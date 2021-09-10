@@ -1,4 +1,4 @@
-// Represents a player's information specific to a specific delve including: delve id, difficulty options, character selected, stats, moves and upgrades, artifacts, and gold
+// Represents a player's information specific to a specific delve including: delve id, difficulty options, character selected, stats, moves and upgrades, and artifacts
 module.exports = class Delver {
     constructor () {
         this.delveID = "";

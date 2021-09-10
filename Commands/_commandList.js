@@ -2,13 +2,13 @@ const fs = require('fs');
 const CommandSet = require('../Classes/CommandSet.js');
 
 // The help command supports 25 command sets to conform with MessageEmbed limit of 25 fields
-// let generalCommands = new CommandSet("General Commands", "Here are the general use BountyBot commands.", false, []);
-let infoCommands = new CommandSet("Informational Commands", "Use these commands to look up information about BountyBot!", false, ["about.js"])
+let generalCommands = new CommandSet("Game Commands", "Here are the commands you'll use when playing Dungeon Tamers", false, ["delve.js"]);
+let infoCommands = new CommandSet("Informational Commands", "Use these commands to look up information about Dungeon Tamers!", false, ["about.js"])
 // let configCommands = new CommandSet("Configuration Commands", "These commands change how the bot operates on your server. They require bot management permission (a role above the bot's roles).", true, [])
 // let moderationCommands = new CommandSet("Moderation Commands", "These commands allow bot managers to counteract bad behavior. They require bot management permission (a role above the bot's roles).", true, [])
 
 exports.commandSets = [
-	// generalCommands,
+	generalCommands,
 	infoCommands,
 	// configCommands,
 	// moderationCommands
