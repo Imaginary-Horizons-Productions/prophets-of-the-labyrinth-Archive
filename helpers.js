@@ -1,6 +1,6 @@
 const GuildProfile = require("./Classes/GuildProfile")
 const { saveGuild, getGuild } = require("./guildDictionary")
-const { getPlayer, savePlayer } = require("./playerDictionary")
+const { getPlayer, setPlayer } = require("./playerDictionary")
 
 exports.guildSetup = function (guild) {
     guild.channels.create("Dungeon Tamers", {
@@ -15,7 +15,7 @@ exports.guildSetup = function (guild) {
                 guildProfile.userIds.forEach(playerId => {
                     var player = getPlayer(playerId, guild.id);
                     player.score[guild.id] = 0;
-                    savePlayer(player);
+                    setPlayer(player);
                 });
             }
             saveGuild(new GuildProfile(guild.id, category.id, channel.id));

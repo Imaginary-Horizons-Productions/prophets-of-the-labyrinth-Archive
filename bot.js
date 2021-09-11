@@ -7,6 +7,7 @@ const { buttonDictionary } = require("./Buttons/_buttonList.js");
 const { loadPlayers } = require("./playerDictionary");
 const { guildSetup } = require("./helpers");
 const { loadGuilds } = require("./guildDictionary");
+const { loadAdventures } = require("./adventureDictionary");
 //#endregion
 
 //#region Executing Code
@@ -21,11 +22,12 @@ const client = new Client({
 	intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_MESSAGES"]
 });
 
-//TODO load adventures
 loadGuilds().then(() => {
-	loadPlayers().then(() => {
-		client.login(require("./Data/Config/auth.json").token);
-	});
+	loadAdventures().then(() => {
+		loadPlayers().then(() => {
+			client.login(require("./Data/Config/auth.json").token);
+		});
+	})
 })
 //#endregion
 

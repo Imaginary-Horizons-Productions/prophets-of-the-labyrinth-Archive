@@ -29,7 +29,7 @@ exports.getGuild = function (guildId) {
     return guildDictionary.get(guildId);
 }
 
-exports.saveGuild = function (guildProfile) {
+exports.saveGuild = function (guildProfile) { //TODO convert to set/save pattern in adventureDictionary to allow save after removal of guild
     guildDictionary.set(guildProfile.id, guildProfile);
     if (!fs.existsSync("./Saves")) {
         fs.mkdirSync("./Saves", { recursive: true });

@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-var buttonWhitelist = ["join.js"];
+var buttonWhitelist = ["join.js", "ready.js"];
 const buttonFiles = fs.readdirSync('./Buttons').filter(file => file.endsWith('.js') && buttonWhitelist.includes(file));
 exports.buttonDictionary = {};
 

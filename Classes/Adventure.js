@@ -3,5 +3,6 @@ module.exports = class Adventure {
         this.id = idInput; // the id of the channel created for the adventure
         this.startMessageId = startIdInput;
         this.players = [leaderInput];
+        this.accumulatedScore = 0;
     }
 }

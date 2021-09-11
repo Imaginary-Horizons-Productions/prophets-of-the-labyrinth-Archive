@@ -2,7 +2,7 @@ const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
 const Adventure = require('../Classes/Adventure.js');
 const Command = require('../Classes/Command.js');
 const { getPlayer } = require('../playerDictionary.js');
-const { startAdventure } = require("../adventureDictionary.js");
+const { setAdventure } = require("../adventureDictionary.js");
 const { getGuild } = require('../guildDictionary.js');
 
 var command = new Command("delve", "Start a new adventure", false, false);
@@ -33,19 +33,23 @@ command.execute = (interaction) => {
 		}).then(channel => { //TODO adventure name generator
 			let embed = new MessageEmbed()
 				.setDescription("A new adventure is starting!")
-			let buttons = new MessageActionRow()
+			let join = new MessageActionRow()
 				.addComponents(
 					new MessageButton()
 						.setCustomId(`join-${channel.id}`)
 						.setLabel("Join")
-						.setStyle("PRIMARY"),
-					new MessageButton()
-						.setCustomId("start")
-						.setLabel("Start!")
-						.setStyle("SUCCESS")
+						.setStyle("PRIMARY")
 				)
-			interaction.reply({ embeds: [embed], components: [buttons], fetchReply: true }).then(message => {
-				startAdventure(new Adventure(channel.id, message.id, leader));
+			interaction.reply({ embeds: [embed], components: [join], fetchReply: true }).then(message => {
+				setAdventure(new Adventure(channel.id, message.id, leader));
+				let ready = new MessageActionRow()
+					.addComponents(
+						new MessageButton()
+							.setCustomId(`ready-${channel.id}-${leader.id}`)
+							.setLabel("Ready!")
+							.setStyle("SUCCESS")
+					)
+				channel.send({ content: "The adventure will begin when the leader clicks the \"Ready!\" button.", components: [ready] });
 			}).catch(console.error);
 		})
 	})

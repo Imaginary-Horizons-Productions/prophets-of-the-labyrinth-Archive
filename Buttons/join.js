@@ -1,6 +1,6 @@
 const Button = require('./../Classes/Button.js');
 const { getPlayer } = require('../playerDictionary.js');
-const { getAdventure, saveAdventure } = require("./../adventureDictionary.js");
+const { getAdventure, setAdventure } = require("./../adventureDictionary.js");
 
 var button = new Button("join");
 
@@ -13,12 +13,12 @@ button.execute = (interaction, args) => {
             channel.permissionOverwrites.create(interaction.user, {
                 VIEW_CHANNEL: true
             })
-            saveAdventure(adventure);
+            setAdventure(adventure);
             interaction.reply({ content: `You have joined the adventure! Here's a link to the channel: ${channel}`, ephemeral: true });
             channel.send(`${interaction.member} joined the adventure.`)
                 .catch(console.error)
         } else {
-            interaction.reply(`You are already part of this adventure! Here's a link: ${channel}`)
+            interaction.reply({ content: `You are already part of this adventure! Here's a link: ${channel}`, ephemeral: true })
                 .catch(console.error);
         }
     })
