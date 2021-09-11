@@ -47,8 +47,8 @@ client.on("interactionCreate", interaction => {
 			interaction.reply(`The \`/${interaction.commandName}\` command is restricted to bot managers (users with permissions above the bot).`)
 		}
 	} else if (interaction.isButton()) {
-		//TODO customId parsing
-		buttonDictionary[interaction.customId].execute(interaction);
+		var args = interaction.customId.split("-");
+		buttonDictionary[args[0]].execute(interaction, args);
 	} else if (interaction.isSelectMenu()) {
 		//TODO value parsing
 		selectDictionary[interaction.customId].execute(interaction);

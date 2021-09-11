@@ -12,5 +12,5 @@ module.exports = class Command {
 			.setDescription(descriptionInput);
 	}
 
-	execute(interaction, state, metrics) { }
+	execute(interaction) { }
 }

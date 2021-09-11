@@ -12,3 +12,7 @@ exports.startAdventure = function (adventure) {
     adventureDictionary.set(adventure.id, adventure);
     //TODO save
 }
+
+exports.saveAdventure = function (adventure) {
+    //TODO implement
+}
