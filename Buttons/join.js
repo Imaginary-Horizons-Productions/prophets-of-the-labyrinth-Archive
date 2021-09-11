@@ -7,7 +7,7 @@ var button = new Button("join");
 button.execute = (interaction) => {
     // Give the basic rules and information about the bot
     var adventure = getAdventure(interaction.user.id); //TODO swap placeholder user id for channel id
-    adventure.players.push(getPlayer(interaction.user.id));
+    adventure.players.push(getPlayer(interaction.user.id, interaction.guild.id));
     //TODO save adventure
     interaction.reply(`${interaction.member} joined the adventure.`)
         .catch(console.error)

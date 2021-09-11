@@ -1,4 +1,5 @@
 const Player = require("./Classes/Player");
+const { getGuild, saveGuild } = require("./guildDictionary");
 
 var playerDictionary = new Map();
 
@@ -9,9 +10,12 @@ exports.loadPlayers = function () {
     })
 }
 
-exports.getPlayer = function (playerId) {
+exports.getPlayer = function (playerId, guildId) {
     if (!playerDictionary.has(playerId)) {
-        playerDictionary.set(playerId, new Player(playerId));
+        exports.savePlayer(new Player(playerId));
+        var guildProfile = getGuild(guildId);
+        guildProfile.userIds.push(playerId);
+        saveGuild(guildProfile);
     }
     return playerDictionary.get(playerId);
 }

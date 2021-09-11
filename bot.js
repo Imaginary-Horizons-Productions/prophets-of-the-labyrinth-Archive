@@ -5,6 +5,8 @@ const { commandDictionary, slashData } = require(`./Commands/_commandList.js`);
 const { selectDictionary } = require("./Selects/_selectList.js");
 const { buttonDictionary } = require("./Buttons/_buttonList.js");
 const { loadPlayers } = require("./playerDictionary");
+const { guildSetup } = require("./helpers");
+const { loadGuilds } = require("./guildDictionary");
 //#endregion
 
 //#region Executing Code
@@ -19,11 +21,12 @@ const client = new Client({
 	intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_MESSAGES"]
 });
 
-//TODO load guilds
 //TODO load adventures
-loadPlayers().then(() => {
-	client.login(require("./Data/Config/auth.json").token);
-});
+loadGuilds().then(() => {
+	loadPlayers().then(() => {
+		client.login(require("./Data/Config/auth.json").token);
+	});
+})
 //#endregion
 
 //#region Event Handlers
@@ -34,8 +37,15 @@ client.on("ready", () => {
 })
 
 client.on("interactionCreate", interaction => {
+	//TODO inGuild gate
 	if (interaction.isCommand()) {
-		commandDictionary[interaction.commandName].execute(interaction);
+		var command = commandDictionary[interaction.commandName];
+		//TODO premium gate
+		if (!command.managerCommand || !interaction.member.manageable) {
+			command.execute(interaction);
+		} else {
+			interaction.reply(`The \`/${interaction.commandName}\` command is restricted to bot managers (users with permissions above the bot).`)
+		}
 	} else if (interaction.isButton()) {
 		//TODO customId parsing
 		buttonDictionary[interaction.customId].execute(interaction);
@@ -46,6 +56,6 @@ client.on("interactionCreate", interaction => {
 })
 
 client.on("guildCreate", guild => {
-	//TODO create category and general text channel
+	guildSetup(guild);
 })
 //#endregion

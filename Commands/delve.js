@@ -9,7 +9,7 @@ var command = new Command("delve", "Start a new adventure", false, false);
 command.execute = (interaction) => {
 	// Start a new adventure
 	let adventureId = interaction.user.id; //TODO use new private text channel's id
-	let leader = getPlayer(interaction.user.id);
+	let leader = getPlayer(interaction.user.id, interaction.guild.id);
 	let embed = new MessageEmbed()
 		.setDescription("A new adventure is starting!")
 	let buttons = new MessageActionRow()
