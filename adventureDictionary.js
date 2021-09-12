@@ -1,4 +1,4 @@
-const { setPlayer } = require("./playerDictionary");
+const { setPlayer, getPlayer } = require("./playerDictionary");
 const fs = require("fs");
 
 var filePath = "./Saves/adventures.json";
@@ -37,7 +37,8 @@ exports.setAdventure = function (adventure) {
 
 exports.completeAdventure = function (adventure, channel, result) {
 	//TODO switch on result
-	adventure.players.forEach(player => {
+	adventure.delvers.forEach(delver => {
+		let player = getPlayer(delver.id, channel.guild.id);
 		if (player.score[channel.guild.id]) {
 			player.score[channel.guild.id] += adventure.accumulatedScore;
 		} else {

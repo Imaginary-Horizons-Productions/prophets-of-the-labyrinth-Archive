@@ -1,6 +1,7 @@
 const Button = require('./../Classes/Button.js');
 const { getPlayer } = require('../playerDictionary.js');
 const { getAdventure, setAdventure } = require("./../adventureDictionary.js");
+const Delver = require('../Classes/Delver.js');
 
 var button = new Button("join");
 
@@ -8,8 +9,8 @@ button.execute = (interaction, args) => {
     // Give the basic rules and information about the bot
     interaction.guild.channels.fetch(args[1]).then(channel => {
         var adventure = getAdventure(channel.id);
-        if (!adventure.players.some(player => player.id == interaction.user.id)) {
-            adventure.players.push(getPlayer(interaction.user.id, interaction.guild.id));
+        if (!adventure.delvers.some(delver => delver.id == interaction.user.id)) {
+            adventure.delvers.push(new Delver(interaction.user.id, channel.id));
             channel.permissionOverwrites.create(interaction.user, {
                 VIEW_CHANNEL: true
             })
