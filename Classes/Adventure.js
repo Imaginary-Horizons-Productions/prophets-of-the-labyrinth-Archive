@@ -4,5 +4,6 @@ module.exports = class Adventure {
         this.startMessageId = startIdInput;
         this.delvers = [leaderInput];
         this.accumulatedScore = 0;
+        this.depth = 0;
     }
 }

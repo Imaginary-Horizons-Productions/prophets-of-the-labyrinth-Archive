@@ -3,7 +3,7 @@ module.exports = class GuildProfile {
     constructor(idInput, categoryIdInput, centralIdInput) {
         this.id = idInput;
         this.categoryId = categoryIdInput;
-        this.centralID = centralIdInput;
+        this.centralId = centralIdInput;
         this.userIds = [];
     }
 }

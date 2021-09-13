@@ -35,6 +35,17 @@ exports.setAdventure = function (adventure) {
 	exports.saveAdventures()
 }
 
+exports.nextRoom = function (adventure, channel) {
+	adventure.depth++;
+	if (adventure.depth > 0) {
+		adventure.accumulatedScore = 10;
+		exports.completeAdventure(adventure, channel, "success");
+	} else {
+		//TODO generate rooms
+		channel.send()
+	}
+}
+
 exports.completeAdventure = function (adventure, channel, result) {
 	//TODO switch on result
 	adventure.delvers.forEach(delver => {
@@ -46,7 +57,6 @@ exports.completeAdventure = function (adventure, channel, result) {
 		}
 		setPlayer(player);
 	})
-	//TODO delete/edit start message
 	adventureDictionary.delete(channel.id);
 	channel.send(`The adventure has been completed! Delvers have earned ${adventure.accumulatedScore} score (times their personal multiplier). This channel will be cleaned up in 5 minutes.`)
 		.catch(console.error);

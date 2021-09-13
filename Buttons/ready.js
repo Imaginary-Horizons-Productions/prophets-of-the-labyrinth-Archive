@@ -1,5 +1,6 @@
-const { getAdventure, completeAdventure } = require('../adventureDictionary.js');
+const { getAdventure, nextRoom } = require('../adventureDictionary.js');
 const Button = require('../Classes/Button.js');
+const { getGuild } = require('../guildDictionary.js');
 
 var button = new Button("ready");
 
@@ -7,11 +8,16 @@ button.execute = (interaction, args) => {
 	// Start an adventure if clicked by adventure leader
 	if (interaction.user.id === args[2]) {
 		let adventure = getAdventure(args[1]);
+		let guildProfile = getGuild(interaction.guild.id);
 		interaction.reply("The adventure has begun!");
-
-		//TODO generate rooms
-		adventure.accumulatedScore = 10;
-		completeAdventure(adventure, interaction.channel, "success");
+		interaction.guild.channels.fetch(guildProfile.centralId).then(channel => {
+			channel.messages.fetch(adventure.startMessageId).then(startMessage => {
+				startMessage.edit({ components: [] });
+			})
+		}).catch(console.error);
+		interaction.message.edit({ components: [] })
+			.catch(console.error);
+		nextRoom(adventure, interaction.channel);
 	}
 }
 
