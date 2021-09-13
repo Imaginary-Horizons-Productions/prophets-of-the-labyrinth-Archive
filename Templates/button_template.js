@@ -1,4 +1,4 @@
-const Button = require('../Classes/Button.js');
+const Button = require('../../Classes/Button.js');
 
 var button = new Button("");
 

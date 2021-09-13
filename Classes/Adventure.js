@@ -5,5 +5,6 @@ module.exports = class Adventure {
         this.delvers = [leaderInput];
         this.accumulatedScore = 0;
         this.depth = 0;
+        this.gold = 100;
     }
 }

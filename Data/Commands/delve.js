@@ -1,9 +1,10 @@
 const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
 const Adventure = require('../../Classes/Adventure.js');
 const Command = require('../../Classes/Command.js');
-const { getPlayer } = require('../playerDictionary.js');
-const { setAdventure } = require("../adventureDictionary.js");
-const { getGuild } = require('../guildDictionary.js');
+const Delver = require('../../Classes/Delver.js');
+const { getPlayer } = require('../playerList.js');
+const { setAdventure } = require("../adventureList.js");
+const { getGuild } = require('../guildList.js');
 
 var command = new Command("delve", "Start a new adventure", false, false);
 
@@ -44,7 +45,7 @@ command.execute = (interaction) => {
 							.setStyle("PRIMARY")
 					)
 				interaction.reply({ embeds: [embed], components: [join], fetchReply: true }).then(message => {
-					setAdventure(new Adventure(channel.id, message.id, leader));
+					setAdventure(new Adventure(channel.id, message.id, new Delver(interaction.user.id, channel.id)));
 					let ready = new MessageActionRow()
 						.addComponents(
 							new MessageButton()

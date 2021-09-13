@@ -1,6 +1,6 @@
-const GuildProfile = require("./Classes/GuildProfile")
-const { saveGuild, getGuild } = require("./Data/guildDictionary")
-const { getPlayer, setPlayer } = require("./Data/playerDictionary")
+const GuildProfile = require("./Classes/GuildProfile.js")
+const { saveGuild, getGuild } = require("./Data/guildList.js")
+const { getPlayer, setPlayer } = require("./Data/playerList.js")
 
 exports.guildSetup = function (guild) {
     guild.channels.create("Dungeon Tamers", {

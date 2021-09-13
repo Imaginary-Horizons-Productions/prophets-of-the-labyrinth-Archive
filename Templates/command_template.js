@@ -1,4 +1,4 @@
-const Command = require('../Classes/Command.js');
+const Command = require('../../Classes/Command.js');
 
 var command = new Command("name", "description", false, false);
 

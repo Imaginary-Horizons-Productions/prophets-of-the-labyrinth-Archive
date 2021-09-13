@@ -1,13 +1,13 @@
 //#region Imports
 const { Client } = require("discord.js");
 const versionData = require('./Config/versionData.json');
-const { commandDictionary, slashData } = require(`./Data/Commands/_commandList.js`);
-const { selectDictionary } = require("./Data/Selects/_selectList.js");
-const { buttonDictionary } = require("./Data/Buttons/_buttonList.js");
-const { loadPlayers } = require("./Data/playerDictionary.js");
+const { commandDictionary, slashData } = require(`./Data/Commands/_commandDictionary.js`);
+const { selectDictionary } = require("./Data/Selects/_selectDictionary.js");
+const { buttonDictionary } = require("./Data/Buttons/_buttonDictionary.js");
+const { loadPlayers } = require("./Data/playerList.js");
 const { guildSetup } = require("./helpers.js");
-const { loadGuilds } = require("./Data/guildDictionary.js");
-const { loadAdventures } = require("./Data/adventureDictionary.js");
+const { loadGuilds } = require("./Data/guildList.js");
+const { loadAdventures } = require("./Data/adventureList.js");
 //#endregion
 
 //#region Executing Code

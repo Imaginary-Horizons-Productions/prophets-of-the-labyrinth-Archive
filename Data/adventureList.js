@@ -1,6 +1,7 @@
-const { setPlayer, getPlayer } = require("./playerDictionary.js");
+const { setPlayer, getPlayer } = require("./playerList.js");
 const fs = require("fs");
-const { MessageActionRow, MessageButton } = require("discord.js");
+const { roomDictionary } = require("./Rooms/_roomDictionary.js");
+const { MessageEmbed } = require("discord.js");
 
 var filePath = "./../Saves/adventures.json";
 var adventureDictionary = new Map();
@@ -42,14 +43,12 @@ exports.nextRoom = function (adventure, channel) {
 		adventure.accumulatedScore = 10;
 		return exports.completeAdventure(adventure, channel, "success");
 	} else {
-		let buttons = new MessageActionRow()
-			.addComponents(
-				new MessageButton()
-					.setCustomId("continue")
-					.setLabel("Continue")
-					.setStyle("PRIMARY")
-			)
-		return { content: `Entering Room #${adventure.depth}`, components: [buttons] };
+		let room = roomDictionary["Gold on Fire"];
+		let embed = new MessageEmbed()
+			.setAuthor(`Entering Room #${adventure.depth}`, channel.client.user.displayAvatarURL())
+			.setTitle(room.title)
+			.setDescription(room.description);
+		return { embeds: [embed], components: room.components };
 	}
 }
 

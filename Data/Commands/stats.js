@@ -1,6 +1,6 @@
 const { MessageEmbed } = require('discord.js');
 const Command = require('../../Classes/Command.js');
-const { getPlayer } = require('../playerDictionary.js');
+const { getPlayer } = require('../playerList.js');
 
 var command = new Command("stats", "Get the stats for a user or yourself", false, false);
 command.data.addUserOption(option => option.setName("user").setDescription("The user to look up (yourself if blank)").setRequired(false));

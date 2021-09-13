@@ -1,5 +1,5 @@
-const Player = require("../Classes/Player");
-const { getGuild, saveGuild } = require("./guildDictionary");
+const Player = require("../Classes/Player.js");
+const { getGuild, saveGuild } = require("./guildList.js");
 const fs = require("fs");
 
 var filePath = "./../Saves/players.json";
