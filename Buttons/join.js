@@ -1,5 +1,4 @@
 const Button = require('./../Classes/Button.js');
-const { getPlayer } = require('../playerDictionary.js');
 const { getAdventure, setAdventure } = require("./../adventureDictionary.js");
 const Delver = require('../Classes/Delver.js');
 

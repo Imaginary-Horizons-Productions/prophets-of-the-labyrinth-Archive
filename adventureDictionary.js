@@ -1,5 +1,6 @@
 const { setPlayer, getPlayer } = require("./playerDictionary");
 const fs = require("fs");
+const { MessageActionRow, MessageButton } = require("discord.js");
 
 var filePath = "./Saves/adventures.json";
 var adventureDictionary = new Map();
@@ -37,12 +38,18 @@ exports.setAdventure = function (adventure) {
 
 exports.nextRoom = function (adventure, channel) {
 	adventure.depth++;
-	if (adventure.depth > 0) {
+	if (adventure.depth > 3) {
 		adventure.accumulatedScore = 10;
-		exports.completeAdventure(adventure, channel, "success");
+		return exports.completeAdventure(adventure, channel, "success");
 	} else {
-		//TODO generate rooms
-		channel.send()
+		let buttons = new MessageActionRow()
+			.addComponents(
+				new MessageButton()
+					.setCustomId("continue")
+					.setLabel("Continue")
+					.setStyle("PRIMARY")
+			)
+		return { content: `Entering Room #${adventure.depth}`, components: [buttons] };
 	}
 }
 
@@ -58,11 +65,10 @@ exports.completeAdventure = function (adventure, channel, result) {
 		setPlayer(player);
 	})
 	adventureDictionary.delete(channel.id);
-	channel.send(`The adventure has been completed! Delvers have earned ${adventure.accumulatedScore} score (times their personal multiplier). This channel will be cleaned up in 5 minutes.`)
-		.catch(console.error);
 	setTimeout(() => { //TODO set to clear on startup if interrupted
 		channel.delete("Adventure complete!");
-	}, 300000)
+	}, 300000);
+	return { content: `The adventure has been completed! Delvers have earned ${adventure.accumulatedScore} score (times their personal multiplier). This channel will be cleaned up in 5 minutes.` };
 }
 
 exports.saveAdventures = function () {

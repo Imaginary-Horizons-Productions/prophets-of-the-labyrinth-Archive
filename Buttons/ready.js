@@ -9,7 +9,6 @@ button.execute = (interaction, args) => {
 	if (interaction.user.id === args[2]) {
 		let adventure = getAdventure(args[1]);
 		let guildProfile = getGuild(interaction.guild.id);
-		interaction.reply("The adventure has begun!");
 		interaction.guild.channels.fetch(guildProfile.centralId).then(channel => {
 			channel.messages.fetch(adventure.startMessageId).then(startMessage => {
 				startMessage.edit({ components: [] });
@@ -17,7 +16,7 @@ button.execute = (interaction, args) => {
 		}).catch(console.error);
 		interaction.message.edit({ components: [] })
 			.catch(console.error);
-		nextRoom(adventure, interaction.channel);
+		interaction.reply(nextRoom(adventure, interaction.channel));
 	}
 }
 
