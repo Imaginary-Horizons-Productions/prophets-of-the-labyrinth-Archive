@@ -5,7 +5,8 @@ module.exports = class Delver {
         this.delveID = delveIdInput;
         this.difficultyOptions = [];
         this.characterName = "";
-        this.hp = 0;
+        this.hp = 10;
+        this.maxHp = 30;
         this.power = 0;
         this.moves = [];
     }

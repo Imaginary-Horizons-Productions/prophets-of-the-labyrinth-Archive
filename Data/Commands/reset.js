@@ -1,5 +1,5 @@
-const Command = require('../Classes/Command.js');
-const { guildSetup } = require('../helpers.js');
+const Command = require('../../Classes/Command.js');
+const { guildSetup } = require('../../helpers.js');
 
 var command = new Command("reset", "Recreate the Dungeon Tamers category and central text channel and reset player scores", true, false);
 

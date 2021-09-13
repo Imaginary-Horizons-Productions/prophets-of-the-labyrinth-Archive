@@ -16,6 +16,7 @@ button.execute = (interaction, args) => {
 		}).catch(console.error);
 		interaction.message.edit({ components: [] })
 			.catch(console.error);
+		adventure.lives = adventure.delvers.length + 1;
 		interaction.reply(nextRoom(adventure, interaction.channel));
 	}
 }

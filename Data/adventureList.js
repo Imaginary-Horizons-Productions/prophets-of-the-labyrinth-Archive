@@ -53,13 +53,22 @@ exports.nextRoom = function (adventure, channel) {
 }
 
 exports.completeAdventure = function (adventure, channel, result) {
-	//TODO switch on result
+	var baseScore;
+	switch (result) {
+		case "success":
+			baseScore = adventure.accumulatedScore;
+			break;
+		case "defeat":
+			baseScore = Math.floor(adventure.accumulatedScore / 2);
+			break;
+	}
+
 	adventure.delvers.forEach(delver => {
 		let player = getPlayer(delver.id, channel.guild.id);
 		if (player.score[channel.guild.id]) {
-			player.score[channel.guild.id] += adventure.accumulatedScore;
+			player.score[channel.guild.id] += baseScore;
 		} else {
-			player.score[channel.guild.id] = adventure.accumulatedScore;
+			player.score[channel.guild.id] = baseScore;
 		}
 		setPlayer(player);
 	})
@@ -67,7 +76,7 @@ exports.completeAdventure = function (adventure, channel, result) {
 	setTimeout(() => { //TODO set to clear on startup if interrupted
 		channel.delete("Adventure complete!");
 	}, 300000);
-	return { content: `The adventure has been completed! Delvers have earned ${adventure.accumulatedScore} score (times their personal multiplier). This channel will be cleaned up in 5 minutes.` };
+	return { content: `The adventure has been completed! Delvers have earned ${baseScore} score (times their personal multiplier). This channel will be cleaned up in 5 minutes.` };
 }
 
 exports.saveAdventures = function () {

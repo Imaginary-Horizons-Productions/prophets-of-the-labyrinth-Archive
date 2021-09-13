@@ -1,4 +1,5 @@
 const GuildProfile = require("./Classes/GuildProfile.js")
+const { getAdventure, completeAdventure } = require("./Data/adventureList.js")
 const { saveGuild, getGuild } = require("./Data/guildList.js")
 const { getPlayer, setPlayer } = require("./Data/playerList.js")
 
@@ -21,4 +22,18 @@ exports.guildSetup = function (guild) {
             saveGuild(new GuildProfile(guild.id, category.id, channel.id));
         })
     })
+}
+
+exports.dealDamage = function (delver, channel, damage) {
+    delver.hp -= damage;
+    if (delver.hp <= 0) {
+        delver.hp = delver.maxHp;
+        let adventure = getAdventure(channel.id);
+        adventure.lives -= 1;
+        channel.send(`<@${delver.id}> has died and been revived. ${adventure.lives} lives remain.`)
+        if (adventure.lives <= 0) {
+            return completeAdventure(adventure, channel, "defeat");
+        }
+    }
+    return;
 }
