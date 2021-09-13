@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 var selectWhitelist = [];
-const selectFiles = fs.readdirSync('./Selects').filter(file => file.endsWith('.js') && selectWhitelist.includes(file));
+const selectFiles = fs.readdirSync('./Data/Selects').filter(file => file.endsWith('.js') && selectWhitelist.includes(file));
 exports.selectDictionary = {};
 
 for (const file of selectFiles) {

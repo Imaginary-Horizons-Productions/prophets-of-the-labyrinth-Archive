@@ -1,13 +1,13 @@
 //#region Imports
 const { Client } = require("discord.js");
-const versionData = require('./Data/Config/versionData.json');
-const { commandDictionary, slashData } = require(`./Commands/_commandList.js`);
-const { selectDictionary } = require("./Selects/_selectList.js");
-const { buttonDictionary } = require("./Buttons/_buttonList.js");
-const { loadPlayers } = require("./playerDictionary");
-const { guildSetup } = require("./helpers");
-const { loadGuilds } = require("./guildDictionary");
-const { loadAdventures } = require("./adventureDictionary");
+const versionData = require('./Config/versionData.json');
+const { commandDictionary, slashData } = require(`./Data/Commands/_commandList.js`);
+const { selectDictionary } = require("./Data/Selects/_selectList.js");
+const { buttonDictionary } = require("./Data/Buttons/_buttonList.js");
+const { loadPlayers } = require("./Data/playerDictionary.js");
+const { guildSetup } = require("./helpers.js");
+const { loadGuilds } = require("./Data/guildDictionary.js");
+const { loadAdventures } = require("./Data/adventureDictionary.js");
 //#endregion
 
 //#region Executing Code
@@ -25,7 +25,7 @@ const client = new Client({
 loadGuilds().then(() => {
 	loadAdventures().then(() => {
 		loadPlayers().then(() => {
-			client.login(require("./Data/Config/auth.json").token);
+			client.login(require("./Config/auth.json").token);
 		});
 	})
 })

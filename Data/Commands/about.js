@@ -1,4 +1,4 @@
-const Command = require('./../Classes/Command.js');
+const Command = require('./../../Classes/Command.js');
 const { MessageEmbed } = require("discord.js");
 
 var command = new Command("about", "Get Dungeon Tamer's description and contributors", false, false);
@@ -6,7 +6,6 @@ var command = new Command("about", "Get Dungeon Tamer's description and contribu
 command.execute = (interaction) => {
     // Give the basic rules and information about the bot
     let embed = new MessageEmbed().setColor('6b81eb')
-        .setAuthor(`Imaginary Horizons Productions`, "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png")
         .setTitle(`About Dungeon Tamers`)
         // .setURL(/* bot invite link */)
         .setThumbnail(interaction.client.user.displayAvatarURL())
@@ -16,7 +15,7 @@ command.execute = (interaction) => {
         .addField(`\u200B`, `**__Patrons__**\nImaginary Horizons Productions is supported on [Patreon](https://www.patreon.com/imaginaryhorizonsproductions) by generous users like you, credited below.`)
         .addField(`Cartographer Tier`, `Ralph Beish`, false)
         .addField(`Explorer Tier`, `Eric Hu`, false)
-        // .setFooter("Click \"About BountyBot\" to add BountyBot to your own server! Click \"Imaginary Horizons Productions\" to go to the BountyBot announcements channel!", avatarURL)
+        .setFooter("Imaginary Horizons Productions", "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png")
         .setTimestamp();
 
     interaction.reply({ embeds: [embed], ephemeral: true })

@@ -1,6 +1,6 @@
 const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
-const Adventure = require('../Classes/Adventure.js');
-const Command = require('../Classes/Command.js');
+const Adventure = require('../../Classes/Adventure.js');
+const Command = require('../../Classes/Command.js');
 const { getPlayer } = require('../playerDictionary.js');
 const { setAdventure } = require("../adventureDictionary.js");
 const { getGuild } = require('../guildDictionary.js');
@@ -35,6 +35,7 @@ command.execute = (interaction) => {
 			}).then(channel => { //TODO adventure name generator
 				let embed = new MessageEmbed()
 					.setDescription("A new adventure is starting!")
+					.setFooter("Imaginary Horizons Productions", "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png")
 				let join = new MessageActionRow()
 					.addComponents(
 						new MessageButton()

@@ -1,5 +1,5 @@
 const fs = require('fs');
-const CommandSet = require('../Classes/CommandSet.js');
+const CommandSet = require('../../Classes/CommandSet.js');
 
 // The help command supports 25 command sets to conform with MessageEmbed limit of 25 fields
 let generalCommands = new CommandSet("Game Commands", "Here are the commands you'll use when playing Dungeon Tamers", false, ["delve.js"]);
@@ -18,7 +18,7 @@ var commandFileNames = [];
 this.commandSets.forEach(set => {
 	commandFileNames = commandFileNames.concat(set.fileNames);
 })
-const commandFiles = fs.readdirSync('./Commands').filter(file => file.endsWith('.js') && commandFileNames.includes(file));
+const commandFiles = fs.readdirSync('./Data/Commands').filter(file => file.endsWith('.js') && commandFileNames.includes(file));
 exports.commandDictionary = {};
 exports.slashData = [];
 

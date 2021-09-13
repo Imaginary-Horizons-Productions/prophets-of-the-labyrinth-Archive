@@ -1,8 +1,8 @@
-const Player = require("./Classes/Player");
+const Player = require("../Classes/Player");
 const { getGuild, saveGuild } = require("./guildDictionary");
 const fs = require("fs");
 
-var filePath = "./Saves/players.json";
+var filePath = "./../Saves/players.json";
 var playerDictionary = new Map();
 
 exports.loadPlayers = function () {
@@ -14,8 +14,8 @@ exports.loadPlayers = function () {
 			})
 			resolve();
 		} else {
-			if (!fs.existsSync("./Saves")) {
-				fs.mkdirSync("./Saves", { recursive: true });
+			if (!fs.existsSync("./../Saves")) {
+				fs.mkdirSync("./../Saves", { recursive: true });
 			}
 			fs.writeFile(filePath, "[]", "utf8", error => {
 				if (error) {
@@ -43,8 +43,8 @@ exports.setPlayer = function (player) {
 }
 
 exports.savePlayers = function () {
-    if (!fs.existsSync("./Saves")) {
-		fs.mkdirSync("./Saves", { recursive: true });
+    if (!fs.existsSync("./../Saves")) {
+		fs.mkdirSync("./../Saves", { recursive: true });
 	}
 	fs.writeFile(filePath, JSON.stringify(Array.from((playerDictionary.values()))), "utf8", error => {
 		if (error) {

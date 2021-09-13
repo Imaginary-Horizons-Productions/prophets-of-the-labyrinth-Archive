@@ -1,6 +1,6 @@
 var fs = require("fs");
 
-var filePath = "./Saves/guilds.json";
+var filePath = "./../Saves/guilds.json";
 var guildDictionary = new Map();
 
 exports.loadGuilds = function () {
@@ -12,8 +12,8 @@ exports.loadGuilds = function () {
             })
             resolve();
         } else {
-            if (!fs.existsSync("./Saves")) {
-                fs.mkdirSync("./Saves", { recursive: true });
+            if (!fs.existsSync("./../Saves")) {
+                fs.mkdirSync("./../Saves", { recursive: true });
             }
             fs.writeFile(filePath, "[]", "utf8", error => {
                 if (error) {
@@ -31,8 +31,8 @@ exports.getGuild = function (guildId) {
 
 exports.saveGuild = function (guildProfile) { //TODO convert to set/save pattern in adventureDictionary to allow save after removal of guild
     guildDictionary.set(guildProfile.id, guildProfile);
-    if (!fs.existsSync("./Saves")) {
-        fs.mkdirSync("./Saves", { recursive: true });
+    if (!fs.existsSync("./../Saves")) {
+        fs.mkdirSync("./../Saves", { recursive: true });
     }
     fs.writeFile(filePath, JSON.stringify(Array.from((guildDictionary.values()))), "utf8", error => {
         if (error) {

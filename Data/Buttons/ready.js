@@ -1,5 +1,5 @@
 const { getAdventure, nextRoom } = require('../adventureDictionary.js');
-const Button = require('../Classes/Button.js');
+const Button = require('../../Classes/Button.js');
 const { getGuild } = require('../guildDictionary.js');
 
 var button = new Button("ready");

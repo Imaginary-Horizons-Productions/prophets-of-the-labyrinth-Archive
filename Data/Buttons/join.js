@@ -1,6 +1,6 @@
-const Button = require('./../Classes/Button.js');
+const Button = require('../../Classes/Button.js');
 const { getAdventure, setAdventure } = require("./../adventureDictionary.js");
-const Delver = require('../Classes/Delver.js');
+const Delver = require('../../Classes/Delver.js');
 
 var button = new Button("join");
 

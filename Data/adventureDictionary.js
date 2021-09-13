@@ -1,8 +1,8 @@
-const { setPlayer, getPlayer } = require("./playerDictionary");
+const { setPlayer, getPlayer } = require("./playerDictionary.js");
 const fs = require("fs");
 const { MessageActionRow, MessageButton } = require("discord.js");
 
-var filePath = "./Saves/adventures.json";
+var filePath = "./../Saves/adventures.json";
 var adventureDictionary = new Map();
 
 exports.loadAdventures = function () {
@@ -14,8 +14,8 @@ exports.loadAdventures = function () {
 			})
 			resolve();
 		} else {
-			if (!fs.existsSync("./Saves")) {
-				fs.mkdirSync("./Saves", { recursive: true });
+			if (!fs.existsSync("./../Saves")) {
+				fs.mkdirSync("./../Saves", { recursive: true });
 			}
 			fs.writeFile(filePath, "[]", "utf8", error => {
 				if (error) {
@@ -72,8 +72,8 @@ exports.completeAdventure = function (adventure, channel, result) {
 }
 
 exports.saveAdventures = function () {
-	if (!fs.existsSync("./Saves")) {
-		fs.mkdirSync("./Saves", { recursive: true });
+	if (!fs.existsSync("./../Saves")) {
+		fs.mkdirSync("./../Saves", { recursive: true });
 	}
 	fs.writeFile(filePath, JSON.stringify(Array.from((adventureDictionary.values()))), "utf8", error => {
 		if (error) {
