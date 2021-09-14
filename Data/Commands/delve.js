@@ -7,6 +7,7 @@ const { setAdventure } = require("../adventureList.js");
 const { getGuild } = require('../guildList.js');
 
 var command = new Command("delve", "Start a new adventure", false, false);
+command.data.addStringOption(option => option.setName("seed").setDescription("The value to base the random events of the run on").setRequired(false));
 
 command.execute = (interaction) => {
 	// Start a new adventure
@@ -45,7 +46,7 @@ command.execute = (interaction) => {
 							.setStyle("PRIMARY")
 					)
 				interaction.reply({ embeds: [embed], components: [join], fetchReply: true }).then(message => {
-					setAdventure(new Adventure(channel.id, message.id, new Delver(interaction.user.id, channel.id)));
+					setAdventure(new Adventure(channel.id, interaction.options.getString("seed"), message.id, new Delver(interaction.user.id, channel.id)));
 					let ready = new MessageActionRow()
 						.addComponents(
 							new MessageButton()

@@ -1,6 +1,6 @@
 const Button = require('../../Classes/Button.js');
 const { dealDamage } = require('../../helpers.js');
-const { getAdventure, nextRoom } = require('../adventureList.js');
+const { getAdventure } = require('../adventureList.js');
 
 var button = new Button("getgoldonfire");
 

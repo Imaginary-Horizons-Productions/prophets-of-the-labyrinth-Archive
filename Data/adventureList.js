@@ -43,7 +43,13 @@ exports.nextRoom = function (adventure, channel) {
 		adventure.accumulatedScore = 10;
 		return exports.completeAdventure(adventure, channel, "success");
 	} else {
-		let room = roomDictionary["Gold on Fire"];
+		let roomPool = Object.values(roomDictionary);
+		let room = roomPool[adventure.seed % roomPool.length];
+		if (adventure.seed % roomPool.length) {
+			adventure.seed *= 3;
+		} else {
+			adventure.seed = Math.ceil(adventure.seed / 5);
+		}
 		let embed = new MessageEmbed()
 			.setAuthor(`Entering Room #${adventure.depth}`, channel.client.user.displayAvatarURL())
 			.setTitle(room.title)

@@ -37,3 +37,10 @@ exports.dealDamage = function (delver, channel, damage) {
     }
     return;
 }
+
+exports.healDamage = function (delver, healing) {
+    delver.hp += healing;
+    if (delver.hp > delver.maxHp) {
+        delver.hp = delver.maxHp;
+    }
+}

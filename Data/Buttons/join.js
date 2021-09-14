@@ -13,6 +13,7 @@ button.execute = (interaction, args) => {
             channel.permissionOverwrites.create(interaction.user, {
                 VIEW_CHANNEL: true
             })
+            adventure.gold += 50;
             setAdventure(adventure);
             interaction.reply({ content: `You have joined the adventure! Here's a link to the channel: ${channel}`, ephemeral: true });
             channel.send(`${interaction.member} joined the adventure.`)

@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-var roomWhitelist = ["goldonfire.js"];
+var roomWhitelist = ["goldonfire.js", "hpshare.js", "freegold.js"];
 const roomFiles = fs.readdirSync('./Data/Rooms').filter(file => file.endsWith('.js') && roomWhitelist.includes(file));
 exports.roomDictionary = {};
 
