@@ -24,7 +24,7 @@ exports.guildSetup = function (guild) {
     })
 }
 
-exports.dealDamage = function (delver, channel, damage) {
+exports.takeDamage = function (delver, channel, damage) {
     delver.hp -= damage;
     if (delver.hp <= 0) {
         delver.hp = delver.maxHp;
@@ -38,7 +38,7 @@ exports.dealDamage = function (delver, channel, damage) {
     return;
 }
 
-exports.healDamage = function (delver, healing) {
+exports.gainHealth = function (delver, healing) {
     delver.hp += healing;
     if (delver.hp > delver.maxHp) {
         delver.hp = delver.maxHp;

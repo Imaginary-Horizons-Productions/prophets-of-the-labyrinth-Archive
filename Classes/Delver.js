@@ -7,7 +7,7 @@ module.exports = class Delver {
         this.characterName = "";
         this.hp = 10;
         this.maxHp = 30;
-        this.power = 0;
+        this.readType = "targets";
         this.moves = [];
     }
 }

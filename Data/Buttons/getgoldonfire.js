@@ -1,5 +1,5 @@
 const Button = require('../../Classes/Button.js');
-const { dealDamage } = require('../../helpers.js');
+const { takeDamage } = require('../../helpers.js');
 const { getAdventure } = require('../adventureList.js');
 
 var button = new Button("getgoldonfire");
@@ -9,7 +9,7 @@ button.execute = (interaction, args) => {
     let adventure = getAdventure(interaction.channel.id);
     adventure.gold += 20;
     interaction.reply(`${interaction.user} reaches into the flames and grabs some coin.`);
-    let messagePayload = dealDamage(adventure.delvers.find(delver => delver.id == interaction.user.id), interaction.channel, 10);
+    let messagePayload = takeDamage(adventure.delvers.find(delver => delver.id == interaction.user.id), interaction.channel, 10);
     if (messagePayload) {
         interaction.message.edit({ components: [] })
             .catch(console.error);

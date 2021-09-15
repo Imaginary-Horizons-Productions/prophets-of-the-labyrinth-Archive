@@ -1,22 +1,23 @@
 const { setPlayer, getPlayer } = require("./playerList.js");
 const fs = require("fs");
 const { roomDictionary } = require("./Rooms/_roomDictionary.js");
-const { MessageEmbed } = require("discord.js");
+const { MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu } = require("discord.js");
 
-var filePath = "./../Saves/adventures.json";
+var filePath = "./Saves/adventures.json";
+var requirePath = "./../Saves/adventures.json";
 var adventureDictionary = new Map();
 
 exports.loadAdventures = function () {
 	return new Promise((resolve, reject) => {
 		if (fs.existsSync(filePath)) {
-			var adventures = require(filePath);
+			var adventures = require(requirePath);
 			adventures.forEach(adventure => {
 				adventureDictionary.set(adventure.id, adventure);
 			})
 			resolve();
 		} else {
-			if (!fs.existsSync("./../Saves")) {
-				fs.mkdirSync("./../Saves", { recursive: true });
+			if (!fs.existsSync("./Saves")) {
+				fs.mkdirSync("./Saves", { recursive: true });
 			}
 			fs.writeFile(filePath, "[]", "utf8", error => {
 				if (error) {
@@ -44,11 +45,17 @@ exports.nextRoom = function (adventure, channel) {
 		return exports.completeAdventure(adventure, channel, "success");
 	} else {
 		let roomPool = Object.values(roomDictionary);
-		let room = roomPool[adventure.seed % roomPool.length];
-		if (adventure.seed % roomPool.length) {
-			adventure.seed *= 3;
+		let indexEnd = adventure.rnIndex + roomPool.length.toString().length;
+		let index;
+		if (indexEnd < adventure.rnIndex) {
+			index = adventure.rnTable.slice(adventure.rnIndex) + adventure.rnTable.slice(0, indexEnd);
 		} else {
-			adventure.seed = Math.ceil(adventure.seed / 5);
+			index = adventure.rnTable.slice(adventure.rnIndex, indexEnd);
+		}
+		let room = roomPool[index];
+		adventure.rnIndex = (adventure.rnIndex + 1) % adventure.rnTable.length;
+		if (adventure.type === "battle") {
+			exports.startBattle(adventure, room, channel);
 		}
 		let embed = new MessageEmbed()
 			.setAuthor(`Entering Room #${adventure.depth}`, channel.client.user.displayAvatarURL())
@@ -56,6 +63,78 @@ exports.nextRoom = function (adventure, channel) {
 			.setDescription(room.description);
 		return { embeds: [embed], components: room.components };
 	}
+}
+
+exports.startBattle = function (adventure, room, channel) {
+	adventure.battleRound = 0;
+	adventure.battleEnemies.concat(room.enemies);
+	exports.newRound(adventure, channel);
+}
+
+exports.newRound = function (adventure, channel) {
+	let embed = new MessageEmbed();
+	channel.send({ embeds: [embed], components: generateBattleMenu(adventure) });  //TODO how to clear previous round components?
+}
+
+exports.generateBattleMenu = function (adventure) {
+	let moveOptions = [];
+	for (i = 0; i < adventure.enemies.length; i++) {
+		moveOptions.push({
+			label: adventure.enemies[i].name,
+			description: "",
+			value: `enemy-${i}`
+		})
+	}
+	for (i = 0; i < adventure.delvers.length; i++) {
+		moveOptions.push({
+			label: adventure.delvers[i].name,
+			description: "",
+			value: `enemy-${i}`
+		})
+	}
+	let battleMenu = [
+		new MessageActionRow()
+			.addComponents(
+				new MessageButton()
+					.setCustomId("read")
+					.setLabel("Read")
+					.setStyle("PRIMARY"),
+				new MessageButton()
+					.setCustomId("self")
+					.setLabel("Inspect self")
+					.setStyle("SECONDARY")
+			),
+		new MessageActionRow()
+			.addComponents(
+				new MessageSelectMenu()
+					.setCustomId(`move`)
+					.setPlaceholder("Use your first move on...")
+					.addOptions(moveOptions)
+			),
+		new MessageActionRow()
+			.addComponents(
+				new MessageSelectMenu()
+					.setCustomId(`move`)
+					.setPlaceholder("Use your second move on...")
+					.addOptions(moveOptions)
+			),
+		new MessageActionRow()
+			.addComponents(
+				new MessageSelectMenu()
+					.setCustomId(`move`)
+					.setPlaceholder("Use your third move on...")
+					.addOptions(moveOptions)
+			),
+		new MessageActionRow()
+			.addComponents(
+				new MessageSelectMenu()
+					.setCustomId(`move`)
+					.setPlaceholder("Use your fourth move on...")
+					.addOptions(moveOptions)
+			)
+	]; // read, inspect self, moves
+
+	return battleMenu;
 }
 
 exports.completeAdventure = function (adventure, channel, result) {
@@ -86,8 +165,8 @@ exports.completeAdventure = function (adventure, channel, result) {
 }
 
 exports.saveAdventures = function () {
-	if (!fs.existsSync("./../Saves")) {
-		fs.mkdirSync("./../Saves", { recursive: true });
+	if (!fs.existsSync("./Saves")) {
+		fs.mkdirSync("./Saves", { recursive: true });
 	}
 	fs.writeFile(filePath, JSON.stringify(Array.from((adventureDictionary.values()))), "utf8", error => {
 		if (error) {

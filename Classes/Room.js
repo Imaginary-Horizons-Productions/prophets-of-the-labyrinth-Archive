@@ -4,5 +4,11 @@ module.exports = class Room {
         this.title = titleInput;
         this.description = descriptionInput;
         this.components = [];
+        this.enemies = [];
+    }
+
+    addEnemy(enemyInput) {
+        this.enemies.push(enemyInput)
+        return this;
     }
 }
