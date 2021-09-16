@@ -5,7 +5,7 @@ const { commandDictionary, slashData } = require(`./Data/Commands/_commandDictio
 const { selectDictionary } = require("./Data/Selects/_selectDictionary.js");
 const { buttonDictionary } = require("./Data/Buttons/_buttonDictionary.js");
 const { loadPlayers } = require("./Data/playerList.js");
-const { guildSetup } = require("./helpers.js");
+const { guildSetup, getPremiumUsers } = require("./helpers.js");
 const { loadGuilds } = require("./Data/guildList.js");
 const { loadAdventures } = require("./Data/adventureList.js");
 //#endregion
@@ -42,11 +42,16 @@ client.on("interactionCreate", interaction => {
 	if (interaction.inGuild()) {
 		if (interaction.isCommand()) {
 			var command = commandDictionary[interaction.commandName];
-			//TODO premium gate
-			if (!command.managerCommand || !interaction.member.manageable) {
-				command.execute(interaction);
+			if (!command.premiumCommand || !helpers.getPremiumUsers().includes(interaction.user.id)) {
+				if (!command.managerCommand || !interaction.member.manageable) {
+					command.execute(interaction);
+				} else {
+					interaction.reply(`The \`/${interaction.commandName}\` command is restricted to bot managers (users with permissions above the bot).`)
+						.catch(console.error);
+				}
 			} else {
-				interaction.reply(`The \`/${interaction.commandName}\` command is restricted to bot managers (users with permissions above the bot).`)
+				interaction.reply(`The \`/${interaction.commandName}\` command is a premium command. Use \`/premium\` for more information.`)
+					.catch(console.error);
 			}
 		} else if (interaction.isButton()) {
 			var args = interaction.customId.split("-");

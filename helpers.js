@@ -3,6 +3,11 @@ const { getAdventure, completeAdventure } = require("./Data/adventureList.js")
 const { saveGuild, getGuild } = require("./Data/guildList.js")
 const { getPlayer, setPlayer } = require("./Data/playerList.js")
 
+exports.patrons = require("./Config/patrons.json");
+exports.getPremiumUsers = function () {
+    return exports.patrons.cartographers.concat(exports.patrons.archivists).concat(exports.patrons.grandArchivists).concat(exports.patrons.developers).concat(exports.patrons.giftPremium);
+}
+
 exports.guildSetup = function (guild) {
     guild.channels.create("Dungeon Tamers", {
         type: "GUILD_CATEGORY"
