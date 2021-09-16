@@ -42,7 +42,7 @@ client.on("interactionCreate", interaction => {
 	if (interaction.inGuild()) {
 		if (interaction.isCommand()) {
 			var command = commandDictionary[interaction.commandName];
-			if (!command.premiumCommand || !helpers.getPremiumUsers().includes(interaction.user.id)) {
+			if (!command.premiumCommand || !getPremiumUsers().includes(interaction.user.id)) {
 				if (!command.managerCommand || !interaction.member.manageable) {
 					command.execute(interaction);
 				} else {
