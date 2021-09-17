@@ -2,7 +2,8 @@ module.exports = class Adventure {
     constructor(idInput, seedInput, startIdInput, leaderInput) {
         this.id = idInput; // the id of the channel created for the adventure
         this.initialSeed = seedInput || Date.now().toString();
-        this.rnTable = linearRandomGenerator((seedInput ? unicodeSum(this.initialSeed) : this.initialSeed).substring(-5)).join("");
+        this.rnTable = linearRandomGenerator(processSeed(this.initialSeed, seedInput !== undefined)).join("");
+        console.log(this.rnTable);
         this.rnIndex = 0;
         this.startMessageId = startIdInput;
         this.delvers = [leaderInput];
@@ -15,8 +16,15 @@ module.exports = class Adventure {
     }
 }
 
-function unicodeSum(stringOfNumbers) {
-    return Array.from(stringOfNumbers).reduce((total, current) => total += current.charCodeAt(0), 0).toString();
+function processSeed(initialSeed, seedProvidedByUser) {
+    let lumber; // will become a table later
+    if (seedProvidedByUser) {
+        // Sum the unicode indices of the characters
+        lumber = Array.from(initialSeed).reduce((total, current) => total += current.charCodeAt(0), 0).toString();
+    } else {
+        lumber = initialSeed;
+    }
+    return lumber.substring(-5); // planks
 }
 
 // x0=seed; a=multiplier; b=increment; m=modulus; n=desired array length;
