@@ -2,10 +2,7 @@ module.exports = class Adventure {
     constructor(idInput, seedInput, startIdInput, leaderInput) {
         this.id = idInput; // the id of the channel created for the adventure
         this.initialSeed = seedInput || Date.now().toString();
-        this.rnTable = lastTwoOfUnicodeSum(this.initialSeed);
-        while (this.rnTable.length < 10) {
-            this.rnTable = this.rnTable.concat(lastTwoOfUnicodeSum(this.rnTable));
-        }
+        this.rnTable = linearRandomGenerator((seedInput ? unicodeSum(this.initialSeed) : this.initialSeed).substring(-5)).join("");
         this.rnIndex = 0;
         this.startMessageId = startIdInput;
         this.delvers = [leaderInput];
@@ -15,12 +12,19 @@ module.exports = class Adventure {
         this.gold = 100;
         this.battleRound;
         this.battleEnemies = [];
-        console.log(this.rnTable);
     }
 }
 
-function lastTwoOfUnicodeSum(stringOfNumbers) {
-    // Problem: 4th character is always 0
-    let sum = Array.from(stringOfNumbers).reduce((total, current) => total += current.charCodeAt(0), 0).toString();
-    return sum.at(-1) + sum.at(-2);
+function unicodeSum(stringOfNumbers) {
+    return Array.from(stringOfNumbers).reduce((total, current) => total += current.charCodeAt(0), 0).toString();
+}
+
+// x0=seed; a=multiplier; b=increment; m=modulus; n=desired array length;
+function linearRandomGenerator(x0) {
+    const results = [];
+    for (let i = 0; i < 1000000; i++) {
+        x0 = (5 * x0 + 7) % 100003;
+        results.push(x0);
+    }
+    return results;
 }
