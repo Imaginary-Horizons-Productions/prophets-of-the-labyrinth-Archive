@@ -3,7 +3,6 @@ module.exports = class Adventure {
         this.id = idInput; // the id of the channel created for the adventure
         this.initialSeed = seedInput || Date.now().toString();
         this.rnTable = linearRandomGenerator(processSeed(this.initialSeed, seedInput !== undefined)).join("");
-        console.log(this.rnTable);
         this.rnIndex = 0;
         this.startMessageId = startIdInput;
         this.delvers = [leaderInput];
