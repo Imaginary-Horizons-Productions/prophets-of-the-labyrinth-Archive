@@ -52,9 +52,10 @@ exports.nextRoom = function (adventure, channel) {
 		} else {
 			index = adventure.rnTable.slice(adventure.rnIndex, indexEnd);
 		}
-		let room = roomPool[index];
+		inded = index % roomPool.length; // Only necessary if pool has fewer than 9 objects
+		let room = roomPool[0];//let room = roomPool[index];
 		adventure.rnIndex = (adventure.rnIndex + 1) % adventure.rnTable.length;
-		if (adventure.type === "battle") {
+		if (room.type === "battle") {
 			exports.startBattle(adventure, room, channel);
 		}
 		let embed = new MessageEmbed()
@@ -67,29 +68,34 @@ exports.nextRoom = function (adventure, channel) {
 
 exports.startBattle = function (adventure, room, channel) {
 	adventure.battleRound = 0;
-	adventure.battleEnemies.concat(room.enemies);
+	adventure.battleEnemies = room.enemies;
 	exports.newRound(adventure, channel);
 }
 
-exports.newRound = function (adventure, channel) {
-	let embed = new MessageEmbed();
-	channel.send({ embeds: [embed], components: generateBattleMenu(adventure) });  //TODO how to clear previous round components?
+exports.newRound = function (adventure, channel, lastRoundMessage = null) {
+	adventure.battleRound++;
+	if (lastRoundMessage) {
+		lastRoundMessage.edit({ components: [] });
+	}
+	let embed = new MessageEmbed()
+		.setTitle(`Round ${adventure.battleRound}`);
+	channel.send({ embeds: [embed], components: exports.generateBattleMenu(adventure) });
 }
 
 exports.generateBattleMenu = function (adventure) {
 	let moveOptions = [];
-	for (i = 0; i < adventure.enemies.length; i++) {
+	for (i = 0; i < adventure.battleEnemies.length; i++) {
 		moveOptions.push({
-			label: adventure.enemies[i].name,
+			label: adventure.battleEnemies[i].name,
 			description: "",
 			value: `enemy-${i}`
 		})
 	}
 	for (i = 0; i < adventure.delvers.length; i++) {
 		moveOptions.push({
-			label: adventure.delvers[i].name,
+			label: adventure.delvers[i].characterName,
 			description: "",
-			value: `enemy-${i}`
+			value: `ally-${i}`
 		})
 	}
 	let battleMenu = [
@@ -107,32 +113,32 @@ exports.generateBattleMenu = function (adventure) {
 		new MessageActionRow()
 			.addComponents(
 				new MessageSelectMenu()
-					.setCustomId(`move`)
+					.setCustomId(`move-0`)
 					.setPlaceholder("Use your first move on...")
 					.addOptions(moveOptions)
 			),
 		new MessageActionRow()
 			.addComponents(
 				new MessageSelectMenu()
-					.setCustomId(`move`)
+					.setCustomId(`move-1`)
 					.setPlaceholder("Use your second move on...")
 					.addOptions(moveOptions)
 			),
 		new MessageActionRow()
 			.addComponents(
 				new MessageSelectMenu()
-					.setCustomId(`move`)
+					.setCustomId(`move-2`)
 					.setPlaceholder("Use your third move on...")
 					.addOptions(moveOptions)
 			),
 		new MessageActionRow()
 			.addComponents(
 				new MessageSelectMenu()
-					.setCustomId(`move`)
+					.setCustomId(`move-3`)
 					.setPlaceholder("Use your fourth move on...")
 					.addOptions(moveOptions)
 			)
-	]; // read, inspect self, moves
+	];
 
 	return battleMenu;
 }

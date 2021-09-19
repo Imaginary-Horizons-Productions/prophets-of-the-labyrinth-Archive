@@ -1,6 +1,6 @@
 const Enemy = require("../../Classes/Enemy.js");
 
-module.exports.enemy = new Enemy("name")
+module.exports = new Enemy("name")
     .setHp()
     .setSpeed()
     .addActions([]);
