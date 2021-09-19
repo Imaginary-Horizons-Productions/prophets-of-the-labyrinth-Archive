@@ -1,9 +1,9 @@
 const Command = require('./../../Classes/Command.js');
 const { MessageEmbed } = require("discord.js");
 
-var command = new Command("about", "Get Dungeon Tamer's description and contributors", false, false);
+module.exports = new Command("about", "Get Dungeon Tamer's description and contributors", false, false);
 
-command.execute = (interaction) => {
+module.exports.execute = (interaction) => {
     // Give the basic rules and information about the bot
     let embed = new MessageEmbed().setColor('6b81eb')
         .setTitle(`About Dungeon Tamers`)
@@ -21,5 +21,3 @@ command.execute = (interaction) => {
     interaction.reply({ embeds: [embed], ephemeral: true })
         .catch(console.error)
 }
-
-module.exports = command;

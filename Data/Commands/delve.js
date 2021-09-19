@@ -6,10 +6,10 @@ const { getPlayer } = require('../playerList.js');
 const { setAdventure } = require("../adventureList.js");
 const { getGuild } = require('../guildList.js');
 
-var command = new Command("delve", "Start a new adventure", false, false);
-command.data.addStringOption(option => option.setName("seed").setDescription("The value to base the random events of the run on").setRequired(false));
+module.exports = new Command("delve", "Start a new adventure", false, false);
+module.exports.data.addStringOption(option => option.setName("seed").setDescription("The value to base the random events of the run on").setRequired(false));
 
-command.execute = (interaction) => {
+module.exports.execute = (interaction) => {
 	// Start a new adventure
 	let guildProfile = getGuild(interaction.guild.id);
 	if (interaction.channel.id === guildProfile.centralId) {
@@ -63,5 +63,3 @@ command.execute = (interaction) => {
 			.catch(console.error);
 	}
 }
-
-module.exports = command;

@@ -2,9 +2,9 @@ const Button = require('../../Classes/Button.js');
 const { takeDamage } = require('../../helpers.js');
 const { getAdventure } = require('../adventureList.js');
 
-var button = new Button("getgoldonfire");
+module.exports = new Button("getgoldonfire");
 
-button.execute = (interaction, args) => {
+module.exports.execute = (interaction, args) => {
     // Gold +20, HP -10
     let adventure = getAdventure(interaction.channel.id);
     adventure.gold += 20;
@@ -16,5 +16,3 @@ button.execute = (interaction, args) => {
         interaction.channel.send(messagePayload);
     }
 }
-
-module.exports = button;

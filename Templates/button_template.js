@@ -1,9 +1,7 @@
 const Button = require('../../Classes/Button.js');
 
-var button = new Button("");
+module.exports = new Button("");
 
-button.execute = (interaction, args) => {
-    // Specs
+module.exports.execute = (interaction, args) => {
+	// Specs
 }
-
-module.exports = button;

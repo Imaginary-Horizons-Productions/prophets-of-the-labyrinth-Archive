@@ -1,9 +1,9 @@
 const { MessageActionRow, MessageButton } = require("discord.js");
 const Room = require("../../Classes/Room.js")
 
-var room = new Room("event", "Health Redistrabution", "description");
+module.exports = new Room("event", "Health Redistrabution", "description");
 
-room.components.push(new MessageActionRow()
+module.exports.components.push(new MessageActionRow()
     .addComponents(
         new MessageButton()
             .setCustomId("hpshare")
@@ -14,5 +14,3 @@ room.components.push(new MessageActionRow()
             .setLabel("Move on")
             .setStyle("SECONDARY")
     ))
-
-module.exports = room;

@@ -2,9 +2,9 @@ const Button = require('../../Classes/Button.js');
 const { getAdventure, setAdventure } = require("./../adventureList.js");
 const Delver = require('../../Classes/Delver.js');
 
-var button = new Button("join");
+module.exports = new Button("join");
 
-button.execute = (interaction, args) => {
+module.exports.execute = (interaction, args) => {
     // Give the basic rules and information about the bot
     interaction.guild.channels.fetch(args[1]).then(channel => {
         var adventure = getAdventure(channel.id);
@@ -24,5 +24,3 @@ button.execute = (interaction, args) => {
         }
     })
 }
-
-module.exports = button;

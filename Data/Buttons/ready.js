@@ -2,9 +2,9 @@ const { getAdventure, nextRoom } = require('../adventureList.js');
 const Button = require('../../Classes/Button.js');
 const { getGuild } = require('../guildList.js');
 
-var button = new Button("ready");
+module.exports = new Button("ready");
 
-button.execute = (interaction, args) => {
+module.exports.execute = (interaction, args) => {
 	// Start an adventure if clicked by adventure leader
 	if (interaction.user.id === args[2]) {
 		let adventure = getAdventure(args[1]);
@@ -20,5 +20,3 @@ button.execute = (interaction, args) => {
 		interaction.reply(nextRoom(adventure, interaction.channel));
 	}
 }
-
-module.exports = button;
