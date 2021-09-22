@@ -1,6 +1,7 @@
 const { getAdventure, nextRoom } = require('../adventureList.js');
 const Button = require('../../Classes/Button.js');
 const { getGuild } = require('../guildList.js');
+const { weaponDictionary } = require("./../Weapons/_weaponDictionary.js");
 
 module.exports = new Button("ready");
 
@@ -17,8 +18,10 @@ module.exports.execute = (interaction, args) => {
 		interaction.message.edit({ components: [] })
 			.catch(console.error);
 		adventure.lives = adventure.delvers.length + 1;
-		interaction.reply(nextRoom(adventure, interaction.channel)).then(message => {
-			adventure.lastComponentMessageId = message.id;
-		});
+		adventure.delvers.forEach(delver => { //TODO move to select to generate delvers based on character picks
+			delver.weapons.push(weaponDictionary["dagger"]);
+		})
+		interaction.reply({ content: `The adventure has begun!.`, ephemeral: true });
+		nextRoom(adventure, interaction.channel);
 	}
 }

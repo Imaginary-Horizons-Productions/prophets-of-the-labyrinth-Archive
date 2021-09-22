@@ -36,15 +36,3 @@ function linearRandomGenerator(seed) {
 	}
 	return results;
 }
-
-module.exports.prototype.nextRandomNumber = (poolSize) => {
-	let index;
-	let indexEnd = this.rnIndex + poolSize.toString().length;
-	if (indexEnd < this.rnIndex) {
-		index = this.rnTable.slice(this.rnIndex) + this.rnTable.slice(0, indexEnd);
-	} else {
-		index = this.rnTable.slice(this.rnIndex, indexEnd);
-	}
-	this.rnIndex = (this.rnIndex + 1) % this.rnTable.length;
-	return index % poolSize;
-}

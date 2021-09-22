@@ -1,5 +1,4 @@
 const GuildProfile = require("./Classes/GuildProfile.js")
-const { getAdventure, completeAdventure } = require("./Data/adventureList.js")
 const { saveGuild, getGuild } = require("./Data/guildList.js")
 const { getPlayer, setPlayer } = require("./Data/playerList.js")
 
