@@ -131,7 +131,6 @@ exports.newRound = function (adventure, channel, embed) {
 				adventure.battleEnemies = [];
 				exports.nextRoom(adventure, channel)
 			});
-			//TODO return
 		} else {
 			// Increment round and clear last round's components
 			adventure.battleRound++;
@@ -232,8 +231,8 @@ exports.checkNextRound = function (adventure, channel) {
 	}
 }
 
-exports.takeDamage = function (delver, channel, damage) {
-	delver.hp -= damage;
+exports.takeDamage = function (delver, channel, damage) { //TODO refactor to return damage text (including blocked damage)
+	delver.hp -= damage; //TODO generalize to include enemies
 	if (delver.hp <= 0) {
 		delver.hp = delver.maxHp;
 		let adventure = exports.getAdventure(channel.id);
@@ -244,6 +243,13 @@ exports.takeDamage = function (delver, channel, damage) {
 		}
 	}
 	return;
+}
+
+exports.gainHealth = function (delver, healing) { //TODO refactor to return damage text
+	delver.hp += healing; //TODO generalize to include enemies
+	if (delver.hp > delver.maxHp) {
+		delver.hp = delver.maxHp;
+	}
 }
 
 //{channelId: guildId} A list of adventure channels that restarting the bot interrupted deleting

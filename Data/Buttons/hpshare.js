@@ -1,6 +1,5 @@
 const Button = require('../../Classes/Button.js');
-const { gainHealth } = require('../../helpers.js');
-const { getAdventure, nextRoom, takeDamage } = require('../adventureList.js');
+const { getAdventure, nextRoom, takeDamage, gainHealth } = require('../adventureList.js');
 
 module.exports = new Button("hpshare");
 

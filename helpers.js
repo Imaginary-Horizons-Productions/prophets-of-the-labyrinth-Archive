@@ -15,10 +15,3 @@ exports.ensuredPathSave = function (path, fileName, data) {
 		}
 	})
 }
-
-exports.gainHealth = function (delver, healing) {
-	delver.hp += healing;
-	if (delver.hp > delver.maxHp) {
-		delver.hp = delver.maxHp;
-	}
-}
