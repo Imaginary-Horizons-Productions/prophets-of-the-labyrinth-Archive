@@ -52,8 +52,8 @@ client.on("ready", () => {
 		ensuredPathSave("./Saves", "completedAdventures.json", "{}");
 	})
 
-	//TODO upload slash commands gloabally
-	//TODO post version notes
+	//TODO #2 upload slash commands gloabally
+	//TODO #3 post version notes
 })
 
 client.on("interactionCreate", interaction => {

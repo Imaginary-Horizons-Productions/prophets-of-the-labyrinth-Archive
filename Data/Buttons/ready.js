@@ -18,7 +18,7 @@ module.exports.execute = (interaction, args) => {
 		interaction.message.edit({ components: [] })
 			.catch(console.error);
 		adventure.lives = adventure.delvers.length + 1;
-		adventure.delvers.forEach(delver => { //TODO move to select to generate delvers based on character picks
+		adventure.delvers.forEach(delver => { //TODO #15 move to select to generate delvers based on character picks
 			delver.weapons.push(weaponDictionary["dagger"]);
 		})
 		interaction.reply({ content: `The adventure has begun!.`, ephemeral: true });

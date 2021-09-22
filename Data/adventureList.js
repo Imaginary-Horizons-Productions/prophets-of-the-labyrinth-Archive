@@ -10,7 +10,7 @@ var filePath = "./Saves/adventures.json";
 var requirePath = "./../Saves/adventures.json";
 var adventureDictionary = new Map();
 
-exports.loadAdventures = function () {
+exports.loadAdventures = function () { //TODO #18 generalize file loading
 	return new Promise((resolve, reject) => {
 		if (fs.existsSync(filePath)) {
 			var adventures = require(requirePath);
@@ -103,19 +103,19 @@ exports.newRound = function (adventure, channel, embed) {
 			let target;
 			if (move.targetTeam === "ally") {
 				target = adventure.delvers[move.targetIndex];
-				lastRoundText += `${user.name} dealt ${move.damage} damage to ${target.name}.\n`; //TODO include weapon name
+				lastRoundText += `${user.name} dealt ${move.damage} damage to ${target.name}.\n`; //TODO #4 include weapon name
 				exports.takeDamage(target, channel, move.damage);
 			} else {
 				target = adventure.battleEnemies[move.targetIndex];
 				target.hp -= move.damage;
-				lastRoundText += `${user.name} dealt ${move.damage} damage to ${target.name}.\n`; //TODO include weapon name
+				lastRoundText += `${user.name} dealt ${move.damage} damage to ${target.name}.\n`; //TODO #5 merge enemy/ally path in combat descriptions
 				if (target.hp <= 0) {
 					target.hp = 0;
 					lastRoundText += `The ${target.name} was knocked out!\n`;
 				}
 			}
 
-			//TODO decrement weapon durability and check for breakage
+			//TODO #6 decrement weapon durability and check for breakage
 		}
 	})
 	adventure.battleMoves = [];
@@ -141,15 +141,15 @@ exports.newRound = function (adventure, channel, embed) {
 			}
 
 			// Next Round's Prerolls
-			//TODO crits
+			//TODO #7 crits
 			for (let i = 0; i < adventure.battleEnemies.length; i++) {
 				let enemy = adventure.battleEnemies[i];
-				let action = enemy.actions[0]; //TODO move selection AI (remember to include weights)
+				let action = enemy.actions[0]; //TODO #8 move selection AI (remember to include weights)
 				adventure.battleMoves.push(new Move()
 					.setSpeed(enemy.speed)
 					.setUser("enemy", i)
-					.setTarget("player", 0) //TODO targeting AI (remember to avoid KO'd delvers)
-					.setDamage(action.damage)); //TODO enemy action effects
+					.setTarget("player", 0) //TODO #9 targeting AI (remember to avoid KO'd delvers)
+					.setDamage(action.damage)); //TODO #10 enemy action effects
 			}
 			if (lastRoundText !== "") {
 				embed.setDescription(lastRoundText);
@@ -231,8 +231,8 @@ exports.checkNextRound = function (adventure, channel) {
 	}
 }
 
-exports.takeDamage = function (delver, channel, damage) { //TODO refactor to return damage text (including blocked damage)
-	delver.hp -= damage; //TODO generalize to include enemies
+exports.takeDamage = function (delver, channel, damage) { //TODO #11 refactor to return damage text (including blocked damage)
+	delver.hp -= damage; //TODO #12 generalize to include enemies
 	if (delver.hp <= 0) {
 		delver.hp = delver.maxHp;
 		let adventure = exports.getAdventure(channel.id);
@@ -245,8 +245,8 @@ exports.takeDamage = function (delver, channel, damage) { //TODO refactor to ret
 	return;
 }
 
-exports.gainHealth = function (delver, healing) { //TODO refactor to return damage text
-	delver.hp += healing; //TODO generalize to include enemies
+exports.gainHealth = function (delver, healing) { //TODO #13 refactor to return damage text
+	delver.hp += healing; //TODO #14 generalize to include enemies
 	if (delver.hp > delver.maxHp) {
 		delver.hp = delver.maxHp;
 	}
