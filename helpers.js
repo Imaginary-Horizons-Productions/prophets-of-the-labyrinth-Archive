@@ -5,7 +5,7 @@ const { getPlayer, setPlayer } = require("./Data/playerList.js")
 
 exports.patrons = require("./Config/patrons.json");
 exports.getPremiumUsers = function () {
-    return exports.patrons.cartographers.concat(exports.patrons.archivists).concat(exports.patrons.grandArchivists).concat(exports.patrons.developers).concat(exports.patrons.giftPremium);
+    return exports.patrons.cartographers.concat(exports.patrons.archivists, exports.patrons.grandArchivists, exports.patrons.developers, exports.patrons.giftPremium);
 }
 
 exports.guildSetup = function (guild) {
@@ -27,20 +27,6 @@ exports.guildSetup = function (guild) {
             saveGuild(new GuildProfile(guild.id, category.id, channel.id));
         })
     })
-}
-
-exports.takeDamage = function (delver, channel, damage) {
-    delver.hp -= damage;
-    if (delver.hp <= 0) {
-        delver.hp = delver.maxHp;
-        let adventure = getAdventure(channel.id);
-        adventure.lives -= 1;
-        channel.send(`<@${delver.id}> has died and been revived. ${adventure.lives} lives remain.`)
-        if (adventure.lives <= 0) {
-            return completeAdventure(adventure, channel, "defeat");
-        }
-    }
-    return;
 }
 
 exports.gainHealth = function (delver, healing) {

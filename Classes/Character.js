@@ -1,6 +1,6 @@
 module.exports = class Character {
     constructor() {
-        this.signatureMove;
+        this.signatureWeapon;
         this.element;
         this.read;
     }

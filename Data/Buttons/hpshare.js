@@ -1,5 +1,5 @@
 const Button = require('../../Classes/Button.js');
-const { takeDamage, gainHealth } = require('../../helpers.js');
+const { gainHealth } = require('../../helpers.js');
 const { nextRoom } = require('../adventureList.js');
 
 module.exports = new Button("hpshare");
@@ -15,7 +15,7 @@ module.exports.execute = (interaction, args) => {
     interaction.reply(`${interaction.user} loses 10 hp. Everyone else gains 5 hp.`);
     interaction.message.edit({ components: [] })
         .catch(console.error);
-    let messagePayload = takeDamage(adventure.delvers.find(delver => delver.id == interaction.user.id), interaction.channel, 10);
+    let messagePayload = adventure.delvers.find(delver => delver.id == interaction.user.id).takeDamage(interaction.channel, 10);
     if (messagePayload) {
         interaction.channel.send(messagePayload);
     } else {

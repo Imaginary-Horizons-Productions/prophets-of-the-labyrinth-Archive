@@ -1,0 +1,63 @@
+Discord Bot Game
+Gatcha game - collect and power up characters to send into dungeons with friends
+
+Fun Asynchronous Coop Repeatable Gameplay
+- allocating buffs (Neow in StSwF)
+- assessing risk (StSwF routes)
+
+== Use private information to prevent quarterbacking ==
+Info types:
+- critical hit prediction
+- enemy hp
+- stagger
+- enemy targeting
+- elemental weaknesses?
+
+== Elements ==
+Elements are strong against 1/3, weak against 1/3, and neutral against 1/3 of other elements
+
+light > wind, water
+light < earth, fire
+light = light, dark
+
+wind > water, dark
+wind < earth, light
+wind = wind, fire
+
+water > dark, fire
+water < wind, light
+water = earth, water
+
+dark > fire, earth
+dark < wind, water
+dark = dark, light
+
+fire > earth, light
+fire < dark, water
+fire = fire, wind
+
+earth > light, wind
+earth < fire, dark
+earth = earth, water
+
+== Deployment ==
+players deploy a pair of characters into a dungeon, one leading at a time. characters can switch to provide relief and gain advantage (elemental and otherwise)
+With characters having 2 elements, limiting deployments to 2 characers per player prevents overcoverage of elements
+Characters can be deployed at any level below the highest level reached to increase drop rates
+
+== In dungeon rewards ==
+- move changes
+- move upgrades
+- temporary artifacts
+- in-dungeon currency
+=== Purchaseable Rewards ===
+- moves
+- upgrades
+- consumables
+- scouting (who's the boss?)
+- move refills
+
+== Permanent Rewards ==
+- score
+- artifacts
+- character rolls

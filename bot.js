@@ -57,8 +57,10 @@ client.on("interactionCreate", interaction => {
 			var args = interaction.customId.split("-");
 			buttonDictionary[args[0]].execute(interaction, args);
 		} else if (interaction.isSelectMenu()) {
-			//TODO value parsing
-			selectDictionary[interaction.customId].execute(interaction);
+			let args = interaction.customId.split("-");
+			let command = args.shift();
+			args = args.concat(interaction.values[0].split("-"));
+			selectDictionary[command].execute(interaction, args);
 		}
 	} else {
 		interaction.reply({ content: "Direct message commands are not supported at this time.", ephemeral: true })

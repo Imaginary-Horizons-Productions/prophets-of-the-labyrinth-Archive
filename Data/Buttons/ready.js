@@ -17,6 +17,8 @@ module.exports.execute = (interaction, args) => {
 		interaction.message.edit({ components: [] })
 			.catch(console.error);
 		adventure.lives = adventure.delvers.length + 1;
-		interaction.reply(nextRoom(adventure, interaction.channel));
+		interaction.reply(nextRoom(adventure, interaction.channel)).then(message => {
+			adventure.lastComponentMessageId = message.id;
+		});
 	}
 }

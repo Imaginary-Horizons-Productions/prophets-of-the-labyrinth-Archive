@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-var selectWhitelist = [];
+var selectWhitelist = ["weapon.js"];
 const selectFiles = fs.readdirSync('./Data/Selects').filter(file => file.endsWith('.js') && selectWhitelist.includes(file));
 exports.selectDictionary = {};
 
