@@ -10,7 +10,7 @@ module.exports.execute = (interaction) => {
 	let player = getPlayer(interaction.user.id, interaction.guild.id);
 	let embed = new MessageEmbed()
 		.setTitle("Player Stats")
-		.setDescription(`Total Score: ${Object.values(player.score).reduce((total, current) => total += current)}`)
+		.setDescription(`Total Score: ${Object.values(player.scores).reduce((total, current) => total += current)}`)
 		.setFooter("Imaginary Horizons Productions", "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png");
 	interaction.reply({ embeds: [embed], ephemeral: true })
 		.catch(console.error);

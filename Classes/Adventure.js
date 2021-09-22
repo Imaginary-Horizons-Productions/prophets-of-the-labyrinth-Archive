@@ -30,7 +30,7 @@ function processSeed(initialSeed, seedProvidedByUser) {
 
 function linearRandomGenerator(seed) {
 	const results = [];
-	for (let i = 0; i < 1000000; i++) {
+	for (let i = 0; i < 10000; i++) {
 		seed = (5 * seed + 7) % 100003;
 		results.push(seed);
 	}

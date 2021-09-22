@@ -2,8 +2,7 @@
 module.exports = class Player {
     constructor(idInput) {
         this.id = idInput;
-        this.guilds = new Map();
-        this.score = {};
+        this.scores = {};
         this.artifacts = [];
         this.characters = [];
     }

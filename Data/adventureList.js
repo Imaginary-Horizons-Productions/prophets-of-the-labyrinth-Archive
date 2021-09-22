@@ -4,6 +4,7 @@ const { roomDictionary } = require("./Rooms/_roomDictionary.js");
 const { MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu } = require("discord.js");
 const { enemyDictionary } = require("./Enemies/_enemyDictionary.js");
 const Move = require("./../Classes/Move.js");
+const { ensuredPathSave } = require("../helpers.js");
 
 var filePath = "./Saves/adventures.json";
 var requirePath = "./../Saves/adventures.json";
@@ -14,8 +15,6 @@ exports.loadAdventures = function () {
 		if (fs.existsSync(filePath)) {
 			var adventures = require(requirePath);
 			adventures.forEach(adventure => {
-				//TODO cast as Adventure class
-				//TODO cast adventure.delvers as Delver class
 				adventureDictionary.set(adventure.id, adventure);
 			})
 			resolve();
@@ -247,40 +246,42 @@ exports.takeDamage = function (delver, channel, damage) {
 	return;
 }
 
+//{channelId: guildId} A list of adventure channels that restarting the bot interrupted deleting
+let completedAdventures = {};
+
 exports.completeAdventure = function (adventure, channel, result) {
-	var baseScore;
+	var baseScore = adventure.depth;
 	switch (result) {
 		case "success":
-			baseScore = adventure.accumulatedScore;
+			baseScore += adventure.accumulatedScore;
 			break;
 		case "defeat":
-			baseScore = Math.floor(adventure.accumulatedScore / 2);
+			baseScore += Math.floor(adventure.accumulatedScore / 2);
 			break;
 	}
 
 	adventure.delvers.forEach(delver => {
 		let player = getPlayer(delver.id, channel.guild.id);
-		if (player.score[channel.guild.id]) {
-			player.score[channel.guild.id] += baseScore;
+		let previousScore = player.scores[channel.guild.id];
+		if (previousScore) {
+			player.scores[channel.guild.id] += baseScore;
 		} else {
-			player.score[channel.guild.id] = baseScore;
+			player.scores[channel.guild.id] = baseScore;
 		}
 		setPlayer(player);
 	})
 	adventureDictionary.delete(channel.id);
-	setTimeout(() => { //TODO set to clear on startup if interrupted
+	exports.saveAdventures();
+	completedAdventures[channel.id] = channel.guild.id;
+	ensuredPathSave("./Saves", "completedAdventures.json", JSON.stringify(completedAdventures));
+	setTimeout(() => {
 		channel.delete("Adventure complete!");
+		delete completedAdventures[channel.id];
+		ensuredPathSave("./Saves", "completedAdventures.json", JSON.stringify(completedAdventures));
 	}, 300000);
 	channel.send(`The adventure has been completed! Delvers have earned ${baseScore} score (times their personal multiplier). This channel will be cleaned up in 5 minutes.`);
 }
 
 exports.saveAdventures = function () {
-	if (!fs.existsSync("./Saves")) {
-		fs.mkdirSync("./Saves", { recursive: true });
-	}
-	fs.writeFile(filePath, JSON.stringify(Array.from((adventureDictionary.values()))), "utf8", error => {
-		if (error) {
-			console.error(error);
-		}
-	})
+	ensuredPathSave("./Saves", "adventures.json", JSON.stringify(Array.from((adventureDictionary.values()))));
 }

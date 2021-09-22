@@ -1,11 +1,12 @@
 //#region Imports
 const { Client } = require("discord.js");
+const fs = require("fs");
 const versionData = require('./Config/versionData.json');
 const { commandDictionary, slashData } = require(`./Data/Commands/_commandDictionary.js`);
 const { selectDictionary } = require("./Data/Selects/_selectDictionary.js");
 const { buttonDictionary } = require("./Data/Buttons/_buttonDictionary.js");
 const { loadPlayers } = require("./Data/playerList.js");
-const { guildSetup, getPremiumUsers } = require("./helpers.js");
+const { guildSetup, getPremiumUsers, ensuredPathSave } = require("./helpers.js");
 const { loadGuilds } = require("./Data/guildList.js");
 const { loadAdventures } = require("./Data/adventureList.js");
 //#endregion
@@ -34,6 +35,23 @@ loadGuilds().then(() => {
 //#region Event Handlers
 client.on("ready", () => {
 	console.log(`Connected as ${client.user.tag}`);
+	// Delete Completed Adventure Channels
+	new Promise((resolve, reject) => {
+		if (fs.existsSync("./Saves/completedAdventures.json")) {
+			var completedAdventures = require("./Saves/completedAdventures.json");
+			Object.keys(completedAdventures).forEach(channelId => {
+				client.guilds.fetch(completedAdventures[channelId]).then(guild => {
+					guild.channels.fetch(channelId).then(channel => {
+						channel.delete("adventure completed");
+					})
+				})
+			})
+		}
+		resolve();
+	}).then(() => {
+		ensuredPathSave("./Saves", "completedAdventures.json", "{}");
+	})
+
 	//TODO upload slash commands gloabally
 	//TODO post version notes
 })

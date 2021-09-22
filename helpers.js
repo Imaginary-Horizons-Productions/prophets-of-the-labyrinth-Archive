@@ -1,36 +1,24 @@
-const GuildProfile = require("./Classes/GuildProfile.js")
-const { saveGuild, getGuild } = require("./Data/guildList.js")
-const { getPlayer, setPlayer } = require("./Data/playerList.js")
+const fs = require("fs");
 
 exports.patrons = require("./Config/patrons.json");
 exports.getPremiumUsers = function () {
-    return exports.patrons.cartographers.concat(exports.patrons.archivists, exports.patrons.grandArchivists, exports.patrons.developers, exports.patrons.giftPremium);
+	return exports.patrons.cartographers.concat(exports.patrons.archivists, exports.patrons.grandArchivists, exports.patrons.developers, exports.patrons.giftPremium);
 }
 
-exports.guildSetup = function (guild) {
-    guild.channels.create("Dungeon Tamers", {
-        type: "GUILD_CATEGORY"
-    }).then(category => {
-        guild.channels.create("dungeon-tamers-central", {
-            type: "GUILD_TEXT",
-            parent: category
-        }).then(channel => {
-            var guildProfile = getGuild(guild.id);
-            if (guildProfile) {
-                guildProfile.userIds.forEach(playerId => {
-                    var player = getPlayer(playerId, guild.id);
-                    player.score[guild.id] = 0;
-                    setPlayer(player);
-                });
-            }
-            saveGuild(new GuildProfile(guild.id, category.id, channel.id));
-        })
-    })
+exports.ensuredPathSave = function (path, fileName, data) {
+	if (!fs.existsSync(path)) {
+		fs.mkdirSync(path, { recursive: true });
+	}
+	fs.writeFile(path + "/" + fileName, data, "utf8", error => {
+		if (error) {
+			console.error(error);
+		}
+	})
 }
 
 exports.gainHealth = function (delver, healing) {
-    delver.hp += healing;
-    if (delver.hp > delver.maxHp) {
-        delver.hp = delver.maxHp;
-    }
+	delver.hp += healing;
+	if (delver.hp > delver.maxHp) {
+		delver.hp = delver.maxHp;
+	}
 }
