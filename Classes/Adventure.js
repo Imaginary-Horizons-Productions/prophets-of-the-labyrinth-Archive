@@ -1,13 +1,14 @@
 module.exports = class Adventure {
-	constructor(idInput, seedInput, startIdInput, leaderInput) {
-		this.id = idInput; // the id of the channel created for the adventure
+	constructor(seedInput) {
+		this.id; // the id of the channel created for the adventure
+		this.name;
 		this.initialSeed = seedInput || Date.now().toString();
 		this.rnTable = linearRandomGenerator(processSeed(this.initialSeed, seedInput !== undefined)).join("");
 		this.rnIndex = 0;
 		this.rnIndexBattle = 0;
-        this.startMessageId = startIdInput;
+        this.startMessageId;
 		this.lastComponentMessageId = "";
-		this.delvers = [leaderInput];
+		this.delvers = [];
 		this.accumulatedScore = 0;
 		this.depth = 0;
 		this.lives = 1;
@@ -15,6 +16,26 @@ module.exports = class Adventure {
 		this.battleRound;
 		this.battleEnemies = [];
 		this.battleMoves = [];
+	}
+
+	setName (nameInput) {
+		this.name = nameInput;
+		return this;
+	}
+
+	setId (textChannelId) {
+		this.id = textChannelId;
+		return this;
+	}
+
+	setStartMessageID(id) {
+		this.startMessageId = id;
+		return this;
+	}
+
+	setLeader(delver) {
+		this.delvers.push(delver);
+		return this;
 	}
 }
 
