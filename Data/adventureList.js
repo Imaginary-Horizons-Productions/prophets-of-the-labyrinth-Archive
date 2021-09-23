@@ -116,6 +116,7 @@ exports.nextRoom = function (adventure, channel) {
 exports.newRound = function (adventure, channel, embed) {
 	// Resolve round's moves
 	let lastRoundText = "";
+	//TODO #22 sort battleMoves by speed
 	adventure.battleMoves.forEach(move => {
 		let userTeam = move.userTeam === "ally" ? adventure.delvers : adventure.battleEnemies;
 		let user = userTeam[move.userIndex];
@@ -123,12 +124,12 @@ exports.newRound = function (adventure, channel, embed) {
 			let target;
 			if (move.targetTeam === "ally") {
 				target = adventure.delvers[move.targetIndex];
-				lastRoundText += `${user.name} dealt ${move.damage} damage to ${target.name}.\n`; //TODO #4 include weapon name
+				lastRoundText += `${user.name} dealt ${move.damage} damage to ${target.name}.\n`;
 				exports.takeDamage(target, channel, move.damage);
 			} else {
 				target = adventure.battleEnemies[move.targetIndex];
 				target.hp -= move.damage;
-				lastRoundText += `${user.name} dealt ${move.damage} damage to ${target.name}.\n`; //TODO #5 merge enemy/ally path in combat descriptions
+				lastRoundText += `${user.name} dealt ${move.damage} damage to ${target.name} with ${move.weaponName}.\n`; //TODO #5 merge enemy/ally path in combat descriptions
 				if (target.hp <= 0) {
 					target.hp = 0;
 					lastRoundText += `The ${target.name} was knocked out!\n`;
@@ -168,7 +169,7 @@ exports.newRound = function (adventure, channel, embed) {
 				adventure.battleMoves.push(new Move()
 					.setSpeed(enemy.speed)
 					.setUser("enemy", i)
-					.setTarget("player", exports.nextRandomNumber(adventure, adventure.delvers.length, "battle")) //TODO #19 nonrandom AI
+					.setTarget("ally", exports.nextRandomNumber(adventure, adventure.delvers.length, "battle")) //TODO #19 nonrandom AI
 					.setDamage(action.damage)); //TODO #10 enemy action effects
 			}
 			if (lastRoundText !== "") {

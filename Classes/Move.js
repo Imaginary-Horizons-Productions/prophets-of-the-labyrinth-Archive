@@ -1,6 +1,7 @@
 module.exports = class Move {
     constructor() {
         this.speed = 0;
+		this.weaponName = "";
         this.userTeam = "";
         this.userIndex = "";
         this.targetTeam = "";
@@ -13,6 +14,11 @@ module.exports = class Move {
         this.speed = number;
         return this;
     }
+
+	setWeaponName(weaponNameInput) {
+		this.weaponName = weaponNameInput;
+		return this;
+	}
 
     setUser(team, index) {
         this.userTeam = team;
