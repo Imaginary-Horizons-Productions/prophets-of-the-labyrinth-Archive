@@ -41,16 +41,26 @@ exports.setAdventure = function (adventure) {
 	exports.saveAdventures()
 }
 
-exports.nextRandomNumber = function (adventure, poolSize) {
+exports.nextRandomNumber = function (adventure, poolSize, branch) {
+	let generated;
 	let index;
-	let indexEnd = adventure.rnIndex + poolSize.toString().length;
-	if (indexEnd < adventure.rnIndex) {
-		index = adventure.rnTable.slice(adventure.rnIndex) + adventure.rnTable.slice(0, indexEnd);
-	} else {
-		index = adventure.rnTable.slice(adventure.rnIndex, indexEnd);
+	switch (branch) {
+		case "general":
+			index = adventure.rnIndex;
+			adventure.rnIndex = (index + 1) % adventure.rnTable.length;
+			break;
+		case "battle":
+			index = adventure.rnIndexBattle;
+			adventure.rnIndexBattle = (index + 1) % adventure.rnTable.length;
+			break;
 	}
-	adventure.rnIndex = (adventure.rnIndex + 1) % adventure.rnTable.length;
-	return index % poolSize;
+	let indexEnd = index + poolSize.toString().length;
+	if (indexEnd < index) {
+		generated = adventure.rnTable.slice(index) + adventure.rnTable.slice(0, indexEnd);
+	} else {
+		generated = adventure.rnTable.slice(index, indexEnd);
+	}
+	return generated % poolSize;
 }
 
 exports.nextRoom = function (adventure, channel) {
@@ -65,7 +75,7 @@ exports.nextRoom = function (adventure, channel) {
 		exports.completeAdventure(adventure, channel, "success");
 	} else {
 		let roomPool = Object.values(roomDictionary);
-		let room = roomPool[exports.nextRandomNumber(adventure, roomPool.length)];
+		let room = roomPool[exports.nextRandomNumber(adventure, roomPool.length, "general")];
 		let embed = new MessageEmbed()
 			.setAuthor(`Entering Room #${adventure.depth}`, channel.client.user.displayAvatarURL())
 			.setTitle(room.title)
@@ -148,7 +158,7 @@ exports.newRound = function (adventure, channel, embed) {
 				adventure.battleMoves.push(new Move()
 					.setSpeed(enemy.speed)
 					.setUser("enemy", i)
-					.setTarget("player", 0) //TODO #9 targeting AI (remember to avoid KO'd delvers)
+					.setTarget("player", exports.nextRandomNumber(adventure, adventure.delvers.length, "battle")) //TODO #19 nonrandom AI
 					.setDamage(action.damage)); //TODO #10 enemy action effects
 			}
 			if (lastRoundText !== "") {

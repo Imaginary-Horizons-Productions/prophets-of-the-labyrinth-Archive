@@ -4,6 +4,7 @@ module.exports = class Adventure {
 		this.initialSeed = seedInput || Date.now().toString();
 		this.rnTable = linearRandomGenerator(processSeed(this.initialSeed, seedInput !== undefined)).join("");
 		this.rnIndex = 0;
+		this.rnIndexBattle = 0;
         this.startMessageId = startIdInput;
 		this.lastComponentMessageId = "";
 		this.delvers = [leaderInput];
