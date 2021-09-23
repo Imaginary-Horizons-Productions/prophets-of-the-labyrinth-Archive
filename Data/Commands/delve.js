@@ -37,6 +37,7 @@ module.exports.execute = (interaction) => {
 			}).then(channel => { //TODO #17 adventure name generator
 				let embed = new MessageEmbed()
 					.setDescription("A new adventure is starting!")
+					.addField("1 Party Member", `Leader: ${interaction.member}`)
 					.setFooter("Imaginary Horizons Productions", "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png")
 				let join = new MessageActionRow()
 					.addComponents(

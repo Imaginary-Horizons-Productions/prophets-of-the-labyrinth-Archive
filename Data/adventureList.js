@@ -41,6 +41,16 @@ exports.setAdventure = function (adventure) {
 	exports.saveAdventures()
 }
 
+exports.updateStartingMessage = function (startMessage, adventure) {
+	let embed = startMessage.embeds[0];
+	let partyList = `Leader: <@${adventure.delvers[0].id}>`;
+	for (let i = 1; i < adventure.delvers.length; i++) {
+		partyList += `\n <@${adventure.delvers[i].id}>`;
+	}
+	embed.spliceFields(0, 1, { name: `${adventure.delvers.length} Party Member${adventure.delvers.length == 1 ? "" : "s"}`, value: partyList });
+	startMessage.edit({ embeds: [embed] });
+}
+
 exports.nextRandomNumber = function (adventure, poolSize, branch) {
 	let generated;
 	let index;
@@ -163,6 +173,9 @@ exports.newRound = function (adventure, channel, embed) {
 			}
 			if (lastRoundText !== "") {
 				embed.setDescription(lastRoundText);
+			}
+			if (!embed.title) {
+				embed.setTitle("Combat");
 			}
 			embed.setFooter(`Round ${adventure.battleRound}`);
 			channel.send({ embeds: [embed], components: exports.generateBattleMenu(adventure) }).then(message => {
