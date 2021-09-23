@@ -1,6 +1,6 @@
 const Move = require('../../Classes/Move');
 const Select = require('../../Classes/Select.js');
-const { getAdventure, saveAdventures, checkNextRound } = require('../adventureList');
+const { getAdventure, saveAdventures, checkNextRound, updateRoundMessage } = require('../adventureList');
 
 module.exports = new Select("weapon");
 
@@ -22,6 +22,7 @@ module.exports.execute = (interaction, args) => {
 		saveAdventures();
 		interaction.reply({ content: `Your plan to use **${weapon.name}** on **${adventure.battleEnemies[targetIndex].name}** next round has been recorded.`, ephemeral: true })
 			.catch(console.error);
+		updateRoundMessage(interaction.message, adventure);
 		checkNextRound(adventure, interaction.channel);
 	} else {
 		interaction.reply({ content: `You don't have a weapon in slot ${args[0] + 1}`, ephemeral: true })

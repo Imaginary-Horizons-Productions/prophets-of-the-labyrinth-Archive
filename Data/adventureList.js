@@ -177,12 +177,28 @@ exports.newRound = function (adventure, channel, embed) {
 			if (!embed.title) {
 				embed.setTitle("Combat");
 			}
-			embed.setFooter(`Round ${adventure.battleRound}`);
+			embed.addField(`0/${adventure.delvers.length} Moves Readied`, "Ready party members will be listed here")
+				.setFooter(`Round ${adventure.battleRound}`);
 			channel.send({ embeds: [embed], components: exports.generateBattleMenu(adventure) }).then(message => {
 				adventure.lastComponentMessageId = message.id;
 			});
 		}
 	}
+}
+
+exports.updateRoundMessage = function (roundMessage, adventure) {
+	let embed = roundMessage.embeds[0];
+	let readyList = "";
+	for (var move of adventure.battleMoves) {
+		if (move.userTeam === "ally") {
+			readyList += `\n<@${adventure.delvers[move.userIndex].id}>`;
+		}
+	}
+	if (readyList === "") {
+		readyList = "Ready party members will be listed here";
+	}
+	embed.spliceFields(0, 1, { name: `${adventure.battleMoves.length - adventure.battleEnemies.length}/${adventure.delvers.length} Moves Readied`, value: readyList });
+	roundMessage.edit({ embeds: [embed] });
 }
 
 exports.generateBattleMenu = function (adventure) {
