@@ -114,9 +114,13 @@ exports.nextRoom = function (adventure, channel) {
 }
 
 exports.newRound = function (adventure, channel, embed) {
+	// Sort Soves by Speed
+	adventure.battleMoves.sort((first, second) => {
+		return second.speed - first.speed;
+	})
+
 	// Resolve round's moves
 	let lastRoundText = "";
-	//TODO #22 sort battleMoves by speed
 	adventure.battleMoves.forEach(move => {
 		let userTeam = move.userTeam === "ally" ? adventure.delvers : adventure.battleEnemies;
 		let user = userTeam[move.userIndex];
