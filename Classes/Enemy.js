@@ -1,7 +1,7 @@
 // Represents an enemy for players to fight
 module.exports = class Enemy {
     constructor(nameInput) {
-        this.name = nameInput;
+        this.name = nameInput; //TODO #25 unique-ify enemy names
         this.hp = 0;
         this.speed = 0;
         this.element = "";

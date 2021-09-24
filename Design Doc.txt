@@ -5,14 +5,6 @@ Fun Asynchronous Coop Repeatable Gameplay
 - allocating buffs (Neow in StSwF)
 - assessing risk (StSwF routes)
 
-== Use private information to prevent quarterbacking ==
-Info types:
-- critical hit prediction
-- enemy hp
-- stagger
-- enemy targeting
-- elemental weaknesses?
-
 == Elements ==
 Elements are strong against 1/3, weak against 1/3, and neutral against 1/3 of other elements
 

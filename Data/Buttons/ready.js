@@ -33,7 +33,7 @@ module.exports.execute = (interaction, args) => {
 					.setLabel("Party Stats")
 					.setStyle("SECONDARY")
 			)];
-		interaction.reply({ content: `The adventure has begun! Here are some utilities for the run.`, components: utilities, fetchReply: true }).then(message => {
+		interaction.reply({ content: `The adventure has begun! Here are some utilities for the run (remember to \`Jump\` to the message if viewing from pins).`, components: utilities, fetchReply: true }).then(message => {
 			message.pin();
 		});
 		nextRoom(adventure, interaction.channel);
