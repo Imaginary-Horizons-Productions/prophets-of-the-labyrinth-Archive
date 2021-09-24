@@ -7,6 +7,7 @@ module.exports = class Delver {
 		this.name = "Placeholder"; //TODO #23 convert to class name "Username the Placeholder"
 		this.hp = 10;
 		this.maxHp = 30;
+		this.speed = 10;
 		this.readType = "targets";
 		this.weapons = [];
 	}

@@ -14,7 +14,7 @@ module.exports.execute = (interaction, args) => {
 		let targetTeam = args[1];
 		let targetIndex = args[2];
 		adventure.battleMoves.push(new Move()
-			.setSpeed(user.speed) //BUG #21 ally speed set to undefined
+			.setSpeed(user.speed)
 			.setWeaponName(weapon.name)
 			.setUser("ally", userIndex)
 			.setTarget(targetTeam, targetIndex)
