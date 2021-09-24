@@ -26,7 +26,7 @@ module.exports.execute = (interaction, args) => {
 		updateRoundMessage(interaction.message, adventure);
 		checkNextRound(adventure, interaction.channel);
 	} else {
-		interaction.reply({ content: `You don't have a weapon in slot ${args[0] + 1}`, ephemeral: true })
+		interaction.reply({ content: `You don't have a weapon in slot ${Number(args[0]) + 1}.`, ephemeral: true })
 			.catch(console.error);
 	}
 }
