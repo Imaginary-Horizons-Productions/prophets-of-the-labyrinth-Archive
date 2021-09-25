@@ -8,7 +8,8 @@ module.exports = class Delver {
 		this.hp = 10;
 		this.maxHp = 30;
 		this.speed = 10;
-		this.readType = "targets";
+		this.roundSpeed = 0;
+		this.readType = "speed";
 		this.weapons = [];
 	}
 }

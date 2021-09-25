@@ -175,6 +175,13 @@ exports.newRound = function (adventure, channel, embed) {
 					.setUser("enemy", i)
 					.setTarget("ally", exports.nextRandomNumber(adventure, adventure.delvers.length, "battle")) //TODO #19 nonrandom AI
 					.setDamage(action.damage)); //TODO #10 enemy action effects
+				let percentBonus = (exports.nextRandomNumber(adventure, 20, "battle") - 20) / 100;
+				enemy.roundSpeed = Math.floor(enemy.speed + enemy.speed * percentBonus);
+			}
+
+			for (var delver of adventure.delvers) {
+				let percentBonus = (exports.nextRandomNumber(adventure, 20, "battle") - 20) / 100;
+				delver.roundSpeed = Math.floor(delver.speed + delver.speed * percentBonus);
 			}
 			if (lastRoundText !== "") {
 				embed.setDescription(lastRoundText);

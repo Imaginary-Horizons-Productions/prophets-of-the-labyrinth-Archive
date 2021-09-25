@@ -4,6 +4,7 @@ module.exports = class Enemy {
         this.name = nameInput; //TODO #25 unique-ify enemy names
         this.hp = 0;
         this.speed = 0;
+		this.roundSpeed = 0;
         this.element = "";
         this.actions = [];
     }

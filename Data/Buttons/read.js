@@ -29,7 +29,14 @@ module.exports.execute = (interaction, args) => {
 			embed.setDescription("Coming Soon!");
 			break;
 		case "speed": // Shows roundly random speed bonuses and order of move resolution
-			embed.setDescription("Coming Soon!");
+			let speedText = "__Move Order__";
+			let combatants = adventure.battleEnemies.concat(adventure.delvers).sort((first, second) => {
+				return second.speed - first.speed;
+			});
+			for (let i = 0; i < combatants.length; i++) {
+				speedText += `\n${i + 1}: ${combatants[i].name} (${combatants[i].roundSpeed >= 0 ? `+${combatants[i].roundSpeed}` : `-${combatants[i].roundSpeed}`} speed)`
+			}
+			embed.setDescription(speedText);
 			break;
 		case "stagger": // Shows current pressure and stagger thresholds for all characters
 			embed.setDescription("Coming Soon!");
