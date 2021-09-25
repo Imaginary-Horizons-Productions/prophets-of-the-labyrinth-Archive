@@ -34,7 +34,7 @@ module.exports.execute = (interaction, args) => {
 				return second.speed - first.speed;
 			});
 			for (let i = 0; i < combatants.length; i++) {
-				speedText += `\n${i + 1}: ${combatants[i].name} (${combatants[i].roundSpeed >= 0 ? `+${combatants[i].roundSpeed}` : `-${combatants[i].roundSpeed}`} speed)`
+				speedText += `\n${i + 1}: ${combatants[i].name} (${combatants[i].roundSpeed >= 0 ? `+${combatants[i].roundSpeed}` : `${combatants[i].roundSpeed}`} speed)`
 			}
 			embed.setDescription(speedText);
 			break;

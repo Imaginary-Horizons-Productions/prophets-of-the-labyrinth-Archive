@@ -116,7 +116,7 @@ exports.nextRoom = function (adventure, channel) {
 exports.newRound = function (adventure, channel, embed) {
 	// Sort Soves by Speed
 	adventure.battleMoves.sort((first, second) => {
-		return second.speed - first.speed;
+		return (second.speed + second.roundSpeed) - (first.speed + first.roundSpeed);
 	})
 
 	// Resolve round's moves
@@ -175,13 +175,13 @@ exports.newRound = function (adventure, channel, embed) {
 					.setUser("enemy", i)
 					.setTarget("ally", exports.nextRandomNumber(adventure, adventure.delvers.length, "battle")) //TODO #19 nonrandom AI
 					.setDamage(action.damage)); //TODO #10 enemy action effects
-				let percentBonus = (exports.nextRandomNumber(adventure, 20, "battle") - 20) / 100;
-				enemy.roundSpeed = Math.floor(enemy.speed + enemy.speed * percentBonus);
+				let percentBonus = (exports.nextRandomNumber(adventure, 21, "battle") - 10) / 100;
+				enemy.roundSpeed = Math.floor(enemy.speed * percentBonus);
 			}
 
 			for (var delver of adventure.delvers) {
-				let percentBonus = (exports.nextRandomNumber(adventure, 20, "battle") - 20) / 100;
-				delver.roundSpeed = Math.floor(delver.speed + delver.speed * percentBonus);
+				let percentBonus = (exports.nextRandomNumber(adventure, 21, "battle") - 10) / 100;
+				delver.roundSpeed = Math.floor(delver.speed * percentBonus);
 			}
 			if (lastRoundText !== "") {
 				embed.setDescription(lastRoundText);
