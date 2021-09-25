@@ -6,7 +6,8 @@ module.exports = class Adventure {
 		this.rnTable = linearRandomGenerator(processSeed(this.initialSeed, seedInput !== undefined)).join("");
 		this.rnIndex = 0;
 		this.rnIndexBattle = 0;
-        this.startMessageId;
+        this.startMessageId = "";
+		this.utilityMessageId = "";
 		this.lastComponentMessageId = "";
 		this.delvers = [];
 		this.accumulatedScore = 0;

@@ -338,7 +338,9 @@ exports.completeAdventure = function (adventure, channel, result) {
 	channel.messages.fetch(adventure.lastComponentMessageId).then(message => {
 		message.edit({ components: [] });
 	})
-	//TODO #28 clear utilty message components
+	channel.messages.fetch(adventure.utilityMessageId).then(message => {
+		message.edit({ components: [] });
+	})
 
 	adventureDictionary.delete(channel.id);
 	exports.saveAdventures();
