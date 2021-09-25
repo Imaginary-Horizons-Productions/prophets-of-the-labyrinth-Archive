@@ -11,13 +11,11 @@ module.exports.execute = (interaction, args) => {
 			gainHealth(delver, 5);
 		}
 	})
-	interaction.reply(`${interaction.user} loses 10 hp. Everyone else gains 5 hp.`);
-	interaction.message.edit({ components: [] })
-		.catch(console.error);
-	let messagePayload = takeDamage(adventure.delvers.find(delver => delver.id == interaction.user.id), interaction.channel, 10);
-	if (messagePayload) {
-		interaction.channel.send(messagePayload);
-	} else {
+	let damageText = takeDamage(adventure.delvers.find(delver => delver.id == interaction.user.id), interaction.channel, 10);
+	interaction.reply(`${damageText} Everyone else gains 5 hp.`);
+	if (adventure.lives > 0) {
 		nextRoom(adventure, interaction.channel);
 	}
+	interaction.message.edit({ components: [] })
+		.catch(console.error);
 }

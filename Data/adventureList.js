@@ -5,6 +5,7 @@ const { MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu } = req
 const { enemyDictionary } = require("./Enemies/_enemyDictionary.js");
 const Move = require("./../Classes/Move.js");
 const { ensuredPathSave } = require("../helpers.js");
+const Delver = require("../Classes/Delver.js");
 
 var filePath = "./Saves/adventures.json";
 var requirePath = "./../Saves/adventures.json";
@@ -128,17 +129,12 @@ exports.newRound = function (adventure, channel, embed) {
 			let target;
 			if (move.targetTeam === "ally") {
 				target = adventure.delvers[move.targetIndex];
-				lastRoundText += `${user.name} dealt ${move.damage} damage to ${target.name}.\n`;
-				exports.takeDamage(target, channel, move.damage);
+				lastRoundText += `${user.name} attacked ${target.name}.`;
 			} else {
 				target = adventure.battleEnemies[move.targetIndex];
-				target.hp -= move.damage;
-				lastRoundText += `${user.name} dealt ${move.damage} damage to ${target.name} with ${move.weaponName}.\n`; //TODO #5 merge enemy/ally path in combat descriptions
-				if (target.hp <= 0) {
-					target.hp = 0;
-					lastRoundText += `The ${target.name} was knocked out!\n`;
-				}
+				lastRoundText += `${user.name} used ${move.weaponName} on ${target.name}.`; //TODO #5 merge enemy/ally path in combat descriptions
 			}
+			lastRoundText += " " + exports.takeDamage(target, channel, move.damage) + "\n";
 
 			//TODO #6 decrement weapon durability and check for breakage
 		}
@@ -150,7 +146,12 @@ exports.newRound = function (adventure, channel, embed) {
 		exports.completeAdventure(adventure, channel, "defeat");
 	} else {
 		if (adventure.battleEnemies.every(enemy => enemy.hp === 0)) {
-			channel.send("Victory!").then(message => {
+			channel.send({
+				embeds: [new MessageEmbed()
+					.setTitle("Victory!")
+					.setDescription(lastRoundText)
+					.setFooter(`Round ${adventure.battleRound}`)]
+			}).then(message => {
 				adventure.battleRound = 0;
 				adventure.battleMoves = [];
 				adventure.battleEnemies = [];
@@ -282,18 +283,24 @@ exports.checkNextRound = function (adventure, channel) {
 	}
 }
 
-exports.takeDamage = function (delver, channel, damage) { //TODO #11 refactor to return damage text (including blocked damage)
-	delver.hp -= damage; //TODO #12 generalize to include enemies
-	if (delver.hp <= 0) {
-		delver.hp = delver.maxHp;
+exports.takeDamage = function (character, channel, damage) { //TODO #27 implement blocking
+	character.hp -= damage;
+	let damageText = ` ${character.name} takes ${damage} damage.`;
+	if (character.hp <= 0) {
 		let adventure = exports.getAdventure(channel.id);
-		adventure.lives -= 1;
-		channel.send(`<@${delver.id}> has died and been revived. ${adventure.lives} lives remain.`)
-		if (adventure.lives <= 0) {
-			exports.completeAdventure(adventure, channel, "defeat");
+		if (character instanceof Delver) {
+			character.hp = character.maxHp;
+			adventure.lives -= 1;
+			if (adventure.lives <= 0) {
+				exports.completeAdventure(adventure, channel, "defeat");
+			}
+			damageText += ` ${character.name} has died and been revived. ${adventure.lives} lives remain.`;
+		} else {
+			character.hp = 0;
+			damageText += ` ${character.name} has died.`;
 		}
 	}
-	return;
+	return damageText;
 }
 
 exports.gainHealth = function (delver, healing) { //TODO #13 refactor to return damage text
@@ -327,6 +334,12 @@ exports.completeAdventure = function (adventure, channel, result) {
 		}
 		setPlayer(player);
 	})
+
+	channel.messages.fetch(adventure.lastComponentMessageId).then(message => {
+		message.edit({ components: [] });
+	})
+	//TODO #28 clear utilty message components
+
 	adventureDictionary.delete(channel.id);
 	exports.saveAdventures();
 	completedAdventures[channel.id] = channel.guild.id;
