@@ -1,6 +1,6 @@
 const Command = require('../../Classes/Command.js');
 const { guildSetup } = require('../../helpers.js');
-const { resetScores } = require('../playerList.js');
+const { resetScores } = require('../playerDAO.js');
 
 module.exports = new Command("reset", "Recreate the Dungeon Tamers category and central text channel and reset player scores", true, false);
 

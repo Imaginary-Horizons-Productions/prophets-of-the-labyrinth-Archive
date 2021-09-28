@@ -5,10 +5,10 @@ const versionData = require('./Config/versionData.json');
 const { commandDictionary, slashData } = require(`./Data/Commands/_commandDictionary.js`);
 const { selectDictionary } = require("./Data/Selects/_selectDictionary.js");
 const { buttonDictionary } = require("./Data/Buttons/_buttonDictionary.js");
-const { loadPlayers } = require("./Data/playerList.js");
+const { loadPlayers } = require("./Data/playerDAO.js");
 const { guildSetup, getPremiumUsers, ensuredPathSave } = require("./helpers.js");
-const { loadGuilds } = require("./Data/guildList.js");
-const { loadAdventures } = require("./Data/adventureList.js");
+const { loadGuilds } = require("./Data/guildDAO.js");
+const { loadAdventures } = require("./Data/adventureDAO.js");
 //#endregion
 
 //#region Executing Code

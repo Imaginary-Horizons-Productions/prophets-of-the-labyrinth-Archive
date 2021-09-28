@@ -1,6 +1,5 @@
 const Button = require('../../Classes/Button.js');
-const { nextRoom, setAdventure } = require('../adventureList.js');
-const { getAdventure } = require('../adventureList.js');
+const { nextRoom, setAdventure, getAdventure } = require('../adventureDAO.js');
 
 module.exports = new Button("freegold");
 

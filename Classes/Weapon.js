@@ -4,15 +4,9 @@ module.exports = class Weapon {
 		this.description = descriptionInput;
 		this.element = elementInput;
 		this.effect = effectInput;
-		this.power = 10;
-		this.uses = 10;
-		this.maxUses = 10;
 	}
-
-	setPower(numberInput) {
-		this.power = numberInput;
-		return this;
-	}
+	uses = 10;
+	maxUses = 10;
 
 	setUses(numberInput) {
 		this.uses = numberInput;

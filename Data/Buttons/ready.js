@@ -1,6 +1,6 @@
-const { getAdventure, nextRoom } = require('../adventureList.js');
+const { getAdventure, nextRoom } = require('../adventureDAO.js');
 const Button = require('../../Classes/Button.js');
-const { getGuild } = require('../guildList.js');
+const { getGuild } = require('../guildDAO.js');
 const { weaponDictionary } = require("./../Weapons/_weaponDictionary.js");
 const { MessageActionRow, MessageButton } = require('discord.js');
 

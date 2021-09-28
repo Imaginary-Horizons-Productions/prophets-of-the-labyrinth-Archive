@@ -1,6 +1,6 @@
 const Move = require('../../Classes/Move');
 const Select = require('../../Classes/Select.js');
-const { getAdventure, saveAdventures, checkNextRound, updateRoundMessage } = require('../adventureList');
+const { getAdventure, saveAdventures, checkNextRound, updateRoundMessage } = require('../adventureDAO');
 
 module.exports = new Select("weapon");
 
@@ -15,10 +15,10 @@ module.exports.execute = (interaction, args) => {
 		let targetIndex = args[2];
 		adventure.battleMoves.push(new Move()
 			.setSpeed(user.speed)
-			.setWeaponName(weapon.name)
-			.setUser("ally", userIndex)
+			.setRoundSpeed(user.roundSpeed)
+			.setMoveName(weapon.name)
+			.setUser(user.team, userIndex)
 			.setTarget(targetTeam, targetIndex)
-			.setDamage(weapon.power)
 			.setEffect(weapon.effect));
 		saveAdventures();
 		interaction.reply({ content: `Your plan to use **${weapon.name}** on **${adventure.battleEnemies[targetIndex].name}** next round has been recorded.`, ephemeral: true })

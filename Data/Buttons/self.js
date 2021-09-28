@@ -1,6 +1,6 @@
 const Button = require('../../Classes/Button.js');
 const { MessageEmbed } = require('discord.js');
-const { getAdventure } = require('../adventureList.js');
+const { getAdventure } = require('../adventureDAO.js');
 
 module.exports = new Button("self");
 

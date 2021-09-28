@@ -4,6 +4,6 @@ module.exports = class GuildProfile {
         this.id = idInput;
         this.categoryId = categoryIdInput;
         this.centralId = centralIdInput;
-        this.userIds = [];
     }
+	userIds = [];
 }

@@ -1,4 +1,4 @@
-const { nextRoom, getAdventure } = require('../adventureList.js');
+const { nextRoom, getAdventure } = require('../adventureDAO.js');
 const Button = require('../../Classes/Button.js');
 
 module.exports = new Button("continue");

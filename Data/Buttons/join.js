@@ -1,5 +1,5 @@
 const Button = require('../../Classes/Button.js');
-const { getAdventure, setAdventure, updateStartingMessage } = require("./../adventureList.js");
+const { getAdventure, setAdventure, updateStartingMessage } = require("./../adventureDAO.js");
 const Delver = require('../../Classes/Delver.js');
 
 module.exports = new Button("join");

@@ -1,11 +1,11 @@
-const { setPlayer, getPlayer } = require("./playerList.js");
+const { setPlayer, getPlayer } = require("./playerDAO.js");
 const fs = require("fs");
 const { roomDictionary } = require("./Rooms/_roomDictionary.js");
 const { MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu } = require("discord.js");
 const { enemyDictionary } = require("./Enemies/_enemyDictionary.js");
-const Move = require("./../Classes/Move.js");
+const Move = require("../Classes/Move.js");
+const { resolveMove } = require("./moveDAO.js");
 const { ensuredPathSave } = require("../helpers.js");
-const Delver = require("../Classes/Delver.js");
 
 var filePath = "./Saves/adventures.json";
 var requirePath = "./../Saves/adventures.json";
@@ -18,7 +18,6 @@ exports.loadAdventures = function () { //TODO #18 generalize file loading
 			adventures.forEach(adventure => {
 				adventureDictionary.set(adventure.id, adventure);
 			})
-			resolve();
 		} else {
 			if (!fs.existsSync("./Saves")) {
 				fs.mkdirSync("./Saves", { recursive: true });
@@ -28,8 +27,8 @@ exports.loadAdventures = function () { //TODO #18 generalize file loading
 					console.error(error);
 				}
 			})
-			resolve();
 		}
+		resolve();
 	})
 }
 
@@ -122,23 +121,13 @@ exports.newRound = function (adventure, channel, embed) {
 
 	// Resolve round's moves
 	let lastRoundText = "";
-	adventure.battleMoves.forEach(move => {
-		let userTeam = move.userTeam === "ally" ? adventure.delvers : adventure.battleEnemies;
-		let user = userTeam[move.userIndex];
-		if (user.hp > 0) {
-			let target;
-			if (move.targetTeam === "ally") {
-				target = adventure.delvers[move.targetIndex];
-				lastRoundText += `${user.name} attacked ${target.name}.`;
-			} else {
-				target = adventure.battleEnemies[move.targetIndex];
-				lastRoundText += `${user.name} used ${move.weaponName} on ${target.name}.`; //TODO #5 merge enemy/ally path in combat descriptions
-			}
-			lastRoundText += " " + exports.takeDamage(target, channel, move.damage) + "\n";
-
-			//TODO #6 decrement weapon durability and check for breakage
+	for (let i = 0; i < adventure.battleMoves.length; i++) {
+		lastRoundText += resolveMove(adventure.battleMoves[i], adventure, channel);
+		if (adventure.lives <= 0) {
+			exports.completeAdventure(adventure, channel, "defeat");
+			break;
 		}
-	})
+	}
 	adventure.battleMoves = [];
 
 	// Check for Defeat or Victory
@@ -168,17 +157,18 @@ exports.newRound = function (adventure, channel, embed) {
 
 			// Next Round's Prerolls
 			//TODO #7 crits
-			for (let i = 0; i < adventure.battleEnemies.length; i++) {
-				let enemy = adventure.battleEnemies[i];
+			adventure.battleEnemies.forEach((enemy, index) => {
+				let percentBonus = (exports.nextRandomNumber(adventure, 21, "battle") - 10) / 100;
+				enemy.roundSpeed = Math.floor(enemy.speed * percentBonus);
 				let action = enemy.actions[0]; //TODO #8 move selection AI (remember to include weights)
 				adventure.battleMoves.push(new Move()
 					.setSpeed(enemy.speed)
-					.setUser("enemy", i)
-					.setTarget("ally", exports.nextRandomNumber(adventure, adventure.delvers.length, "battle")) //TODO #19 nonrandom AI
-					.setDamage(action.damage)); //TODO #10 enemy action effects
-				let percentBonus = (exports.nextRandomNumber(adventure, 21, "battle") - 10) / 100;
-				enemy.roundSpeed = Math.floor(enemy.speed * percentBonus);
-			}
+					.setRoundSpeed(enemy.roundSpeed)
+					.setMoveName(action.name)
+					.setUser(enemy.team, index)
+					.setTarget("ally", exports.nextRandomNumber(adventure, adventure.delvers.length, "battle"))
+					.setEffect(action.effect));//TODO #19 nonrandom AI
+			})
 
 			for (var delver of adventure.delvers) {
 				let percentBonus = (exports.nextRandomNumber(adventure, 21, "battle") - 10) / 100;
@@ -212,6 +202,10 @@ exports.updateRoundMessage = function (roundMessage, adventure) {
 	}
 	embed.spliceFields(0, 1, { name: `${adventure.battleMoves.length - adventure.battleEnemies.length}/${adventure.delvers.length} Moves Readied`, value: readyList });
 	roundMessage.edit({ embeds: [embed] });
+}
+
+exports.uniqueifyEnemyNames = function (adventure) {
+	//TODO #25 unique-ify enemy names
 }
 
 exports.generateBattleMenu = function (adventure) {
@@ -280,33 +274,6 @@ exports.checkNextRound = function (adventure, channel) {
 		let embed = new MessageEmbed()
 			.setFooter(`Round ${adventure.battleRound}`);
 		exports.newRound(adventure, channel, embed);
-	}
-}
-
-exports.takeDamage = function (character, channel, damage) { //TODO #27 implement blocking
-	character.hp -= damage;
-	let damageText = ` ${character.name} takes ${damage} damage.`;
-	if (character.hp <= 0) {
-		let adventure = exports.getAdventure(channel.id);
-		if (character instanceof Delver) {
-			character.hp = character.maxHp;
-			adventure.lives -= 1;
-			if (adventure.lives <= 0) {
-				exports.completeAdventure(adventure, channel, "defeat");
-			}
-			damageText += ` ${character.name} has died and been revived. ${adventure.lives} lives remain.`;
-		} else {
-			character.hp = 0;
-			damageText += ` ${character.name} has died.`;
-		}
-	}
-	return damageText;
-}
-
-exports.gainHealth = function (delver, healing) { //TODO #13 refactor to return damage text
-	delver.hp += healing; //TODO #14 generalize to include enemies
-	if (delver.hp > delver.maxHp) {
-		delver.hp = delver.maxHp;
 	}
 }
 

@@ -2,9 +2,9 @@ const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
 const Adventure = require('../../Classes/Adventure.js');
 const Command = require('../../Classes/Command.js');
 const Delver = require('../../Classes/Delver.js');
-const { getPlayer } = require('../playerList.js');
-const { setAdventure, nextRandomNumber } = require("../adventureList.js");
-const { getGuild } = require('../guildList.js');
+const { getPlayer } = require('../playerDAO.js');
+const { setAdventure, nextRandomNumber } = require("../adventureDAO.js");
+const { getGuild } = require('../guildDAO.js');
 
 module.exports = new Command("delve", "Start a new adventure", false, false);
 module.exports.data.addStringOption(option => option.setName("seed").setDescription("The value to base the random events of the run on").setRequired(false));

@@ -1,30 +1,30 @@
 module.exports = class Adventure {
 	constructor(seedInput) {
-		this.id; // the id of the channel created for the adventure
-		this.name;
 		this.initialSeed = seedInput || Date.now().toString();
 		this.rnTable = linearRandomGenerator(processSeed(this.initialSeed, seedInput !== undefined)).join("");
-		this.rnIndex = 0;
-		this.rnIndexBattle = 0;
-        this.startMessageId = "";
-		this.utilityMessageId = "";
-		this.lastComponentMessageId = "";
-		this.delvers = [];
-		this.accumulatedScore = 0;
-		this.depth = 0;
-		this.lives = 1;
-		this.gold = 100;
-		this.battleRound;
-		this.battleEnemies = [];
-		this.battleMoves = [];
 	}
+	id; // the id of the channel created for the adventure
+	name;
+	rnIndex = 0;
+	rnIndexBattle = 0;
+	startMessageId = "";
+	utilityMessageId = "";
+	lastComponentMessageId = "";
+	delvers = [];
+	accumulatedScore = 0;
+	depth = 0;
+	lives = 1;
+	gold = 100;
+	battleRound;
+	battleEnemies = [];
+	battleMoves = [];
 
-	setName (nameInput) {
+	setName(nameInput) {
 		this.name = nameInput;
 		return this;
 	}
 
-	setId (textChannelId) {
+	setId(textChannelId) {
 		this.id = textChannelId;
 		return this;
 	}

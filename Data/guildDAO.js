@@ -1,6 +1,6 @@
 var fs = require("fs");
 const { ensuredPathSave } = require("../helpers.js");
-const GuildProfile = require('./../Classes/GuildProfile.js');
+const GuildProfile = require('../Classes/GuildProfile.js');
 
 var filePath = "./Saves/guilds.json";
 var requirePath = "./../Saves/guilds.json";
@@ -13,7 +13,6 @@ exports.loadGuilds = function () {
 			guildProfiles.forEach(guildProfile => {
 				guildDictionary.set(guildProfile.id, guildProfile);
 			})
-			resolve();
 		} else {
 			if (!fs.existsSync("./Saves")) {
 				fs.mkdirSync("./Saves", { recursive: true });
@@ -23,8 +22,8 @@ exports.loadGuilds = function () {
 					console.error(error);
 				}
 			})
-			resolve();
 		}
+		resolve();
 	})
 }
 

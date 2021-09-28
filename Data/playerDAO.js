@@ -1,5 +1,5 @@
 const Player = require("../Classes/Player.js");
-const { getGuild, saveGuilds } = require("./guildList.js");
+const { getGuild, saveGuilds } = require("./guildDAO.js");
 const fs = require("fs");
 const { ensuredPathSave } = require("../helpers.js");
 
@@ -14,7 +14,6 @@ exports.loadPlayers = function () {
 			players.forEach(player => {
 				playerDictionary.set(player.id, player);
 			})
-			resolve();
 		} else {
 			if (!fs.existsSync("./Saves")) {
 				fs.mkdirSync("./Saves", { recursive: true });
@@ -24,8 +23,8 @@ exports.loadPlayers = function () {
 					console.error(error);
 				}
 			})
-			resolve();
 		}
+		resolve();
 	})
 }
 

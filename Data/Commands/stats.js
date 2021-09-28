@@ -1,6 +1,6 @@
 const { MessageEmbed } = require('discord.js');
 const Command = require('../../Classes/Command.js');
-const { getPlayer } = require('../playerList.js');
+const { getPlayer } = require('../playerDAO.js');
 
 module.exports = new Command("stats", "Get the stats for a user or yourself", false, false);
 module.exports.data.addUserOption(option => option.setName("user").setDescription("The user to look up (yourself if blank)").setRequired(false));
