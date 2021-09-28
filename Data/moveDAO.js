@@ -1,4 +1,4 @@
-module.exports.resolveMove = function (move, adventure, channel) {
+module.exports.resolveMove = function (move, adventure) {
 	let moveText = "";
 	let userTeam = move.userTeam === "ally" ? adventure.delvers : adventure.battleEnemies;
 	let user = userTeam[move.userIndex];
@@ -10,7 +10,7 @@ module.exports.resolveMove = function (move, adventure, channel) {
 		} else {
 			target = adventure.battleEnemies[move.targetIndex];
 		}
-		let resultText = move.effect(target, user, move.isCrit, adventure);
+		let resultText = move.effect(target, user, move.isCrit, move.element, adventure);
 		moveText += `${user.name} used ${move.name} on ${target.name}. ` + resultText + "\n";
 	}
 	return moveText;

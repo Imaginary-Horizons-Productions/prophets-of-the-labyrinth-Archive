@@ -2,6 +2,7 @@ module.exports = class Move {
 	constructor() {
 		this.name = "";
 		this.speed = 0;
+		this.element = "";
 		this.roundSpeed = 0;
 		this.isCrit = false;
 		this.userTeam = "";
@@ -18,6 +19,16 @@ module.exports = class Move {
 
 	setRoundSpeed(number) {
 		this.roundSpeed = number;
+		return this;
+	}
+
+	setElement(elementInput) {
+		this.element = elementInput;
+		return this;
+	}
+
+	setIsCrit(boolean) {
+		this.isCrit = boolean;
 		return this;
 	}
 

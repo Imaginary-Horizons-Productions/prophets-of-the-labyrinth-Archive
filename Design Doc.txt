@@ -5,33 +5,6 @@ Fun Asynchronous Coop Repeatable Gameplay
 - allocating buffs (Neow in StSwF)
 - assessing risk (StSwF routes)
 
-== Elements ==
-Elements are strong against 1/3, weak against 1/3, and neutral against 1/3 of other elements
-
-light > wind, water
-light < earth, fire
-light = light, dark
-
-wind > water, dark
-wind < earth, light
-wind = wind, fire
-
-water > dark, fire
-water < wind, light
-water = earth, water
-
-dark > fire, earth
-dark < wind, water
-dark = dark, light
-
-fire > earth, light
-fire < dark, water
-fire = fire, wind
-
-earth > light, wind
-earth < fire, dark
-earth = earth, water
-
 == Deployment ==
 players deploy a pair of characters into a dungeon, one leading at a time. characters can switch to provide relief and gain advantage (elemental and otherwise)
 With characters having 2 elements, limiting deployments to 2 characers per player prevents overcoverage of elements

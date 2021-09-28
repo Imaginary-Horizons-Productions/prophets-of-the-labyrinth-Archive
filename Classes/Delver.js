@@ -10,7 +10,7 @@ module.exports = class Delver extends Combatant {
 		super.name = nameInput; //TODO #23 convert to class name "Username the Placeholder"
 		super.team = "ally";
 		this.difficultyOptions = [];
-		this.readType = "speed";
+		this.readType = "weaknesses";
 		this.weapons = [];
 	}
 }

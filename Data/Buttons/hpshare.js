@@ -12,7 +12,7 @@ module.exports.execute = (interaction, args) => {
 			gainHealth(delver, 5);
 		}
 	})
-	let damageText = takeDamage(adventure.delvers.find(delver => delver.id == interaction.user.id), 10, adventure);
+	let damageText = takeDamage(adventure.delvers.find(delver => delver.id == interaction.user.id), 10, "untyped", adventure);
 	interaction.reply(`${damageText} Everyone else gains 5 hp.`);
 	if (adventure.lives > 0) {
 		nextRoom(adventure, interaction.channel);

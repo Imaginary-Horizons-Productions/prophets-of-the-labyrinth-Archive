@@ -16,6 +16,8 @@ module.exports.execute = (interaction, args) => {
 		adventure.battleMoves.push(new Move()
 			.setSpeed(user.speed)
 			.setRoundSpeed(user.roundSpeed)
+			.setElement(weapon.element)
+			.setIsCrit(user.crit)
 			.setMoveName(weapon.name)
 			.setUser(user.team, userIndex)
 			.setTarget(targetTeam, targetIndex)

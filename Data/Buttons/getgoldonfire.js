@@ -8,6 +8,6 @@ module.exports.execute = (interaction, args) => {
 	// Gold +20, HP -10
 	let adventure = getAdventure(interaction.channel.id);
 	adventure.gold += 20;
-	let damageText = takeDamage(adventure.delvers.find(delver => delver.id == interaction.user.id), 10, adventure);
+	let damageText = takeDamage(adventure.delvers.find(delver => delver.id == interaction.user.id), 10, "untyped", adventure);
 	interaction.reply(`${interaction.user} reaches into the flames and grabs some coin. ${damageText}`);
 }
