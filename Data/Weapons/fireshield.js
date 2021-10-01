@@ -1,13 +1,15 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { takeDamage } = require("../combatantDAO.js");
 
-module.exports = new Weapon("dagger", "An attack that deals extra damage on a critical hit (crit: even more damage)", "wind", effect)
-	.setUses(10);
+module.exports = new Weapon("fireshield", "Defend yourself while bashing a target with a flaming shield (crit: more damage)", "fire", effect)
+	.setUses(5);
 
 function effect(target, user, isCrit, element, adventure) {
-	let damage = 100;
+	let damage = 75;
+	let block = 50;
 	if (isCrit) {
-		damage *= 3;
+		damage *= 2;
 	}
+	user.addBlock(block);
 	return takeDamage(target, damage, element, adventure);
 }

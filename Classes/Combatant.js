@@ -2,10 +2,10 @@ module.exports = class Combatant {
 	constructor() { }
 	name = "Placeholder";
 	team = "";
-	hp = 10;
-	maxHp = 30;
+	hp = 300;
+	maxHp = 300;
 	block = 0;
-	speed = 10;
+	speed = 100;
 	roundSpeed = 0;
 	crit = false;
 	element = "water";

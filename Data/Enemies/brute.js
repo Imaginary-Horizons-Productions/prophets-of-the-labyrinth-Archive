@@ -2,13 +2,13 @@ const Enemy = require("../../Classes/Enemy.js");
 const { takeDamage } = require("../combatantDAO.js");
 
 module.exports = new Enemy("brute")
-	.setHp(20)
-	.setSpeed(5)
+	.setHp(500)
+	.setSpeed(105)
 	.setElement("earth")
 	.addActions([{ name: "punch", weight: 3, effect: punchEffect }, { name: "big punch", weight: 1, effect: bigPunchEffect }]);
 
 function punchEffect(target, user, isCrit, element, adventure) {
-	let damage = 5;
+	let damage = 50;
 	if (isCrit) {
 		damage *= 2;
 	}
@@ -16,7 +16,7 @@ function punchEffect(target, user, isCrit, element, adventure) {
 }
 
 function bigPunchEffect(target, user, isCrit, element, adventure) {
-	let damage = 10;
+	let damage = 100;
 	if (isCrit) {
 		damage *= 2;
 	}

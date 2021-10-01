@@ -1,13 +1,13 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { takeDamage } = require("../combatantDAO.js");
 
-module.exports = new Weapon("dagger", "An attack that deals extra damage on a critical hit (crit: even more damage)", "wind", effect)
-	.setUses(10);
+module.exports = new Weapon("icespear", "A high damage attack with low durability (crit: more damage)", "water", effect)
+	.setUses(3);
 
 function effect(target, user, isCrit, element, adventure) {
-	let damage = 100;
+	let damage = 200;
 	if (isCrit) {
-		damage *= 3;
+		damage *= 2;
 	}
 	return takeDamage(target, damage, element, adventure);
 }
