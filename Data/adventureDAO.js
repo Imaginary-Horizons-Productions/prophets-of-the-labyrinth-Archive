@@ -95,6 +95,7 @@ exports.nextRoom = function (adventure, channel) {
 				adventure.battleRound = 0;
 				adventure.battleMoves = [];
 				Object.keys(room.enemies).forEach(enemyName => {
+					//TODO #31 parse enemy count string to allow enemy counts to scale (with players, previous events, etc)
 					for (let i = 0; i < room.enemies[enemyName]; i++) {
 						let enemy = {};
 						Object.assign(enemy, enemyDictionary[enemyName])

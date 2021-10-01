@@ -8,7 +8,7 @@ module.exports = class Room {
     }
 
     addEnemy(enemyInput, countInput) {
-        this.enemies[enemyInput] = countInput
+        this.enemies[enemyInput] = countInput;
         return this;
     }
 }
