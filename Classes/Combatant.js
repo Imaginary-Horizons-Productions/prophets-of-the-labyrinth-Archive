@@ -1,6 +1,7 @@
 module.exports = class Combatant {
 	constructor() { }
-	name = "Placeholder";
+	name = "";
+	title = "";
 	team = "";
 	hp = 300;
 	maxHp = 300;
@@ -9,6 +10,11 @@ module.exports = class Combatant {
 	roundSpeed = 0;
 	crit = false;
 	element = "water";
+
+	setTitle(titleInput) {
+		this.title = titleInput;
+		return this;
+	}
 
 	setHp(integer) {
 		this.hp = integer;

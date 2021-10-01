@@ -53,9 +53,11 @@ module.exports.execute = (interaction) => {
 							.setStyle("PRIMARY")
 					)
 				interaction.reply({ embeds: [embed], components: [join], fetchReply: true }).then(message => {
+					let leader = new Delver(interaction.user.id, interaction.member.displayName, channel.id);
+					leader.setTitle("Placeholder");
 					adventure.setId(channel.id)
 						.setStartMessageID(message.id)
-						.setLeader(new Delver(interaction.user.id, `${interaction.member.displayName} the Placeholder`, channel.id));
+						.setLeader(leader);
 					setAdventure(adventure);
 					let ready = new MessageActionRow()
 						.addComponents(

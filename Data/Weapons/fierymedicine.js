@@ -11,7 +11,7 @@ function effect(target, user, isCrit, element, adventure) {
 	}
 	if (target.element === "fire") {
 		value /= 2;
-		return gainHealth(target, value);
+		return gainHealth(target, value, adventure.battleEnemyTitles);
 	} else {
 		return takeDamage(target, value, element, adventure);
 	}

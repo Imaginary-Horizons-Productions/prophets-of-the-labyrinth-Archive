@@ -14,5 +14,7 @@ module.exports = class Delver extends Combatant {
 		this.weapons = [];
 	}
 
+	setTitle = super.setTitle;
+
 	clearBlock = super.clearBlock;
 }

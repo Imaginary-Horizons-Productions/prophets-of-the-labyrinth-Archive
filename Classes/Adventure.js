@@ -17,6 +17,7 @@ module.exports = class Adventure {
 	gold = 100;
 	battleRound;
 	battleEnemies = [];
+	battleEnemyTitles = {};
 	battleMoves = [];
 
 	setName(nameInput) {

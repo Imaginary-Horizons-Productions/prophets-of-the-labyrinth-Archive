@@ -1,3 +1,5 @@
+const { getFullName } = require("./combatantDAO.js");
+
 module.exports.resolveMove = function (move, adventure) {
 	let moveText = "";
 	let userTeam = move.userTeam === "ally" ? adventure.delvers : adventure.battleEnemies;
@@ -11,7 +13,7 @@ module.exports.resolveMove = function (move, adventure) {
 			target = adventure.battleEnemies[move.targetIndex];
 		}
 		let resultText = move.effect(target, user, move.isCrit, move.element, adventure);
-		moveText += `${user.name} used ${move.name} on ${target.name}. ` + resultText + "\n";
+		moveText += `${user.name} used ${move.name} on ${getFullName(target, adventure.battleEnemyTitles)}. ` + resultText + "\n";
 	}
 	return moveText;
 }

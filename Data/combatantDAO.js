@@ -1,4 +1,18 @@
+const Enemy = require("../Classes/Enemy.js");
+const Delver = require("../Classes/Delver.js");
 const Combatant = require("./../Classes/Combatant.js");
+
+exports.getFullName = function (combatant, titleObject) {
+	if (combatant instanceof Enemy) {
+		if (titleObject[combatant.name] > 1) {
+			return `${combatant.name} ${combatant.title}`;
+		} else {
+			return combatant.name;
+		}
+	} else if (combatant instanceof Delver) {
+		return `${combatant.name} the ${combatant.title}`;
+	}
+}
 
 exports.takeDamage = function (combatant, damage, element, adventure) {
 	let pendingDamage = damage;
@@ -21,29 +35,29 @@ exports.takeDamage = function (combatant, damage, element, adventure) {
 		pendingDamage = 0;
 	}
 	combatant.hp -= pendingDamage;
-	let damageText = ` ${combatant.name} takes ${pendingDamage} damage${blockedDamage > 0 ? ` (${blockedDamage} blocked)` : ""}${isWeakness ? "!!!" : isResistance ? "." : "!"}`;
+	let damageText = ` ${exports.getFullName(combatant, adventure.battleEnemyTitles)} takes ${pendingDamage} damage${blockedDamage > 0 ? ` (${blockedDamage} blocked)` : ""}${isWeakness ? "!!!" : isResistance ? "." : "!"}`;
 	if (combatant.hp <= 0) {
 		if (combatant.team === "ally") {
 			combatant.hp = combatant.maxHp;
 			adventure.lives -= 1;
-			damageText += ` ${combatant.name} has died and been revived. ${adventure.lives} lives remain.`;
+			damageText += ` ${exports.getFullName(combatant, adventure.battleEnemyTitles)} has died and been revived. ${adventure.lives} lives remain.`;
 		} else {
 			combatant.hp = 0;
-			damageText += ` ${combatant.name} has died.`;
+			damageText += ` ${exports.getFullName(combatant, adventure.battleEnemyTitles)} has died.`;
 		}
 	}
 	return damageText;
 }
 
-module.exports.gainHealth = (combatant, healing) => {
+module.exports.gainHealth = (combatant, healing, titleObject) => {
 	combatant.hp += healing;
 	if (combatant.hp > combatant.maxHp) {
 		combatant.hp = combatant.maxHp;
 	}
 
 	if (combatant.hp === combatant.maxHp) {
-		return `${combatant.name} was fully healed!`;
+		return `${exports.getFullName(combatant, titleObject)} was fully healed!`;
 	} else {
-		return `${combatant.name} gained ${healing} hp.`
+		return `${exports.getFullName(combatant, titleObject)} gained ${healing} hp.`
 	}
 }

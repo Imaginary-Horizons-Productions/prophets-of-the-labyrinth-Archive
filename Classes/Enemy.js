@@ -10,6 +10,8 @@ module.exports = class Enemy extends Combatant {
 		this.actions = [];
 	}
 
+	setTitle = super.setTitle;
+
 	addActions(actionsInput) {
 		this.actions = actionsInput;
 		return this;

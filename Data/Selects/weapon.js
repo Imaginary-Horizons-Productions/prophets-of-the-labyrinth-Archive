@@ -1,6 +1,7 @@
 const Move = require('../../Classes/Move');
 const Select = require('../../Classes/Select.js');
 const { getAdventure, saveAdventures, checkNextRound, updateRoundMessage } = require('../adventureDAO');
+const { getFullName } = require("./../combatantDAO.js");
 
 module.exports = new Select("weapon");
 
@@ -29,7 +30,7 @@ module.exports.execute = (interaction, args) => {
 		} else if (targetTeam === "enemy") {
 			target = adventure.battleEnemies[targetIndex];
 		}
-		interaction.reply({ content: `Your plan to use **${weapon.name}** on **${target.name}** next round has been recorded.`, ephemeral: true })
+		interaction.reply({ content: `Your plan to use **${weapon.name}** on **${getFullName(target, adventure.battleEnemyTitles)}** next round has been recorded.`, ephemeral: true })
 			.catch(console.error);
 		updateRoundMessage(interaction.message, adventure);
 		checkNextRound(adventure, interaction.channel);

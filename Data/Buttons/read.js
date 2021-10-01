@@ -2,6 +2,7 @@ const { MessageEmbed } = require('discord.js');
 const Button = require('../../Classes/Button.js');
 const { getAdventure } = require('../adventureDAO.js');
 const Combatant = require("./../../Classes/Combatant.js");
+const { getFullName } = require("./../combatantDAO.js");
 
 module.exports = new Button("read");
 
@@ -19,7 +20,7 @@ module.exports.execute = (interaction, args) => {
 				if (move.userTeam === "enemy") {
 					let enemy = adventure.battleEnemies[move.userIndex];
 					let target = adventure.delvers[move.targetIndex];
-					descriptionText += `\nNext round, **${enemy.name}** intends to attack **${target.name}**`;
+					descriptionText += `\nNext round, **${getFullName(enemy, adventure.battleEnemyTitles)}** intends to attack **${target.name}**`;
 				}
 			})
 			break;
@@ -27,11 +28,11 @@ module.exports.execute = (interaction, args) => {
 			let combatants = adventure.battleEnemies.concat(adventure.delvers);
 			descriptionText += "__Critical Hits__";
 			combatants.forEach(combatant => {
-				descriptionText += `\n${combatant.name}: ${combatant.crit ? "Critical Hit" : "normal hit"}`;
+				descriptionText += `\n${getFullName(combatant, adventure.battleEnemyTitles)}: ${combatant.crit ? "Critical Hit" : "normal hit"}`;
 			});
 			descriptionText += "\n\n__Elemental Weaknesses__";
 			combatants.forEach(combatant => {
-				descriptionText += `\n${combatant.name}: ${Combatant.getWeaknesses(combatant.element).join(", ")}`;
+				descriptionText += `\n${getFullName(combatant, adventure.battleEnemyTitles)}: ${Combatant.getWeaknesses(combatant.element).join(", ")}`;
 			})
 			break;
 		case "health": // Shows current HP, max HP, and block of all characters
@@ -42,7 +43,7 @@ module.exports.execute = (interaction, args) => {
 			adventure.battleEnemies.concat(adventure.delvers).sort((first, second) => {
 				return (second.speed + second.roundSpeed) - (first.speed + first.roundSpeed);
 			}).forEach(combatant => {
-				descriptionText += `\n${i + 1}: ${combatant.name} (${combatant.roundSpeed >= 0 ? `+${combatant.roundSpeed}` : `${combatant.roundSpeed}`} speed)`
+				descriptionText += `\n${i + 1}: ${getFullName(combatant, adventure.battleEnemyTitles)} (${combatant.roundSpeed >= 0 ? `+${combatant.roundSpeed}` : `${combatant.roundSpeed}`} speed)`
 			});
 			//TODO consider adding elemental strengths
 			break;

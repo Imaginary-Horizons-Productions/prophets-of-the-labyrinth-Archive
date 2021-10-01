@@ -4,7 +4,9 @@ const { roomDictionary } = require("./Rooms/_roomDictionary.js");
 const { MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu } = require("discord.js");
 const { enemyDictionary } = require("./Enemies/_enemyDictionary.js");
 const Move = require("../Classes/Move.js");
+const Enemy = require("../Classes/Enemy.js");
 const { resolveMove } = require("./moveDAO.js");
+const { getFullName } = require("./combatantDAO.js");
 const { ensuredPathSave } = require("../helpers.js");
 
 var filePath = "./Saves/adventures.json";
@@ -97,9 +99,10 @@ exports.nextRoom = function (adventure, channel) {
 				Object.keys(room.enemies).forEach(enemyName => {
 					//TODO #31 parse enemy count string to allow enemy counts to scale (with players, previous events, etc)
 					for (let i = 0; i < room.enemies[enemyName]; i++) {
-						let enemy = {};
-						Object.assign(enemy, enemyDictionary[enemyName])
+						let enemy = new Enemy();
+						Object.assign(enemy, enemyDictionary[enemyName]);
 						adventure.battleEnemies.push(enemy);
+						exports.setEnemyTitle(adventure.battleEnemyTitles, enemy);
 					}
 				})
 				resolve(adventure);
@@ -131,71 +134,68 @@ exports.newRound = function (adventure, channel, embed) {
 	}
 	adventure.battleMoves = [];
 
-	// Check for Defeat or Victory
-	if (adventure.lives <= 0) {
-		exports.completeAdventure(adventure, channel, "defeat");
+	// Check for Victory
+	if (adventure.battleEnemies.every(enemy => enemy.hp === 0)) {
+		channel.send({
+			embeds: [new MessageEmbed()
+				.setTitle("Victory!")
+				.setDescription(lastRoundText)
+				.setFooter(`Round ${adventure.battleRound}`)]
+		}).then(message => {
+			adventure.battleRound = 0;
+			adventure.battleMoves = [];
+			adventure.battleEnemies = [];
+			adventure.battleEnemyTitles = {};
+			exports.nextRoom(adventure, channel)
+		});
 	} else {
-		if (adventure.battleEnemies.every(enemy => enemy.hp === 0)) {
-			channel.send({
-				embeds: [new MessageEmbed()
-					.setTitle("Victory!")
-					.setDescription(lastRoundText)
-					.setFooter(`Round ${adventure.battleRound}`)]
-			}).then(message => {
-				adventure.battleRound = 0;
-				adventure.battleMoves = [];
-				adventure.battleEnemies = [];
-				exports.nextRoom(adventure, channel)
-			});
-		} else {
-			// Increment round and clear last round's components
-			adventure.battleRound++;
-			if (adventure.lastComponentMessageId) {
-				channel.messages.fetch(adventure.lastComponentMessageId).then(message => {
-					message.edit({ components: [] });
-				})
-			}
-
-			// Logistics for Next Round
-			adventure.battleEnemies.concat(adventure.delvers).forEach(combatant => {
-				// Clear Excess Block
-				combatant.clearBlock();
-
-				// Roll Round Speed
-				let percentBonus = (exports.nextRandomNumber(adventure, 21, "battle") - 10) / 100;
-				combatant.roundSpeed = Math.floor(combatant.speed * percentBonus);
-
-				// Roll Critical Hit
-				let critRoll = exports.nextRandomNumber(adventure, 4, "battle");
-				combatant.crit = critRoll > 2;
+		// Increment round and clear last round's components
+		adventure.battleRound++;
+		if (adventure.lastComponentMessageId) {
+			channel.messages.fetch(adventure.lastComponentMessageId).then(message => {
+				message.edit({ components: [] });
 			})
-
-			// Roll Enemy Moves
-			adventure.battleEnemies.forEach((enemy, index) => {
-				let action = enemy.actions[0]; //TODO #8 move selection AI (remember to include weights)
-				adventure.battleMoves.push(new Move()
-					.setSpeed(enemy.speed)
-					.setRoundSpeed(enemy.roundSpeed)
-					.setElement(enemy.element)
-					.setIsCrit(enemy.crit)
-					.setMoveName(action.name)
-					.setUser(enemy.team, index)
-					.setTarget("ally", exports.nextRandomNumber(adventure, adventure.delvers.length, "battle"))
-					.setEffect(action.effect));//TODO #19 nonrandom AI
-			})
-
-			if (lastRoundText !== "") {
-				embed.setDescription(lastRoundText);
-			}
-			if (!embed.title) {
-				embed.setTitle("Combat");
-			}
-			embed.addField(`0/${adventure.delvers.length} Moves Readied`, "Ready party members will be listed here")
-				.setFooter(`Round ${adventure.battleRound}`);
-			channel.send({ embeds: [embed], components: exports.generateBattleMenu(adventure) }).then(message => {
-				adventure.lastComponentMessageId = message.id;
-			});
 		}
+
+		// Logistics for Next Round
+		adventure.battleEnemies.concat(adventure.delvers).forEach(combatant => {
+			// Clear Excess Block
+			combatant.clearBlock();
+
+			// Roll Round Speed
+			let percentBonus = (exports.nextRandomNumber(adventure, 21, "battle") - 10) / 100;
+			combatant.roundSpeed = Math.floor(combatant.speed * percentBonus);
+
+			// Roll Critical Hit
+			let critRoll = exports.nextRandomNumber(adventure, 4, "battle");
+			combatant.crit = critRoll > 2;
+		})
+
+		// Roll Enemy Moves
+		adventure.battleEnemies.forEach((enemy, index) => {
+			let action = enemy.actions[0]; //TODO #8 move selection AI (remember to include weights)
+			adventure.battleMoves.push(new Move()
+				.setSpeed(enemy.speed)
+				.setRoundSpeed(enemy.roundSpeed)
+				.setElement(enemy.element)
+				.setIsCrit(enemy.crit)
+				.setMoveName(action.name)
+				.setUser(enemy.team, index)
+				.setTarget("ally", exports.nextRandomNumber(adventure, adventure.delvers.length, "battle"))
+				.setEffect(action.effect));//TODO #19 nonrandom AI
+		})
+
+		if (lastRoundText !== "") {
+			embed.setDescription(lastRoundText);
+		}
+		if (!embed.title) {
+			embed.setTitle("Combat");
+		}
+		embed.addField(`0/${adventure.delvers.length} Moves Readied`, "Ready party members will be listed here")
+			.setFooter(`Round ${adventure.battleRound}`);
+		channel.send({ embeds: [embed], components: exports.generateBattleMenu(adventure) }).then(message => {
+			adventure.lastComponentMessageId = message.id;
+		});
 	}
 }
 
@@ -214,18 +214,26 @@ exports.updateRoundMessage = function (roundMessage, adventure) {
 	roundMessage.edit({ embeds: [embed] });
 }
 
-exports.uniqueifyEnemyNames = function (adventure) {
-	//TODO #25 unique-ify enemy names
+exports.setEnemyTitle = function (titleObject, enemy) {
+	if (titleObject[enemy.name]) {
+		titleObject[enemy.name]++;
+		enemy.title = titleObject[enemy.name];
+	} else {
+		titleObject[enemy.name] = 1;
+		enemy.title = 1;
+	}
 }
 
 exports.generateBattleMenu = function (adventure) {
 	let targetOptions = [];
 	for (i = 0; i < adventure.battleEnemies.length; i++) {
-		targetOptions.push({
-			label: adventure.battleEnemies[i].name,
-			description: "",
-			value: `enemy-${i}`
-		})
+		if (adventure.battleEnemies[i].hp !== 0) {
+			targetOptions.push({
+				label: getFullName(adventure.battleEnemies[i], adventure.battleEnemyTitles),
+				description: "",
+				value: `enemy-${i}`
+			})
+		}
 	}
 	for (i = 0; i < adventure.delvers.length; i++) {
 		targetOptions.push({
