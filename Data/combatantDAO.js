@@ -1,10 +1,27 @@
 const Combatant = require("./../Classes/Combatant.js");
 
-exports.takeDamage = function (combatant, damage, element, adventure) { //TODO #27 implement blocking
+exports.takeDamage = function (combatant, damage, element, adventure) {
+	let pendingDamage = damage;
 	let isWeakness = Combatant.getWeaknesses(combatant.element).includes(element);
+	if (isWeakness) {
+		pendingDamage *= 2;
+	}
 	let isResistance = Combatant.getResistances(combatant.element).includes(element);
-	combatant.hp -= Math.ceil(damage * (isWeakness ? 2 : 1) * (isResistance ? 0.5 : 1));
-	let damageText = ` ${combatant.name} takes ${damage}${isWeakness ? " **x 2**" : ""}${isResistance ? " **÷ 2**" : ""} damage.`;
+	if (isResistance) {
+		pendingDamage = Math.ceil(pendingDamage / 2);
+	}
+	let blockedDamage = 0;
+	if (pendingDamage >= combatant.block) {
+		pendingDamage -= combatant.block;
+		blockedDamage = combatant.block;
+		combatant.block = 0;
+	} else {
+		combatant.block -= pendingDamage;
+		blockedDamage = pendingDamage;
+		pendingDamage = 0;
+	}
+	combatant.hp -= pendingDamage;
+	let damageText = ` ${combatant.name} takes ${pendingDamage} damage${blockedDamage > 0 ? ` (${blockedDamage} blocked)` : ""}${isWeakness ? "!!!" : isResistance ? "." : "!"}`;
 	if (combatant.hp <= 0) {
 		if (combatant.team === "ally") {
 			combatant.hp = combatant.maxHp;

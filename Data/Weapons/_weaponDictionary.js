@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-var weaponWhitelist = ["dagger.js"];
+var weaponWhitelist = ["dagger.js", "buckler.js"];
 const weaponFiles = fs.readdirSync('./Data/Weapons').filter(file => file.endsWith('.js') && weaponWhitelist.includes(file));
 exports.weaponDictionary = {};
 

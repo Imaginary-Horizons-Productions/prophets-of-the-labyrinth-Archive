@@ -14,4 +14,6 @@ module.exports = class Enemy extends Combatant {
 		this.actions = actionsInput;
 		return this;
 	}
+
+	clearBlock = super.clearBlock;
 }

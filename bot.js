@@ -43,7 +43,7 @@ client.on("ready", () => {
 				client.guilds.fetch(completedAdventures[channelId]).then(guild => { //BUG #26 crash if completed adventure channel deleted while bot is down
 					guild.channels.fetch(channelId).then(channel => {
 						channel.delete("adventure completed");
-					})
+					}).catch(console.error);
 				})
 			})
 		}

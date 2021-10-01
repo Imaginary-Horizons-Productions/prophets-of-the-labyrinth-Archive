@@ -155,17 +155,22 @@ exports.newRound = function (adventure, channel, embed) {
 				})
 			}
 
-			// Next Round's Prerolls
-			adventure.battleEnemies.forEach((enemy, index) => {
+			// Logistics for Next Round
+			adventure.battleEnemies.concat(adventure.delvers).forEach(combatant => {
+				// Clear Excess Block
+				combatant.clearBlock();
+
 				// Roll Round Speed
 				let percentBonus = (exports.nextRandomNumber(adventure, 21, "battle") - 10) / 100;
-				enemy.roundSpeed = Math.floor(enemy.speed * percentBonus);
+				combatant.roundSpeed = Math.floor(combatant.speed * percentBonus);
 
 				// Roll Critical Hit
 				let critRoll = exports.nextRandomNumber(adventure, 4, "battle");
-				enemy.crit = critRoll > 2;
+				combatant.crit = critRoll > 2;
+			})
 
-				// Compile Move
+			// Roll Enemy Moves
+			adventure.battleEnemies.forEach((enemy, index) => {
 				let action = enemy.actions[0]; //TODO #8 move selection AI (remember to include weights)
 				adventure.battleMoves.push(new Move()
 					.setSpeed(enemy.speed)
@@ -178,15 +183,6 @@ exports.newRound = function (adventure, channel, embed) {
 					.setEffect(action.effect));//TODO #19 nonrandom AI
 			})
 
-			for (var delver of adventure.delvers) {
-				// Roll Round Speed
-				let percentBonus = (exports.nextRandomNumber(adventure, 21, "battle") - 10) / 100;
-				delver.roundSpeed = Math.floor(delver.speed * percentBonus);
-
-				// Roll Critical Hit
-				let critRoll = exports.nextRandomNumber(adventure, 4, "battle");
-				delver.crit = critRoll > 2;
-			}
 			if (lastRoundText !== "") {
 				embed.setDescription(lastRoundText);
 			}

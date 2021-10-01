@@ -13,4 +13,6 @@ module.exports = class Delver extends Combatant {
 		this.readType = "weaknesses";
 		this.weapons = [];
 	}
+
+	clearBlock = super.clearBlock;
 }

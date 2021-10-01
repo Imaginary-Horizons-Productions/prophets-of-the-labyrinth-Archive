@@ -4,6 +4,7 @@ module.exports = class Combatant {
 	team = "";
 	hp = 10;
 	maxHp = 30;
+	block = 0;
 	speed = 10;
 	roundSpeed = 0;
 	crit = false;
@@ -12,6 +13,16 @@ module.exports = class Combatant {
 	setHp(integer) {
 		this.hp = integer;
 		this.maxHp = integer;
+		return this;
+	}
+
+	addBlock(integer) {
+		this.block = integer;
+		return this;
+	}
+
+	clearBlock() {
+		this.block = 0;
 		return this;
 	}
 

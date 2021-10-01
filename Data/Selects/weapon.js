@@ -23,7 +23,13 @@ module.exports.execute = (interaction, args) => {
 			.setTarget(targetTeam, targetIndex)
 			.setEffect(weapon.effect));
 		saveAdventures();
-		interaction.reply({ content: `Your plan to use **${weapon.name}** on **${adventure.battleEnemies[targetIndex].name}** next round has been recorded.`, ephemeral: true })
+		let target;
+		if (targetTeam === "ally") {
+			target = adventure.delvers[targetIndex];
+		} else if (targetTeam === "enemy") {
+			target = adventure.battleEnemies[targetIndex];
+		}
+		interaction.reply({ content: `Your plan to use **${weapon.name}** on **${target.name}** next round has been recorded.`, ephemeral: true })
 			.catch(console.error);
 		updateRoundMessage(interaction.message, adventure);
 		checkNextRound(adventure, interaction.channel);
