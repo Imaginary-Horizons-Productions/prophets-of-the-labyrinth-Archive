@@ -1,5 +1,6 @@
 const { getAdventure, nextRoom } = require('../adventureDAO.js');
 const Button = require('../../Classes/Button.js');
+const Weapon = require('../../Classes/Weapon.js');
 const { getGuild } = require('../guildDAO.js');
 const { weaponDictionary } = require("./../Weapons/_weaponDictionary.js");
 const { MessageActionRow, MessageButton } = require('discord.js');
@@ -20,7 +21,10 @@ module.exports.execute = (interaction, args) => {
 			.catch(console.error);
 		adventure.lives = adventure.delvers.length + 1;
 		adventure.delvers.forEach(delver => { //TODO #15 move to select to generate delvers based on character picks
-			delver.weapons.push(weaponDictionary["dagger"], weaponDictionary["buckler"]);
+			delver.weapons.push(Object.assign(new Weapon(), weaponDictionary["dagger"]), Object.assign(new Weapon(), weaponDictionary["buckler"]));
+			while (delver.weapons.length < 5) {
+				delver.weapons.push(Object.assign(new Weapon(), weaponDictionary["empty"]));
+			}
 		})
 		let utilities = [new MessageActionRow()
 			.addComponents(

@@ -6,7 +6,7 @@ module.exports = new Weapon("buckler", "Reduce damage a character takes next rou
 function effect(target, user, isCrit, element, adventure) {
 	let block = 75;
 	if (isCrit) {
-		damage *= 2;
+		block *= 2;
 	}
 	target.addBlock(block);
 	return "";

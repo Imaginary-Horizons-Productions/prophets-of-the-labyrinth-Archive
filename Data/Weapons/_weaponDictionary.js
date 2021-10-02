@@ -1,6 +1,8 @@
 const fs = require('fs');
 
 var weaponWhitelist = [
+	"-empty.js",
+	"-punch.js",
 	"backstab.js",
 	"buckler.js",
 	"chameleonsword.js",

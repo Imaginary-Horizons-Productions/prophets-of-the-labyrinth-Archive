@@ -8,7 +8,6 @@ module.exports.resolveMove = function (move, adventure) {
 		let target;
 		if (move.targetTeam === "ally") {
 			target = adventure.delvers[move.targetIndex];
-			//TODO #6 decrement weapon durability and check for breakage
 		} else {
 			target = adventure.battleEnemies[move.targetIndex];
 		}
