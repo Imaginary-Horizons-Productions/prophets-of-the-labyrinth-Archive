@@ -6,6 +6,9 @@ module.exports = new Weapon("shieldoflight", "Block an immense amount of damage 
 
 function effect(target, user, isCrit, element, adventure) {
 	let block = 1000;
+	if (user.element === element) {
+		block = Math.ceil(block * 1.5);
+	}
 	if (isCrit) {
 		block *= 2;
 	}

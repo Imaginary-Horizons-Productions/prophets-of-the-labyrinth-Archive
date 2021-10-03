@@ -7,6 +7,9 @@ module.exports = new Weapon("icespear", "A high damage attack with low durabilit
 
 function effect(target, user, isCrit, element, adventure) {
 	let damage = 200;
+	if (user.element === element) {
+		damage = Math.ceil(damage * 1.5);
+	}
 	if (isCrit) {
 		damage *= 2;
 	}

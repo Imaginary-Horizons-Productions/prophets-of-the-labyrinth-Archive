@@ -7,6 +7,7 @@ module.exports = new Weapon("punch", "description", "untyped", effect)
 
 function effect(target, user, isCrit, element, adventure) {
 	let damage = 50;
+	// No same element effect boost due to untyped
 	if (isCrit) {
 		damage *= 2;
 	}

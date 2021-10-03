@@ -11,6 +11,9 @@ function effect(target, user, isCrit, element, adventure) {
 	if (target.speed + target.roundSpeed < user.speed + user.roundSpeed) {
 		damage += 100;
 	}
+	if (user.element === element) {
+		damage = Math.ceil(damage * 1.5);
+	}
 	if (isCrit) {
 		block += 75;
 	}

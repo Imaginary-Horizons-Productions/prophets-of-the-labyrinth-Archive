@@ -7,6 +7,9 @@ module.exports = new Weapon("dagger", "An attack that deals extra damage on a cr
 
 function effect(target, user, isCrit, element, adventure) {
 	let damage = 100;
+	if (user.element === element) {
+		damage = Math.ceil(damage * 1.5);
+	}
 	if (isCrit) {
 		damage *= 3;
 	}

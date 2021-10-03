@@ -10,6 +10,9 @@ function effect(target, user, isCrit, element, adventure) {
 	if (target.block === 0) {
 		damage = 125;
 	}
+	if (user.element === element) {
+		damage = Math.ceil(damage * 1.5);
+	}
 	if (isCrit) {
 		damage *= 2;
 	}

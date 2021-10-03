@@ -5,7 +5,9 @@ module.exports = new Weapon("name", "description", "element", effect)
 	.setUses();
 
 function effect(target, user, isCrit, element, adventure) {
-	// TODO #32 same element effect boost
+	if (user.element === element) {
+
+	}
 	if (isCrit) {
 
 	}

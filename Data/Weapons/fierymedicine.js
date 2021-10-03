@@ -7,6 +7,9 @@ module.exports = new Weapon("fierymedicine", "Heal a fire element character, dam
 
 function effect(target, user, isCrit, element, adventure) {
 	let value = 50;
+	if (user.element === element) {
+		value = Math.ceil(value * 1.5);
+	}
 	if (isCrit) {
 		value *= 2;
 	}

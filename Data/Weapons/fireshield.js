@@ -8,6 +8,9 @@ module.exports = new Weapon("fireshield", "Defend yourself while bashing a targe
 function effect(target, user, isCrit, element, adventure) {
 	let damage = 75;
 	let block = 50;
+	if (user.element === element) {
+		damage = Math.ceil(damage * 1.5);
+	}
 	if (isCrit) {
 		damage *= 2;
 	}

@@ -7,6 +7,9 @@ module.exports = new Weapon("prideclaw", "Deal a large amount of damage that won
 
 function effect(target, user, isCrit, element, adventure) {
 	let damage = 150;
+	if (user.element === element) {
+		damage = Math.ceil(damage * 1.5);
+	}
 	if (isCrit) {
 		damage *= 2;
 	}
