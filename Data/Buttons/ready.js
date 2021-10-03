@@ -22,9 +22,6 @@ module.exports.execute = (interaction, args) => {
 		adventure.lives = adventure.delvers.length + 1;
 		adventure.delvers.forEach(delver => { //TODO #15 move to select to generate delvers based on character picks
 			delver.weapons.push(Object.assign(new Weapon(), weaponDictionary["dagger"]), Object.assign(new Weapon(), weaponDictionary["buckler"]));
-			while (delver.weapons.length < 5) {
-				delver.weapons.push(Object.assign(new Weapon(), weaponDictionary["empty"]));
-			}
 		})
 		let utilities = [new MessageActionRow()
 			.addComponents(

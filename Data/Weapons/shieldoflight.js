@@ -1,6 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 
 module.exports = new Weapon("shieldoflight", "Block an immense amount of damage once (crit: more block)", "light", effect)
+	.setTargetingTags({ target: "self", team: "ally" })
 	.setUses(1);
 
 function effect(target, user, isCrit, element, adventure) {

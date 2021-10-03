@@ -2,6 +2,7 @@ const Weapon = require('../../Classes/Weapon.js');
 const { takeDamage } = require("../combatantDAO.js");
 
 module.exports = new Weapon("icespear", "A high damage attack with low durability (crit: more damage)", "water", effect)
+	.setTargetingTags({ target: "single", team: "enemy" })
 	.setUses(3);
 
 function effect(target, user, isCrit, element, adventure) {

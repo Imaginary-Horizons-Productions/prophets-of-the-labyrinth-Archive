@@ -1,12 +1,11 @@
 const { setPlayer, getPlayer } = require("./playerDAO.js");
 const fs = require("fs");
 const { roomDictionary } = require("./Rooms/_roomDictionary.js");
-const { MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu } = require("discord.js");
+const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
 const { enemyDictionary } = require("./Enemies/_enemyDictionary.js");
 const Move = require("../Classes/Move.js");
 const Enemy = require("../Classes/Enemy.js");
 const { resolveMove } = require("./moveDAO.js");
-const { getFullName } = require("./combatantDAO.js");
 const { ensuredPathSave } = require("../helpers.js");
 
 var filePath = "./Saves/adventures.json";
@@ -193,25 +192,38 @@ exports.newRound = function (adventure, channel, embed) {
 		}
 		embed.addField(`0/${adventure.delvers.length} Moves Readied`, "Ready party members will be listed here")
 			.setFooter(`Round ${adventure.battleRound}`);
-		channel.send({ embeds: [embed], components: exports.generateBattleMenu(adventure) }).then(message => {
+		let battleMenu = [new MessageActionRow()
+			.addComponents(
+				new MessageButton()
+					.setCustomId("read")
+					.setLabel("Read")
+					.setStyle("SECONDARY"),
+				new MessageButton()
+					.setCustomId("readymove")
+					.setLabel("Ready a Move")
+					.setStyle("PRIMARY")
+			)];
+		channel.send({ embeds: [embed], components: battleMenu }).then(message => {
 			adventure.lastComponentMessageId = message.id;
 		});
 	}
 }
 
-exports.updateRoundMessage = function (roundMessage, adventure) {
-	let embed = roundMessage.embeds[0];
-	let readyList = "";
-	for (var move of adventure.battleMoves) {
-		if (move.userTeam === "ally") {
-			readyList += `\n<@${adventure.delvers[move.userIndex].id}>`;
+exports.updateRoundMessage = function (messageManager, adventure) {
+	messageManager.fetch(adventure.lastComponentMessageId).then(roundMessage => {
+		let embed = roundMessage.embeds[0];
+		let readyList = "";
+		for (var move of adventure.battleMoves) {
+			if (move.userTeam === "ally") {
+				readyList += `\n<@${adventure.delvers[move.userIndex].id}>`;
+			}
 		}
-	}
-	if (readyList === "") {
-		readyList = "Ready party members will be listed here";
-	}
-	embed.spliceFields(0, 1, { name: `${adventure.battleMoves.length - adventure.battleEnemies.length}/${adventure.delvers.length} Moves Readied`, value: readyList });
-	roundMessage.edit({ embeds: [embed] });
+		if (readyList === "") {
+			readyList = "Ready party members will be listed here";
+		}
+		embed.spliceFields(0, 1, { name: `${adventure.battleMoves.length - adventure.battleEnemies.length}/${adventure.delvers.length} Moves Readied`, value: readyList });
+		roundMessage.edit({ embeds: [embed] });
+	})
 }
 
 exports.setEnemyTitle = function (titleObject, enemy) {
@@ -222,69 +234,6 @@ exports.setEnemyTitle = function (titleObject, enemy) {
 		titleObject[enemy.name] = 1;
 		enemy.title = 1;
 	}
-}
-
-exports.generateBattleMenu = function (adventure) {
-	let targetOptions = [];
-	for (i = 0; i < adventure.battleEnemies.length; i++) {
-		if (adventure.battleEnemies[i].hp !== 0) {
-			targetOptions.push({
-				label: getFullName(adventure.battleEnemies[i], adventure.battleEnemyTitles),
-				description: "",
-				value: `enemy-${i}`
-			})
-		}
-	}
-	for (i = 0; i < adventure.delvers.length; i++) {
-		targetOptions.push({
-			label: adventure.delvers[i].name,
-			description: "",
-			value: `ally-${i}`
-		})
-	}
-	let battleMenu = [
-		new MessageActionRow()
-			.addComponents(
-				new MessageButton()
-					.setCustomId("read")
-					.setLabel("Read")
-					.setStyle("PRIMARY"),
-				new MessageButton()
-					.setCustomId("self")
-					.setLabel("Inspect self")
-					.setStyle("SECONDARY")
-			),
-		new MessageActionRow()
-			.addComponents(
-				new MessageSelectMenu()
-					.setCustomId(`weapon-0`)
-					.setPlaceholder("Use your first weapon on...")
-					.addOptions(targetOptions)
-			),
-		new MessageActionRow()
-			.addComponents(
-				new MessageSelectMenu()
-					.setCustomId(`weapon-1`)
-					.setPlaceholder("Use your second weapon on...")
-					.addOptions(targetOptions)
-			),
-		new MessageActionRow()
-			.addComponents(
-				new MessageSelectMenu()
-					.setCustomId(`weapon-2`)
-					.setPlaceholder("Use your third weapon on...")
-					.addOptions(targetOptions)
-			),
-		new MessageActionRow()
-			.addComponents(
-				new MessageSelectMenu()
-					.setCustomId(`weapon-3`)
-					.setPlaceholder("Use your fourth weapon on...")
-					.addOptions(targetOptions)
-			)
-	];
-
-	return battleMenu;
 }
 
 exports.checkNextRound = function (adventure, channel) {
