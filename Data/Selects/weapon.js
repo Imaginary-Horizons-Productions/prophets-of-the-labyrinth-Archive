@@ -24,10 +24,13 @@ module.exports.execute = (interaction, args) => {
 		} else {
 			weapon = weaponDictionary["punch"];
 		}
+
+		// Add move to round list (overwrite exisiting readied move)
 		let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
 		let targetTeam = args[1];
 		let targetIndex = args[2];
-		adventure.battleMoves.push(new Move() //TODO #34 extra moves from same user should overwrite previous selection
+		let overwritten = false;
+		let newMove = new Move()
 			.setSpeed(user.speed)
 			.setRoundSpeed(user.roundSpeed)
 			.setElement(weapon.element)
@@ -35,7 +38,20 @@ module.exports.execute = (interaction, args) => {
 			.setMoveName(weapon.name)
 			.setUser(user.team, userIndex)
 			.setTarget(targetTeam, targetIndex)
-			.setEffect(weapon.effect));
+			.setEffect(weapon.effect);
+		for (let i = 0; i < adventure.battleMoves.length; i++) {
+			let move = adventure.battleMoves[i];
+			if (move.userTeam === userTeam && move.userIndex === userIndex) {
+				adventure.battleMoves.splice(i, 1, newMove);
+				overwritten = true;
+				break;
+			}
+		}
+		if (!overwritten) {
+			adventure.battleMoves.push(newMove);
+		}
+
+		// Send confirmation text
 		let target;
 		if (targetTeam === "ally") {
 			target = adventure.delvers[targetIndex];
