@@ -72,8 +72,9 @@ client.on("interactionCreate", interaction => {
 					.catch(console.error);
 			}
 		} else if (interaction.isButton()) {
-			var args = interaction.customId.split("-");
-			buttonDictionary[args[0]].execute(interaction, args);
+			let args = interaction.customId.split("-");
+			let command = args.shift();
+			buttonDictionary[command].execute(interaction, args);
 		} else if (interaction.isSelectMenu()) {
 			let args = interaction.customId.split("-");
 			let command = args.shift();

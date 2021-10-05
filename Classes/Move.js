@@ -5,10 +5,9 @@ module.exports = class Move {
 		this.element = "";
 		this.roundSpeed = 0;
 		this.isCrit = false;
-		this.userTeam = "";
+		this.userTeam = ""; //TODO convert to array to support joint/combo moves
 		this.userIndex = "";
-		this.targetTeam = "";
-		this.targetIndex = "";
+		this.targets = [];
 		this.effect = () => { };
 	}
 
@@ -43,9 +42,8 @@ module.exports = class Move {
 		return this;
 	}
 
-	setTarget(team, index) {
-		this.targetTeam = team;
-		this.targetIndex = index;
+	addTarget(team, index) {
+		this.targets.push({ team: team, index: index });
 		return this;
 	}
 

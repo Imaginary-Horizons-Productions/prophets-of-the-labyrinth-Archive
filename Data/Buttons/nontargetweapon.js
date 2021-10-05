@@ -1,7 +1,6 @@
 const Button = require('../../Classes/Button.js');
 const Move = require('../../Classes/Move');
-const { getAdventure, saveAdventures, checkNextRound, updateRoundMessage } = require('../adventureDAO');
-const { weaponDictionary } = require('../Weapons/_weaponDictionary');
+const { getAdventure, saveAdventures, checkNextRound, updateRoundMessage, nextRandomNumber } = require('../adventureDAO');
 const { getFullName } = require("./../combatantDAO.js");
 
 module.exports = new Button("nontargetweapon");
@@ -13,22 +12,16 @@ module.exports.execute = (interaction, args) => { //TODO #33 implement non-targe
 	let weaponIndex = args[0];
 	let weapon;
 	let confirmationText = "";
-	if (weaponIndex === "punch" || parseInt(weaponIndex) < user.weapons.length) {
-		if (weaponIndex !== "punch") {
-			weapon = user.weapons[weaponIndex];
-			weapon.uses--;
-			if (weapon.uses === 0) {
-				user.weapons.splice(weaponIndex, 1);
-				confirmationText += ` Your ${weapon.name} broke!`;
-			}
-		} else {
-			weapon = weaponDictionary["punch"];
+	if (parseInt(weaponIndex) < user.weapons.length) {
+		weapon = user.weapons[weaponIndex];
+		weapon.uses--;
+		if (weapon.uses === 0) {
+			user.weapons.splice(weaponIndex, 1);
+			confirmationText += ` Your ${weapon.name} broke!`;
 		}
 
 		// Add move to round list (overwrite exisiting readied move)
 		let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
-		let targetTeam = args[1];
-		let targetIndex = args[2];
 		let overwritten = false;
 		let newMove = new Move()
 			.setSpeed(user.speed)
@@ -37,11 +30,35 @@ module.exports.execute = (interaction, args) => { //TODO #33 implement non-targe
 			.setIsCrit(user.crit)
 			.setMoveName(weapon.name)
 			.setUser(user.team, userIndex)
-			.setTarget(targetTeam, targetIndex)
 			.setEffect(weapon.effect);
+
+		let targetText = "";
+		let targetTeam = weapon.targetingTags.team;
+		if (weapon.targetingTags.target === "all") {
+			let targetCount = 0;
+			if (targetTeam === "ally") {
+				targetCount = adventure.delvers.length;
+				targetText = "all allies";
+			} else if (targetTeam === "enemy") {
+				targetCount = adventure.battleEnemies.length;
+				targetText = "all enemies";
+			}
+			for (let i = 0; i < targetCount; i++) {
+				newMove.addTarget(targetTeam, i);
+			}
+		} else if (weapon.targetingTags.target === "random") {
+			if (targetTeam === "ally") {
+				newMove.addTarget(targetTeam, nextRandomNumber(adventure, adventure.delvers.length, "battle"));
+				targetText = "a random ally";
+			} else if (targetTeam === "enemy") {
+				newMove.addTarget(targetTeam, nextRandomNumber(adventure, adventure.battleEnemies.length, "battle"));
+				targetText = "a random enemy";
+			}
+		}
+
 		for (let i = 0; i < adventure.battleMoves.length; i++) {
 			let move = adventure.battleMoves[i];
-			if (move.userTeam === userTeam && move.userIndex === userIndex) {
+			if (move.userTeam === user.team && move.userIndex === userIndex) {
 				adventure.battleMoves.splice(i, 1, newMove);
 				overwritten = true;
 				break;
@@ -52,13 +69,7 @@ module.exports.execute = (interaction, args) => { //TODO #33 implement non-targe
 		}
 
 		// Send confirmation text
-		let target;
-		if (targetTeam === "ally") {
-			target = adventure.delvers[targetIndex];
-		} else if (targetTeam === "enemy") {
-			target = adventure.battleEnemies[targetIndex];
-		}
-		confirmationText = `Your plan to use **${weapon.name}** on **${getFullName(target, adventure.battleEnemyTitles)}** next round has been recorded.` + confirmationText;
+		confirmationText = `Your plan to use **${weapon.name}** on **${targetText}** next round has been recorded.` + confirmationText;
 		interaction.reply({ content: confirmationText, ephemeral: true })
 			.catch(console.error);
 		saveAdventures();

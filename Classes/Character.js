@@ -29,7 +29,7 @@ module.exports = class Character {
 	}
 
 	setSignatureWeapons(weaponArray) {
-		this.signatureWeapon = weaponArray;
+		this.signatureWeapons = weaponArray;
 		return this;
 	}
 }

@@ -55,9 +55,9 @@ module.exports.execute = (interaction, args) => {
 				moveMenu.push(new MessageActionRow()
 					.addComponents(
 						new MessageButton()
-							.setCustomId(`weapon-${i}`)
+							.setCustomId(`nontargetweapon-${i}`)
 							.setLabel(`Use ${weapon.name}`)
-							.setStyle("SECONDARY")
+							.setStyle("PRIMARY")
 					))
 			}
 		}

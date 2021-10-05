@@ -7,7 +7,7 @@ module.exports = new Button("ready");
 
 module.exports.execute = (interaction, args) => {
 	// Start an adventure if clicked by adventure leader
-	let adventure = getAdventure(args[1]);
+	let adventure = getAdventure(interaction.channel.id);
 	if (interaction.user.id === adventure.leaderId) {
 		// Clear components from recruitment and deploy messages
 		let guildProfile = getGuild(interaction.guild.id);

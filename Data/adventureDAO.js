@@ -180,7 +180,7 @@ exports.newRound = function (adventure, channel, embed) {
 				.setIsCrit(enemy.crit)
 				.setMoveName(action.name)
 				.setUser(enemy.team, index)
-				.setTarget("ally", exports.nextRandomNumber(adventure, adventure.delvers.length, "battle"))
+				.addTarget("ally", exports.nextRandomNumber(adventure, adventure.delvers.length, "battle"))
 				.setEffect(action.effect));//TODO #19 nonrandom AI
 		})
 
