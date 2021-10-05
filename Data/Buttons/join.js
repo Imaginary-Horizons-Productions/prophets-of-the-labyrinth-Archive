@@ -4,12 +4,12 @@ const Delver = require('../../Classes/Delver.js');
 
 module.exports = new Button("join");
 
-module.exports.execute = (interaction, args) => {
+module.exports.execute = (interaction, [channelId]) => {
 	// Give the basic rules and information about the bot
-	interaction.guild.channels.fetch(args[1]).then(channel => {
-		var adventure = getAdventure(channel.id);
+	interaction.guild.channels.fetch(channelId).then(channel => {
+		var adventure = getAdventure(channelId);
 		if (!adventure.delvers.some(delver => delver.id == interaction.user.id)) {
-			adventure.delvers.push(new Delver(interaction.user.id, channel.id));
+			adventure.delvers.push(new Delver(interaction.user.id, channelId));
 			channel.permissionOverwrites.create(interaction.user, {
 				VIEW_CHANNEL: true
 			})
