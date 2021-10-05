@@ -7,14 +7,19 @@ module.exports = class Delver extends Combatant {
 		super();
 		this.id = idInput;
 		this.adventureId = adventureIdInput;
-		super.name = nameInput; //TODO #30 split player name into short and full names
+		super.name = nameInput;
 		super.team = "ally";
-		this.difficultyOptions = [];
-		this.readType = "weaknesses";
-		this.weapons = [];
 	}
+	readType = "weaknesses";
+	weapons = [];
 
 	setTitle = super.setTitle;
+
+	setHp = super.setHp;
+
+	setSpeed = super.setSpeed;
+
+	setElement = super.setElement;
 
 	clearBlock = super.clearBlock;
 }

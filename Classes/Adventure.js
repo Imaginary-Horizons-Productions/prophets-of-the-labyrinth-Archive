@@ -10,10 +10,12 @@ module.exports = class Adventure {
 	startMessageId = "";
 	utilityMessageId = "";
 	lastComponentMessageId = "";
+	leaderId = "";
 	delvers = [];
+	difficultyOptions = [];
 	accumulatedScore = 0;
 	depth = 0;
-	lives = 1;
+	lives = 2;
 	gold = 100;
 	battleRound;
 	battleEnemies = [];
@@ -30,13 +32,13 @@ module.exports = class Adventure {
 		return this;
 	}
 
-	setStartMessageID(id) {
+	setStartMessageId(id) {
 		this.startMessageId = id;
 		return this;
 	}
 
-	setLeader(delver) {
-		this.delvers.push(delver);
+	setLeaderId(id) {
+		this.leaderId = id;
 		return this;
 	}
 }

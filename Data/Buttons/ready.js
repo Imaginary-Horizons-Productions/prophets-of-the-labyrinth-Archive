@@ -1,16 +1,14 @@
 const { getAdventure, nextRoom } = require('../adventureDAO.js');
 const Button = require('../../Classes/Button.js');
-const Weapon = require('../../Classes/Weapon.js');
 const { getGuild } = require('../guildDAO.js');
-const { weaponDictionary } = require("./../Weapons/_weaponDictionary.js");
 const { MessageActionRow, MessageButton } = require('discord.js');
 
 module.exports = new Button("ready");
 
 module.exports.execute = (interaction, args) => {
 	// Start an adventure if clicked by adventure leader
-	if (interaction.user.id === args[2]) {
-		let adventure = getAdventure(args[1]);
+	let adventure = getAdventure(args[1]);
+	if (interaction.user.id === adventure.leaderId) {
 		let guildProfile = getGuild(interaction.guild.id);
 		interaction.guild.channels.fetch(guildProfile.centralId).then(channel => {
 			channel.messages.fetch(adventure.startMessageId).then(startMessage => {
@@ -19,10 +17,6 @@ module.exports.execute = (interaction, args) => {
 		}).catch(console.error);
 		interaction.message.edit({ components: [] })
 			.catch(console.error);
-		adventure.lives = adventure.delvers.length + 1;
-		adventure.delvers.forEach(delver => { //TODO #15 move to select to generate delvers based on character picks
-			delver.weapons.push(Object.assign(new Weapon(), weaponDictionary["dagger"]), Object.assign(new Weapon(), weaponDictionary["buckler"]));
-		})
 		let utilities = [new MessageActionRow()
 			.addComponents(
 				new MessageButton()
@@ -39,5 +33,7 @@ module.exports.execute = (interaction, args) => {
 			adventure.utilityMessageId = message.id;
 		});
 		nextRoom(adventure, interaction.channel);
+	} else {
+		interaction.reply("Please wait for the leader to start the adventure.");
 	}
 }

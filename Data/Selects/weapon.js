@@ -27,8 +27,7 @@ module.exports.execute = (interaction, args) => {
 
 		// Add move to round list (overwrite exisiting readied move)
 		let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
-		let targetTeam = args[1];
-		let targetIndex = args[2];
+		let [targetTeam, targetIndex] = interaction.values[0].split("-");
 		let overwritten = false;
 		let newMove = new Move()
 			.setSpeed(user.speed)
@@ -65,6 +64,7 @@ module.exports.execute = (interaction, args) => {
 		updateRoundMessage(interaction.channel.messages, adventure);
 		checkNextRound(adventure, interaction.channel);
 	} else {
+		// Needed to prevent crashes in case users keep weapon menus around and use one with a broken weapon
 		interaction.reply({ content: `You don't have that weapon anymore.`, ephemeral: true })
 			.catch(console.error);
 	}

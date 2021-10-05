@@ -77,7 +77,6 @@ client.on("interactionCreate", interaction => {
 		} else if (interaction.isSelectMenu()) {
 			let args = interaction.customId.split("-");
 			let command = args.shift();
-			args = args.concat(interaction.values[0].split("-"));
 			selectDictionary[command].execute(interaction, args);
 		}
 	} else {

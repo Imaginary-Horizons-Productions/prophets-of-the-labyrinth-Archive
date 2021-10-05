@@ -1,7 +1,6 @@
 const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
 const Adventure = require('../../Classes/Adventure.js');
 const Command = require('../../Classes/Command.js');
-const Delver = require('../../Classes/Delver.js');
 const { getPlayer } = require('../playerDAO.js');
 const { setAdventure, nextRandomNumber } = require("../adventureDAO.js");
 const { getGuild } = require('../guildDAO.js');
@@ -53,20 +52,23 @@ module.exports.execute = (interaction) => {
 							.setStyle("PRIMARY")
 					)
 				interaction.reply({ embeds: [embed], components: [join], fetchReply: true }).then(message => {
-					let leader = new Delver(interaction.user.id, interaction.member.displayName, channel.id);
-					leader.setTitle("Placeholder");
-					adventure.setId(channel.id)
-						.setStartMessageID(message.id)
-						.setLeader(leader);
-					setAdventure(adventure);
 					let ready = new MessageActionRow()
 						.addComponents(
 							new MessageButton()
-								.setCustomId(`ready-${channel.id}-${leader.id}`)
-								.setLabel("Ready!")
-								.setStyle("SUCCESS")
+								.setCustomId("deploy")
+								.setLabel("Pick a Class")
+								.setStyle("PRIMARY"),
+							new MessageButton()
+								.setCustomId("difficulty")
+								.setLabel("Pick Difficulty Options (coming soon)")
+								.setStyle("DANGER")
+								.setDisabled(true)
 						)
-					channel.send({ content: "The adventure will begin when the leader clicks the \"Ready!\" button.", components: [ready] });
+					channel.send({ content: "The adventure will begin when everyone has picked a class and the leader clicks the \"Ready!\" button.", components: [ready] });
+					adventure.setId(channel.id)
+						.setStartMessageId(message.id)
+						.setLeaderId(interaction.user.id);
+					setAdventure(adventure);
 				}).catch(console.error);
 			})
 		})

@@ -2,6 +2,7 @@ const fs = require('fs');
 
 var buttonWhitelist = [
 	"continue.js",
+	"deploy.js",
 	"freegold.js",
 	"getgoldonfire.js",
 	"hpshare.js",
