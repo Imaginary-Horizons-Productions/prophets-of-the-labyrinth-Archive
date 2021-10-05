@@ -1,6 +1,7 @@
 const Button = require('../../Classes/Button.js');
 const { MessageActionRow, MessageSelectMenu } = require('discord.js');
 const { getPlayer } = require('../playerDAO.js');
+const { characterDictionary } = require('../Characters/_characterDictionary.js');
 
 module.exports = new Button("deploy");
 
@@ -10,9 +11,10 @@ module.exports.execute = (interaction, args) => {
 	let classOptions = [];
 	for (const className in playerProfile.characters) {
 		if (playerProfile.characters[className] > 0) {
+			let character = characterDictionary[className];
 			classOptions.push({
 				label: className,
-				description: "", //TODO element, readtype or description in deploy
+				description: `${character.element} - ${character.read}`,
 				value: className
 			})
 		}

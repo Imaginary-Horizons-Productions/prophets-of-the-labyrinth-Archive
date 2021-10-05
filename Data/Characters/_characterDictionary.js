@@ -9,5 +9,5 @@ exports.characterDictionary = {};
 
 for (const file of characterFiles) {
     const character = require(`./${file}`);
-    exports.characterDictionary[character.name] = character;
+    exports.characterDictionary[character.title] = character;
 }
