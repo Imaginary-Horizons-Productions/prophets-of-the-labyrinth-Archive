@@ -51,7 +51,7 @@ module.exports.execute = (interaction) => {
 							.setLabel("Join")
 							.setStyle("PRIMARY")
 					)
-				interaction.reply({ embeds: [embed], components: [join], fetchReply: true }).then(message => {
+				interaction.reply({ embeds: [embed], components: [join], fetchReply: true }).then(startMessage => {
 					let ready = new MessageActionRow()
 						.addComponents(
 							new MessageButton()
@@ -64,11 +64,13 @@ module.exports.execute = (interaction) => {
 								.setStyle("DANGER")
 								.setDisabled(true)
 						)
-					channel.send({ content: "The adventure will begin when everyone has picked a class and the leader clicks the \"Ready!\" button.", components: [ready] });
-					adventure.setId(channel.id)
-						.setStartMessageId(message.id)
-						.setLeaderId(interaction.user.id);
-					setAdventure(adventure);
+					channel.send({ content: "The adventure will begin when everyone has picked a class and the leader clicks the \"Ready!\" button.", components: [ready] }).then(message => {
+						adventure.setId(channel.id)
+							.setStartMessageId(startMessage.id)
+							.setDeployMessageId(message.id)
+							.setLeaderId(interaction.user.id);
+						setAdventure(adventure);
+					});
 				}).catch(console.error);
 			})
 		})

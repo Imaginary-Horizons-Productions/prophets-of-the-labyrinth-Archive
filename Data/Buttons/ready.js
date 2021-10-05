@@ -9,14 +9,18 @@ module.exports.execute = (interaction, args) => {
 	// Start an adventure if clicked by adventure leader
 	let adventure = getAdventure(args[1]);
 	if (interaction.user.id === adventure.leaderId) {
+		// Clear components from recruitment and deploy messages
 		let guildProfile = getGuild(interaction.guild.id);
 		interaction.guild.channels.fetch(guildProfile.centralId).then(channel => {
 			channel.messages.fetch(adventure.startMessageId).then(startMessage => {
 				startMessage.edit({ components: [] });
 			})
 		}).catch(console.error);
-		interaction.message.edit({ components: [] })
-			.catch(console.error);
+		interaction.channel.messages.fetch(adventure.deployMessageId).then(message => {
+			message.edit({ components: [] });
+		}).catch(console.error);
+
+		// Post utilities message
 		let utilities = [new MessageActionRow()
 			.addComponents(
 				new MessageButton()
@@ -26,7 +30,11 @@ module.exports.execute = (interaction, args) => {
 				new MessageButton()
 					.setCustomId("partystats")
 					.setLabel("Party Stats")
-					.setStyle("SECONDARY")
+					.setStyle("SECONDARY"),
+				new MessageButton()
+					.setCustomId("giveup")
+					.setLabel("Give Up")
+					.setStyle("DANGER")
 			)];
 		interaction.reply({ content: `The adventure has begun! Here are some utilities for the run (remember to \`Jump\` to the message if viewing from pins).`, components: utilities, fetchReply: true }).then(message => {
 			message.pin();
