@@ -19,7 +19,7 @@ module.exports.execute = (interaction, args) => {
 			weapon.uses--;
 			if (weapon.uses === 0) {
 				user.weapons.splice(weaponIndex, 1);
-				confirmationText += ` Your ${weapon.name} broke!`;
+				confirmationText += ` The ${weapon.name} broke!`;
 			}
 		} else {
 			weapon = weaponDictionary["punch"];
@@ -57,8 +57,8 @@ module.exports.execute = (interaction, args) => {
 		} else if (targetTeam === "enemy") {
 			target = adventure.battleEnemies[targetIndex];
 		}
-		confirmationText = `Your plan to use **${weapon.name}** on **${getFullName(target, adventure.battleEnemyTitles)}** next round has been recorded.` + confirmationText;
-		interaction.reply({ content: confirmationText, ephemeral: true })
+		confirmationText = `${interaction.user} readies **${weapon.name}** to use on **${getFullName(target, adventure.battleEnemyTitles)}**.` + confirmationText;
+		interaction.reply({ content: confirmationText })
 			.catch(console.error);
 		saveAdventures();
 		updateRoundMessage(interaction.channel.messages, adventure);

@@ -8,7 +8,7 @@ module.exports = new Weapon("cursedshield", "Pay some hp to use a strong shield 
 function effect(target, user, isCrit, element, adventure) {
 	let block = 125;
 	if (user.element === element) {
-		block = Math.ceil(block * 1.5);
+		block *= 1.5;
 	}
 	if (isCrit) {
 		block *= 2;

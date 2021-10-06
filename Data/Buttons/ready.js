@@ -9,15 +9,18 @@ module.exports.execute = (interaction, args) => {
 	// Start an adventure if clicked by adventure leader
 	let adventure = getAdventure(interaction.channel.id);
 	if (interaction.user.id === adventure.leaderId) {
-		// Clear components from recruitment and deploy messages
+		// Clear components from recruitment, start, and deploy messages
 		let guildProfile = getGuild(interaction.guild.id);
 		interaction.guild.channels.fetch(guildProfile.centralId).then(channel => {
-			channel.messages.fetch(adventure.startMessageId).then(startMessage => {
-				startMessage.edit({ components: [] });
+			channel.messages.fetch(adventure.recruitMessageId).then(recruitMessage => {
+				recruitMessage.edit({ components: [] });
 			})
 		}).catch(console.error);
-		interaction.channel.messages.fetch(adventure.deployMessageId).then(message => {
-			message.edit({ components: [] });
+		interaction.channel.messages.fetch(adventure.deployMessageId).then(deployMessage => {
+			deployMessage.edit({ components: [] });
+		}).catch(console.error);
+		interaction.channel.messages.fetch(adventure.startMessageId).then(startMessage => {
+			startMessage.edit({ components: [] });
 		}).catch(console.error);
 
 		// Post utilities message

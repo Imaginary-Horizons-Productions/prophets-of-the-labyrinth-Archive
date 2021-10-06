@@ -2,6 +2,7 @@ const fs = require('fs');
 
 var characterWhitelist = [
 	"assassin.js",
+	"firestarter.js",
 	"knight.js"
 ];
 const characterFiles = fs.readdirSync('./Data/Characters').filter(file => file.endsWith('.js') && characterWhitelist.includes(file));

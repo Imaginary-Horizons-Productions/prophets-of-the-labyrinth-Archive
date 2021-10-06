@@ -34,7 +34,8 @@ module.exports.execute = (interaction, args) => {
 		// Check if all ready
 		let confirmationText = "";
 		let readyButton = [];
-		if (adventure.lives - 1 === adventure.delvers.length) { // Lives equals player count + 1; no opportunity to lose lives before adventure starts
+		let allReady = adventure.lives - 1 === adventure.delvers.length;
+		if (allReady) { // Lives equals player count + 1; no opportunity to lose lives before adventure starts
 			readyButton.push(new MessageActionRow()
 				.addComponents(
 					new MessageButton()
@@ -47,8 +48,9 @@ module.exports.execute = (interaction, args) => {
 
 		// Send confirmation text
 		confirmationText = `${interaction.user} will be playing as ${interaction.values[0]}.` + confirmationText;
-		interaction.reply({ content: confirmationText, components: readyButton })
-			.catch(console.error);
+		interaction.reply({ content: confirmationText, components: readyButton, fetchReply: allReady }).then(message => {
+			adventure.setStartMessageId(message.id);
+		}).catch(console.error);
 		saveAdventures();
 	} else {
 		interaction.reply({ content: "This adventure seems to be over already.", ephemeral: true });

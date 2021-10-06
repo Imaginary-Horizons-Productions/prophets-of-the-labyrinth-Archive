@@ -7,8 +7,9 @@ module.exports = class Adventure {
 	name;
 	rnIndex = 0;
 	rnIndexBattle = 0;
-	startMessageId = "";
+	recruitMessageId = "";
 	deployMessageId = "";
+	startMessageId = "";
 	utilityMessageId = "";
 	lastComponentMessageId = "";
 	leaderId = "";
@@ -33,13 +34,18 @@ module.exports = class Adventure {
 		return this;
 	}
 
-	setStartMessageId(id) {
-		this.startMessageId = id;
+	setRecruitMessageId(id) {
+		this.recruitMessageId = id;
 		return this;
 	}
 
 	setDeployMessageId(id) {
 		this.deployMessageId = id;
+		return this;
+	}
+
+	setStartMessageId(id) {
+		this.startMessageId = id;
 		return this;
 	}
 

@@ -4,7 +4,7 @@ const { getAdventure, saveAdventures, checkNextRound, updateRoundMessage, nextRa
 
 module.exports = new Button("nontargetweapon");
 
-module.exports.execute = (interaction, args) => { //TODO #33 implement non-targeting moves
+module.exports.execute = (interaction, args) => {
 	// Add move object to adventure
 	let adventure = getAdventure(interaction.channel.id);
 	let user = adventure.delvers.find(delver => delver.id === interaction.user.id);
@@ -16,7 +16,7 @@ module.exports.execute = (interaction, args) => { //TODO #33 implement non-targe
 		weapon.uses--;
 		if (weapon.uses === 0) {
 			user.weapons.splice(weaponIndex, 1);
-			confirmationText += ` Your ${weapon.name} broke!`;
+			confirmationText += ` The ${weapon.name} broke!`;
 		}
 
 		// Add move to round list (overwrite exisiting readied move)
@@ -53,6 +53,9 @@ module.exports.execute = (interaction, args) => { //TODO #33 implement non-targe
 				newMove.addTarget(targetTeam, nextRandomNumber(adventure, adventure.battleEnemies.length, "battle"));
 				targetText = "a random enemy";
 			}
+		} else if (weapon.targetingTags.target === "self") {
+			newMove.addTarget(targetTeam, userIndex);
+			targetText = "themself";
 		}
 
 		for (let i = 0; i < adventure.battleMoves.length; i++) {
@@ -68,8 +71,8 @@ module.exports.execute = (interaction, args) => { //TODO #33 implement non-targe
 		}
 
 		// Send confirmation text
-		confirmationText = `Your plan to use **${weapon.name}** on **${targetText}** next round has been recorded.` + confirmationText;
-		interaction.reply({ content: confirmationText, ephemeral: true })
+		confirmationText = `${interaction.user} readies **${weapon.name}** to use on **${targetText}**.` + confirmationText;
+		interaction.reply({ content: confirmationText })
 			.catch(console.error);
 		saveAdventures();
 		updateRoundMessage(interaction.channel.messages, adventure);

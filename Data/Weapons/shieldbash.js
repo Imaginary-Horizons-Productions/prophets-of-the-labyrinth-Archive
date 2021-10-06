@@ -8,7 +8,7 @@ module.exports = new Weapon("shieldbash", "Deal damage equal to your block (crit
 function effect(target, user, isCrit, element, adventure) {
 	let damage = user.block;
 	if (user.element === element) {
-		damage = Math.ceil(damage * 1.5);
+		damage *= 1.5;
 	}
 	if (isCrit) {
 		damage *= 2;

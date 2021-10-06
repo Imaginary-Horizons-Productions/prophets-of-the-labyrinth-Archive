@@ -1,15 +1,12 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { takeDamage } = require('../combatantDAO.js');
 
-module.exports = new Weapon("chargingslash", "Deal additional damage to a target if not blocking (crit: more damage)", "fire", effect)
-	.setTargetingTags({ target: "single", team: "enemy" })
-	.setUses(10);
+module.exports = new Weapon("firecracker", "A damaging explosion that hits a random enemy (crit: more damage)", "fire", effect)
+	.setTargetingTags({ target: "random", team: "enemy" }) // tagObject {target: ["single", "all", "random", "self"], team: ["ally", "enemy", "any"]}
+	.setUses(5);
 
 function effect(target, user, isCrit, element, adventure) {
-	let damage = 75;
-	if (user.block === 0) {
-		damage = 150;
-	}
+	let damage = 125;
 	if (user.element === element) {
 		damage *= 1.5;
 	}

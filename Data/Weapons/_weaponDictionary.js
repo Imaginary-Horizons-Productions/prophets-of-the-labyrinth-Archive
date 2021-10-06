@@ -10,6 +10,7 @@ var weaponWhitelist = [
 	"dagger.js",
 	"fanofknives.js",
 	"fierymedicine.js",
+	"firecracker.js",
 	"fireshield.js",
 	"icespear.js",
 	"preemptivestrike.js",

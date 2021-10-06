@@ -15,7 +15,7 @@ exports.getFullName = function (combatant, titleObject) {
 }
 
 exports.takeDamage = function (combatant, damage, element, adventure) {
-	let pendingDamage = damage;
+	let pendingDamage = Math.ceil(damage);
 	let isWeakness = Combatant.getWeaknesses(combatant.element).includes(element);
 	if (isWeakness) {
 		pendingDamage *= 2;
