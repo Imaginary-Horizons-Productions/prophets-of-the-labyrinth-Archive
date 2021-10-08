@@ -49,7 +49,7 @@ exports.takeDamage = function (combatant, damage, element, adventure) {
 	return damageText;
 }
 
-module.exports.gainHealth = (combatant, healing, titleObject) => {
+exports.gainHealth = (combatant, healing, titleObject) => {
 	combatant.hp += healing;
 	if (combatant.hp > combatant.maxHp) {
 		combatant.hp = combatant.maxHp;
@@ -60,4 +60,14 @@ module.exports.gainHealth = (combatant, healing, titleObject) => {
 	} else {
 		return `${exports.getFullName(combatant, titleObject)} gained ${healing} hp.`
 	}
+}
+
+exports.addBlock = (combatant, integer) => {
+	combatant.block = integer;
+	return combatant;
+}
+
+exports.clearBlock = (combatant) => {
+	combatant.block = 0;
+	return combatant;
 }

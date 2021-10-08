@@ -28,7 +28,7 @@ module.exports.execute = (interaction, args) => {
 		if (userIndex === -1) {
 			adventure.delvers.push(delver);
 		} else {
-			adventure.delvers.splice(i, 1, delver);
+			adventure.delvers.splice(userIndex, 1, delver);
 		}
 
 		// Check if all ready
@@ -44,6 +44,8 @@ module.exports.execute = (interaction, args) => {
 						.setStyle("SUCCESS")
 				))
 			confirmationText += " All players are ready, have the leader click the button below to start!";
+
+			//TODO #38 if allReady and adventure.startMessageId already exists, player has changed class, so delete extra start button
 		}
 
 		// Send confirmation text

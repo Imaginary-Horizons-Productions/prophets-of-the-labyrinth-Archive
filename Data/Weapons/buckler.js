@@ -1,4 +1,5 @@
 const Weapon = require('../../Classes/Weapon.js');
+const { addBlock } = require('../combatantDAO.js');
 
 module.exports = new Weapon("buckler", "Reduce damage a character takes next round (crit: more shield)", "earth", effect)
 	.setTargetingTags({ target: "single", team: "ally" })
@@ -12,6 +13,6 @@ function effect(target, user, isCrit, element, adventure) {
 	if (isCrit) {
 		block *= 2;
 	}
-	target.addBlock(block);
+	addBlock(target, block);
 	return "";
 }

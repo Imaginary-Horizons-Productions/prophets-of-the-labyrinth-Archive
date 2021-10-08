@@ -7,6 +7,7 @@ const Move = require("../Classes/Move.js");
 const Enemy = require("../Classes/Enemy.js");
 const { resolveMove } = require("./moveDAO.js");
 const { ensuredPathSave } = require("../helpers.js");
+const { clearBlock } = require("./combatantDAO.js");
 
 var filePath = "./Saves/adventures.json";
 var requirePath = "./../Saves/adventures.json";
@@ -162,7 +163,7 @@ exports.newRound = function (adventure, channel, embed) {
 		// Logistics for Next Round
 		adventure.battleEnemies.concat(adventure.delvers).forEach(combatant => {
 			// Clear Excess Block
-			combatant.clearBlock();
+			clearBlock(combatant);
 
 			// Roll Round Speed
 			let percentBonus = (exports.nextRandomNumber(adventure, 21, "battle") - 10) / 100;

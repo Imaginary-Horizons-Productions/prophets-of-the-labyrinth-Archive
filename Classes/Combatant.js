@@ -22,16 +22,6 @@ module.exports = class Combatant {
 		return this;
 	}
 
-	addBlock(integer) { //TODO #37 move addBlock and clearBlock to CombatantDAO.js
-		this.block = integer;
-		return this;
-	}
-
-	clearBlock() {
-		this.block = 0;
-		return this;
-	}
-
 	setSpeed(integer) {
 		this.speed = integer;
 		return this;

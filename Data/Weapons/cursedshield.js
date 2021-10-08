@@ -1,5 +1,5 @@
 const Weapon = require('../../Classes/Weapon.js');
-const { takeDamage } = require("../combatantDAO.js");
+const { takeDamage, addBlock } = require("../combatantDAO.js");
 
 module.exports = new Weapon("cursedshield", "Pay some hp to use a strong shield (crit: more shield)", "dark", effect)
 	.setTargetingTags({ target: "single", team: "ally" })
@@ -13,6 +13,6 @@ function effect(target, user, isCrit, element, adventure) {
 	if (isCrit) {
 		block *= 2;
 	}
-	target.addBlock(block);
+	addBlock(target, block);
 	return takeDamage(user, 25, "untyped", adventure); // user pays health
 }

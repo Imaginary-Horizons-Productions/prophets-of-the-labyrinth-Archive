@@ -20,6 +20,4 @@ module.exports = class Delver extends Combatant {
 	setSpeed = super.setSpeed;
 
 	setElement = super.setElement;
-
-	clearBlock = super.clearBlock;
 }

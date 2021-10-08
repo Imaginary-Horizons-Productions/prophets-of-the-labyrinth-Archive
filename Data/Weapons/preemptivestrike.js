@@ -1,5 +1,5 @@
 const Weapon = require('../../Classes/Weapon.js');
-const { takeDamage } = require('../combatantDAO.js');
+const { takeDamage, addBlock } = require('../combatantDAO.js');
 
 module.exports = new Weapon("preemptivestrike", "Deal more damage if the target has lower speed than you (crit: gain block)", "water", effect)
 	.setTargetingTags({ target: "single", team: "enemy" })
@@ -17,6 +17,6 @@ function effect(target, user, isCrit, element, adventure) {
 	if (isCrit) {
 		block += 75;
 	}
-	user.addBlock(block);
+	addBlock(user, block);
 	return takeDamage(target, damage, element, adventure);
 }

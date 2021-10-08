@@ -1,4 +1,5 @@
 const Weapon = require('../../Classes/Weapon.js');
+const { addBlock } = require('../combatantDAO.js');
 
 module.exports = new Weapon("shieldoflight", "Block an immense amount of damage once (crit: more block)", "light", effect)
 	.setTargetingTags({ target: "self", team: "ally" })
@@ -12,6 +13,6 @@ function effect(target, user, isCrit, element, adventure) {
 	if (isCrit) {
 		block *= 2;
 	}
-	user.addBlock(block);
+	addBlock(user, block);
 	return ""; // result as text
 }
