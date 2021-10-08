@@ -22,7 +22,7 @@ module.exports = class Combatant {
 		return this;
 	}
 
-	addBlock(integer) {
+	addBlock(integer) { //TODO #37 move addBlock and clearBlock to CombatantDAO.js
 		this.block = integer;
 		return this;
 	}

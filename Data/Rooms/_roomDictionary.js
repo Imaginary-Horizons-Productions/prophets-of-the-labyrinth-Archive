@@ -4,7 +4,8 @@ var roomWhitelist = [
 	"goldonfire.js",
 	"hpshare.js",
 	"freegold.js",
-	"brutefight.js"
+	"brutefight.js",
+	"counterpartfight.js"
 ];
 const roomFiles = fs.readdirSync('./Data/Rooms').filter(file => file.endsWith('.js') && roomWhitelist.includes(file));
 exports.roomDictionary = {};

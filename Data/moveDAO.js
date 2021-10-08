@@ -22,6 +22,7 @@ module.exports.resolveMove = function (move, adventure) {
 				targetNames.push(getFullName(target, adventure.battleEnemyTitles));
 			}
 		})
+		moveText += ` ${targetNames.join(", ")}. ${resultTexts.join(" ")}\n`
 	}
-	return `${moveText} ${targetNames.join(", ")}. ${resultTexts.join(" ")}\n`;
+	return moveText;
 }

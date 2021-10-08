@@ -96,24 +96,27 @@ exports.nextRoom = function (adventure, channel) {
 				adventure.battleRound = 0;
 				adventure.battleMoves = [];
 				Object.keys(room.enemies).forEach(enemyName => {
-					//TODO #31 parse enemy count string to allow enemy counts to scale (with players, previous events, etc)
-					for (let i = 0; i < room.enemies[enemyName]; i++) {
-						let enemy = new Enemy();
-						Object.assign(enemy, enemyDictionary[enemyName]);
-						adventure.battleEnemies.push(enemy);
-						exports.setEnemyTitle(adventure.battleEnemyTitles, enemy);
-					}
-				})
-				resolve(adventure);
-			}).then(adventure => {
-				exports.newRound(adventure, channel, embed);
+					let countExpression = room.enemies[enemyName];
+					let enemyCount = countExpression.split("*").reduce((total, term) => {
+						return total * (term == "n" ? adventure.delvers.length : new Number(term));
+					}, 1);
+				for (let i = 0; i < Math.ceil(enemyCount); i++) {
+					let enemy = new Enemy();
+					Object.assign(enemy, enemyDictionary[enemyName]);
+					adventure.battleEnemies.push(enemy);
+					exports.setEnemyTitle(adventure.battleEnemyTitles, enemy);
+				}
 			})
-		} else {
-			channel.send({ embeds: [embed], components: room.components }).then(message => {
-				adventure.lastComponentMessageId = message.id;
-			});
-		}
+			resolve(adventure);
+		}).then(adventure => {
+			exports.newRound(adventure, channel, embed);
+		})
+	} else {
+		channel.send({ embeds: [embed], components: room.components }).then(message => {
+			adventure.lastComponentMessageId = message.id;
+		});
 	}
+}
 }
 
 exports.newRound = function (adventure, channel, embed) {

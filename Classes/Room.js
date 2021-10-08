@@ -7,8 +7,8 @@ module.exports = class Room {
         this.enemies = {};
     }
 
-    addEnemy(enemyInput, countInput) {
-        this.enemies[enemyInput] = countInput;
+    addEnemy(enemyName, countExpression) {
+        this.enemies[enemyName] = countExpression;
         return this;
     }
 }

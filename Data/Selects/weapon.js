@@ -40,7 +40,7 @@ module.exports.execute = (interaction, args) => {
 			.setEffect(weapon.effect);
 		for (let i = 0; i < adventure.battleMoves.length; i++) {
 			let move = adventure.battleMoves[i];
-			if (move.userTeam === userTeam && move.userIndex === userIndex) {
+			if (move.userTeam === user.team && move.userIndex === userIndex) {
 				adventure.battleMoves.splice(i, 1, newMove);
 				overwritten = true;
 				break;
