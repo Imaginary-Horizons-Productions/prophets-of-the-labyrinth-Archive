@@ -45,7 +45,12 @@ module.exports.execute = (interaction, args) => {
 				))
 			confirmationText += " All players are ready, have the leader click the button below to start!";
 
-			//TODO #38 if allReady and adventure.startMessageId already exists, player has changed class, so delete extra start button
+			// if startMessageId already exists, player has changed class, so delete extra start button
+			if (adventure.startMessageId) {
+				interaction.channel.messages.fetch(adventure.startMessageId).then(startMessage => {
+					startMessage.edit({ components: [] });
+				})
+			}
 		}
 
 		// Send confirmation text
