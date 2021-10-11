@@ -4,9 +4,7 @@ const Combatant = require("./Combatant");
 module.exports = class Enemy extends Combatant {
 	// Properties from Combatant: hp, maxHp, speed, roundSpeed, elements, setHp, setSpeed, setElement
 	constructor(nameInput) {
-		super();
-		this.name = nameInput;
-		this.team = "enemy";
+		super(nameInput, "enemy");
 		this.actions = [];
 	}
 

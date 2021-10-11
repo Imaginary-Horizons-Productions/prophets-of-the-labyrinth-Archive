@@ -1,8 +1,9 @@
 module.exports = class Combatant {
-	constructor() { }
-	name = "";
+	constructor(nameInput, teamInput) {
+		this.name = nameInput;
+		this.team = teamInput;
+	}
 	title = "";
-	team = "";
 	hp = 300;
 	maxHp = 300;
 	block = 0;
