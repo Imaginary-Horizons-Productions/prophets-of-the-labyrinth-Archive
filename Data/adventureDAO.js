@@ -101,23 +101,24 @@ exports.nextRoom = function (adventure, channel) {
 					let enemyCount = countExpression.split("*").reduce((total, term) => {
 						return total * (term == "n" ? adventure.delvers.length : new Number(term));
 					}, 1);
-				for (let i = 0; i < Math.ceil(enemyCount); i++) {
-					let enemy = new Enemy();
-					Object.assign(enemy, enemyDictionary[enemyName]);
-					adventure.battleEnemies.push(enemy);
-					exports.setEnemyTitle(adventure.battleEnemyTitles, enemy);
-				}
+					for (let i = 0; i < Math.ceil(enemyCount); i++) {
+						let enemy = new Enemy();
+						Object.assign(enemy, enemyDictionary[enemyName]);
+						adventure.battleEnemies.push(enemy);
+						exports.setEnemyTitle(adventure.battleEnemyTitles, enemy);
+					}
+				})
+				resolve(adventure);
+			}).then(adventure => {
+				exports.newRound(adventure, channel, embed);
 			})
-			resolve(adventure);
-		}).then(adventure => {
-			exports.newRound(adventure, channel, embed);
-		})
-	} else {
-		channel.send({ embeds: [embed], components: room.components }).then(message => {
-			adventure.lastComponentMessageId = message.id;
-		});
+		} else {
+			channel.send({ embeds: [embed], components: room.components }).then(message => {
+				adventure.lastComponentMessageId = message.id;
+			});
+		}
+		exports.saveAdventures();
 	}
-}
 }
 
 exports.newRound = function (adventure, channel, embed) {
@@ -293,5 +294,5 @@ exports.completeAdventure = function (adventure, channel, result) {
 }
 
 exports.saveAdventures = function () {
-	ensuredPathSave("./Saves", "adventures.json", JSON.stringify(Array.from((adventureDictionary.values()))));
+	ensuredPathSave("./Saves", "adventures.json", JSON.stringify(Array.from(adventureDictionary.values())));
 }
