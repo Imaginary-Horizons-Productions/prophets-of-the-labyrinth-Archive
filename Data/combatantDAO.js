@@ -14,36 +14,36 @@ exports.getFullName = function (combatant, titleObject) {
 	}
 }
 
-exports.takeDamage = function (combatant, damage, element, adventure) {
+exports.dealDamage = function (target, damage, element, adventure) {
 	let pendingDamage = Math.ceil(damage);
-	let isWeakness = Combatant.getWeaknesses(combatant.element).includes(element);
+	let isWeakness = Combatant.getWeaknesses(target.element).includes(element);
 	if (isWeakness) {
 		pendingDamage *= 2;
 	}
-	let isResistance = Combatant.getResistances(combatant.element).includes(element);
+	let isResistance = Combatant.getResistances(target.element).includes(element);
 	if (isResistance) {
 		pendingDamage = Math.ceil(pendingDamage / 2);
 	}
 	let blockedDamage = 0;
-	if (pendingDamage >= combatant.block) {
-		pendingDamage -= combatant.block;
-		blockedDamage = combatant.block;
-		combatant.block = 0;
+	if (pendingDamage >= target.block) {
+		pendingDamage -= target.block;
+		blockedDamage = target.block;
+		target.block = 0;
 	} else {
-		combatant.block -= pendingDamage;
+		target.block -= pendingDamage;
 		blockedDamage = pendingDamage;
 		pendingDamage = 0;
 	}
-	combatant.hp -= pendingDamage;
-	let damageText = ` ${exports.getFullName(combatant, adventure.battleEnemyTitles)} takes ${pendingDamage} damage${blockedDamage > 0 ? ` (${blockedDamage} blocked)` : ""}${isWeakness ? "!!!" : isResistance ? "." : "!"}`;
-	if (combatant.hp <= 0) {
-		if (combatant.team === "ally") {
-			combatant.hp = combatant.maxHp;
+	target.hp -= pendingDamage;
+	let damageText = ` ${exports.getFullName(target, adventure.battleEnemyTitles)} takes ${pendingDamage} damage${blockedDamage > 0 ? ` (${blockedDamage} blocked)` : ""}${isWeakness ? "!!!" : isResistance ? "." : "!"}`;
+	if (target.hp <= 0) {
+		if (target.team === "ally") {
+			target.hp = target.maxHp;
 			adventure.lives -= 1;
-			damageText += ` ${exports.getFullName(combatant, adventure.battleEnemyTitles)} has died and been revived. ${adventure.lives} lives remain.`;
+			damageText += ` ${exports.getFullName(target, adventure.battleEnemyTitles)} has died and been revived. ${adventure.lives} lives remain.`;
 		} else {
-			combatant.hp = 0;
-			damageText += ` ${exports.getFullName(combatant, adventure.battleEnemyTitles)} has died.`;
+			target.hp = 0;
+			damageText += ` ${exports.getFullName(target, adventure.battleEnemyTitles)} has died.`;
 		}
 	}
 	return damageText;

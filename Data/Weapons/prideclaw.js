@@ -1,5 +1,5 @@
 const Weapon = require('../../Classes/Weapon.js');
-const { takeDamage } = require('../combatantDAO.js');
+const { dealDamage } = require('../combatantDAO.js');
 
 module.exports = new Weapon("prideclaw", "Deal a large amount of damage that won't strike elemental weakness (crit: more damage)", "element", effect)
 	.setTargetingTags({ target: "single", team: "enemy" })
@@ -13,5 +13,5 @@ function effect(target, user, isCrit, element, adventure) {
 	if (isCrit) {
 		damage *= 2;
 	}
-	return takeDamage(target, damage, "untyped", adventure);
+	return dealDamage(target, damage, "untyped", adventure);
 }

@@ -1,5 +1,5 @@
 const Weapon = require('../../Classes/Weapon.js');
-const { takeDamage } = require('../combatantDAO.js');
+const { dealDamage } = require('../combatantDAO.js');
 
 module.exports = new Weapon("chameleonsword", "Deal damage matching the element of the wielder (crit: more damage)", "untyped", effect)
 	.setTargetingTags({ target: "single", team: "enemy" })
@@ -11,5 +11,5 @@ function effect(target, user, isCrit, element, adventure) {
 	if (isCrit) {
 		damage *= 2;
 	}
-	return takeDamage(target, damage, user.element, adventure);
+	return dealDamage(target, damage, user.element, adventure);
 }

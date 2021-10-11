@@ -1,5 +1,5 @@
 const Weapon = require('../../Classes/Weapon.js');
-const { takeDamage, addBlock } = require("../combatantDAO.js");
+const { dealDamage, addBlock } = require("../combatantDAO.js");
 
 module.exports = new Weapon("fireshield", "Defend yourself while bashing a target with a flaming shield (crit: more damage)", "fire", effect)
 	.setTargetingTags({ target: "single", team: "enemy" })
@@ -15,5 +15,5 @@ function effect(target, user, isCrit, element, adventure) {
 		damage *= 2;
 	}
 	addBlock(user, block);
-	return takeDamage(target, damage, element, adventure);
+	return dealDamage(target, damage, element, adventure);
 }

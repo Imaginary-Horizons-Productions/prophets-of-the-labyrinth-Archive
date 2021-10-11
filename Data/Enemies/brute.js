@@ -1,5 +1,5 @@
 const Enemy = require("../../Classes/Enemy.js");
-const { takeDamage } = require("../combatantDAO.js");
+const { dealDamage } = require("../combatantDAO.js");
 
 module.exports = new Enemy("brute")
 	.setHp(500)
@@ -12,7 +12,7 @@ function punchEffect(target, user, isCrit, element, adventure) {
 	if (isCrit) {
 		damage *= 2;
 	}
-	return takeDamage(target, damage, element, adventure);
+	return dealDamage(target, damage, element, adventure);
 }
 
 function bigPunchEffect(target, user, isCrit, element, adventure) {
@@ -20,5 +20,5 @@ function bigPunchEffect(target, user, isCrit, element, adventure) {
 	if (isCrit) {
 		damage *= 2;
 	}
-	return takeDamage(target, damage, element, adventure);
+	return dealDamage(target, damage, element, adventure);
 }

@@ -1,5 +1,5 @@
 const Enemy = require("../../Classes/Enemy.js");
-const { takeDamage } = require("../combatantDAO.js");
+const { dealDamage } = require("../combatantDAO.js");
 
 module.exports = new Enemy("mirrorclone")
 	.setHp(300)
@@ -12,5 +12,5 @@ function glassShardEffect(target, user, isCrit, element, adventure) {
 	if (isCrit) {
 		damage *= 2;
 	}
-	return takeDamage(target, damage, element, adventure);
+	return dealDamage(target, damage, element, adventure);
 }
