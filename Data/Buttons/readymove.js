@@ -2,6 +2,7 @@ const Button = require('../../Classes/Button.js');
 const { MessageEmbed, MessageActionRow, MessageSelectMenu, MessageButton } = require('discord.js');
 const { getAdventure } = require('../adventureDAO.js');
 const { getFullName } = require("../combatantDAO.js");
+const { isNonStacking, getModifierDescription } = require("./../Modifiers/_modifierDictionary.js");
 
 module.exports = new Button("readymove");
 
@@ -13,6 +14,14 @@ module.exports.execute = (interaction, args) => {
 		.setTitle(delver.name)
 		.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nReads: ${delver.readType}`)
 		.setFooter("Imaginary Horizons Productions", "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png");
+
+	let modifiersText = "";
+	for (let modifier in delver.modifiers) {
+		modifiersText += `${modifier}${isNonStacking(modifier) ? "" : ` x ${delver.modifiers[modifier]}`} - ${getModifierDescription(modifier)}\n`;
+	}
+	if (modifiersText !== "") {
+		embed.addField("Modifiers", modifiersText);
+	}
 
 	let moveMenu = [];
 	let enemyOptions = adventure.battleEnemies.map((enemy, i) => {

@@ -71,3 +71,8 @@ exports.clearBlock = (combatant) => {
 	combatant.block = 0;
 	return combatant;
 }
+
+exports.addModifier = (combatant, modifierName, value) => {
+	combatant.modifiers[modifierName] = value;
+	return combatant;
+}

@@ -11,6 +11,7 @@ module.exports = class Combatant {
 	roundSpeed = 0;
 	crit = false;
 	element = "water";
+	modifiers = {};
 
 	setTitle(titleInput) {
 		this.title = titleInput;

@@ -1,21 +1,22 @@
-const { setPlayer, getPlayer } = require("./playerDAO.js");
 const fs = require("fs");
-const { roomDictionary } = require("./Rooms/_roomDictionary.js");
-const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
-const { enemyDictionary } = require("./Enemies/_enemyDictionary.js");
-const Move = require("../Classes/Move.js");
-const Enemy = require("../Classes/Enemy.js");
-const { resolveMove } = require("./moveDAO.js");
 const { ensuredPathSave } = require("../helpers.js");
+const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
+const Adventure = require("../Classes/Adventure.js");
+const { setPlayer, getPlayer } = require("./playerDAO.js");
+const { roomDictionary } = require("./Rooms/_roomDictionary.js");
+const Move = require("../Classes/Move.js");
+const { resolveMove } = require("./moveDAO.js");
+const { enemyDictionary } = require("./Enemies/_enemyDictionary.js");
+const Enemy = require("../Classes/Enemy.js");
 const { clearBlock } = require("./combatantDAO.js");
 const Delver = require("../Classes/Delver.js");
-const Adventure = require("../Classes/Adventure.js");
+const { getTurnDecrement } = require("./Modifiers/_modifierDictionary.js");
 
 var filePath = "./Saves/adventures.json";
 var requirePath = "./../Saves/adventures.json";
 var adventureDictionary = new Map();
 
-exports.loadAdventures = function () { //TODO #18 generalize file loading
+exports.loadAdventures = function () {
 	return new Promise((resolve, reject) => {
 		if (fs.existsSync(filePath)) {
 			var adventures = require(requirePath);
@@ -175,7 +176,12 @@ exports.newRound = function (adventure, channel, embed) {
 			adventure.battleMoves = [];
 			adventure.battleEnemies = [];
 			adventure.battleEnemyTitles = {};
-			exports.nextRoom(adventure, channel)
+			adventure.delvers.forEach(delver => {
+				delver.modifiers = {};
+			})
+			return adventure;
+		}).then(adventure => {
+			exports.nextRoom(adventure, channel);
 		});
 	} else {
 		// Increment round and clear last round's components
@@ -198,6 +204,15 @@ exports.newRound = function (adventure, channel, embed) {
 			// Roll Critical Hit
 			let critRoll = exports.nextRandomNumber(adventure, 4, "battle");
 			combatant.crit = critRoll > 2;
+
+			// Decrement Modifiers
+			for (let modifierName in combatant.modifiers) {
+				combatant.modifiers[modifierName] -= getTurnDecrement(modifierName);
+
+				if (combatant.modifiers[modifierName] <= 0) {
+					delete combatant.modifiers[modifierName];
+				}
+			}
 		})
 
 		// Roll Enemy Moves
@@ -208,7 +223,7 @@ exports.newRound = function (adventure, channel, embed) {
 					actionPool.push(action);
 				}
 			})
-			let action = actionPool[exports.nextRandomNumber(adventure, actionPool.length, "battle")]; //TODO #8 move selection AI (remember to include weights)
+			let action = actionPool[exports.nextRandomNumber(adventure, actionPool.length, "battle")]; //TODO #19 nonrandom AI
 			adventure.battleMoves.push(new Move()
 				.setSpeed(enemy.speed)
 				.setRoundSpeed(enemy.roundSpeed)
@@ -216,7 +231,7 @@ exports.newRound = function (adventure, channel, embed) {
 				.setIsCrit(enemy.crit)
 				.setMoveName(action.name)
 				.setUser(enemy.team, index)
-				.addTarget("ally", exports.nextRandomNumber(adventure, adventure.delvers.length, "battle")));//TODO #19 nonrandom AI
+				.addTarget("ally", exports.nextRandomNumber(adventure, adventure.delvers.length, "battle")));
 		})
 
 		if (lastRoundText !== "") {

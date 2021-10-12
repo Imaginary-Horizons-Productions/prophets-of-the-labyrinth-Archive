@@ -45,9 +45,10 @@ module.exports.execute = (interaction, args) => {
 			}).forEach(combatant => {
 				descriptionText += `\n${i + 1}: ${getFullName(combatant, adventure.battleEnemyTitles)} (${combatant.roundSpeed >= 0 ? `+${combatant.roundSpeed}` : `${combatant.roundSpeed}`} speed)`
 			});
-			//TODO consider adding elemental strengths
+			//TODO #41 add elemental strengths
 			break;
 		case "stagger": // Shows current pressure and stagger thresholds for all characters
+			//TODO consider adding enemy modifiers
 			descriptionText += "Coming Soon!";
 			break;
 	}
