@@ -4,4 +4,4 @@ module.exports = new Enemy("name")
 	.setHp()
 	.setSpeed()
 	.setElement() // enum: "fire", "water", "earth", "wind", "light", "dark"
-	.addActions([]);
+	.addAction();

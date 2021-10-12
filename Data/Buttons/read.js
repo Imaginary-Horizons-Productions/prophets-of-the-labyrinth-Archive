@@ -36,7 +36,10 @@ module.exports.execute = (interaction, args) => {
 			})
 			break;
 		case "health": // Shows current HP, max HP, and block of all characters
-			descriptionText += "Coming Soon!";
+			descriptionText += "__Health and Block__";
+			adventure.battleEnemies.concat(adventure.delvers).forEach(combatant => {
+				descriptionText += `\n${combatant.name}: ${combatant.hp}/${combatant.maxHp} HP, ${combatant.block} Block`;
+			})
 			break;
 		case "speed": // Shows roundly random speed bonuses and order of move resolution
 			descriptionText += "__Move Order__";

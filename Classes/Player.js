@@ -4,6 +4,6 @@ module.exports = class Player {
 		this.id = idInput;
 		this.scores = {};
 		this.artifacts = {};
-		this.characters = { "knight": 1, "assassin": 1 }; //TODO #36 roll starting classes randomly
+		this.characters = { "knight": 1, "assassin": 1, "firestarter": 1 }; //TODO #36 roll starting classes randomly
 	}
 }
