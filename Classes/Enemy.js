@@ -5,13 +5,13 @@ module.exports = class Enemy extends Combatant {
 	// Properties from Combatant: hp, maxHp, speed, roundSpeed, elements, setHp, setSpeed, setElement
 	constructor(nameInput) {
 		super(nameInput, "enemy");
-		this.actions = [];
+		this.actions = {};
 	}
 
 	setTitle = super.setTitle;
 
-	addActions(actionsInput) {
-		this.actions = actionsInput;
+	addAction(actionsInput) {
+		this.actions[actionsInput.name] = actionsInput;
 		return this;
 	}
 }

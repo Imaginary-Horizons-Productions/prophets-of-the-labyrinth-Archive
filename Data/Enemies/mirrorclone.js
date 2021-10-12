@@ -5,7 +5,7 @@ module.exports = new Enemy("mirrorclone")
 	.setHp(300)
 	.setSpeed(100)
 	.setElement("dark")
-	.addActions([{ name: "glass shard", weight: 1, effect: glassShardEffect }]);
+	.addAction({ name: "glass shard", weight: 1, effect: glassShardEffect });
 
 function glassShardEffect(target, user, isCrit, element, adventure) {
 	let damage = 50;

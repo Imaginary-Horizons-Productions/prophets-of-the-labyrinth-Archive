@@ -28,8 +28,7 @@ module.exports.execute = (interaction, args) => {
 			.setElement(weapon.element)
 			.setIsCrit(user.crit)
 			.setMoveName(weapon.name)
-			.setUser(user.team, userIndex)
-			.setEffect(weapon.effect);
+			.setUser(user.team, userIndex);
 
 		let targetText = "";
 		let targetTeam = weapon.targetingTags.team;

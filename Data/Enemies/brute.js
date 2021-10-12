@@ -5,7 +5,8 @@ module.exports = new Enemy("brute")
 	.setHp(500)
 	.setSpeed(105)
 	.setElement("earth")
-	.addActions([{ name: "punch", weight: 3, effect: punchEffect }, { name: "big punch", weight: 1, effect: bigPunchEffect }]);
+	.addAction({ name: "punch", weight: 3, effect: punchEffect })
+	.addAction({ name: "big punch", weight: 1, effect: bigPunchEffect });
 
 function punchEffect(target, user, isCrit, element, adventure) {
 	let damage = 50;

@@ -8,6 +8,8 @@ const Enemy = require("../Classes/Enemy.js");
 const { resolveMove } = require("./moveDAO.js");
 const { ensuredPathSave } = require("../helpers.js");
 const { clearBlock } = require("./combatantDAO.js");
+const Delver = require("../Classes/Delver.js");
+const Adventure = require("../Classes/Adventure.js");
 
 var filePath = "./Saves/adventures.json";
 var requirePath = "./../Saves/adventures.json";
@@ -18,7 +20,29 @@ exports.loadAdventures = function () { //TODO #18 generalize file loading
 		if (fs.existsSync(filePath)) {
 			var adventures = require(requirePath);
 			adventures.forEach(adventure => {
-				adventureDictionary.set(adventure.id, adventure);
+				// Cast delvers into Delver class
+				let castDelvers = [];
+				for (let delver of adventure.delvers) {
+					castDelvers.push(Object.assign(new Delver(), delver));
+				}
+				adventure.delvers = castDelvers;
+
+				// Cast enemies into Enemy class
+				let castEnemies = [];
+				for (let enemy of adventure.battleEnemies) {
+					castEnemies.push(Object.assign(new Enemy(), enemy));
+				}
+				adventure.battleEnemies = castEnemies;
+
+				// Cast moves into Move class
+				let castMoves = [];
+				for (let move of adventure.battleMoves) {
+					castMoves.push(Object.assign(new Move(), move));
+				}
+				adventure.battleMoves = castMoves;
+
+				// Set adventure
+				adventureDictionary.set(adventure.id, Object.assign(new Adventure(adventure.initialSeed), adventure));
 			})
 		} else {
 			if (!fs.existsSync("./Saves")) {
@@ -111,13 +135,14 @@ exports.nextRoom = function (adventure, channel) {
 				resolve(adventure);
 			}).then(adventure => {
 				exports.newRound(adventure, channel, embed);
+				exports.saveAdventures();
 			})
 		} else {
 			channel.send({ embeds: [embed], components: room.components }).then(message => {
 				adventure.lastComponentMessageId = message.id;
+				exports.saveAdventures();
 			});
 		}
-		exports.saveAdventures();
 	}
 }
 
@@ -177,7 +202,13 @@ exports.newRound = function (adventure, channel, embed) {
 
 		// Roll Enemy Moves
 		adventure.battleEnemies.forEach((enemy, index) => {
-			let action = enemy.actions[0]; //TODO #8 move selection AI (remember to include weights)
+			let actionPool = [];
+			Object.values(enemy.actions).forEach(action => {
+				for (let i = 0; i < action.weight; i++) {
+					actionPool.push(action);
+				}
+			})
+			let action = actionPool[exports.nextRandomNumber(adventure, actionPool.length, "battle")]; //TODO #8 move selection AI (remember to include weights)
 			adventure.battleMoves.push(new Move()
 				.setSpeed(enemy.speed)
 				.setRoundSpeed(enemy.roundSpeed)
@@ -185,8 +216,7 @@ exports.newRound = function (adventure, channel, embed) {
 				.setIsCrit(enemy.crit)
 				.setMoveName(action.name)
 				.setUser(enemy.team, index)
-				.addTarget("ally", exports.nextRandomNumber(adventure, adventure.delvers.length, "battle"))
-				.setEffect(action.effect));//TODO #19 nonrandom AI
+				.addTarget("ally", exports.nextRandomNumber(adventure, adventure.delvers.length, "battle")));//TODO #19 nonrandom AI
 		})
 
 		if (lastRoundText !== "") {
@@ -210,6 +240,7 @@ exports.newRound = function (adventure, channel, embed) {
 			)];
 		channel.send({ embeds: [embed], components: battleMenu }).then(message => {
 			adventure.lastComponentMessageId = message.id;
+			exports.saveAdventures();
 		});
 	}
 }

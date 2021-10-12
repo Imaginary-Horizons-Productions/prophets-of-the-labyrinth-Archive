@@ -8,7 +8,6 @@ module.exports = class Move {
 		this.userTeam = ""; //TODO convert to array to support joint/combo moves
 		this.userIndex = "";
 		this.targets = [];
-		this.effect = () => { };
 	}
 
 	setSpeed(number) {

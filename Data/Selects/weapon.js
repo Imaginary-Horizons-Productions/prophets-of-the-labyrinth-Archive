@@ -36,8 +36,7 @@ module.exports.execute = (interaction, args) => {
 			.setIsCrit(user.crit)
 			.setMoveName(weapon.name)
 			.setUser(user.team, userIndex)
-			.addTarget(targetTeam, targetIndex)
-			.setEffect(weapon.effect);
+			.addTarget(targetTeam, targetIndex);
 		for (let i = 0; i < adventure.battleMoves.length; i++) {
 			let move = adventure.battleMoves[i];
 			if (move.userTeam === user.team && move.userIndex === userIndex) {
