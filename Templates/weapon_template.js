@@ -11,5 +11,5 @@ function effect(target, user, isCrit, element, adventure) {
 	if (isCrit) {
 
 	}
-	return ""; // result as text
+	return ""; // result text
 }

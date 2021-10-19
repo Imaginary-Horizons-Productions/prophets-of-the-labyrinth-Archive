@@ -13,7 +13,7 @@ function punchEffect(target, user, isCrit, element, adventure) {
 	if (isCrit) {
 		damage *= 2;
 	}
-	return dealDamage(target, damage, element, adventure);
+	return dealDamage(target, user, damage, element, adventure);
 }
 
 function bigPunchEffect(target, user, isCrit, element, adventure) {
@@ -21,5 +21,5 @@ function bigPunchEffect(target, user, isCrit, element, adventure) {
 	if (isCrit) {
 		damage *= 2;
 	}
-	return dealDamage(target, damage, element, adventure);
+	return dealDamage(target, user, damage, element, adventure);
 }

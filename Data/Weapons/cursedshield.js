@@ -14,5 +14,5 @@ function effect(target, user, isCrit, element, adventure) {
 		block *= 2;
 	}
 	addBlock(target, block);
-	return dealDamage(user, 25, "untyped", adventure); // user pays health
+	return dealDamage(user, null, 25, "untyped", adventure); // user pays health
 }

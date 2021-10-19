@@ -18,5 +18,5 @@ function effect(target, user, isCrit, element, adventure) {
 		block += 75;
 	}
 	addBlock(user, block);
-	return dealDamage(target, damage, element, adventure);
+	return dealDamage(target, user, damage, element, adventure);
 }

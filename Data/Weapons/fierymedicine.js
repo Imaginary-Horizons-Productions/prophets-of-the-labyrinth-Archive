@@ -17,6 +17,6 @@ function effect(target, user, isCrit, element, adventure) {
 		value /= 2;
 		return gainHealth(target, value, adventure.battleEnemyTitles);
 	} else {
-		return dealDamage(target, value, element, adventure);
+		return dealDamage(target, user, value, element, adventure);
 	}
 }

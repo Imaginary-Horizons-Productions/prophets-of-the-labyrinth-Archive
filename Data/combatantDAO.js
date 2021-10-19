@@ -14,17 +14,18 @@ exports.getFullName = function (combatant, titleObject) {
 	}
 }
 
-exports.dealDamage = function (target, damage, element, adventure) {
-	let pendingDamage = Math.ceil(damage);
-	let isWeakness = Combatant.getWeaknesses(target.element).includes(element);
-	if (isWeakness) {
-		pendingDamage *= 2;
-	}
-	let isResistance = Combatant.getResistances(target.element).includes(element);
-	if (isResistance) {
-		pendingDamage = Math.ceil(pendingDamage / 2);
-	}
+exports.dealDamage = function (target, user, damage, element, adventure) {
 	if (!Object.keys(target.modifiers).includes("evade")) {
+		let pendingDamage = damage + (user?.modifiers["powerup"] || 0);
+		let isWeakness = Combatant.getWeaknesses(target.element).includes(element);
+		if (isWeakness) {
+			pendingDamage *= 2;
+		}
+		let isResistance = Combatant.getResistances(target.element).includes(element);
+		if (isResistance) {
+			pendingDamage = pendingDamage / 2;
+		}
+		pendingDamage = Math.ceil(pendingDamage);
 		let blockedDamage = 0;
 		if (pendingDamage >= target.block) {
 			pendingDamage -= target.block;
@@ -81,6 +82,10 @@ exports.clearBlock = (combatant) => {
 }
 
 exports.addModifier = (combatant, modifierName, value) => {
-	combatant.modifiers[modifierName] = value;
+	if (combatant.modifiers[modifierName]) {
+		combatant.modifiers[modifierName] += value;
+	} else {
+		combatant.modifiers[modifierName] = value;
+	}
 	return combatant;
 }
