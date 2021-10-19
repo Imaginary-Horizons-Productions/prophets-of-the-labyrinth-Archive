@@ -2,12 +2,10 @@ const { getFullName } = require("./combatantDAO.js");
 const { getEnemy } = require("./Enemies/_enemyDictionary.js");
 const { getWeapon } = require("./Weapons/_weaponDictionary.js");
 
-module.exports.resolveMove = function (move, adventure) {
+exports.resolveMove = function (move, adventure) {
 	let userTeam = move.userTeam === "ally" ? adventure.delvers : adventure.battleEnemies;
 	let user = userTeam[move.userIndex];
 	let moveText = "";
-	let targetNames = [];
-	let resultTexts = [];
 	if (user.hp > 0) {
 		moveText = `${user.name} used ${move.name} on`;
 		let effect;
@@ -16,21 +14,33 @@ module.exports.resolveMove = function (move, adventure) {
 		} else {
 			effect = getEnemy(user.name).actions[move.name].effect;
 		}
-		move.targets.forEach(targetIds => {
-			let target;
+		let resultTexts = move.targets.map(targetIds => {
+			let targetTeam;
 			if (targetIds.team === "ally") {
-				target = adventure.delvers[targetIds.index];
+				targetTeam = adventure.delvers;
 			} else {
-				target = adventure.battleEnemies[targetIds.index];
+				targetTeam = adventure.battleEnemies;
 			}
-			resultTexts.push(effect(target, user, move.isCrit, move.element, adventure));
-			if (targetIds.team === "self") {
-				targetNames.push("themself");
-			} else {
-				targetNames.push(getFullName(target, adventure.battleEnemyTitles));
-			}
-		})
+			return effect(targetTeam[targetIds.index], user, move.isCrit, move.element, adventure);
+		});
+		let targetNames = exports.getTargetList(move.targets, adventure);
 		moveText += ` ${targetNames.join(", ")}.${move.isCrit ? " *Critical Hit!*" : ""} ${resultTexts.join(" ")}\n`
 	}
 	return moveText;
+}
+
+exports.getTargetList = (targets, adventure) => {
+	return targets.map(targetIds => {
+		if (targetIds.team === "self") {
+			return "themself";
+		} else {
+			let targetTeam;
+			if (targetIds.team === "ally") {
+				targetTeam = adventure.delvers;
+			} else {
+				targetTeam = adventure.battleEnemies;
+			}
+			return getFullName(targetTeam[targetIds.index], adventure.battleEnemyTitles);
+		}
+	})
 }

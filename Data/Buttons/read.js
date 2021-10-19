@@ -1,6 +1,7 @@
 const { MessageEmbed } = require('discord.js');
 const Button = require('../../Classes/Button.js');
 const { getAdventure } = require('../adventureDAO.js');
+const { getTargetList } = require('../moveDAO.js');
 const Combatant = require("./../../Classes/Combatant.js");
 const { getFullName } = require("./../combatantDAO.js");
 
@@ -13,32 +14,38 @@ module.exports.execute = (interaction, args) => {
 	let embed = new MessageEmbed()
 		.setTitle("Reading the Situation");
 	let descriptionText = "";
-	switch (delver.readType) {
+	let readCombatants;
+	switch (delver.read) {
 		case "targets": // Shows who the enemies are targeting next round
 			descriptionText += "__Enemy Targets__";
 			adventure.battleMoves.forEach(move => {
 				if (move.userTeam === "enemy") {
 					let enemy = adventure.battleEnemies[move.userIndex];
-					let target = adventure.delvers[move.targetIndex];
-					descriptionText += `\nNext round, **${getFullName(enemy, adventure.battleEnemyTitles)}** intends to attack **${target.name}**`;
+					let targets = getTargetList(move.targets, adventure);
+					descriptionText += `\nNext round, **${getFullName(enemy, adventure.battleEnemyTitles)}** intends to attack **${targets.join(", ")}**`;
 				}
 			})
 			break;
 		case "weaknesses": // Shows which combatants are going to critically hit next round and elemental weakness
-			let combatants = adventure.battleEnemies.concat(adventure.delvers);
+			readCombatants = adventure.battleEnemies.concat(adventure.delvers);
 			descriptionText += "__Critical Hits__";
-			combatants.forEach(combatant => {
+			readCombatants.forEach(combatant => {
 				descriptionText += `\n${getFullName(combatant, adventure.battleEnemyTitles)}: ${combatant.crit ? "Critical Hit" : "normal hit"}`;
 			});
 			descriptionText += "\n\n__Elemental Weaknesses__";
-			combatants.forEach(combatant => {
+			readCombatants.forEach(combatant => {
 				descriptionText += `\n${getFullName(combatant, adventure.battleEnemyTitles)}: ${Combatant.getWeaknesses(combatant.element).join(", ")}`;
 			})
 			break;
-		case "health": // Shows current HP, max HP, and block of all combatants
+		case "health": // Shows current HP, max HP, block, and resistances of all combatants
+			readCombatants = adventure.battleEnemies.concat(adventure.delvers)
 			descriptionText += "__Health and Block__";
-			adventure.battleEnemies.concat(adventure.delvers).forEach(combatant => {
+			readCombatants.forEach(combatant => {
 				descriptionText += `\n${combatant.name}: ${combatant.hp}/${combatant.maxHp} HP, ${combatant.block} Block`;
+			})
+			descriptionText += "\n\n__Elemental Resistances__";
+			readCombatants.forEach(combatant => {
+				descriptionText += `\n${getFullName(combatant, adventure.battleEnemyTitles)}: ${Combatant.getResistances(combatant.element).join(", ")}`;
 			})
 			break;
 		case "speed": // Shows roundly random speed bonuses and order of move resolution
@@ -46,9 +53,8 @@ module.exports.execute = (interaction, args) => {
 			adventure.battleEnemies.concat(adventure.delvers).sort((first, second) => {
 				return (second.speed + second.roundSpeed) - (first.speed + first.roundSpeed);
 			}).forEach(combatant => {
-				descriptionText += `\n${i + 1}: ${getFullName(combatant, adventure.battleEnemyTitles)} (${combatant.roundSpeed >= 0 ? `+${combatant.roundSpeed}` : `${combatant.roundSpeed}`} speed)`
+				descriptionText += `\n${i + 1}: ${getFullName(combatant, adventure.battleEnemyTitles)} (${combatant.roundSpeed >= 0 ? "+" : ""}${combatant.roundSpeed} speed)`
 			});
-			//TODO #41 add elemental strengths
 			break;
 		case "stagger": // Shows current pressure and stagger thresholds for all combatants
 			//TODO consider adding enemy modifiers
