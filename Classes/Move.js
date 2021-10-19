@@ -1,22 +1,18 @@
+const { calculateTotalSpeed } = require("../Data/combatantDAO");
+
 module.exports = class Move {
 	constructor() {
 		this.name = "";
 		this.speed = 0;
 		this.element = "";
-		this.roundSpeed = 0;
 		this.isCrit = false;
 		this.userTeam = ""; //TODO convert to array to support joint/combo moves
 		this.userIndex = "";
 		this.targets = [];
 	}
 
-	setSpeed(number) {
-		this.speed = number;
-		return this;
-	}
-
-	setRoundSpeed(number) {
-		this.roundSpeed = number;
+	setSpeed(combatant) {
+		this.speed = calculateTotalSpeed(combatant);
 		return this;
 	}
 

@@ -2,7 +2,7 @@ const Enemy = require("../Classes/Enemy.js");
 const Delver = require("../Classes/Delver.js");
 const Combatant = require("./../Classes/Combatant.js");
 
-exports.getFullName = function (combatant, titleObject) {
+exports.getFullName = (combatant, titleObject) => {
 	if (combatant instanceof Enemy) {
 		if (titleObject[combatant.name] > 1) {
 			return `${combatant.name} ${combatant.title}`;
@@ -14,7 +14,15 @@ exports.getFullName = function (combatant, titleObject) {
 	}
 }
 
-exports.dealDamage = function (target, user, damage, element, adventure) {
+exports.calculateTotalSpeed = combatant => {
+	let totalSpeed = combatant.speed + combatant.roundSpeed;
+	if (Object.keys(combatant.modifiers).includes("slow")) {
+		totalSpeed /= 2;
+	}
+	return Math.ceil(totalSpeed);
+}
+
+exports.dealDamage = (target, user, damage, element, adventure) => {
 	if (!Object.keys(target.modifiers).includes("evade")) {
 		let pendingDamage = damage + (user?.modifiers["powerup"] || 0);
 		let isWeakness = Combatant.getWeaknesses(target.element).includes(element);

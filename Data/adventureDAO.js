@@ -150,7 +150,7 @@ exports.nextRoom = function (adventure, channel) {
 exports.newRound = function (adventure, channel, embed) {
 	// Sort Soves by Speed
 	adventure.battleMoves.sort((first, second) => {
-		return (second.speed + second.roundSpeed) - (first.speed + first.roundSpeed);
+		return second.speed - first.speed;
 	})
 
 	// Resolve round's moves
@@ -225,8 +225,7 @@ exports.newRound = function (adventure, channel, embed) {
 			})
 			let action = actionPool[exports.nextRandomNumber(adventure, actionPool.length, "battle")]; //TODO #19 nonrandom AI
 			adventure.battleMoves.push(new Move()
-				.setSpeed(enemy.speed)
-				.setRoundSpeed(enemy.roundSpeed)
+				.setSpeed(enemy)
 				.setElement(enemy.element)
 				.setIsCrit(enemy.crit)
 				.setMoveName(action.name)

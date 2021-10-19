@@ -30,8 +30,7 @@ module.exports.execute = (interaction, args) => {
 		let [targetTeam, targetIndex] = interaction.values[0].split("-");
 		let overwritten = false;
 		let newMove = new Move()
-			.setSpeed(user.speed)
-			.setRoundSpeed(user.roundSpeed)
+			.setSpeed(user)
 			.setElement(weapon.element)
 			.setIsCrit(user.crit)
 			.setMoveName(weapon.name)

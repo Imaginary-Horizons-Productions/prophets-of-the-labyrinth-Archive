@@ -23,8 +23,7 @@ module.exports.execute = (interaction, args) => {
 		let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
 		let overwritten = false;
 		let newMove = new Move()
-			.setSpeed(user.speed)
-			.setRoundSpeed(user.roundSpeed)
+			.setSpeed(user)
 			.setElement(weapon.element)
 			.setIsCrit(user.crit)
 			.setMoveName(weapon.name)
