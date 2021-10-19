@@ -6,7 +6,7 @@ const { setPlayer, getPlayer } = require("./playerDAO.js");
 const { roomDictionary } = require("./Rooms/_roomDictionary.js");
 const Move = require("../Classes/Move.js");
 const { resolveMove } = require("./moveDAO.js");
-const { enemyDictionary } = require("./Enemies/_enemyDictionary.js");
+const { getEnemy } = require("./Enemies/_enemyDictionary.js");
 const Enemy = require("../Classes/Enemy.js");
 const { clearBlock } = require("./combatantDAO.js");
 const Delver = require("../Classes/Delver.js");
@@ -128,7 +128,7 @@ exports.nextRoom = function (adventure, channel) {
 					}, 1);
 					for (let i = 0; i < Math.ceil(enemyCount); i++) {
 						let enemy = new Enemy();
-						Object.assign(enemy, enemyDictionary[enemyName]);
+						Object.assign(enemy, getEnemy(enemyName));
 						adventure.battleEnemies.push(enemy);
 						exports.setEnemyTitle(adventure.battleEnemyTitles, enemy);
 					}

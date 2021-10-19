@@ -24,7 +24,7 @@ module.exports.execute = (interaction, args) => {
 				}
 			})
 			break;
-		case "weaknesses": // Shows which characters are going to critically hit next round and elemental weakness
+		case "weaknesses": // Shows which combatants are going to critically hit next round and elemental weakness
 			let combatants = adventure.battleEnemies.concat(adventure.delvers);
 			descriptionText += "__Critical Hits__";
 			combatants.forEach(combatant => {
@@ -35,7 +35,7 @@ module.exports.execute = (interaction, args) => {
 				descriptionText += `\n${getFullName(combatant, adventure.battleEnemyTitles)}: ${Combatant.getWeaknesses(combatant.element).join(", ")}`;
 			})
 			break;
-		case "health": // Shows current HP, max HP, and block of all characters
+		case "health": // Shows current HP, max HP, and block of all combatants
 			descriptionText += "__Health and Block__";
 			adventure.battleEnemies.concat(adventure.delvers).forEach(combatant => {
 				descriptionText += `\n${combatant.name}: ${combatant.hp}/${combatant.maxHp} HP, ${combatant.block} Block`;
@@ -50,7 +50,7 @@ module.exports.execute = (interaction, args) => {
 			});
 			//TODO #41 add elemental strengths
 			break;
-		case "stagger": // Shows current pressure and stagger thresholds for all characters
+		case "stagger": // Shows current pressure and stagger thresholds for all combatants
 			//TODO consider adding enemy modifiers
 			descriptionText += "Coming Soon!";
 			break;

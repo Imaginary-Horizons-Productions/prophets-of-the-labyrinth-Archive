@@ -3,8 +3,8 @@ const { Client } = require("discord.js");
 const fs = require("fs");
 const versionData = require('./Config/versionData.json');
 const { commandDictionary, slashData } = require(`./Data/Commands/_commandDictionary.js`);
-const { selectDictionary } = require("./Data/Selects/_selectDictionary.js");
-const { buttonDictionary } = require("./Data/Buttons/_buttonDictionary.js");
+const { getSelect } = require("./Data/Selects/_selectDictionary.js");
+const { getButton } = require("./Data/Buttons/_buttonDictionary.js");
 const { loadPlayers } = require("./Data/playerDAO.js");
 const { guildSetup, getPremiumUsers, ensuredPathSave } = require("./helpers.js");
 const { loadGuilds } = require("./Data/guildDAO.js");
@@ -74,11 +74,11 @@ client.on("interactionCreate", interaction => {
 		} else if (interaction.isButton()) {
 			let args = interaction.customId.split("-");
 			let command = args.shift();
-			buttonDictionary[command].execute(interaction, args);
+			getButton(command).execute(interaction, args);
 		} else if (interaction.isSelectMenu()) {
 			let args = interaction.customId.split("-");
 			let command = args.shift();
-			selectDictionary[command].execute(interaction, args);
+			getSelect(command).execute(interaction, args);
 		}
 	} else {
 		interaction.reply({ content: "Direct message commands are not supported at this time.", ephemeral: true })

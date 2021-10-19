@@ -1,10 +1,10 @@
-const Character = require('../../Classes/Character.js');
+const Archetype = require('../../Classes/Archetype.js');
 const Delver = require('../../Classes/Delver.js');
 const Weapon = require('../../Classes/Weapon.js');
 const Select = require('../../Classes/Select.js');
 const { getAdventure, saveAdventures } = require('../adventureDAO');
-const { characterDictionary } = require('../Characters/_characterDictionary.js');
-const { weaponDictionary } = require('../Weapons/_weaponDictionary');
+const { getArchetype } = require('../Archetypes/_archetypeDictionary.js');
+const { getWeapon } = require('../Weapons/_weaponDictionary');
 const { MessageActionRow, MessageButton } = require('discord.js');
 
 module.exports = new Select("delver");
@@ -13,14 +13,14 @@ module.exports.execute = (interaction, args) => {
 	// Add the player's delver object to the adventure
 	let adventure = getAdventure(interaction.channel.id);
 	if (adventure) {
-		let characterTemplate = Object.assign(new Character, characterDictionary[interaction.values[0]]);
+		let archetypeTemplate = Object.assign(new Archetype, getArchetype(interaction.values[0]));
 		let delver = new Delver(interaction.user.id, interaction.member.displayName, interaction.channel.id)
-			.setTitle(characterTemplate.title)
-			.setHp(characterTemplate.maxHp)
-			.setSpeed(characterTemplate.speed)
-			.setElement(characterTemplate.element);
-		characterTemplate.signatureWeapons.forEach(weaponName => {
-			delver.weapons.push(Object.assign(new Weapon(), weaponDictionary[weaponName]));
+			.setTitle(archetypeTemplate.title)
+			.setHp(archetypeTemplate.maxHp)
+			.setSpeed(archetypeTemplate.speed)
+			.setElement(archetypeTemplate.element);
+		archetypeTemplate.signatureWeapons.forEach(weaponName => {
+			delver.weapons.push(Object.assign(new Weapon(), getWeapon(weaponName)));
 		})
 
 		// Add delver to list (or overwrite)

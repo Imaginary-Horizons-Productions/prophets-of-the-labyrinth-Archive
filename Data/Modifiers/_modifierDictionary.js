@@ -1,34 +1,32 @@
-const fs = require('fs');
-
 var modifierWhitelist = [
 	"evade.js",
 	"powerup.js",
 	"slow.js"
 ];
-const modifierFiles = fs.readdirSync('./Data/Modifiers').filter(file => file.endsWith('.js') && modifierWhitelist.includes(file));
-exports.modifierDictionary = {};
 
-for (const file of modifierFiles) {
+const modifierDictionary = {};
+
+for (const file of modifierWhitelist) {
 	const modifier = require(`./${file}`);
-	exports.modifierDictionary[modifier.name] = modifier;
+	modifierDictionary[modifier.name] = modifier;
 }
 
 exports.getModifierDescription = (modifierName) => {
-	return exports.modifierDictionary[modifierName].description;
+	return modifierDictionary[modifierName].description;
 }
 
 exports.getTurnDecrement = (modifierName) => {
-	return exports.modifierDictionary[modifierName].turnDecrement;
+	return modifierDictionary[modifierName].turnDecrement;
 }
 
 exports.isBuff = (modifierName) => {
-	return exports.modifierDictionary[modifierName].isBuff;
+	return modifierDictionary[modifierName].isBuff;
 }
 
 exports.isDebuff = (modifierName) => {
-	return exports.modifierDictionary[modifierName].isDebuff;
+	return modifierDictionary[modifierName].isDebuff;
 }
 
 exports.isNonStacking = (modifierName) => {
-	return exports.modifierDictionary[modifierName].isNonStacking;
+	return modifierDictionary[modifierName].isNonStacking;
 }

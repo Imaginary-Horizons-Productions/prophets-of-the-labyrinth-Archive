@@ -1,5 +1,3 @@
-const fs = require('fs');
-
 var roomWhitelist = [
 	"goldonfire.js",
 	"hpshare.js",
@@ -7,10 +5,10 @@ var roomWhitelist = [
 	"brutefight.js",
 	"counterpartfight.js"
 ];
-const roomFiles = fs.readdirSync('./Data/Rooms').filter(file => file.endsWith('.js') && roomWhitelist.includes(file));
+
 exports.roomDictionary = {};
 
-for (const file of roomFiles) {
+for (const file of roomWhitelist) {
 	const room = require(`./${file}`);
 	exports.roomDictionary[room.title] = room;
 }

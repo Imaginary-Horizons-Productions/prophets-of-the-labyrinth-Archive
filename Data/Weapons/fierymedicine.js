@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { dealDamage, gainHealth } = require('../combatantDAO.js');
 
-module.exports = new Weapon("fierymedicine", "Heal a fire element character, damage everyone else (crit: more healing/damage)", "fire", effect)
+module.exports = new Weapon("fierymedicine", "Heal a fire element combatant, damage everyone else (crit: more healing/damage)", "fire", effect)
 	.setTargetingTags({ target: "single", team: "any" })
 	.setUses(5);
 

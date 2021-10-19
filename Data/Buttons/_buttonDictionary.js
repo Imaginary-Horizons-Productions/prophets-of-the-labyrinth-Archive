@@ -1,5 +1,3 @@
-const fs = require('fs');
-
 var buttonWhitelist = [
 	"continue.js",
 	"deploy.js",
@@ -15,10 +13,14 @@ var buttonWhitelist = [
 	"readymove.js",
 	"self.js"
 ];
-const buttonFiles = fs.readdirSync('./Data/Buttons').filter(file => file.endsWith('.js') && buttonWhitelist.includes(file));
-exports.buttonDictionary = {};
 
-for (const file of buttonFiles) {
+const buttonDictionary = {};
+
+for (const file of buttonWhitelist) {
 	const button = require(`./${file}`);
-	exports.buttonDictionary[button.name] = button;
+	buttonDictionary[button.name] = button;
+}
+
+exports.getButton = (buttonName) => {
+	return buttonDictionary[buttonName];
 }

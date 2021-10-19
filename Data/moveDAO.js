@@ -1,6 +1,6 @@
 const { getFullName } = require("./combatantDAO.js");
-const { enemyDictionary } = require("./Enemies/_enemyDictionary.js");
-const { weaponDictionary } = require("./Weapons/_weaponDictionary.js");
+const { getEnemy } = require("./Enemies/_enemyDictionary.js");
+const { getWeapon } = require("./Weapons/_weaponDictionary.js");
 
 module.exports.resolveMove = function (move, adventure) {
 	let userTeam = move.userTeam === "ally" ? adventure.delvers : adventure.battleEnemies;
@@ -12,9 +12,9 @@ module.exports.resolveMove = function (move, adventure) {
 		moveText = `${user.name} used ${move.name} on`;
 		let effect;
 		if (move.userTeam === "ally") {
-			effect = weaponDictionary[move.name].effect;
+			effect = getWeapon(move.name).effect;
 		} else {
-			effect = enemyDictionary[user.name].actions[move.name].effect;
+			effect = getEnemy(user.name).actions[move.name].effect;
 		}
 		move.targets.forEach(targetIds => {
 			let target;

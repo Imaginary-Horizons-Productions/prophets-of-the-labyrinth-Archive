@@ -1,13 +1,15 @@
-const fs = require('fs');
-
 var selectWhitelist = [
 	"delver.js",
 	"weapon.js"
 ];
-const selectFiles = fs.readdirSync('./Data/Selects').filter(file => file.endsWith('.js') && selectWhitelist.includes(file));
-exports.selectDictionary = {};
 
-for (const file of selectFiles) {
+const selectDictionary = {};
+
+for (const file of selectWhitelist) {
 	const select = require(`./${file}`);
-	exports.selectDictionary[select.name] = select;
+	selectDictionary[select.name] = select;
+}
+
+exports.getSelect = (selectName) => {
+	return selectDictionary[selectName];
 }

@@ -1,4 +1,4 @@
-module.exports = class Character {
+module.exports = class Archetype {
 	constructor(titleInput) {
 		this.title = titleInput;
 	}

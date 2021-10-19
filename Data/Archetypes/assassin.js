@@ -1,6 +1,6 @@
-const Character = require("../../Classes/Character.js");
+const Archetype = require("../../Classes/Archetype.js");
 
-module.exports = new Character("assassin")
+module.exports = new Archetype("assassin")
 	.setElement("wind")
 	.setReadType("weaknesses")
 	.setSignatureWeapons(["dagger", "fanofknives"]);

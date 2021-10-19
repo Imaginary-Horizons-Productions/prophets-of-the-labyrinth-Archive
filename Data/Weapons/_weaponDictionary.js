@@ -1,5 +1,3 @@
-const fs = require('fs');
-
 var weaponWhitelist = [
 	"-punch.js",
 	"backstab.js",
@@ -15,13 +13,17 @@ var weaponWhitelist = [
 	"icespear.js",
 	"preemptivestrike.js",
 	"prideclaw.js",
-	"shieldbash.sj",
+	"shieldbash.js",
 	"shieldoflight.js"
 ];
-const weaponFiles = fs.readdirSync('./Data/Weapons').filter(file => file.endsWith('.js') && weaponWhitelist.includes(file));
-exports.weaponDictionary = {};
 
-for (const file of weaponFiles) {
+const weaponDictionary = {};
+
+for (const file of weaponWhitelist) {
 	const weapon = require(`./${file}`);
-	exports.weaponDictionary[weapon.name] = weapon;
+	weaponDictionary[weapon.name] = weapon;
+}
+
+exports.getWeapon = (weaponName) => {
+	return weaponDictionary[weaponName];
 }
