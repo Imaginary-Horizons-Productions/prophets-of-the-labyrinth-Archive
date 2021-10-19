@@ -30,7 +30,7 @@ module.exports.resolveMove = function (move, adventure) {
 				targetNames.push(getFullName(target, adventure.battleEnemyTitles));
 			}
 		})
-		moveText += ` ${targetNames.join(", ")}. ${resultTexts.join(" ")}\n`
+		moveText += ` ${targetNames.join(", ")}.${move.isCrit ? " *Critical Hit!*" : ""} ${resultTexts.join(" ")}\n`
 	}
 	return moveText;
 }
