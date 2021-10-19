@@ -24,7 +24,7 @@ module.exports.resolveMove = function (move, adventure) {
 				target = adventure.battleEnemies[targetIds.index];
 			}
 			resultTexts.push(effect(target, user, move.isCrit, move.element, adventure));
-			if (targetIds.target === "self") {
+			if (targetIds.team === "self") {
 				targetNames.push("themself");
 			} else {
 				targetNames.push(getFullName(target, adventure.battleEnemyTitles));

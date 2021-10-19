@@ -1,7 +1,7 @@
 const Button = require('../../Classes/Button.js');
 const { MessageActionRow, MessageSelectMenu } = require('discord.js');
 const { getPlayer } = require('../playerDAO.js');
-const { getAchetype } = require('../Archetypes/_archetypeDictionary.js');
+const { getArchetype } = require('../Archetypes/_archetypeDictionary.js');
 
 module.exports = new Button("deploy");
 
