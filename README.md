@@ -1,5 +1,5 @@
 # dungeon-tamers
-A game in Discord to play with other server members.
+A rougelike dungeon crawl in Discord to play with other server members.
 
 ## Developer Setup Instructions
 1. Copy "Dev Setup" from "Templates" into root

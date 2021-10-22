@@ -1,7 +1,6 @@
 const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
 const Adventure = require('../../Classes/Adventure.js');
 const Command = require('../../Classes/Command.js');
-const { getPlayer } = require('../playerDAO.js');
 const { setAdventure, nextRandomNumber } = require("../adventureDAO.js");
 const { getGuild } = require('../guildDAO.js');
 
@@ -12,7 +11,6 @@ module.exports.execute = (interaction) => {
 	// Start a new adventure
 	let guildProfile = getGuild(interaction.guild.id);
 	if (interaction.channel.id === guildProfile.centralId) {
-		let leader = getPlayer(interaction.user.id, interaction.guild.id);
 		interaction.guild.channels.fetch(guildProfile.categoryId).then(category => {
 			let adventure = new Adventure(interaction.options.getString("seed"));
 			let descriptors = ["Shining", "New", "Dusty", "Old", "Floating", "Undersea", "Future"];

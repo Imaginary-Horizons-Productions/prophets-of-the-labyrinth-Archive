@@ -1,6 +1,6 @@
 const Archetype = require("../../Classes/Archetype.js");
 
-module.exports = new Archetype("knight")
+module.exports = new Archetype("Knight")
 	.setElement("earth")
 	.setReadType("targets")
 	.setSignatureWeapons(["crystalsword", "buckler"]);
