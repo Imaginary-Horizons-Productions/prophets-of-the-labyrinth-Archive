@@ -4,4 +4,5 @@ module.exports = new Modifier("name", 1)
 	.setDescription()
 	.setIsBuff()
 	.setIsDebuff()
-	.setIsNonStacking();
+	.setIsNonStacking()
+	.setInverse();

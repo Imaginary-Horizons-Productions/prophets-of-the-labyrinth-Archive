@@ -1,5 +1,6 @@
 var modifierWhitelist = [
 	"evade.js",
+	"powerdown.js",
 	"powerup.js",
 	"slow.js"
 ];
@@ -29,4 +30,8 @@ exports.isDebuff = (modifierName) => {
 
 exports.isNonStacking = (modifierName) => {
 	return modifierDictionary[modifierName].isNonStacking;
+}
+
+exports.getInverse = (modifierName) => {
+	return modifierDictionary[modifierName].inverse;
 }

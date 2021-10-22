@@ -12,7 +12,7 @@ module.exports.execute = (interaction, args) => {
 	let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 	let embed = new MessageEmbed()
 		.setTitle(delver.name)
-		.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nReads: ${delver.readType}`)
+		.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nReads: ${delver.read}`)
 		.setFooter("Imaginary Horizons Productions", "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png");
 
 	let modifiersText = "";

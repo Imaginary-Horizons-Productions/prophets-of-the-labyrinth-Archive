@@ -9,6 +9,7 @@ module.exports = class Modifier {
 	isBuff = true;
 	isDebuff = true;
 	isNonStacking = false;
+	inverse = "";
 
 	setDescription(text) {
 		this.description = text;
@@ -27,6 +28,11 @@ module.exports = class Modifier {
 
 	setIsNonStacking(boolean) {
 		this.isNonStacking = boolean;
+		return this;
+	}
+
+	setInverse(modifierName) {
+		this.inverse = modifierName;
 		return this;
 	}
 }

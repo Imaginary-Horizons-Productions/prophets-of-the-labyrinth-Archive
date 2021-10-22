@@ -1,6 +1,7 @@
 const Enemy = require("../Classes/Enemy.js");
 const Delver = require("../Classes/Delver.js");
 const Combatant = require("./../Classes/Combatant.js");
+const { getInverse } = require("./Modifiers/_modifierDictionary.js");
 
 exports.getFullName = (combatant, titleObject) => {
 	if (combatant instanceof Enemy) {
@@ -90,10 +91,24 @@ exports.clearBlock = (combatant) => {
 }
 
 exports.addModifier = (combatant, modifierName, value) => {
-	if (combatant.modifiers[modifierName]) {
-		combatant.modifiers[modifierName] += value;
+	let pendingStacks = value;
+	let inverse = getInverse(modifierName);
+	let inverseStacks = combatant.modifiers[inverse];
+	if (inverseStacks) {
+		if (inverseStacks > pendingStacks) {
+			combatant.modifiers[inverse] -= pendingStacks;
+		} else {
+			delete combatant.modifiers[inverse];
+			if (inverseStacks < pendingStacks) {
+				combatant.modifiers[modifierName] = pendingStacks - inverseStacks;
+			}
+		}
 	} else {
-		combatant.modifiers[modifierName] = value;
+		if (combatant.modifiers[modifierName]) {
+			combatant.modifiers[modifierName] += pendingStacks;
+		} else {
+			combatant.modifiers[modifierName] = pendingStacks;
+		}
 	}
 	return combatant;
 }
