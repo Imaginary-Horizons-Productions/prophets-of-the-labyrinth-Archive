@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { dealDamage } = require('../combatantDAO.js');
 
-module.exports = new Weapon("punch", "description", "untyped", effect)
+module.exports = new Weapon("punch", "description", "untyped", effect, [])
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setUses(0);
 

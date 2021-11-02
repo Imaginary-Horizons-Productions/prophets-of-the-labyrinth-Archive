@@ -37,7 +37,7 @@ module.exports.execute = (interaction, args) => {
 				targetCount = adventure.delvers.length;
 				targetText = "all allies";
 			} else if (targetTeam === "enemy") {
-				targetCount = adventure.battleEnemies.length;
+				targetCount = adventure.room.enemies.length;
 				targetText = "all enemies";
 			}
 			for (let i = 0; i < targetCount; i++) {
@@ -48,7 +48,7 @@ module.exports.execute = (interaction, args) => {
 				newMove.addTarget(targetTeam, nextRandomNumber(adventure, adventure.delvers.length, "battle"));
 				targetText = "a random ally";
 			} else if (targetTeam === "enemy") {
-				newMove.addTarget(targetTeam, nextRandomNumber(adventure, adventure.battleEnemies.length, "battle"));
+				newMove.addTarget(targetTeam, nextRandomNumber(adventure, adventure.room.enemies.length, "battle"));
 				targetText = "a random enemy";
 			}
 		} else if (weapon.targetingTags.target === "self") {
@@ -56,16 +56,16 @@ module.exports.execute = (interaction, args) => {
 			targetText = "themself";
 		}
 
-		for (let i = 0; i < adventure.battleMoves.length; i++) {
-			let move = adventure.battleMoves[i];
+		for (let i = 0; i < adventure.room.moves.length; i++) {
+			let move = adventure.room.moves[i];
 			if (move.userTeam === user.team && move.userIndex === userIndex) {
-				adventure.battleMoves.splice(i, 1, newMove);
+				adventure.room.moves.splice(i, 1, newMove);
 				overwritten = true;
 				break;
 			}
 		}
 		if (!overwritten) {
-			adventure.battleMoves.push(newMove);
+			adventure.room.moves.push(newMove);
 		}
 
 		// Send confirmation text

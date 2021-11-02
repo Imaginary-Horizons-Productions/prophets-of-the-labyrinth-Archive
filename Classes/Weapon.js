@@ -1,9 +1,10 @@
 module.exports = class Weapon {
-	constructor(nameInput, descriptionInput, elementInput, effectInput) {
+	constructor(nameInput, descriptionInput, elementInput, effectInput, upgradeNames) {
 		this.name = nameInput;
 		this.description = descriptionInput;
 		this.element = elementInput;
 		this.effect = effectInput;
+		this.upgrades = upgradeNames;
 	}
 	targetingTags = {};
 	uses = 10;

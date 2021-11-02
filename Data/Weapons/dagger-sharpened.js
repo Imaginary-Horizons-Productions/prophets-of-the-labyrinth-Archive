@@ -1,20 +1,17 @@
 const Weapon = require('../../Classes/Weapon.js');
-const { dealDamage } = require('../combatantDAO.js');
+const { dealDamage } = require("../combatantDAO.js");
 
-module.exports = new Weapon("backstab", "Deal additional damage to a target without block (crit: more damage)", "wind", effect)
+module.exports = new Weapon("Sharpened Dagger", "A powerful attack that deals extra damage on a critical hit (crit: even more damage)", "wind", effect, [])
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setUses(10);
 
 function effect(target, user, isCrit, element, adventure) {
-	let damage = 50;
-	if (target.block === 0) {
-		damage = 125;
-	}
+	let damage = 140;
 	if (user.element === element) {
 		damage *= 1.5;
 	}
 	if (isCrit) {
-		damage *= 2;
+		damage *= 3;
 	}
 	return dealDamage(target, user, damage, element, adventure);
 }

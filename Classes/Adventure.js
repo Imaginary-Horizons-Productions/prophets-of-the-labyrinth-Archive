@@ -7,22 +7,21 @@ module.exports = class Adventure {
 	name;
 	rnIndex = 0;
 	rnIndexBattle = 0;
-	recruitMessageId = "";
-	deployMessageId = "";
-	startMessageId = "";
-	utilityMessageId = "";
-	lastComponentMessageId = "";
+	messageIds = {
+		recruit: "",
+		deploy: "",
+		start: "",
+		utility: "",
+		lastComponent: ""
+	};
 	leaderId = "";
 	delvers = [];
 	difficultyOptions = [];
 	accumulatedScore = 0;
 	depth = 0;
+	room;
 	lives = 2;
 	gold = 100;
-	battleRound;
-	battleEnemies = [];
-	battleEnemyTitles = {};
-	battleMoves = [];
 
 	setName(nameInput) {
 		this.name = nameInput;
@@ -34,18 +33,8 @@ module.exports = class Adventure {
 		return this;
 	}
 
-	setRecruitMessageId(id) {
-		this.recruitMessageId = id;
-		return this;
-	}
-
-	setDeployMessageId(id) {
-		this.deployMessageId = id;
-		return this;
-	}
-
-	setStartMessageId(id) {
-		this.startMessageId = id;
+	setMessageId(type, id) {
+		this.messageIds[type] = id;
 		return this;
 	}
 

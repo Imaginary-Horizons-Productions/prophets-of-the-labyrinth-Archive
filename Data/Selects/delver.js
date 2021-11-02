@@ -47,8 +47,8 @@ module.exports.execute = (interaction, args) => {
 			confirmationText += " All players are ready, have the leader click the button below to start!";
 
 			// if startMessageId already exists, player has changed class, so delete extra start button
-			if (adventure.startMessageId) {
-				interaction.channel.messages.fetch(adventure.startMessageId).then(startMessage => {
+			if (adventure.messageIds.start) {
+				interaction.channel.messages.fetch(adventure.messageIds.start).then(startMessage => {
 					startMessage.edit({ components: [] });
 				})
 			}
@@ -57,7 +57,7 @@ module.exports.execute = (interaction, args) => {
 		// Send confirmation text
 		confirmationText = `${interaction.user} will be playing as ${interaction.values[0]}.` + confirmationText;
 		interaction.reply({ content: confirmationText, components: readyButton, fetchReply: allReady }).then(message => {
-			adventure.setStartMessageId(message.id);
+			adventure.setMessageId("start", message.id);
 		}).catch(console.error);
 		saveAdventures();
 	} else {

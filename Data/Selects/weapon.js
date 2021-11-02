@@ -36,16 +36,16 @@ module.exports.execute = (interaction, args) => {
 			.setMoveName(weapon.name)
 			.setUser(user.team, userIndex)
 			.addTarget(targetTeam, targetIndex);
-		for (let i = 0; i < adventure.battleMoves.length; i++) {
-			let move = adventure.battleMoves[i];
+		for (let i = 0; i < adventure.room.moves.length; i++) {
+			let move = adventure.room.moves[i];
 			if (move.userTeam === user.team && move.userIndex === userIndex) {
-				adventure.battleMoves.splice(i, 1, newMove);
+				adventure.room.moves.splice(i, 1, newMove);
 				overwritten = true;
 				break;
 			}
 		}
 		if (!overwritten) {
-			adventure.battleMoves.push(newMove);
+			adventure.room.moves.push(newMove);
 		}
 
 		// Send confirmation text
@@ -53,9 +53,9 @@ module.exports.execute = (interaction, args) => {
 		if (targetTeam === "ally") {
 			target = adventure.delvers[targetIndex];
 		} else if (targetTeam === "enemy") {
-			target = adventure.battleEnemies[targetIndex];
+			target = adventure.room.enemies[targetIndex];
 		}
-		confirmationText = `${interaction.user} readies **${weapon.name}** to use on **${getFullName(target, adventure.battleEnemyTitles)}**.` + confirmationText;
+		confirmationText = `${interaction.user} readies **${weapon.name}** to use on **${getFullName(target, adventure.room.enemyTitles)}**.` + confirmationText;
 		interaction.reply({ content: confirmationText })
 			.catch(console.error);
 		saveAdventures();

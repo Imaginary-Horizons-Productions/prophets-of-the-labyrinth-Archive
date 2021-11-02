@@ -46,15 +46,15 @@ exports.dealDamage = (target, user, damage, element, adventure) => {
 			pendingDamage = 0;
 		}
 		target.hp -= pendingDamage;
-		let damageText = ` ${exports.getFullName(target, adventure.battleEnemyTitles)} takes ${pendingDamage} damage${blockedDamage > 0 ? ` (${blockedDamage} blocked)` : ""}${isWeakness ? "!!!" : isResistance ? "." : "!"}`;
+		let damageText = ` ${exports.getFullName(target, adventure.room.enemyTitles)} takes ${pendingDamage} damage${blockedDamage > 0 ? ` (${blockedDamage} blocked)` : ""}${isWeakness ? "!!!" : isResistance ? "." : "!"}`;
 		if (target.hp <= 0) {
 			if (target.team === "ally") {
 				target.hp = target.maxHp;
 				adventure.lives -= 1;
-				damageText += ` ${exports.getFullName(target, adventure.battleEnemyTitles)} has died and been revived. ${adventure.lives} lives remain.`;
+				damageText += ` ${exports.getFullName(target, adventure.room.enemyTitles)} has died and been revived. ${adventure.lives} lives remain.`;
 			} else {
 				target.hp = 0;
-				damageText += ` ${exports.getFullName(target, adventure.battleEnemyTitles)} has died.`;
+				damageText += ` ${exports.getFullName(target, adventure.room.enemyTitles)} has died.`;
 			}
 		}
 		return damageText;
@@ -63,7 +63,7 @@ exports.dealDamage = (target, user, damage, element, adventure) => {
 		if (target.modifiers["evade"] <= 0) {
 			delete target.modifiers["evade"];
 		}
-		return ` ${exports.getFullName(target, adventure.battleEnemyTitles)} evades the attack!`;
+		return ` ${exports.getFullName(target, adventure.room.enemyTitles)} evades the attack!`;
 	}
 }
 

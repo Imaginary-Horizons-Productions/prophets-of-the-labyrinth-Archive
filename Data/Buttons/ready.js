@@ -12,14 +12,14 @@ module.exports.execute = (interaction, args) => {
 		// Clear components from recruitment, start, and deploy messages
 		let guildProfile = getGuild(interaction.guild.id);
 		interaction.guild.channels.fetch(guildProfile.centralId).then(channel => {
-			channel.messages.fetch(adventure.recruitMessageId).then(recruitMessage => {
+			channel.messages.fetch(adventure.messageIds.recruit).then(recruitMessage => {
 				recruitMessage.edit({ components: [] });
 			})
 		}).catch(console.error);
-		interaction.channel.messages.fetch(adventure.deployMessageId).then(deployMessage => {
+		interaction.channel.messages.fetch(adventure.messageIds.deploy).then(deployMessage => {
 			deployMessage.edit({ components: [] });
 		}).catch(console.error);
-		interaction.channel.messages.fetch(adventure.startMessageId).then(startMessage => {
+		interaction.channel.messages.fetch(adventure.messageIds.start).then(startMessage => {
 			startMessage.edit({ components: [] });
 		}).catch(console.error);
 
@@ -41,7 +41,7 @@ module.exports.execute = (interaction, args) => {
 			)];
 		interaction.reply({ content: `The adventure has begun! Here are some utilities for the run (remember to \`Jump\` to the message if viewing from pins).`, components: utilities, fetchReply: true }).then(message => {
 			message.pin();
-			adventure.utilityMessageId = message.id;
+			adventure.setMessageId("utility", message.id);
 			nextRoom(adventure, interaction.channel);
 		});
 	} else {

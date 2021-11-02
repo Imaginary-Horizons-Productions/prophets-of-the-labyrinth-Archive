@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { dealDamage } = require("../combatantDAO.js");
 
-module.exports = new Weapon("icespear", "A high damage attack with low durability (crit: more damage)", "water", effect)
+module.exports = new Weapon("icespear", "A high damage attack with low durability (crit: more damage)", "water", effect, [])
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setUses(3);
 

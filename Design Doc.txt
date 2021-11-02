@@ -25,3 +25,6 @@ Characters can be deployed at any level below the highest level reached to incre
 == Permanent Rewards ==
 - artifacts
 - character rolls
+
+== Archetype Ideas ==
+- martial artist as stagger reader (also purge debuffs)

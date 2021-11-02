@@ -6,11 +6,11 @@ const { setPlayer, getPlayer } = require("./playerDAO.js");
 const { roomDictionary } = require("./Rooms/_roomDictionary.js");
 const Move = require("../Classes/Move.js");
 const { resolveMove } = require("./moveDAO.js");
-const { getEnemy } = require("./Enemies/_enemyDictionary.js");
 const Enemy = require("../Classes/Enemy.js");
 const { clearBlock } = require("./combatantDAO.js");
 const Delver = require("../Classes/Delver.js");
 const { getTurnDecrement } = require("./Modifiers/_modifierDictionary.js");
+const Room = require("../Classes/Room.js");
 
 var filePath = "./Saves/adventures.json";
 var requirePath = "./../Saves/adventures.json";
@@ -28,19 +28,21 @@ exports.loadAdventures = function () {
 				}
 				adventure.delvers = castDelvers;
 
-				// Cast enemies into Enemy class
-				let castEnemies = [];
-				for (let enemy of adventure.battleEnemies) {
-					castEnemies.push(Object.assign(new Enemy(), enemy));
-				}
-				adventure.battleEnemies = castEnemies;
+				if (adventure.room) {
+					// Cast enemies into Enemy class
+					let castEnemies = [];
+					for (let enemy of adventure.room.enemies) {
+						castEnemies.push(Object.assign(new Enemy(), enemy));
+					}
+					adventure.room.enemies = castEnemies;
 
-				// Cast moves into Move class
-				let castMoves = [];
-				for (let move of adventure.battleMoves) {
-					castMoves.push(Object.assign(new Move(), move));
+					// Cast moves into Move class
+					let castMoves = [];
+					for (let move of adventure?.room.moves) {
+						castMoves.push(Object.assign(new Move(), move));
+					}
+					adventure.room.moves = castMoves;
 				}
-				adventure.battleMoves = castMoves;
 
 				// Set adventure
 				adventureDictionary.set(adventure.id, Object.assign(new Adventure(adventure.initialSeed), adventure));
@@ -102,8 +104,8 @@ exports.nextRandomNumber = function (adventure, poolSize, branch) {
 
 exports.nextRoom = function (adventure, channel) {
 	adventure.depth++;
-	if (adventure.lastComponentMessageId) {
-		channel.messages.fetch(adventure.lastComponentMessageId).then(message => {
+	if (adventure.messageIds.lastComponent) {
+		channel.messages.fetch(adventure.messageIds.lastComponent).then(message => {
 			message.edit({ components: [] });
 		}).catch(console.error);
 	}
@@ -112,70 +114,51 @@ exports.nextRoom = function (adventure, channel) {
 		exports.completeAdventure(adventure, channel, "success");
 	} else {
 		let roomPool = Object.values(roomDictionary);
-		let room = roomPool[exports.nextRandomNumber(adventure, roomPool.length, "general")];
-		let embed = new MessageEmbed()
-			.setAuthor(`Entering Room #${adventure.depth}`, channel.client.user.displayAvatarURL())
-			.setTitle(room.title)
-			.setDescription(room.description);
-		if (room.type === "battle") {
-			new Promise((resolve, reject) => {
-				adventure.battleRound = 0;
-				adventure.battleMoves = [];
-				Object.keys(room.enemies).forEach(enemyName => {
-					let countExpression = room.enemies[enemyName];
-					let enemyCount = countExpression.split("*").reduce((total, term) => {
-						return total * (term == "n" ? adventure.delvers.length : new Number(term));
-					}, 1);
-					for (let i = 0; i < Math.ceil(enemyCount); i++) {
-						let enemy = new Enemy();
-						Object.assign(enemy, getEnemy(enemyName));
-						adventure.battleEnemies.push(enemy);
-						exports.setEnemyTitle(adventure.battleEnemyTitles, enemy);
-					}
-				})
-				resolve(adventure);
-			}).then(adventure => {
-				exports.newRound(adventure, channel, embed);
-				exports.saveAdventures();
+		Object.assign(new Room(), roomPool[exports.nextRandomNumber(adventure, roomPool.length, "general")])
+			.populate(adventure.delvers.length).then(room => {
+				adventure.room = room;
+				let embed = new MessageEmbed()
+					.setAuthor(`Entering Room #${adventure.depth}`, channel.client.user.displayAvatarURL())
+					.setTitle(room.title)
+					.setDescription(room.description);
+				if (room.type === "battle") {
+					exports.newRound(adventure, channel, embed);
+					exports.saveAdventures();
+				} else {
+					channel.send({ embeds: [embed], components: room.components }).then(message => {
+						adventure.setMessageId("lastComponent", message.id);
+						exports.saveAdventures();
+					});
+				}
 			})
-		} else {
-			channel.send({ embeds: [embed], components: room.components }).then(message => {
-				adventure.lastComponentMessageId = message.id;
-				exports.saveAdventures();
-			});
-		}
 	}
 }
 
 exports.newRound = function (adventure, channel, embed) {
 	// Sort Soves by Speed
-	adventure.battleMoves.sort((first, second) => {
+	adventure.room.moves.sort((first, second) => {
 		return second.speed - first.speed;
 	})
 
 	// Resolve round's moves
 	let lastRoundText = "";
-	for (let i = 0; i < adventure.battleMoves.length; i++) {
-		lastRoundText += resolveMove(adventure.battleMoves[i], adventure);
+	for (let i = 0; i < adventure.room.moves.length; i++) {
+		lastRoundText += resolveMove(adventure.room.moves[i], adventure);
 		if (adventure.lives <= 0) {
 			exports.completeAdventure(adventure, channel, "defeat");
 			break;
 		}
 	}
-	adventure.battleMoves = [];
+	adventure.room.moves = [];
 
 	// Check for Victory
-	if (adventure.battleEnemies.every(enemy => enemy.hp === 0)) {
+	if (adventure.room.enemies.every(enemy => enemy.hp === 0)) {
 		channel.send({
 			embeds: [new MessageEmbed()
 				.setTitle("Victory!")
 				.setDescription(lastRoundText)
-				.setFooter(`Round ${adventure.battleRound}`)]
+				.setFooter(`Round ${adventure.room.round}`)]
 		}).then(message => {
-			adventure.battleRound = 0;
-			adventure.battleMoves = [];
-			adventure.battleEnemies = [];
-			adventure.battleEnemyTitles = {};
 			adventure.delvers.forEach(delver => {
 				delver.modifiers = {};
 			})
@@ -185,15 +168,15 @@ exports.newRound = function (adventure, channel, embed) {
 		});
 	} else {
 		// Increment round and clear last round's components
-		adventure.battleRound++;
-		if (adventure.lastComponentMessageId) {
-			channel.messages.fetch(adventure.lastComponentMessageId).then(message => {
+		adventure.room.round++;
+		if (adventure.messageIds.lastComponent) {
+			channel.messages.fetch(adventure.messageIds.lastComponent).then(message => {
 				message.edit({ components: [] });
 			})
 		}
 
 		// Logistics for Next Round
-		adventure.battleEnemies.concat(adventure.delvers).forEach(combatant => {
+		adventure.room.enemies.concat(adventure.delvers).forEach(combatant => {
 			// Clear Excess Block
 			clearBlock(combatant);
 
@@ -216,7 +199,7 @@ exports.newRound = function (adventure, channel, embed) {
 		})
 
 		// Roll Enemy Moves
-		adventure.battleEnemies.forEach((enemy, index) => {
+		adventure.room.enemies.forEach((enemy, index) => {
 			let actionPool = [];
 			Object.values(enemy.actions).forEach(action => {
 				for (let i = 0; i < action.weight; i++) {
@@ -224,7 +207,7 @@ exports.newRound = function (adventure, channel, embed) {
 				}
 			})
 			let action = actionPool[exports.nextRandomNumber(adventure, actionPool.length, "battle")]; //TODO #19 nonrandom AI
-			adventure.battleMoves.push(new Move()
+			adventure.room.moves.push(new Move()
 				.setSpeed(enemy)
 				.setElement(enemy.element)
 				.setIsCrit(enemy.crit)
@@ -240,7 +223,7 @@ exports.newRound = function (adventure, channel, embed) {
 			embed.setTitle("Combat");
 		}
 		embed.addField(`0/${adventure.delvers.length} Moves Readied`, "Ready party members will be listed here")
-			.setFooter(`Round ${adventure.battleRound}`);
+			.setFooter(`Round ${adventure.room.round}`);
 		let battleMenu = [new MessageActionRow()
 			.addComponents(
 				new MessageButton()
@@ -253,17 +236,17 @@ exports.newRound = function (adventure, channel, embed) {
 					.setStyle("PRIMARY")
 			)];
 		channel.send({ embeds: [embed], components: battleMenu }).then(message => {
-			adventure.lastComponentMessageId = message.id;
+			adventure.setMessageId("lastComponent", message.id);
 			exports.saveAdventures();
 		});
 	}
 }
 
 exports.updateRoundMessage = function (messageManager, adventure) {
-	messageManager.fetch(adventure.lastComponentMessageId).then(roundMessage => {
+	messageManager.fetch(adventure.messageIds.lastComponent).then(roundMessage => {
 		let embed = roundMessage.embeds[0];
 		let readyList = "";
-		for (var move of adventure.battleMoves) {
+		for (var move of adventure.room.moves) {
 			if (move.userTeam === "ally") {
 				readyList += `\n<@${adventure.delvers[move.userIndex].id}>`;
 			}
@@ -271,25 +254,15 @@ exports.updateRoundMessage = function (messageManager, adventure) {
 		if (readyList === "") {
 			readyList = "Ready party members will be listed here";
 		}
-		embed.spliceFields(0, 1, { name: `${adventure.battleMoves.length - adventure.battleEnemies.length}/${adventure.delvers.length} Moves Readied`, value: readyList });
+		embed.spliceFields(0, 1, { name: `${adventure.room.moves.length - adventure.room.enemies.length}/${adventure.delvers.length} Moves Readied`, value: readyList });
 		roundMessage.edit({ embeds: [embed] });
 	})
 }
 
-exports.setEnemyTitle = function (titleObject, enemy) {
-	if (titleObject[enemy.name]) {
-		titleObject[enemy.name]++;
-		enemy.title = titleObject[enemy.name];
-	} else {
-		titleObject[enemy.name] = 1;
-		enemy.title = 1;
-	}
-}
-
 exports.checkNextRound = function (adventure, channel) {
-	if (adventure.battleMoves.length >= (adventure.delvers.length + adventure.battleEnemies.length)) {
+	if (adventure.room.moves.length >= (adventure.delvers.length + adventure.room.enemies.length)) {
 		let embed = new MessageEmbed()
-			.setFooter(`Round ${adventure.battleRound}`);
+			.setFooter(`Round ${adventure.room.round}`);
 		exports.newRound(adventure, channel, embed);
 	}
 }
@@ -319,10 +292,10 @@ exports.completeAdventure = function (adventure, channel, result) {
 		setPlayer(player);
 	})
 
-	channel.messages.fetch(adventure.lastComponentMessageId).then(message => {
+	channel.messages.fetch(adventure.messageIds.lastComponent).then(message => {
 		message.edit({ components: [] });
 	})
-	channel.messages.fetch(adventure.utilityMessageId).then(message => {
+	channel.messages.fetch(adventure.messageIds.utility).then(message => {
 		message.edit({ components: [] });
 	})
 

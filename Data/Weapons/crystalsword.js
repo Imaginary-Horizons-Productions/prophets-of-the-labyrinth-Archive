@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { dealDamage, addModifier } = require('../combatantDAO.js');
 
-module.exports = new Weapon("crystalsword", "Strike a foe while gaining power (crit: gain more power)", "earth", effect)
+module.exports = new Weapon("crystalsword", "Strike a foe while gaining power (crit: gain more power)", "earth", effect, [])
 	.setTargetingTags({ target: "single", team: "enemy" }) // tagObject {target: ["single", "all", "random", "self"], team: ["ally", "enemy", "any", "self"]}
 	.setUses(5);
 

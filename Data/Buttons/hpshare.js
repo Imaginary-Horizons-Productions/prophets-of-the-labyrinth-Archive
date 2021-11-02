@@ -9,7 +9,7 @@ module.exports.execute = (interaction, args) => {
 	let adventure = getAdventure(interaction.channel.id);
 	adventure.delvers.forEach(delver => {
 		if (delver.id !== interaction.user.id) {
-			gainHealth(delver, 5, adventure.battleEnemyTitles);
+			gainHealth(delver, 5, adventure.room.enemyTitles);
 		}
 	})
 	let damageText = dealDamage(adventure.delvers.find(delver => delver.id == interaction.user.id), null, 10, "untyped", adventure);

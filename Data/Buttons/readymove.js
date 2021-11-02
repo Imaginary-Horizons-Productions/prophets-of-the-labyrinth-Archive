@@ -24,9 +24,9 @@ module.exports.execute = (interaction, args) => {
 	}
 
 	let moveMenu = [];
-	let enemyOptions = adventure.battleEnemies.map((enemy, i) => {
+	let enemyOptions = adventure.room.enemies.map((enemy, i) => {
 		return {
-			label: getFullName(enemy, adventure.battleEnemyTitles),
+			label: getFullName(enemy, adventure.room.enemyTitles),
 			description: "",
 			value: `enemy-${i}`
 		}

@@ -64,8 +64,8 @@ module.exports.execute = (interaction) => {
 						)
 					channel.send({ content: "The adventure will begin when everyone has picked a class and the leader clicks the \"Ready!\" button.", components: [ready] }).then(message => {
 						adventure.setId(channel.id)
-							.setRecruitMessageId(recruitMessage.id)
-							.setDeployMessageId(message.id)
+							.setMessageId("recruit", recruitMessage.id)
+							.setMessageId("deploy", message.id)
 							.setLeaderId(interaction.user.id);
 						setAdventure(adventure);
 					});

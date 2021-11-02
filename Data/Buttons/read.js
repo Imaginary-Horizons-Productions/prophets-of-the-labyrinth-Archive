@@ -18,42 +18,42 @@ module.exports.execute = (interaction, args) => {
 	switch (delver.read) {
 		case "targets": // Shows who the enemies are targeting next round
 			descriptionText += "__Enemy Targets__";
-			adventure.battleMoves.forEach(move => {
+			adventure.room.moves.forEach(move => {
 				if (move.userTeam === "enemy") {
-					let enemy = adventure.battleEnemies[move.userIndex];
+					let enemy = adventure.room.enemies[move.userIndex];
 					let targets = getTargetList(move.targets, adventure);
-					descriptionText += `\nNext round, **${getFullName(enemy, adventure.battleEnemyTitles)}** intends to attack **${targets.join(", ")}**`;
+					descriptionText += `\nNext round, **${getFullName(enemy, adventure.room.enemyTitles)}** intends to attack **${targets.join(", ")}**`;
 				}
 			})
 			break;
 		case "weaknesses": // Shows which combatants are going to critically hit next round and elemental weakness
-			readCombatants = adventure.battleEnemies.concat(adventure.delvers);
+			readCombatants = adventure.room.enemies.concat(adventure.delvers);
 			descriptionText += "__Critical Hits__";
 			readCombatants.forEach(combatant => {
-				descriptionText += `\n${getFullName(combatant, adventure.battleEnemyTitles)}: ${combatant.crit ? "Critical Hit" : "normal hit"}`;
+				descriptionText += `\n${getFullName(combatant, adventure.room.enemyTitles)}: ${combatant.crit ? "Critical Hit" : "normal hit"}`;
 			});
 			descriptionText += "\n\n__Elemental Weaknesses__";
 			readCombatants.forEach(combatant => {
-				descriptionText += `\n${getFullName(combatant, adventure.battleEnemyTitles)}: ${Combatant.getWeaknesses(combatant.element).join(", ")}`;
+				descriptionText += `\n${getFullName(combatant, adventure.room.enemyTitles)}: ${Combatant.getWeaknesses(combatant.element).join(", ")}`;
 			})
 			break;
 		case "health": // Shows current HP, max HP, block, and resistances of all combatants
-			readCombatants = adventure.battleEnemies.concat(adventure.delvers)
+			readCombatants = adventure.room.enemies.concat(adventure.delvers)
 			descriptionText += "__Health and Block__";
 			readCombatants.forEach(combatant => {
 				descriptionText += `\n${combatant.name}: ${combatant.hp}/${combatant.maxHp} HP, ${combatant.block} Block`;
 			})
 			descriptionText += "\n\n__Elemental Resistances__";
 			readCombatants.forEach(combatant => {
-				descriptionText += `\n${getFullName(combatant, adventure.battleEnemyTitles)}: ${Combatant.getResistances(combatant.element).join(", ")}`;
+				descriptionText += `\n${getFullName(combatant, adventure.room.enemyTitles)}: ${Combatant.getResistances(combatant.element).join(", ")}`;
 			})
 			break;
 		case "speed": // Shows roundly random speed bonuses and order of move resolution
 			descriptionText += "__Move Order__";
-			adventure.battleEnemies.concat(adventure.delvers).sort((first, second) => {
+			adventure.room.enemies.concat(adventure.delvers).sort((first, second) => {
 				return calculateTotalSpeed(second) - calculateTotalSpeed(first);
 			}).forEach((combatant, i) => {
-				descriptionText += `\n${i + 1}: ${getFullName(combatant, adventure.battleEnemyTitles)} (${combatant.roundSpeed >= 0 ? "+" : ""}${combatant.roundSpeed} bonus speed this round${Object.keys(combatant.modifiers).includes("slow") ? `; speed halved due to *slow* modifier` : ""})`
+				descriptionText += `\n${i + 1}: ${getFullName(combatant, adventure.room.enemyTitles)} (${combatant.roundSpeed >= 0 ? "+" : ""}${combatant.roundSpeed} bonus speed this round${Object.keys(combatant.modifiers).includes("slow") ? `; speed halved due to *slow* modifier` : ""})`
 			});
 			break;
 		case "stagger": // Shows current pressure and stagger thresholds for all combatants

@@ -3,7 +3,7 @@ const { getEnemy } = require("./Enemies/_enemyDictionary.js");
 const { getWeapon } = require("./Weapons/_weaponDictionary.js");
 
 exports.resolveMove = function (move, adventure) {
-	let userTeam = move.userTeam === "ally" ? adventure.delvers : adventure.battleEnemies;
+	let userTeam = move.userTeam === "ally" ? adventure.delvers : adventure.room.enemies;
 	let user = userTeam[move.userIndex];
 	let moveText = "";
 	if (user.hp > 0) {
@@ -19,7 +19,7 @@ exports.resolveMove = function (move, adventure) {
 			if (targetIds.team === "ally") {
 				targetTeam = adventure.delvers;
 			} else {
-				targetTeam = adventure.battleEnemies;
+				targetTeam = adventure.room.enemies;
 			}
 			return effect(targetTeam[targetIds.index], user, move.isCrit, move.element, adventure);
 		});
@@ -38,9 +38,9 @@ exports.getTargetList = (targets, adventure) => {
 			if (targetIds.team === "ally") {
 				targetTeam = adventure.delvers;
 			} else {
-				targetTeam = adventure.battleEnemies;
+				targetTeam = adventure.room.enemies;
 			}
-			return getFullName(targetTeam[targetIds.index], adventure.battleEnemyTitles);
+			return getFullName(targetTeam[targetIds.index], adventure.room.enemyTitles);
 		}
 	})
 }

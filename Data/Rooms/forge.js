@@ -3,16 +3,18 @@ const Room = require("../../Classes/Room.js")
 
 module.exports = new Room()
 	.setType("event")
-	.setTitle("Gold on Fire")
-	.setDescription("In the center of the room, there is a huge fire. In the center of the fire, there is a pile of gold.");
+	.setTitle("Abandoned Forge")
+	.setDescription("The room contains an abandoned forge. There seem to be enough supplies leftover to upgrade a weapon.");
 
 module.exports.components.push(new MessageActionRow().addComponents(
 	new MessageButton()
-		.setCustomId("getgoldonfire")
-		.setLabel("Grab some gold [+20 gold, -10 hp]")
-		.setStyle("DANGER"),
+		.setCustomId("upgrade")
+		.setLabel("Upgrade a random weapon")
+		.setStyle("SUCCESS"),
 	new MessageButton()
 		.setCustomId("continue")
 		.setLabel("Move on")
 		.setStyle("SECONDARY")
-));
+))
+
+module.exports.lootList = { "randomUpgrade": "n" };

@@ -1,6 +1,7 @@
 var roomWhitelist = [
 	"goldonfire.js",
 	"hpshare.js",
+	"forge.js",
 	"freegold.js",
 	"brutefight.js",
 	"counterpartfight.js"

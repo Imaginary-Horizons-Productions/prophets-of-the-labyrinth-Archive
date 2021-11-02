@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { dealDamage } = require('../combatantDAO.js');
 
-module.exports = new Weapon("fanofknives", "Throw knives at all enemies (crit: more damage)", "wind", effect)
+module.exports = new Weapon("fanofknives", "Throw knives at all enemies (crit: more damage)", "wind", effect, [])
 	.setTargetingTags({ target: "all", team: "enemy" }) // tagObject {target: ["single", "all", "random", "self"], team: ["ally", "enemy", "any"]}
 	.setUses(10);
 

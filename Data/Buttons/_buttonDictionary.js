@@ -11,7 +11,8 @@ var buttonWhitelist = [
 	"read.js",
 	"ready.js",
 	"readymove.js",
-	"self.js"
+	"self.js",
+	"upgrade.js"
 ];
 
 const buttonDictionary = {};

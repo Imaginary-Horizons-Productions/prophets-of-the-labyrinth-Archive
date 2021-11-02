@@ -14,4 +14,14 @@ module.exports = class Enemy extends Combatant {
 		this.actions[actionsInput.name] = actionsInput;
 		return this;
 	}
+
+	static setEnemyTitle(titleObject, enemy) {
+		if (titleObject[enemy.name]) {
+			titleObject[enemy.name]++;
+			enemy.title = titleObject[enemy.name];
+		} else {
+			titleObject[enemy.name] = 1;
+			enemy.title = 1;
+		}
+	}
 }

@@ -1,5 +1,6 @@
 var selectWhitelist = [
 	"delver.js",
+	"randomupgrade.js",
 	"weapon.js"
 ];
 
