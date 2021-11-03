@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { dealDamage, gainHealth } = require('../combatantDAO.js');
 
-module.exports = new Weapon("fierymedicine", "Heal a fire element combatant, damage everyone else (crit: more healing/damage)", "fire", effect, [])
+module.exports = new Weapon("Windy Potion", "Heal a wind element combatant, damage everyone else (crit: more healing/damage)", "wind", effect, [])
 	.setTargetingTags({ target: "single", team: "any" })
 	.setUses(5);
 
@@ -13,7 +13,7 @@ function effect(target, user, isCrit, element, adventure) {
 	if (isCrit) {
 		value *= 2;
 	}
-	if (target.element === "fire") {
+	if (target.element === "wind") {
 		value /= 2;
 		return gainHealth(target, value, adventure.room.enemyTitles);
 	} else {

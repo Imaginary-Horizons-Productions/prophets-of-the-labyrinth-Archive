@@ -22,7 +22,7 @@ module.exports.execute = (interaction, args) => {
 				confirmationText += ` The ${weapon.name} broke!`;
 			}
 		} else {
-			weapon = getWeapon("punch");
+			weapon = getWeapon("Punch");
 		}
 
 		// Add move to round list (overwrite exisiting readied move)
