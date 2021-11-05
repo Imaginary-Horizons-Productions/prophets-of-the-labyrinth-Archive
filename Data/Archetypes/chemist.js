@@ -2,5 +2,5 @@ const Archetype = require("../../Classes/Archetype.js");
 
 module.exports = new Archetype("Chemist")
 	.setElement("water")
-	.setReadType("speed")
+	.setPredictType("speed")
 	.setSignatureWeapons(["firecracker", "Unfinished Potion"]);

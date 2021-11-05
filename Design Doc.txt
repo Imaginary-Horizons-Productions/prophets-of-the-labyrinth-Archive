@@ -25,3 +25,10 @@ Characters can be deployed at any level below the highest level reached to incre
 == Permanent Rewards ==
 - artifacts
 - character rolls
+
+== Bosses ==
+Counterpart - promote from battle to boss
+- match party count in mirror clones
+- each mirror clone matches the effect of the party member with the same index
+- mirror clones match party member base speed
+- mirror clones invert party targeting (enemy -> ally, ally -> enemy)

@@ -1,6 +1,6 @@
 const Button = require('../../Classes/Button.js');
 const Move = require('../../Classes/Move');
-const { getAdventure, saveAdventures, checkNextRound, updateRoundMessage, nextRandomNumber } = require('../adventureDAO');
+const { getAdventure, saveAdventures, checkNextRound, updateRoundMessage, nextRandomNumber, newRound } = require('../adventureDAO');
 
 module.exports = new Button("nontargetweapon");
 
@@ -74,7 +74,9 @@ module.exports.execute = (interaction, args) => {
 			.catch(console.error);
 		saveAdventures();
 		updateRoundMessage(interaction.channel.messages, adventure);
-		checkNextRound(adventure, interaction.channel);
+		if (checkNextRound(adventure)) {
+			newRound(adventure, interaction.channel);
+		};
 	} else {
 		interaction.reply({ content: `You don't have that weapon anymore.`, ephemeral: true })
 			.catch(console.error);

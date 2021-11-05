@@ -10,7 +10,7 @@ module.exports.execute = (interaction, args) => {
 	let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 	let embed = new MessageEmbed()
 		.setTitle(delver.name)
-		.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nReads: ${delver.read}`)
+		.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nPredicts: ${delver.predict}`)
 		.setFooter("Imaginary Horizons Productions", "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png");
 	for (let i = 0; i < delver.weapons.length; i++) {
 		let weapon = delver.weapons[i];

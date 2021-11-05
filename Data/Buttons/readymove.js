@@ -12,7 +12,7 @@ module.exports.execute = (interaction, args) => {
 	if (!delver.modifiers.Stun) { // Early out if stunned
 		let embed = new MessageEmbed()
 			.setTitle(delver.name)
-			.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nReads: ${delver.read}`)
+			.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nPredicts: ${delver.predict}`)
 			.setFooter("Imaginary Horizons Productions", "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png");
 
 		let modifiersText = modifiersToString(delver);

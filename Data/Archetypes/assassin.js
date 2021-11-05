@@ -2,5 +2,5 @@ const Archetype = require("../../Classes/Archetype.js");
 
 module.exports = new Archetype("Assassin")
 	.setElement("wind")
-	.setReadType("weaknesses")
+	.setPredictType("weaknesses")
 	.setSignatureWeapons(["Dagger", "Cloak"]);

@@ -19,7 +19,7 @@ module.exports.execute = (interaction, args) => {
 			.setHp(archetypeTemplate.maxHp)
 			.setSpeed(archetypeTemplate.speed)
 			.setElement(archetypeTemplate.element)
-			.setRead(archetypeTemplate.read);
+			.setPredict(archetypeTemplate.predict);
 		archetypeTemplate.signatureWeapons.forEach(weaponName => {
 			delver.weapons.push(Object.assign(new Weapon(), getWeapon(weaponName)));
 		})

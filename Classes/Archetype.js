@@ -5,7 +5,7 @@ module.exports = class Archetype {
 	maxHp = 300;
 	speed = 100;
 	element = "untyped";
-	read = "";
+	predict = "";
 	signatureWeapons = [];
 
 	setHp(integer) {
@@ -23,8 +23,8 @@ module.exports = class Archetype {
 		return this;
 	}
 
-	setReadType(readLabel) {
-		this.read = readLabel;
+	setPredictType(predictEnum) {
+		this.predict = predictEnum;
 		return this;
 	}
 

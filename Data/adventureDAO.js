@@ -138,7 +138,13 @@ exports.nextRoom = function (adventure, channel) {
 	}
 }
 
-exports.newRound = function (adventure, channel, embed) {
+exports.newRound = function (adventure, channel, embed = new MessageEmbed()) {
+	// Generate results embed
+	if (!embed.title) {
+		embed.setTitle(adventure.room.title);
+	}
+	embed.setFooter(`Room #${adventure.depth} - Round ${adventure.room.round}`);
+
 	// Sort Soves by Speed
 	adventure.room.moves.sort((first, second) => {
 		return second.speed - first.speed;
@@ -149,19 +155,22 @@ exports.newRound = function (adventure, channel, embed) {
 	for (let i = 0; i < adventure.room.moves.length; i++) {
 		lastRoundText += resolveMove(adventure.room.moves[i], adventure);
 		if (adventure.lives <= 0) {
+			channel.send({
+				embeds: [embed.setTitle("Defeat!").setDescription(lastRoundText)]
+			});
 			exports.completeAdventure(adventure, channel, "defeat");
-			break;
+			return;
 		}
+	}
+	if (lastRoundText !== "") {
+		embed.setDescription(lastRoundText);
 	}
 	adventure.room.moves = [];
 
 	// Check for Victory
 	if (adventure.room.enemies.every(enemy => enemy.hp === 0)) {
 		channel.send({
-			embeds: [new MessageEmbed()
-				.setTitle("Victory!")
-				.setDescription(lastRoundText)
-				.setFooter(`Room #${adventure.depth} - Round ${adventure.room.round}`)]
+			embeds: [embed.setTitle("Victory!")]
 		}).then(message => {
 			adventure.delvers.forEach(delver => {
 				delver.modifiers = {};
@@ -238,29 +247,28 @@ exports.newRound = function (adventure, channel, embed) {
 				.addTarget("ally", exports.nextRandomNumber(adventure, adventure.delvers.length, "battle")));
 		})
 
-		if (lastRoundText !== "") {
-			embed.setDescription(lastRoundText);
-		}
-		if (!embed.title) {
-			embed.setTitle("Combat");
-		}
-		embed.addField(`0/${adventure.delvers.length} Moves Readied`, "Ready party members will be listed here")
-			.setFooter(`Round ${adventure.room.round}`);
-		let battleMenu = [new MessageActionRow()
-			.addComponents(
-				new MessageButton()
-					.setCustomId("predict")
-					.setLabel("Predict")
-					.setStyle("SECONDARY"),
-				new MessageButton()
-					.setCustomId("readymove")
-					.setLabel("Ready a Move")
-					.setStyle("PRIMARY")
-			)];
-		channel.send({ embeds: [embed], components: battleMenu }).then(message => {
-			adventure.setMessageId("lastComponent", message.id);
+		if (!exports.checkNextRound(adventure)) {
+			embed.addField(`0/${adventure.delvers.length} Moves Readied`, "Ready party members will be listed here")
+			let battleMenu = [new MessageActionRow()
+				.addComponents(
+					new MessageButton()
+						.setCustomId("predict")
+						.setLabel("Predict")
+						.setStyle("SECONDARY"),
+					new MessageButton()
+						.setCustomId("readymove")
+						.setLabel("Ready a Move")
+						.setStyle("PRIMARY")
+				)];
+			channel.send({ embeds: [embed], components: battleMenu }).then(message => {
+				adventure.setMessageId("lastComponent", message.id);
+				exports.saveAdventures();
+			});
+		} else {
+			channel.send({ embeds: [embed] });
+			exports.newRound(adventure, channel);
 			exports.saveAdventures();
-		});
+		}
 	}
 }
 
@@ -281,18 +289,14 @@ exports.updateRoundMessage = function (messageManager, adventure) {
 	})
 }
 
-exports.checkNextRound = function (adventure, channel) {
-	if (adventure.room.moves.length >= (adventure.delvers.length + adventure.room.enemies.length)) {
-		let embed = new MessageEmbed()
-			.setFooter(`Round ${adventure.room.round}`);
-		exports.newRound(adventure, channel, embed);
-	}
+exports.checkNextRound = function (adventure) {
+	return adventure.room.moves.length >= (adventure.delvers.length + adventure.room.enemies.length);
 }
 
 //{channelId: guildId} A list of adventure channels that restarting the bot interrupted deleting
 let completedAdventures = {};
 
-exports.completeAdventure = function (adventure, channel, result) {
+exports.completeAdventure = function (adventure, channel, result) { //TODO #54 end of adventure embed (accept embed argument)
 	var baseScore = adventure.depth;
 	switch (result) {
 		case "success":

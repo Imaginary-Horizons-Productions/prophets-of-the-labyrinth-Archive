@@ -14,7 +14,7 @@ module.exports.execute = (interaction, args) => {
 			let archetype = getArchetype(className);
 			classOptions.push({
 				label: className,
-				description: `${archetype.element} - ${archetype.read}`,
+				description: `${archetype.element} - ${archetype.predict}`,
 				value: className
 			})
 		}

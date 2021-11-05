@@ -12,10 +12,10 @@ module.exports.execute = (interaction, args) => {
 	let adventure = getAdventure(interaction.channel.id);
 	let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 	let embed = new MessageEmbed()
-		.setTitle(`Predicting: ${delver.read.toUpperCase()}`);
+		.setTitle(`Predicting: ${delver.predict.toUpperCase()}`);
 	let descriptionText = "";
 	let readCombatants;
-	switch (delver.read) {
+	switch (delver.predict) {
 		case "targets": // Shows who the enemies are targeting next round
 			descriptionText += "__Enemy Targets__";
 			adventure.room.moves.forEach(move => {
