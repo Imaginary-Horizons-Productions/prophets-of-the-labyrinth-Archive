@@ -53,7 +53,7 @@ module.exports.execute = (interaction, args) => {
 			adventure.room.enemies.concat(adventure.delvers).sort((first, second) => {
 				return calculateTotalSpeed(second) - calculateTotalSpeed(first);
 			}).forEach((combatant, i) => {
-				descriptionText += `\n${i + 1}: ${getFullName(combatant, adventure.room.enemyTitles)} (${combatant.roundSpeed >= 0 ? "+" : ""}${combatant.roundSpeed} bonus speed this round${Object.keys(combatant.modifiers).includes("slow") ? `; speed halved due to *slow* modifier` : ""})`
+				descriptionText += `\n${i + 1}: ${getFullName(combatant, adventure.room.enemyTitles)} (${combatant.roundSpeed >= 0 ? "+" : ""}${combatant.roundSpeed} bonus speed this round${Object.keys(combatant.modifiers).includes("Slow") ? `; speed halved due to *Slow* modifier` : ""}${Object.keys(combatant.modifiers).includes("Quicken") ? `; speed doubled due to *Quicken* modifier` : ""})`
 			});
 			break;
 		case "stagger": // Shows modifiers and stagger thresholds for all combatants

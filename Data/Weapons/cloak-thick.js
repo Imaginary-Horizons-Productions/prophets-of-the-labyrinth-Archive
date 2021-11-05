@@ -1,9 +1,9 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { addModifier, removeModifier } = require('../combatantDAO.js');
 
-module.exports = new Weapon("cloak", "Evade an incoming attack (crit: evade another attack)", "wind", effect, [])
+module.exports = new Weapon("Thick Cloak", "Evade an incoming attack; increased durability (crit: evade another attack)", "wind", effect, [])
 	.setTargetingTags({ target: "self", team: "self" })
-	.setUses(5);
+	.setUses(10);
 
 function effect(target, user, isCrit, element, adventure) {
 	if (user.element === element) {

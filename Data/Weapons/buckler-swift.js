@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
-const { addBlock, removeModifier } = require('../combatantDAO.js');
+const { addBlock, removeModifier, addModifier } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Buckler", "Reduce damage a combatant takes next round (crit: more shield)", "earth", effect, ["Guarding Buckler", "Heavy Buckler", "Swift Buckler"])
+module.exports = new Weapon("Swift Buckler", "Reduce damage a combatant takes next round, then gain Quicken (crit: more shield)", "earth", effect, [])
 	.setTargetingTags({ target: "single", team: "ally" })
 	.setUses(10);
 
@@ -14,5 +14,6 @@ function effect(target, user, isCrit, element, adventure) {
 		block *= 2;
 	}
 	addBlock(target, block);
+	addModifier(user, "Quicken", 2);
 	return "";
 }

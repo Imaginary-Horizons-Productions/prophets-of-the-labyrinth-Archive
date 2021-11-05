@@ -1,7 +1,7 @@
 const Modifier = require("../../Classes/Modifier");
 
-module.exports = new Modifier("Slow", 1)
-	.setDescription("Reduced speed for stack count turns.")
+module.exports = new Modifier("Quicken", 1)
+	.setDescription("Increased speed for stack count turns.")
 	.setIsBuff(false)
 	.setIsDebuff(true)
 	.setIsNonStacking(false)

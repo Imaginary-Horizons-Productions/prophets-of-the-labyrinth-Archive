@@ -17,8 +17,11 @@ exports.getFullName = (combatant, titleObject) => {
 
 exports.calculateTotalSpeed = combatant => {
 	let totalSpeed = combatant.speed + combatant.roundSpeed;
-	if (Object.keys(combatant.modifiers).includes("slow")) {
+	if (Object.keys(combatant.modifiers).includes("Slow")) {
 		totalSpeed /= 2;
+	}
+	if (Object.keys(combatant.modifiers).includes("Quicken")) {
+		totalSpeed *= 2;
 	}
 	return Math.ceil(totalSpeed);
 }

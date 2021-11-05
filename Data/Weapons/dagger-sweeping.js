@@ -6,7 +6,7 @@ module.exports = new Weapon("Sweeping Daggers", "Throw knives at all enemies (cr
 	.setUses(10);
 
 function effect(target, user, isCrit, element, adventure) {
-	let damage = 25;
+	let damage = 75;
 	if (user.element === element) {
 		addModifier(target, "Stagger", 1);
 	}
