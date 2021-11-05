@@ -22,7 +22,7 @@ module.exports.execute = (interaction, args) => {
 	let archetypeSelect = [new MessageActionRow()
 		.addComponents(
 			new MessageSelectMenu()
-				.setCustomId("delver")
+				.setCustomId("archetype")
 				.setPlaceholder("Select an archetype...")
 				.addOptions(classOptions),
 		)

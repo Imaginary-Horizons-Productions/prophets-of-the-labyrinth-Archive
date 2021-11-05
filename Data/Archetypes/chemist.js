@@ -1,6 +1,6 @@
 const Archetype = require("../../Classes/Archetype.js");
 
 module.exports = new Archetype("Chemist")
-	.setElement("fire")
+	.setElement("water")
 	.setReadType("speed")
 	.setSignatureWeapons(["firecracker", "Unfinished Potion"]);

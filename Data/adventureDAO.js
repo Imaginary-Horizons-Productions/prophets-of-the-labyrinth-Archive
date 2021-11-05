@@ -176,27 +176,45 @@ exports.newRound = function (adventure, channel, embed) {
 		}
 
 		// Logistics for Next Round
-		adventure.room.enemies.concat(adventure.delvers).forEach(combatant => {
-			// Clear Excess Block
-			clearBlock(combatant);
+		let teams = {
+			"enemy": adventure.room.enemies,
+			"ally": adventure.delvers
+		}
+		for (let teamName in teams) {
+			teams[teamName].forEach((combatant, i) => {
+				// Clear Excess Block
+				clearBlock(combatant);
 
-			// Roll Round Speed
-			let percentBonus = (exports.nextRandomNumber(adventure, 21, "battle") - 10) / 100;
-			combatant.roundSpeed = Math.floor(combatant.speed * percentBonus);
+				// Roll Round Speed
+				let percentBonus = (exports.nextRandomNumber(adventure, 21, "battle") - 10) / 100;
+				combatant.roundSpeed = Math.floor(combatant.speed * percentBonus);
 
-			// Roll Critical Hit
-			let critRoll = exports.nextRandomNumber(adventure, 4, "battle");
-			combatant.crit = critRoll > 2;
+				// Roll Critical Hit
+				let critRoll = exports.nextRandomNumber(adventure, 4, "battle");
+				combatant.crit = critRoll > 2;
 
-			// Decrement Modifiers
-			for (let modifierName in combatant.modifiers) {
-				combatant.modifiers[modifierName] -= getTurnDecrement(modifierName);
+				// Decrement Modifiers
+				for (let modifierName in combatant.modifiers) {
+					if (modifierName !== "Stun") {
+						combatant.modifiers[modifierName] -= getTurnDecrement(modifierName);
 
-				if (combatant.modifiers[modifierName] <= 0) {
-					delete combatant.modifiers[modifierName];
+						if (combatant.modifiers[modifierName] <= 0) {
+							delete combatant.modifiers[modifierName];
+						}
+					} else {
+						if (teamName === "ally") {
+							// Dummy move for Stunned players
+							adventure.room.moves.push(new Move()
+								.setSpeed(combatant)
+								.setElement(combatant.element)
+								.setIsCrit(combatant.crit)
+								.setMoveName("Stun")
+								.setUser(teamName, i));
+						}
+					}
 				}
-			}
-		})
+			})
+		}
 
 		// Roll Enemy Moves
 		adventure.room.enemies.forEach((enemy, index) => {
@@ -227,8 +245,8 @@ exports.newRound = function (adventure, channel, embed) {
 		let battleMenu = [new MessageActionRow()
 			.addComponents(
 				new MessageButton()
-					.setCustomId("read")
-					.setLabel("Read")
+					.setCustomId("predict")
+					.setLabel("Predict")
 					.setStyle("SECONDARY"),
 				new MessageButton()
 					.setCustomId("readymove")

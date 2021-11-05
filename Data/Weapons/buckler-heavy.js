@@ -1,5 +1,5 @@
 const Weapon = require('../../Classes/Weapon.js');
-const { addBlock } = require('../combatantDAO.js');
+const { addBlock, removeModifier } = require('../combatantDAO.js');
 
 module.exports = new Weapon("Heavy Buckler", "Reduce a lot of damage a combatant takes next round (crit: more shield)", "earth", effect, [])
 	.setTargetingTags({ target: "single", team: "ally" })
@@ -8,7 +8,7 @@ module.exports = new Weapon("Heavy Buckler", "Reduce a lot of damage a combatant
 function effect(target, user, isCrit, element, adventure) {
 	let block = 125;
 	if (user.element === element) {
-		block *= 1.5;
+		removeModifier(target, "Stagger", 1);
 	}
 	if (isCrit) {
 		block *= 2;

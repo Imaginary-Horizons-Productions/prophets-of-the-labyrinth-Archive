@@ -2,7 +2,9 @@ var modifierWhitelist = [
 	"evade.js",
 	"powerdown.js",
 	"powerup.js",
-	"slow.js"
+	"slow.js",
+	"stagger.js",
+	"stun.js"
 ];
 
 const modifierDictionary = {};

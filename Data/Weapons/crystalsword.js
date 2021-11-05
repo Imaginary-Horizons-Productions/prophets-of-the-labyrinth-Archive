@@ -8,7 +8,7 @@ module.exports = new Weapon("crystalsword", "Strike a foe while gaining power (c
 function effect(target, user, isCrit, element, adventure) {
 	let damage = 25;
 	if (user.element === element) {
-		//TODO add stagger
+		addModifier(target, "Stagger", 1);
 	}
 	if (isCrit) {
 		addModifier(user, "powerup", 50);

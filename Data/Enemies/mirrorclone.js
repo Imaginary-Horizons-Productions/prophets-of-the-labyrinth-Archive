@@ -1,10 +1,11 @@
 const Enemy = require("../../Classes/Enemy.js");
-const { dealDamage } = require("../combatantDAO.js");
+const { dealDamage, addModifier } = require("../combatantDAO.js");
 
 module.exports = new Enemy("mirrorclone")
 	.setHp(300)
 	.setSpeed(100)
 	.setElement("dark")
+	.setStaggerThreshold(3)
 	.addAction({ name: "glass shard", weight: 1, effect: glassShardEffect });
 
 function glassShardEffect(target, user, isCrit, element, adventure) {
@@ -12,5 +13,6 @@ function glassShardEffect(target, user, isCrit, element, adventure) {
 	if (isCrit) {
 		damage *= 2;
 	}
+	addModifier(target, "Stagger", 1);
 	return dealDamage(target, user, damage, element, adventure);
 }

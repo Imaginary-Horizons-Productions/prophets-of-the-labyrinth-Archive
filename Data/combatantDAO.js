@@ -1,7 +1,7 @@
 const Enemy = require("../Classes/Enemy.js");
 const Delver = require("../Classes/Delver.js");
 const Combatant = require("./../Classes/Combatant.js");
-const { getInverse } = require("./Modifiers/_modifierDictionary.js");
+const { getInverse, isNonStacking, getModifierDescription } = require("./Modifiers/_modifierDictionary.js");
 
 exports.getFullName = (combatant, titleObject) => {
 	if (combatant instanceof Enemy) {
@@ -95,13 +95,9 @@ exports.addModifier = (combatant, modifierName, value) => {
 	let inverse = getInverse(modifierName);
 	let inverseStacks = combatant.modifiers[inverse];
 	if (inverseStacks) {
-		if (inverseStacks > pendingStacks) {
-			combatant.modifiers[inverse] -= pendingStacks;
-		} else {
-			delete combatant.modifiers[inverse];
-			if (inverseStacks < pendingStacks) {
-				combatant.modifiers[modifierName] = pendingStacks - inverseStacks;
-			}
+		exports.removeModifier(combatant, inverse, pendingStacks);
+		if (inverseStacks < pendingStacks) {
+			combatant.modifiers[modifierName] = pendingStacks - inverseStacks;
 		}
 	} else {
 		if (combatant.modifiers[modifierName]) {
@@ -110,5 +106,29 @@ exports.addModifier = (combatant, modifierName, value) => {
 			combatant.modifiers[modifierName] = pendingStacks;
 		}
 	}
+
+	// Check if Stagger becomes Stun
+	if (combatant.modifiers?.Stagger >= combatant.staggerThreshold) {
+		combatant.modifiers.Stagger -= combatant.staggerThreshold;
+		combatant.modifiers.Stun = 1;
+	}
 	return combatant;
+}
+
+exports.removeModifier = (combatant, modifierName, value) => {
+	if (combatant.modifiers[modifierName]) {
+		combatant.modifiers[modifierName] -= value;
+	}
+	if (value < 0 || combatant.modifiers[modifierName] <= 0) {
+		delete combatant.modifiers[modifierName];
+	}
+	return combatant;
+}
+
+exports.modifiersToString = (combatant) => {
+	let modifiersText = "";
+	for (let modifier in combatant.modifiers) {
+		modifiersText += `*${modifier}${isNonStacking(modifier) ? "" : ` x ${combatant.modifiers[modifier]}`}* - ${getModifierDescription(modifier)}\n`;
+	}
+	return modifiersText;
 }

@@ -1,5 +1,5 @@
 const Weapon = require('../../Classes/Weapon.js');
-const { dealDamage } = require('../combatantDAO.js');
+const { dealDamage, addModifier } = require('../combatantDAO.js');
 
 module.exports = new Weapon("chameleonsword", "Deal damage matching the element of the wielder (crit: more damage)", "untyped", effect, [])
 	.setTargetingTags({ target: "single", team: "enemy" })
@@ -7,7 +7,9 @@ module.exports = new Weapon("chameleonsword", "Deal damage matching the element 
 
 function effect(target, user, isCrit, element, adventure) {
 	let damage = 75;
-	// No same element effect boost due to untyped
+	if (user.element === element) {
+		addModifier(target, "Stagger", 1);
+	}
 	if (isCrit) {
 		damage *= 2;
 	}

@@ -1,7 +1,8 @@
 var archetype = [
 	"assassin.js",
 	"chemist.js",
-	"knight.js"
+	"knight.js",
+	"martialartist.js"
 ];
 
 const archetypeDictionary = {};

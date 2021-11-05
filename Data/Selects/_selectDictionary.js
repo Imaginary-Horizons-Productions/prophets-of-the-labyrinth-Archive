@@ -1,5 +1,5 @@
 var selectWhitelist = [
-	"delver.js",
+	"archetype.js",
 	"randomupgrade.js",
 	"weapon.js"
 ];

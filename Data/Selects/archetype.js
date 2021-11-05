@@ -7,7 +7,7 @@ const { getArchetype } = require('../Archetypes/_archetypeDictionary.js');
 const { getWeapon } = require('../Weapons/_weaponDictionary');
 const { MessageActionRow, MessageButton } = require('discord.js');
 
-module.exports = new Select("delver");
+module.exports = new Select("archetype");
 
 module.exports.execute = (interaction, args) => {
 	// Add the player's delver object to the adventure

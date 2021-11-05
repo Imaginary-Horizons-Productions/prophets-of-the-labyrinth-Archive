@@ -1,5 +1,5 @@
 const Weapon = require('../../Classes/Weapon.js');
-const { dealDamage } = require('../combatantDAO.js');
+const { addModifier, dealDamage } = require('../combatantDAO.js');
 
 module.exports = new Weapon("Sweeping Daggers", "Throw knives at all enemies (crit: more damage)", "wind", effect, [])
 	.setTargetingTags({ target: "all", team: "enemy" }) // tagObject {target: ["single", "all", "random", "self"], team: ["ally", "enemy", "any"]}
@@ -8,7 +8,7 @@ module.exports = new Weapon("Sweeping Daggers", "Throw knives at all enemies (cr
 function effect(target, user, isCrit, element, adventure) {
 	let damage = 25;
 	if (user.element === element) {
-		damage *= 1.5;
+		addModifier(target, "Stagger", 1);
 	}
 	if (isCrit) {
 		damage *= 2;

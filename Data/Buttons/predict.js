@@ -2,17 +2,17 @@ const { MessageEmbed } = require('discord.js');
 const Button = require('../../Classes/Button.js');
 const { getAdventure } = require('../adventureDAO.js');
 const { getTargetList } = require('../moveDAO.js');
-const Combatant = require("./../../Classes/Combatant.js");
-const { getFullName, calculateTotalSpeed } = require("./../combatantDAO.js");
+const Combatant = require("../../Classes/Combatant.js");
+const { getFullName, calculateTotalSpeed, modifiersToString } = require("../combatantDAO.js");
 
-module.exports = new Button("read");
+module.exports = new Button("predict");
 
 module.exports.execute = (interaction, args) => {
 	// Based on type, show the user information on the next battle round in an ephemeral message
 	let adventure = getAdventure(interaction.channel.id);
 	let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 	let embed = new MessageEmbed()
-		.setTitle(`Reading the Situation: ${delver.read.toUpperCase()}`);
+		.setTitle(`Predicting: ${delver.read.toUpperCase()}`);
 	let descriptionText = "";
 	let readCombatants;
 	switch (delver.read) {
@@ -56,9 +56,11 @@ module.exports.execute = (interaction, args) => {
 				descriptionText += `\n${i + 1}: ${getFullName(combatant, adventure.room.enemyTitles)} (${combatant.roundSpeed >= 0 ? "+" : ""}${combatant.roundSpeed} bonus speed this round${Object.keys(combatant.modifiers).includes("slow") ? `; speed halved due to *slow* modifier` : ""})`
 			});
 			break;
-		case "stagger": // Shows current pressure and stagger thresholds for all combatants
-			//TODO consider adding enemy modifiers
-			descriptionText += "Coming Soon!";
+		case "stagger": // Shows modifiers and stagger thresholds for all combatants
+			adventure.room.enemies.concat(adventure.delvers).forEach(combatant => {
+				let modifiersText = modifiersToString(combatant);
+				descriptionText += `__${getFullName(combatant, adventure.room.enemyTitles)}__\nStunned at *${combatant.staggerThreshold} Stagger*${modifiersText ? `\n${modifiersText}\n` : ""}`;
+			})
 			break;
 	}
 	embed.setDescription(descriptionText);

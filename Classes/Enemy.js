@@ -9,6 +9,7 @@ module.exports = class Enemy extends Combatant {
 	}
 
 	setTitle = super.setTitle;
+	setStaggerThreshold = super.setStaggerThreshold;
 
 	addAction(actionsInput) {
 		this.actions[actionsInput.name] = actionsInput;

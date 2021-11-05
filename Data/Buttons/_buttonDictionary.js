@@ -8,7 +8,7 @@ var buttonWhitelist = [
 	"join.js",
 	"nontargetweapon.js",
 	"partystats.js",
-	"read.js",
+	"predict.js",
 	"ready.js",
 	"readymove.js",
 	"self.js",

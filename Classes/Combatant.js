@@ -12,6 +12,7 @@ module.exports = class Combatant {
 	crit = false;
 	element = "water";
 	modifiers = {};
+	staggerThreshold = 3;
 
 	setTitle(titleInput) {
 		this.title = titleInput;
@@ -26,6 +27,11 @@ module.exports = class Combatant {
 
 	setSpeed(integer) {
 		this.speed = integer;
+		return this;
+	}
+
+	setStaggerThreshold(integer) {
+		this.staggerThreshold = integer;
 		return this;
 	}
 

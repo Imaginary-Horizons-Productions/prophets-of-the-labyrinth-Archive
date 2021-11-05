@@ -17,9 +17,11 @@ module.exports = class Delver extends Combatant {
 
 	setSpeed = super.setSpeed;
 
+	setStaggerThreshold = super.setStaggerThreshold;
+
 	setElement = super.setElement;
 
-	setRead = (readType) =>{
+	setRead = (readType) => {
 		this.read = readType;
 		return this;
 	}

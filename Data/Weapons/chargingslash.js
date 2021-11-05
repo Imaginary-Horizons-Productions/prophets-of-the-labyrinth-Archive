@@ -1,5 +1,5 @@
 const Weapon = require('../../Classes/Weapon.js');
-const { dealDamage } = require('../combatantDAO.js');
+const { dealDamage, addModifier } = require('../combatantDAO.js');
 
 module.exports = new Weapon("chargingslash", "Deal additional damage to a target if not blocking (crit: more damage)", "fire", effect, [])
 	.setTargetingTags({ target: "single", team: "enemy" })
@@ -11,7 +11,7 @@ function effect(target, user, isCrit, element, adventure) {
 		damage = 150;
 	}
 	if (user.element === element) {
-		damage *= 1.5;
+		addModifier(target, "Stagger", 1);
 	}
 	if (isCrit) {
 		damage *= 2;
