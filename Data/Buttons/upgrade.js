@@ -13,7 +13,7 @@ module.exports.execute = (interaction, args) => {
 		if (weapon.upgrades.length > 0) {
 			weaponOptions.push({
 				label: weapon.name,
-				description: `Possible upgrades: ${weapon.upgrades.join(", ")}`,
+				description: `Upgrades: ${weapon.upgrades.join(", ")}`,
 				value: `${i}`
 			})
 		}

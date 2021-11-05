@@ -109,19 +109,23 @@ exports.nextRoom = function (adventure, channel) {
 			message.edit({ components: [] });
 		}).catch(console.error);
 	}
-	if (adventure.depth > 3) {
+	if (adventure.depth === 11) {
 		adventure.accumulatedScore = 10;
 		exports.completeAdventure(adventure, channel, "success");
 	} else {
 		let roomPool = Object.values(roomDictionary);
-		Object.assign(new Room(), roomPool[exports.nextRandomNumber(adventure, roomPool.length, "general")])
+		let roomTemplate = roomDictionary["Brute Convention"]; //TODO #53 refactor room selector AI
+		if (adventure.depth !== 10) {
+			roomTemplate = roomPool[exports.nextRandomNumber(adventure, roomPool.length, "general")];
+		}
+		Object.assign(new Room(), roomTemplate)
 			.populate(adventure.delvers.length).then(room => {
 				adventure.room = room;
 				let embed = new MessageEmbed()
 					.setAuthor(`Entering Room #${adventure.depth}`, channel.client.user.displayAvatarURL())
 					.setTitle(room.title)
 					.setDescription(room.description);
-				if (room.type === "battle") {
+				if (room.type === "battle" || room.type === "boss") {
 					exports.newRound(adventure, channel, embed);
 					exports.saveAdventures();
 				} else {
@@ -157,7 +161,7 @@ exports.newRound = function (adventure, channel, embed) {
 			embeds: [new MessageEmbed()
 				.setTitle("Victory!")
 				.setDescription(lastRoundText)
-				.setFooter(`Round ${adventure.room.round}`)]
+				.setFooter(`Room #${adventure.depth} - Round ${adventure.room.round}`)]
 		}).then(message => {
 			adventure.delvers.forEach(delver => {
 				delver.modifiers = {};

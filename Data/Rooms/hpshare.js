@@ -4,7 +4,7 @@ const Room = require("../../Classes/Room.js")
 module.exports = new Room()
 	.setType("event")
 	.setTitle("Health Redistrabution")
-	.setDescription("description");
+	.setDescription("An imp wearing glasses approaches you with a contract. It would allow you to heal your party members at the expense of the life of one of your own.");
 
 module.exports.components.push(new MessageActionRow()
 	.addComponents(

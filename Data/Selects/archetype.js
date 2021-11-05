@@ -44,7 +44,7 @@ module.exports.execute = (interaction, args) => {
 						.setLabel("Ready!")
 						.setStyle("SUCCESS")
 				))
-			confirmationText += " All players are ready, have the leader click the button below to start!";
+			confirmationText += "\n\nAll players are ready, the adventure can start when the leader clicks the button below!";
 
 			// if startMessageId already exists, player has changed class, so delete extra start button
 			if (adventure.messageIds.start) {
@@ -55,7 +55,7 @@ module.exports.execute = (interaction, args) => {
 		}
 
 		// Send confirmation text
-		confirmationText = `${interaction.user} will be playing as ${interaction.values[0]}.` + confirmationText;
+		confirmationText = `${interaction.user} will be playing as ${interaction.values[0]}.${confirmationText}`;
 		interaction.reply({ content: confirmationText, components: readyButton, fetchReply: allReady }).then(message => {
 			adventure.setMessageId("start", message.id);
 		}).catch(console.error);
