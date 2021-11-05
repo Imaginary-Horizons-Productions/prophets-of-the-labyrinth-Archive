@@ -26,6 +26,13 @@ Characters can be deployed at any level below the highest level reached to incre
 - artifacts
 - character rolls
 
+== Archetype ==
+- Dark Knight (maybe rename Knight to Paladin?)
+-- element dark
+-- endangers self as tradeoff for powerful weapons (e.g. cursed shield)
+-- predicts weaknesses (for maximum disrespect)
+-- swap Knight's sword base of bonus damage on no block to gain Power-Up to allow Dark Knight to gain damage on no block?
+
 == Bosses ==
 Counterpart - promote from battle to boss
 - match party count in mirror clones

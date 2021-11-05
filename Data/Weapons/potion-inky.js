@@ -6,7 +6,7 @@ module.exports = new Weapon("Inky Potion", "Heal a dark element combatant, damag
 	.setUses(5);
 
 function effect(target, user, isCrit, element, adventure) {
-	let value = 50;
+	let value = 100;
 	if (isCrit) {
 		value *= 2;
 	}

@@ -7,12 +7,10 @@ var weaponWhitelist = [
 	"buckler-heavy.js",
 	"buckler-swift.js",
 	"chameleonsword.js",
-	"chargingslash.js",
 	"cloak-base.js",
 	"cloak-long.js",
 	"cloak-swift.js",
 	"cloak-thick.js",
-	"crystalsword.js",
 	"cursedshield.js",
 	"dagger-base.js",
 	"dagger-sharpened.js",
@@ -30,7 +28,11 @@ var weaponWhitelist = [
 	"spear-base.js",
 	"spear-reactive.js",
 	"spear-sweeping.js",
-	"spear-wicked.js"
+	"spear-wicked.js",
+	"sword-base.js",
+	"sword-charging.js",
+	"sword-guarding.js",
+	"sword-swift.js"
 ];
 
 const weaponDictionary = {};
