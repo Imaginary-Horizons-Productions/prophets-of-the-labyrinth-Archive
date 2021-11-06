@@ -45,6 +45,6 @@ module.exports.execute = (interaction, args) => {
 			nextRoom(adventure, interaction.channel);
 		});
 	} else {
-		interaction.reply("Please wait for the leader to start the adventure.");
+		interaction.reply({ content: "Please wait for the leader to start the adventure.", ephemeral: true });
 	}
 }
