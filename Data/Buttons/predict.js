@@ -12,11 +12,11 @@ module.exports.execute = (interaction, args) => {
 	let adventure = getAdventure(interaction.channel.id);
 	let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 	let embed = new MessageEmbed()
-		.setTitle(`Predicting: ${delver.predict.toUpperCase()}`);
+		.setTitle(`Predicting: ${delver.predict}`);
 	let descriptionText = "";
 	let readCombatants;
 	switch (delver.predict) {
-		case "targets": // Shows who the enemies are targeting next round
+		case "Targets": // Shows who the enemies are targeting next round
 			descriptionText += "__Enemy Targets__";
 			adventure.room.moves.forEach(move => {
 				if (move.userTeam === "enemy") {
@@ -26,7 +26,7 @@ module.exports.execute = (interaction, args) => {
 				}
 			})
 			break;
-		case "weaknesses": // Shows which combatants are going to critically hit next round and elemental weakness
+		case "Weaknessess": // Shows which combatants are going to critically hit next round and elemental weakness
 			readCombatants = adventure.room.enemies.concat(adventure.delvers);
 			descriptionText += "__Critical Hits__";
 			readCombatants.forEach(combatant => {
@@ -37,7 +37,7 @@ module.exports.execute = (interaction, args) => {
 				descriptionText += `\n${getFullName(combatant, adventure.room.enemyTitles)}: ${Combatant.getWeaknesses(combatant.element).join(", ")}`;
 			})
 			break;
-		case "health": // Shows current HP, max HP, block, and resistances of all combatants
+		case "Health": // Shows current HP, max HP, block, and resistances of all combatants
 			readCombatants = adventure.room.enemies.concat(adventure.delvers)
 			descriptionText += "__Health and Block__";
 			readCombatants.forEach(combatant => {
@@ -48,7 +48,7 @@ module.exports.execute = (interaction, args) => {
 				descriptionText += `\n${getFullName(combatant, adventure.room.enemyTitles)}: ${Combatant.getResistances(combatant.element).join(", ")}`;
 			})
 			break;
-		case "speed": // Shows roundly random speed bonuses and order of move resolution
+		case "Speed": // Shows roundly random speed bonuses and order of move resolution
 			descriptionText += "__Move Order__";
 			adventure.room.enemies.concat(adventure.delvers).sort((first, second) => {
 				return calculateTotalSpeed(second) - calculateTotalSpeed(first);
@@ -56,10 +56,10 @@ module.exports.execute = (interaction, args) => {
 				descriptionText += `\n${i + 1}: ${getFullName(combatant, adventure.room.enemyTitles)} (${combatant.roundSpeed >= 0 ? "+" : ""}${combatant.roundSpeed} bonus speed this round${Object.keys(combatant.modifiers).includes("Slow") ? `; speed halved due to *Slow* modifier` : ""}${Object.keys(combatant.modifiers).includes("Quicken") ? `; speed doubled due to *Quicken* modifier` : ""})`
 			});
 			break;
-		case "stagger": // Shows modifiers and stagger thresholds for all combatants
+		case "Modifiers": // Shows modifiers and stagger thresholds for all combatants
 			adventure.room.enemies.concat(adventure.delvers).forEach(combatant => {
 				let modifiersText = modifiersToString(combatant);
-				descriptionText += `__${getFullName(combatant, adventure.room.enemyTitles)}__\nStunned at *${combatant.staggerThreshold} Stagger*${modifiersText ? `\n${modifiersText}\n` : ""}`;
+				descriptionText += `__${getFullName(combatant, adventure.room.enemyTitles)}__\nStunned at *${combatant.staggerThreshold} Stagger*\n${modifiersText ? `${modifiersText}` : ""}\n`;
 			})
 			break;
 	}
