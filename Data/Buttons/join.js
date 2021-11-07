@@ -9,7 +9,7 @@ module.exports.execute = (interaction, [channelId]) => {
 	interaction.guild.channels.fetch(channelId).then(channel => {
 		var adventure = getAdventure(channelId);
 		if (!adventure.delvers.some(delver => delver.id == interaction.user.id)) {
-			adventure.delvers.push(new Delver(interaction.user.id, channelId));
+			adventure.delvers.push(new Delver(interaction.user.id, interaction.member.displayName, channelId));
 			channel.permissionOverwrites.create(interaction.user, {
 				VIEW_CHANNEL: true
 			})

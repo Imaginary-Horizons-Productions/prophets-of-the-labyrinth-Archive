@@ -12,7 +12,8 @@ module.exports.execute = (interaction, args) => {
 	let adventure = getAdventure(interaction.channel.id);
 	let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 	let embed = new MessageEmbed()
-		.setTitle(`Predicting: ${delver.predict}`);
+		.setTitle(`Predicting: ${delver.predict}`)
+		.setFooter(`Room #${adventure.depth} - Round ${adventure.room.round}`);
 	let descriptionText = "";
 	switch (delver.predict) {
 		case "Targets": // Shows who the enemies are targeting next round

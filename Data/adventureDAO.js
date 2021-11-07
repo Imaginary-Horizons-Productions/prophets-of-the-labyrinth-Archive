@@ -72,9 +72,11 @@ exports.setAdventure = function (adventure) {
 
 exports.updateStartingMessage = function (startMessage, adventure) {
 	let embed = startMessage.embeds[0];
-	let partyList = `Leader: <@${adventure.delvers[0].id}>`;
-	for (let i = 1; i < adventure.delvers.length; i++) {
-		partyList += `\n <@${adventure.delvers[i].id}>`;
+	let partyList = `Leader: <@${adventure.leaderId}>`;
+	for (let i = 0; i < adventure.delvers.length; i++) {
+		if (adventure.delvers[i].id !== adventure.leaderId) {
+			partyList += `\n<@${adventure.delvers[i].id}>`;
+		}
 	}
 	embed.spliceFields(0, 1, { name: `${adventure.delvers.length} Party Member${adventure.delvers.length == 1 ? "" : "s"}`, value: partyList });
 	startMessage.edit({ embeds: [embed] });
