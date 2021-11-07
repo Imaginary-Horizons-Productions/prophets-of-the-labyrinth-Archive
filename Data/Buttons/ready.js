@@ -31,10 +31,6 @@ module.exports.execute = (interaction, args) => {
 					.setLabel("Inspect self")
 					.setStyle("SECONDARY"),
 				new MessageButton()
-					.setCustomId("partystats")
-					.setLabel("Party Stats")
-					.setStyle("SECONDARY"),
-				new MessageButton()
 					.setCustomId("giveup")
 					.setLabel("Give Up")
 					.setStyle("DANGER")

@@ -124,9 +124,10 @@ exports.nextRoom = function (adventure, channel) {
 			.populate(adventure.delvers.length).then(room => {
 				adventure.room = room;
 				let embed = new MessageEmbed()
-					.setAuthor(`Entering Room #${adventure.depth}`, channel.client.user.displayAvatarURL())
+					.setAuthor(`Lives: ${adventure.lives} - Party Gold: ${adventure.gold} - Score: ${adventure.accumulatedScore}`, channel.client.user.displayAvatarURL())
 					.setTitle(room.title)
-					.setDescription(room.description);
+					.setDescription(room.description)
+					.setFooter(`Room #${adventure.depth}`);
 				if (room.type === "battle" || room.type === "boss") {
 					exports.newRound(adventure, channel, embed);
 					exports.saveAdventures();
@@ -145,7 +146,8 @@ exports.newRound = function (adventure, channel, embed = new MessageEmbed()) {
 	if (!embed.title) {
 		embed.setTitle(adventure.room.title);
 	}
-	embed.setFooter(`Room #${adventure.depth} - Round ${adventure.room.round}`);
+	embed.setAuthor(`Lives: ${adventure.lives} - Party Gold: ${adventure.gold} - Score: ${adventure.accumulatedScore}`, channel.client.user.displayAvatarURL())
+		.setFooter(`Room #${adventure.depth} - Round ${adventure.room.round}`);
 
 	// Sort Soves by Speed
 	adventure.room.moves.sort((first, second) => {
