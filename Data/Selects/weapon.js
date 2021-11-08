@@ -1,6 +1,6 @@
 const Move = require('../../Classes/Move');
 const Select = require('../../Classes/Select.js');
-const { getAdventure, saveAdventures, checkNextRound, updateRoundMessage, newRound } = require('../adventureDAO');
+const { getAdventure, saveAdventures, checkNextRound, updateRoundMessage, endRound } = require('../adventureDAO');
 const { getWeapon } = require('../Weapons/_weaponDictionary');
 const { getFullName } = require("./../combatantDAO.js");
 
@@ -55,8 +55,8 @@ module.exports.execute = (interaction, args) => {
 			.catch(console.error);
 		saveAdventures();
 		updateRoundMessage(interaction.channel.messages, adventure);
-		if (checkNextRound(adventure, interaction.channel)) {
-			newRound(adventure, interaction.channel);
+		if (checkNextRound(adventure)) {
+			endRound(adventure, interaction.channel);
 		}
 	} else {
 		// Needed to prevent crashes in case users keep weapon menus around and use one with a broken weapon

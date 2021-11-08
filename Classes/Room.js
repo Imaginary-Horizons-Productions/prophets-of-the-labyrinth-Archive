@@ -9,7 +9,7 @@ module.exports = class Room {
 		this.components = [];
 		this.enemyList = {};
 		this.lootList = {};
-		this.round = 1;
+		this.round = 0;
 		this.moves = [];
 		this.enemies = [];
 		this.enemyTitles = {};
@@ -38,7 +38,7 @@ module.exports = class Room {
 
 	populate(delverCount) {
 		return new Promise((resolve, reject) => {
-			this.round = 1;
+			this.round = 0;
 			this.moves = [];
 			this.enemies = [];
 			this.enemyTitles = {};
