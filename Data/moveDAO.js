@@ -10,22 +10,29 @@ exports.resolveMove = function (move, adventure) {
 		if (user.hp > 0) {
 			moveText = `${user.name} used ${move.name} on`;
 			let effect;
+			let breakText = "";
 			if (move.userTeam === "ally") {
 				effect = getWeapon(move.name).effect;
+
+				let weapon = user.weapons.find(weapon => weapon.name === move.name);
+				weapon.uses--;
+				if (weapon.uses === 0) {
+					breakText = ` The ${weapon.name} broke!`;
+				}
 			} else {
 				effect = getEnemy(user.name).actions[move.name].effect;
 			}
-			let resultTexts = move.targets.map(targetIds => {
+			let resultTexts = move.targets.map(targetDatum => {
 				let targetTeam;
-				if (targetIds.team === "ally") {
+				if (targetDatum.team === "ally") {
 					targetTeam = adventure.delvers;
 				} else {
 					targetTeam = adventure.room.enemies;
 				}
-				return effect(targetTeam[targetIds.index], user, move.isCrit, move.element, adventure);
+				return effect(targetTeam[targetDatum.index], user, move.isCrit, move.element, adventure);
 			});
 			let targetNames = exports.getTargetList(move.targets, adventure);
-			moveText += ` ${targetNames.join(", ")}.${move.isCrit ? " *Critical Hit!*" : ""} ${resultTexts.join(" ")}\n`;
+			moveText += ` ${targetNames.join(", ")}.${move.isCrit ? " *Critical Hit!*" : ""} ${resultTexts.join(" ")}${breakText !== "" ? breakText : ""}\n`;
 		}
 		return moveText;
 	} else {

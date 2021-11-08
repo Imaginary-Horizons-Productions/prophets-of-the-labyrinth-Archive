@@ -16,11 +16,6 @@ module.exports.execute = (interaction, args) => {
 	if (weaponIndex === "punch" || parseInt(weaponIndex) < user.weapons.length) {
 		if (weaponIndex !== "punch") {
 			weapon = user.weapons[weaponIndex];
-			weapon.uses--;
-			if (weapon.uses === 0) {
-				user.weapons.splice(weaponIndex, 1);
-				confirmationText += ` The ${weapon.name} broke!`;
-			}
 		} else {
 			weapon = getWeapon("Punch");
 		}

@@ -35,36 +35,45 @@ module.exports.execute = (interaction, args) => {
 				value: `ally-${i}`
 			}
 		})
-		if (delver.weapons.length > 0) {
+		let weaponCount = delver.weapons.reduce((count, weapon) => {
+			if (weapon.uses > 0) {
+				return ++count;
+			} else {
+				return count;
+			}
+		}, 0);
+		if (weaponCount > 0) {
 			for (let i = 0; i < delver.weapons.length; i++) {
 				let weapon = delver.weapons[i];
-				embed.addField(`${weapon.name}`, `Uses: ${weapon.uses}/${weapon.maxUses}\nElement: ${weapon.element}\n${weapon.description}`);
-				if (weapon.targetingTags.target === "single") {
-					// Select Menu
-					let targetOptions = [];
-					if (weapon.targetingTags.team === "enemy" || weapon.targetingTags.team === "any") {
-						targetOptions = targetOptions.concat(enemyOptions);
-					}
+				if (weapon.uses > 0) {
+					embed.addField(`${weapon.name}`, `Uses: ${weapon.uses}/${weapon.maxUses}\nElement: ${weapon.element}\n${weapon.description}`);
+					if (weapon.targetingTags.target === "single") {
+						// Select Menu
+						let targetOptions = [];
+						if (weapon.targetingTags.team === "enemy" || weapon.targetingTags.team === "any") {
+							targetOptions = targetOptions.concat(enemyOptions);
+						}
 
-					if (weapon.targetingTags.team === "ally" || weapon.targetingTags.team === "any") {
-						targetOptions = targetOptions.concat(allyOptions);
+						if (weapon.targetingTags.team === "ally" || weapon.targetingTags.team === "any") {
+							targetOptions = targetOptions.concat(allyOptions);
+						}
+						moveMenu.push(new MessageActionRow()
+							.addComponents(
+								new MessageSelectMenu()
+									.setCustomId(`weapon-${i}`)
+									.setPlaceholder(`Use ${weapon.name} on...`)
+									.addOptions(targetOptions)
+							));
+					} else {
+						// Button
+						moveMenu.push(new MessageActionRow()
+							.addComponents(
+								new MessageButton()
+									.setCustomId(`nontargetweapon-${i}`)
+									.setLabel(`Use ${weapon.name}`)
+									.setStyle("PRIMARY")
+							))
 					}
-					moveMenu.push(new MessageActionRow()
-						.addComponents(
-							new MessageSelectMenu()
-								.setCustomId(`weapon-${i}`)
-								.setPlaceholder(`Use ${weapon.name} on...`)
-								.addOptions(targetOptions)
-						));
-				} else {
-					// Button
-					moveMenu.push(new MessageActionRow()
-						.addComponents(
-							new MessageButton()
-								.setCustomId(`nontargetweapon-${i}`)
-								.setLabel(`Use ${weapon.name}`)
-								.setStyle("PRIMARY")
-						))
 				}
 			}
 		} else {

@@ -13,11 +13,6 @@ module.exports.execute = (interaction, args) => {
 	let confirmationText = "";
 	if (parseInt(weaponIndex) < user.weapons.length) {
 		weapon = user.weapons[weaponIndex];
-		weapon.uses--;
-		if (weapon.uses === 0) {
-			user.weapons.splice(weaponIndex, 1);
-			confirmationText += ` The ${weapon.name} broke!`;
-		}
 
 		// Add move to round list (overwrite exisiting readied move)
 		let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
