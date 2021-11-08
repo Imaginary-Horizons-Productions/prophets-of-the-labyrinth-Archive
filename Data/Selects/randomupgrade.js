@@ -13,6 +13,10 @@ module.exports.execute = (interaction, args) => {
 	let upgradePool = weapon.upgrades;
 	let upgradeName = weapon.upgrades[nextRandomNumber(adventure, upgradePool.length, "general")];
 	let upgrade = getWeapon(upgradeName);
+	let usesDifference = upgrade.maxUses - weapon.maxUses;
+	if (usesDifference > 0) {
+		weapon.uses += usesDifference;
+	}
 	if (weapon.uses > upgrade.maxUses) {
 		upgrade.uses = upgrade.maxUses;
 	} else {
