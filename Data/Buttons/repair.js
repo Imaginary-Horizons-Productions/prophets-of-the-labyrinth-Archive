@@ -1,19 +1,20 @@
 const { MessageActionRow, MessageSelectMenu } = require('discord.js');
 const Button = require('../../Classes/Button.js');
-const { getAdventure } = require("./../adventureDAO.js");
+const { getAdventure } = require("../adventureDAO.js");
 
-module.exports = new Button("upgrade");
+module.exports = new Button("repair");
 
 module.exports.execute = (interaction, args) => {
-	// Present the user with an opportunity to upgrade a weapon
+	// All the user to select a weapon to regain uses on
 	let adventure = getAdventure(interaction.channel.id);
 	let user = adventure.delvers.find(delver => delver.id === interaction.user.id);
 	let weaponOptions = [];
 	user.weapons.forEach((weapon, i) => {
-		if (weapon.upgrades.length > 0) {
+		if (weapon.uses < weapon.maxUses) {
+			let value = Math.min(Math.ceil(weapon.maxUses / 2), weapon.maxUses - weapon.uses);
 			weaponOptions.push({
 				label: weapon.name,
-				description: `Upgrades: ${weapon.upgrades.join(", ")}`,
+				description: `Regain ${value} uses`,
 				value: `${i}`
 			})
 		}
@@ -21,13 +22,13 @@ module.exports.execute = (interaction, args) => {
 	if (adventure.room.loot.forgeSupplies > 0) {
 		if (weaponOptions.length > 0) {
 			let upgradeSelect = new MessageActionRow().addComponents(
-				new MessageSelectMenu().setCustomId("randomupgrade")
-					.setPlaceholder("Pick a weapon to randomly upgrade...")
+				new MessageSelectMenu().setCustomId("repair")
+					.setPlaceholder("Pick a weapon to repair...")
 					.setOptions(weaponOptions)
 			)
-			interaction.reply({ content: `You can pick a weapon to upgrade, but you're not sure what you'll get:`, components: [upgradeSelect], ephemeral: true });
+			interaction.reply({ content: "When you repair a weapon, it'll regain half its max uses.", components: [upgradeSelect], ephemeral: true });
 		} else {
-			interaction.reply({ content: "You don't have any weapons that can be upgraded.", ephemeral: true });
+			interaction.reply({ content: "None of your weapons need repair.", ephemeral: true });
 		}
 	} else {
 		interaction.reply({ content: "The forge's supplies have been exhausted.", ephemeral: true });

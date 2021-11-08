@@ -11,6 +11,7 @@ var buttonWhitelist = [
 	"predict.js",
 	"ready.js",
 	"readymove.js",
+	"repair.js",
 	"self.js",
 	"upgrade.js"
 ];
