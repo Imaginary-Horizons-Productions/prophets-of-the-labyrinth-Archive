@@ -57,9 +57,12 @@ function processSeed(initialSeed, seedProvidedByUser) {
 
 function linearRandomGenerator(seed) {
 	const results = [];
-	for (let i = 0; i < 10000; i++) {
+	let totalLength = 0;
+	while (totalLength < 10000) {
 		seed = (5 * seed + 7) % 100003;
-		results.push(seed.toString(2));
+		let binary = seed.toString(2);
+		results.push(binary);
+		totalLength += binary.length;
 	}
 	return results;
 }
