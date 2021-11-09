@@ -1,6 +1,6 @@
 const Button = require('../../Classes/Button.js');
 const Move = require('../../Classes/Move');
-const { getAdventure, saveAdventures, checkNextRound, updateRoundMessage, nextRandomNumber, endRound } = require('../adventureDAO');
+const { getAdventure, saveAdventures, checkNextRound, updateRoundMessage, generateRandomNumber, endRound } = require('../adventureDAO');
 
 module.exports = new Button("nontargetweapon");
 
@@ -40,10 +40,10 @@ module.exports.execute = (interaction, args) => {
 			}
 		} else if (weapon.targetingTags.target === "random") {
 			if (targetTeam === "ally") {
-				newMove.addTarget(targetTeam, nextRandomNumber(adventure, adventure.delvers.length, "battle"));
+				newMove.addTarget(targetTeam, generateRandomNumber(adventure, adventure.delvers.length, "battle"));
 				targetText = "a random ally";
 			} else if (targetTeam === "enemy") {
-				newMove.addTarget(targetTeam, nextRandomNumber(adventure, adventure.room.enemies.length, "battle"));
+				newMove.addTarget(targetTeam, generateRandomNumber(adventure, adventure.room.enemies.length, "battle"));
 				targetText = "a random enemy";
 			}
 		} else if (weapon.targetingTags.target === "self") {

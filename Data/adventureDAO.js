@@ -82,26 +82,29 @@ exports.updateStartingMessage = function (startMessage, adventure) {
 	startMessage.edit({ embeds: [embed] });
 }
 
-exports.nextRandomNumber = function (adventure, poolSize, branch) {
-	let generated;
-	let index;
+exports.generateRandomNumber = function (adventure, exclusiveMax, branch) {
+	let start;
+	let end;
 	switch (branch) {
 		case "general":
-			index = adventure.rnIndex;
-			adventure.rnIndex = (index + 1) % adventure.rnTable.length;
+			start = adventure.rnIndex;
+			end = start + exclusiveMax - 1;
+			adventure.rnIndex = end % adventure.rnTable.length;
 			break;
 		case "battle":
-			index = adventure.rnIndexBattle;
-			adventure.rnIndexBattle = (index + 1) % adventure.rnTable.length;
+			start = adventure.rnIndexBattle;
+			end = start + exclusiveMax - 1;
+			adventure.rnIndexBattle = end % adventure.rnTable.length;
 			break;
 	}
-	let indexEnd = index + poolSize.toString().length;
-	if (indexEnd < index) {
-		generated = adventure.rnTable.slice(index) + adventure.rnTable.slice(0, indexEnd);
-	} else {
-		generated = adventure.rnTable.slice(index, indexEnd);
+	let generated = 0;
+	for (let i = start; i < end; i++) {
+		let index = i % adventure.rnTable.length;
+		if (Number(adventure.rnTable[index])) {
+			generated++;
+		}
 	}
-	return generated % poolSize;
+	return generated;
 }
 
 exports.nextRoom = function (adventure, channel) {
@@ -118,7 +121,7 @@ exports.nextRoom = function (adventure, channel) {
 		let roomPool = Object.values(roomDictionary);
 		let roomTemplate = roomDictionary["Brute Convention"]; //TODO #53 refactor room selector AI
 		if (adventure.depth !== 10) {
-			roomTemplate = roomPool[exports.nextRandomNumber(adventure, roomPool.length, "general")];
+			roomTemplate = roomPool[exports.generateRandomNumber(adventure, roomPool.length, "general")];
 		}
 		Object.assign(new Room(), roomTemplate)
 			.populate(adventure.delvers.length).then(room => {
@@ -161,11 +164,11 @@ exports.newRound = function (adventure, channel, embed = new MessageEmbed()) {
 			clearBlock(combatant);
 
 			// Roll Round Speed
-			let percentBonus = (exports.nextRandomNumber(adventure, 21, "battle") - 10) / 100;
+			let percentBonus = (exports.generateRandomNumber(adventure, 21, "battle") - 10) / 100;
 			combatant.roundSpeed = Math.floor(combatant.speed * percentBonus);
 
 			// Roll Critical Hit
-			let critRoll = exports.nextRandomNumber(adventure, 4, "battle");
+			let critRoll = exports.generateRandomNumber(adventure, 4, "battle");
 			combatant.crit = critRoll > 2;
 
 			// Decrement Modifiers
@@ -243,14 +246,14 @@ exports.endRound = function (adventure, channel) {
 				actionPool.push(action);
 			}
 		})
-		let action = actionPool[exports.nextRandomNumber(adventure, actionPool.length, "battle")]; //TODO #19 nonrandom AI
+		let action = actionPool[exports.generateRandomNumber(adventure, actionPool.length, "battle")]; //TODO #19 nonrandom AI
 		adventure.room.moves.push(new Move()
 			.setSpeed(enemy)
 			.setElement(enemy.element)
 			.setIsCrit(enemy.crit)
 			.setMoveName(action.name)
 			.setUser(enemy.team, index)
-			.addTarget("ally", exports.nextRandomNumber(adventure, adventure.delvers.length, "battle")));
+			.addTarget("ally", exports.generateRandomNumber(adventure, adventure.delvers.length, "battle")));
 	})
 
 	// Resolve moves

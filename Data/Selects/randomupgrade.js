@@ -1,5 +1,5 @@
 const Select = require('../../Classes/Select.js');
-const { getAdventure, nextRandomNumber, saveAdventures } = require('../adventureDAO.js');
+const { getAdventure, generateRandomNumber, saveAdventures } = require('../adventureDAO.js');
 const { getWeapon } = require('../Weapons/_weaponDictionary.js');
 
 module.exports = new Select("randomupgrade");
@@ -12,7 +12,7 @@ module.exports.execute = (interaction, args) => {
 		let weaponIndex = interaction.values[0];
 		let weapon = user.weapons[weaponIndex];
 		let upgradePool = weapon.upgrades;
-		let upgradeName = weapon.upgrades[nextRandomNumber(adventure, upgradePool.length, "general")];
+		let upgradeName = weapon.upgrades[generateRandomNumber(adventure, upgradePool.length, "general")];
 		let upgrade = getWeapon(upgradeName);
 		let usesDifference = upgrade.maxUses - weapon.maxUses;
 		if (usesDifference > 0) {

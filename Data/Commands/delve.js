@@ -2,7 +2,7 @@ const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
 const Adventure = require('../../Classes/Adventure.js');
 const Command = require('../../Classes/Command.js');
 const Delver = require('../../Classes/Delver.js');
-const { setAdventure, nextRandomNumber } = require("../adventureDAO.js");
+const { setAdventure, generateRandomNumber } = require("../adventureDAO.js");
 const { getGuild } = require('../guildDAO.js');
 
 module.exports = new Command("delve", "Start a new adventure", false, false);
@@ -11,13 +11,15 @@ module.exports.data.addStringOption(option => option.setName("seed").setDescript
 let DESCRIPTORS = ["Shining", "New", "Dusty", "Old", "Floating", "Undersea", "Future"];
 let LOCATIONS = ["Adventure", "Castle", "Labyrinth", "Ruins", "Plateau", "Dungeon", "Maze", "Fortress"];
 let ELEMENTS = ["Fire", "Water", "Earth", "Wind", "Light", "Darkness"];
+let ELEMENT_COLORS = ["RED", "BLUE", "ORANGE", "GREEN", "YELLOW", "PURPLE"];
 
 module.exports.execute = (interaction) => {
 	// Start a new adventure
 	let guildProfile = getGuild(interaction.guild.id);
 	if (interaction.channel.id === guildProfile.centralId) {
 		let adventure = new Adventure(interaction.options.getString("seed"));
-		adventure.setName(`${DESCRIPTORS[nextRandomNumber(adventure, DESCRIPTORS.length, "general")]} ${LOCATIONS[nextRandomNumber(adventure, LOCATIONS.length, "general")]} of ${ELEMENTS[nextRandomNumber(adventure, ELEMENTS.length, "general")]}`);
+		let elementIndex = generateRandomNumber(adventure, ELEMENTS.length, "general");
+		adventure.setName(`${DESCRIPTORS[generateRandomNumber(adventure, DESCRIPTORS.length, "general")]} ${LOCATIONS[generateRandomNumber(adventure, LOCATIONS.length, "general")]} of ${ELEMENTS[elementIndex]}`);
 		interaction.guild.channels.fetch(guildProfile.categoryId).then(category => {
 			interaction.guild.channels.create(adventure.name, {
 				parent: category,
@@ -40,7 +42,7 @@ module.exports.execute = (interaction) => {
 				]
 			}).then(channel => {
 				adventure.delvers.push(new Delver(interaction.user.id, interaction.member.displayName, channel.id));
-				let embed = new MessageEmbed()
+				let embed = new MessageEmbed().setColor(ELEMENT_COLORS[elementIndex])
 					.setTitle(adventure.name)
 					.setDescription("A new adventure is starting!")
 					.addField("1 Party Member", `Leader: ${interaction.member}`)

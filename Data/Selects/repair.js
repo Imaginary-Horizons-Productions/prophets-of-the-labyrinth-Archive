@@ -1,5 +1,5 @@
 const Select = require('../../Classes/Select.js');
-const { getAdventure, nextRandomNumber, saveAdventures } = require('../adventureDAO.js');
+const { getAdventure, generateRandomNumber, saveAdventures } = require('../adventureDAO.js');
 
 module.exports = new Select("repair");
 
