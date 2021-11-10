@@ -12,6 +12,6 @@ for (const file of archetype) {
     archetypeDictionary[archetype.title] = archetype;
 }
 
-exports.getArchetype = (archetypeName) => {
+exports.getArchetype = function (archetypeName) {
 	return archetypeDictionary[archetypeName];
 }

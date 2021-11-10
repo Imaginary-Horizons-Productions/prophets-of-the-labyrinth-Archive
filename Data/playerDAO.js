@@ -24,7 +24,7 @@ exports.loadPlayers = function () {
 				}
 			})
 		}
-		resolve();
+		resolve(`${players.length} players loaded`);
 	})
 }
 

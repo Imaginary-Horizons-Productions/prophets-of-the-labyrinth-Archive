@@ -23,7 +23,7 @@ exports.loadGuilds = function () {
 				}
 			})
 		}
-		resolve();
+		resolve(`${guildProfiles.length} guilds loaded`);
 	})
 }
 

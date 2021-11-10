@@ -10,13 +10,11 @@ module.exports.execute = (interaction, args) => {
 	let user = adventure.delvers.find(delver => delver.id === interaction.user.id);
 	let weaponIndex = args[0];
 	let weapon;
-	let confirmationText = "";
 	if (parseInt(weaponIndex) < user.weapons.length) {
 		weapon = user.weapons[weaponIndex];
 
 		// Add move to round list (overwrite exisiting readied move)
 		let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
-		let overwritten = false;
 		let newMove = new Move()
 			.setSpeed(user)
 			.setElement(weapon.element)
@@ -51,6 +49,7 @@ module.exports.execute = (interaction, args) => {
 			targetText = "themself";
 		}
 
+		let overwritten = false;
 		for (let i = 0; i < adventure.room.moves.length; i++) {
 			let move = adventure.room.moves[i];
 			if (move.userTeam === user.team && move.userIndex === userIndex) {
@@ -64,14 +63,13 @@ module.exports.execute = (interaction, args) => {
 		}
 
 		// Send confirmation text
-		confirmationText = `${interaction.user} readies **${weapon.name}** to use on **${targetText}**.` + confirmationText;
-		interaction.reply({ content: confirmationText })
-			.catch(console.error);
-		saveAdventures();
-		updateRoundMessage(interaction.channel.messages, adventure);
-		if (checkNextRound(adventure)) {
-			endRound(adventure, interaction.channel);
-		};
+		interaction.reply(`${interaction.user} readies **${weapon.name}** to use on **${targetText}**.`).then(() => {
+			saveAdventures();
+			updateRoundMessage(interaction.channel.messages, adventure);
+			if (checkNextRound(adventure)) {
+				endRound(adventure, interaction.channel);
+			};
+		}).catch(console.error);
 	} else {
 		interaction.reply({ content: `You don't have that weapon anymore.`, ephemeral: true })
 			.catch(console.error);

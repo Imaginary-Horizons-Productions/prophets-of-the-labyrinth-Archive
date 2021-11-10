@@ -21,13 +21,13 @@ module.exports.execute = (interaction, args) => {
 		}
 
 		let moveMenu = [];
-		let enemyOptions = adventure.room.enemies.map((enemy, i) => {
-			return {
-				label: getFullName(enemy, adventure.room.enemyTitles),
-				description: "",
-				value: `enemy-${i}`
+		let enemyOptions = [];
+		for (let i = 0; i < adventure.room.enemies.length; i++) {
+			let enemy = adventure.room.enemies[i];
+			if (enemy.hp > 0) {
+				enemyOptions.push({ label: getFullName(enemy, adventure.room.enemyTitles), description: "", value: `enemy-${i}` })
 			}
-		})
+		}
 		let allyOptions = adventure.delvers.map((ally, i) => {
 			return {
 				label: ally.name,

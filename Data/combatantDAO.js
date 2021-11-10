@@ -3,7 +3,7 @@ const Delver = require("../Classes/Delver.js");
 const Combatant = require("./../Classes/Combatant.js");
 const { getInverse, isNonStacking, getModifierDescription } = require("./Modifiers/_modifierDictionary.js");
 
-exports.getFullName = (combatant, titleObject) => {
+exports.getFullName = function (combatant, titleObject) {
 	if (combatant instanceof Enemy) {
 		if (titleObject[combatant.name] > 1) {
 			return `${combatant.name} ${combatant.title}`;
@@ -15,7 +15,7 @@ exports.getFullName = (combatant, titleObject) => {
 	}
 }
 
-exports.calculateTotalSpeed = combatant => {
+exports.calculateTotalSpeed = function (combatant) {
 	let totalSpeed = combatant.speed + combatant.roundSpeed;
 	if (Object.keys(combatant.modifiers).includes("Slow")) {
 		totalSpeed /= 2;
@@ -26,51 +26,55 @@ exports.calculateTotalSpeed = combatant => {
 	return Math.ceil(totalSpeed);
 }
 
-exports.dealDamage = (target, user, damage, element, adventure) => {
-	if (!Object.keys(target.modifiers).includes("evade")) {
-		let pendingDamage = damage + (user?.modifiers["powerup"] || 0);
-		let isWeakness = Combatant.getWeaknesses(target.element).includes(element);
-		if (isWeakness) {
-			pendingDamage *= 2;
-		}
-		let isResistance = Combatant.getResistances(target.element).includes(element);
-		if (isResistance) {
-			pendingDamage = pendingDamage / 2;
-		}
-		pendingDamage = Math.ceil(pendingDamage);
-		let blockedDamage = 0;
-		if (pendingDamage >= target.block) {
-			pendingDamage -= target.block;
-			blockedDamage = target.block;
-			target.block = 0;
-		} else {
-			target.block -= pendingDamage;
-			blockedDamage = pendingDamage;
-			pendingDamage = 0;
-		}
-		target.hp -= pendingDamage;
-		let damageText = ` ${exports.getFullName(target, adventure.room.enemyTitles)} takes ${pendingDamage} damage${blockedDamage > 0 ? ` (${blockedDamage} blocked)` : ""}${isWeakness ? "!!!" : isResistance ? "." : "!"}`;
-		if (target.hp <= 0) {
-			if (target.team === "ally") {
-				target.hp = target.maxHp;
-				adventure.lives -= 1;
-				damageText += ` ${exports.getFullName(target, adventure.room.enemyTitles)} has died and been revived. ${adventure.lives} lives remain.`;
-			} else {
-				target.hp = 0;
-				damageText += ` ${exports.getFullName(target, adventure.room.enemyTitles)} has died.`;
+exports.dealDamage = function (target, user, damage, element, adventure) {
+	if (target.hp > 0) {
+		if (!Object.keys(target.modifiers).includes("evade")) {
+			let pendingDamage = damage + (user?.modifiers["powerup"] || 0);
+			let isWeakness = Combatant.getWeaknesses(target.element).includes(element);
+			if (isWeakness) {
+				pendingDamage *= 2;
 			}
+			let isResistance = Combatant.getResistances(target.element).includes(element);
+			if (isResistance) {
+				pendingDamage = pendingDamage / 2;
+			}
+			pendingDamage = Math.ceil(pendingDamage);
+			let blockedDamage = 0;
+			if (pendingDamage >= target.block) {
+				pendingDamage -= target.block;
+				blockedDamage = target.block;
+				target.block = 0;
+			} else {
+				target.block -= pendingDamage;
+				blockedDamage = pendingDamage;
+				pendingDamage = 0;
+			}
+			target.hp -= pendingDamage;
+			let damageText = ` ${exports.getFullName(target, adventure.room.enemyTitles)} takes ${pendingDamage} damage${blockedDamage > 0 ? ` (${blockedDamage} blocked)` : ""}${isWeakness ? "!!!" : isResistance ? "." : "!"}`;
+			if (target.hp <= 0) {
+				if (target.team === "ally") {
+					target.hp = target.maxHp;
+					adventure.lives -= 1;
+					damageText += ` ${exports.getFullName(target, adventure.room.enemyTitles)} has died and been revived. ${adventure.lives} lives remain.`;
+				} else {
+					target.hp = 0;
+					damageText += ` ${exports.getFullName(target, adventure.room.enemyTitles)} has died.`;
+				}
+			}
+			return damageText;
+		} else {
+			target.modifiers["evade"]--;
+			if (target.modifiers["evade"] <= 0) {
+				delete target.modifiers["evade"];
+			}
+			return ` ${exports.getFullName(target, adventure.room.enemyTitles)} evades the attack!`;
 		}
-		return damageText;
 	} else {
-		target.modifiers["evade"]--;
-		if (target.modifiers["evade"] <= 0) {
-			delete target.modifiers["evade"];
-		}
-		return ` ${exports.getFullName(target, adventure.room.enemyTitles)} evades the attack!`;
+		return ` ${exports.getFullName(target, adventure.room.enemyTitles)} was already dead!`;
 	}
 }
 
-exports.gainHealth = (combatant, healing, titleObject) => {
+exports.gainHealth = function (combatant, healing, titleObject) {
 	combatant.hp += healing;
 	if (combatant.hp > combatant.maxHp) {
 		combatant.hp = combatant.maxHp;
@@ -83,17 +87,17 @@ exports.gainHealth = (combatant, healing, titleObject) => {
 	}
 }
 
-exports.addBlock = (combatant, integer) => {
+exports.addBlock = function (combatant, integer) {
 	combatant.block = integer;
 	return combatant;
 }
 
-exports.clearBlock = (combatant) => {
+exports.clearBlock = function (combatant) {
 	combatant.block = 0;
 	return combatant;
 }
 
-exports.addModifier = (combatant, modifierName, value) => {
+exports.addModifier = function (combatant, modifierName, value) {
 	let pendingStacks = value;
 	let inverse = getInverse(modifierName);
 	let inverseStacks = combatant.modifiers[inverse];
@@ -118,7 +122,7 @@ exports.addModifier = (combatant, modifierName, value) => {
 	return combatant;
 }
 
-exports.removeModifier = (combatant, modifierName, value) => {
+exports.removeModifier = function (combatant, modifierName, value) {
 	if (combatant.modifiers[modifierName]) {
 		combatant.modifiers[modifierName] -= value;
 	}
@@ -128,7 +132,7 @@ exports.removeModifier = (combatant, modifierName, value) => {
 	return combatant;
 }
 
-exports.modifiersToString = (combatant) => {
+exports.modifiersToString = function (combatant) {
 	let modifiersText = "";
 	for (let modifier in combatant.modifiers) {
 		modifiersText += `*${modifier}${isNonStacking(modifier) ? "" : ` x ${combatant.modifiers[modifier]}`}* - ${getModifierDescription(modifier)}\n`;

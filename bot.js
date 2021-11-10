@@ -23,13 +23,16 @@ const client = new Client({
 	intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_MESSAGES"]
 });
 
-loadGuilds().then(() => {
-	loadAdventures().then(() => {
-		loadPlayers().then(() => {
-			client.login(require("./Config/auth.json").token);
-		});
-	})
-})
+(async () => {
+	try {
+		console.log(await loadGuilds());
+		console.log(await loadAdventures());
+		console.log(await loadPlayers());
+		client.login(require("./Config/auth.json").token);
+	} catch (rejectMessage) {
+		console.error(rejectMessage);
+	}
+})()
 //#endregion
 
 //#region Event Handlers

@@ -57,7 +57,7 @@ exports.loadAdventures = function () {
 				}
 			})
 		}
-		resolve();
+		resolve(`${adventures.length} adventures loaded`);
 	})
 }
 

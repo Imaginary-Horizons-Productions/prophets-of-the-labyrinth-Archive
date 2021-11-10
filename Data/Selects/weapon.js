@@ -12,7 +12,6 @@ module.exports.execute = (interaction, args) => {
 	let user = adventure.delvers.find(delver => delver.id === interaction.user.id);
 	let weaponIndex = args[0];
 	let weapon;
-	let confirmationText = "";
 	if (weaponIndex === "punch" || parseInt(weaponIndex) < user.weapons.length) {
 		if (weaponIndex !== "punch") {
 			weapon = user.weapons[weaponIndex];
@@ -23,7 +22,6 @@ module.exports.execute = (interaction, args) => {
 		// Add move to round list (overwrite exisiting readied move)
 		let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
 		let [targetTeam, targetIndex] = interaction.values[0].split("-");
-		let overwritten = false;
 		let newMove = new Move()
 			.setSpeed(user)
 			.setElement(weapon.element)
@@ -31,6 +29,8 @@ module.exports.execute = (interaction, args) => {
 			.setMoveName(weapon.name)
 			.setUser(user.team, userIndex)
 			.addTarget(targetTeam, targetIndex);
+
+		let overwritten = false;
 		for (let i = 0; i < adventure.room.moves.length; i++) {
 			let move = adventure.room.moves[i];
 			if (move.userTeam === user.team && move.userIndex === userIndex) {
@@ -50,16 +50,15 @@ module.exports.execute = (interaction, args) => {
 		} else if (targetTeam === "enemy") {
 			target = adventure.room.enemies[targetIndex];
 		}
-		confirmationText = `${interaction.user} readies **${weapon.name}** to use on **${getFullName(target, adventure.room.enemyTitles)}**.` + confirmationText;
-		interaction.reply({ content: confirmationText })
-			.catch(console.error);
-		saveAdventures();
-		updateRoundMessage(interaction.channel.messages, adventure);
-		if (checkNextRound(adventure)) {
-			endRound(adventure, interaction.channel);
-		}
+		interaction.reply(`${interaction.user} readies **${weapon.name}** to use on **${getFullName(target, adventure.room.enemyTitles)}**.`).then(() => {
+			saveAdventures();
+			updateRoundMessage(interaction.channel.messages, adventure);
+			if (checkNextRound(adventure)) {
+				endRound(adventure, interaction.channel);
+			}
+		}).catch(console.error);
 	} else {
-		// Needed to prevent crashes in case users keep weapon menus around and use one with a broken weapon
+		// Needed to prevent crashes in case users keep weapon menus around and uses one with a broken weapon
 		interaction.reply({ content: `You don't have that weapon anymore.`, ephemeral: true })
 			.catch(console.error);
 	}
