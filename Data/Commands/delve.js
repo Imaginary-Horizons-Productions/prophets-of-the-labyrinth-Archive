@@ -11,7 +11,7 @@ module.exports.data.addStringOption(option => option.setName("seed").setDescript
 
 let DESCRIPTORS = ["Shining", "New", "Dusty", "Old", "Floating", "Undersea", "Future"];
 let LOCATIONS = ["Adventure", "Castle", "Labyrinth", "Ruins", "Plateau", "Dungeon", "Maze", "Fortress"];
-let ELEMENT_COLORS = ["RED", "BLUE", "ORANGE", "GREEN", "YELLOW", "PURPLE"];
+let ELEMENT_COLORS = ["RED", "ORANGE", "YELLOW", "BLUE", "GREEN", "PURPLE"];
 
 module.exports.execute = (interaction) => {
 	// Start a new adventure

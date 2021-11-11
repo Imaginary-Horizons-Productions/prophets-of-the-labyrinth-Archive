@@ -4,5 +4,5 @@ module.exports = new Room()
 	.setType("battle")
 	.setTitle("Slime Fight")
 	.setDescription("Some slimes and oozes approach...")
-	.addEnemy("Slime", "2")
-	.addEnemy("Ooze", "2");
+	.addEnemy("@{adventure} Slime", "2")
+	.addEnemy("@{adventureReverse} Ooze", "2");

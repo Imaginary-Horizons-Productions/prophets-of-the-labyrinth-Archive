@@ -44,6 +44,8 @@ module.exports = class Room {
 			this.enemies = [];
 			this.enemyTitles = {};
 			this.loot = {};
+			let adventureElement = ELEMENTS[adventureElementIndex];
+			let reverseAdventureElement = ELEMENTS[(adventureElementIndex + 3) % 6];
 			for (let enemyName in this.enemyList) {
 				let countExpression = this.enemyList[enemyName];
 				let enemyCount = countExpression.split("*").reduce((total, term) => {
@@ -52,8 +54,10 @@ module.exports = class Room {
 				for (let i = 0; i < Math.ceil(enemyCount); i++) {
 					let enemy = new Enemy();
 					Object.assign(enemy, getEnemy(enemyName));
-					enemy.setElement(enemy.element.replace("@{adventure}", ELEMENTS[adventureElementIndex]))
-						.setElement(enemy.element.replace("@{adventureReverse}", ELEMENTS[(adventureElementIndex + 3) % 6]));
+					enemy.name = enemy.name.replace("@{adventure}", adventureElement);
+					enemy.name = enemy.name.replace("@{adventureReverse}", reverseAdventureElement);
+					enemy.setElement(enemy.element.replace("@{adventure}", adventureElement))
+						.setElement(enemy.element.replace("@{adventureReverse}", reverseAdventureElement));
 					this.enemies.push(enemy);
 					Enemy.setEnemyTitle(this.enemyTitles, enemy);
 				}

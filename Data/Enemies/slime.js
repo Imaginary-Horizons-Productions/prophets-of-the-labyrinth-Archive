@@ -1,7 +1,7 @@
 const Enemy = require("../../Classes/Enemy.js");
 const { addModifier, getFullName, dealDamage } = require("../combatantDAO.js");
 
-module.exports = new Enemy("Slime")
+module.exports = new Enemy("@{adventure} Slime")
 	.setHp(200)
 	.setSpeed(90)
 	.setElement("@{adventure}")
