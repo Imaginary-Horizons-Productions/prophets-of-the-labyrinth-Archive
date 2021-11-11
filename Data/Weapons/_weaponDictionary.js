@@ -1,6 +1,7 @@
 var weaponWhitelist = [
 	"-punch.js",
 	"barrier-base.js",
+	"barrier-purifying.js",
 	"barrier-thick.js",
 	"buckler-base.js",
 	"buckler-guarding.js",
