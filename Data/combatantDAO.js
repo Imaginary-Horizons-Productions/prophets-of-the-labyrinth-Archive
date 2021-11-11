@@ -26,7 +26,7 @@ exports.calculateTotalSpeed = function (combatant) {
 	return Math.ceil(totalSpeed);
 }
 
-exports.dealDamage = function (target, user, damage, element, adventure) {
+exports.dealDamage = async function (target, user, damage, element, adventure) {
 	if (target.hp > 0) {
 		if (!Object.keys(target.modifiers).includes("evade")) {
 			let pendingDamage = damage + (user?.modifiers["powerup"] || 0);

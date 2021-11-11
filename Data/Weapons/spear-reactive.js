@@ -16,5 +16,7 @@ function effect(target, user, isCrit, element, adventure) {
 	if (isCrit) {
 		addModifier(target, "Stagger", 1);
 	}
-	return dealDamage(target, user, damage, element, adventure);
+	return dealDamage(target, user, damage, element, adventure).then(damageText => {
+		return damageText;
+	});
 }

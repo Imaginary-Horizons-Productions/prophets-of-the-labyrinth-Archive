@@ -9,7 +9,7 @@ module.exports = new Room()
 module.exports.components.push(new MessageActionRow().addComponents(
 	new MessageButton()
 		.setCustomId("getgoldonfire")
-		.setLabel("Grab some gold [+20 gold, -10 hp]")
+		.setLabel("Grab some gold [+50 gold, -100 hp]")
 		.setStyle("DANGER"),
 	new MessageButton()
 		.setCustomId("continue")

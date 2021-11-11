@@ -1,5 +1,5 @@
 const Button = require('../../Classes/Button.js');
-const { getAdventure, nextRoom } = require('../adventureDAO.js');
+const { getAdventure, nextRoom, completeAdventure } = require('../adventureDAO.js');
 const { gainHealth, dealDamage } = require("../combatantDAO.js");
 
 module.exports = new Button("hpshare");
@@ -12,11 +12,14 @@ module.exports.execute = (interaction, args) => {
 			gainHealth(delver, 5, adventure.room.enemyTitles);
 		}
 	})
-	let damageText = dealDamage(adventure.delvers.find(delver => delver.id == interaction.user.id), null, 10, "untyped", adventure);
-	interaction.reply(`${damageText} Everyone else gains 5 hp.`);
-	if (adventure.lives > 0) {
-		nextRoom(adventure, interaction.channel);
-	}
+	dealDamage(adventure.delvers.find(delver => delver.id == interaction.user.id), null, 10, "untyped", adventure).then(damageText => {
+		interaction.reply(`${damageText} Everyone else gains 5 hp.`);
+		if (adventure.lives > 0) {
+			nextRoom(adventure, interaction.channel);
+		} else {
+			completeAdventure(adventure, interaction.channel, "defeat");
+		}
+	})
 	interaction.message.edit({ components: [] })
 		.catch(console.error);
 }

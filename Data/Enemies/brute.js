@@ -15,7 +15,9 @@ function punchEffect(target, user, isCrit, element, adventure) {
 		damage *= 2;
 	}
 	addModifier(target, "Stagger", 1);
-	return dealDamage(target, user, damage, element, adventure);
+	return dealDamage(target, user, damage, element, adventure).then(damageText => {
+		return damageText;
+	});
 }
 
 function bigPunchEffect(target, user, isCrit, element, adventure) {
@@ -24,5 +26,7 @@ function bigPunchEffect(target, user, isCrit, element, adventure) {
 		damage *= 2;
 	}
 	addModifier(target, "Stagger", 3);
-	return dealDamage(target, user, damage, element, adventure);
+	return dealDamage(target, user, damage, element, adventure).then(damageText => {
+		return damageText;
+	});
 }

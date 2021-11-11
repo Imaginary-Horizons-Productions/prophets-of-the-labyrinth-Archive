@@ -1,19 +1,19 @@
 const Weapon = require('../../Classes/Weapon.js');
-const { dealDamage, addModifier } = require("../combatantDAO.js");
+const { addModifier, dealDamage } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Spear", "An attack that inflicts stagger on a crit (crit: inflict Stagger)", "Light", effect, ["Reactive Spear", "Sweeping Spear", "Wicked Spear"])
+module.exports = new Weapon("Sickle", "Attack an enemy and deal 10% max HP damage; increased durability (crit: more damage)", "Water", effect, [])
 	.setTargetingTags({ target: "single", team: "enemy" })
-	.setUses(10);
+	.setUses(20);
 
 function effect(target, user, isCrit, element, adventure) {
-	let damage = 100;
+	let damage = 75 + (0.1 * target.maxHp);
 	if (user.element === element) {
 		addModifier(target, "Stagger", 1);
 	}
 	if (isCrit) {
-		addModifier(target, "Stagger", 1);
+		damage *= 2;
 	}
 	return dealDamage(target, user, damage, element, adventure).then(damageText => {
 		return damageText;
-	});
+	}); // result text
 }

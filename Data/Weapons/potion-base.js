@@ -13,5 +13,7 @@ function effect(target, user, isCrit, element, adventure) {
 	if (isCrit) {
 		value *= 2;
 	}
-	return dealDamage(target, user, value, element, adventure);
+	return dealDamage(target, user, value, element, adventure).then(damageText => {
+		return damageText;
+	});
 }

@@ -17,5 +17,7 @@ function effect(target, user, isCrit, element, adventure) {
 		damage *= 2;
 	}
 	addBlock(user, 75);
-	return dealDamage(target, user, damage, element, adventure);
+	return dealDamage(target, user, damage, element, adventure).then(damageText => {
+		return damageText;
+	});
 }

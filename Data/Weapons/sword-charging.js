@@ -17,5 +17,7 @@ function effect(target, user, isCrit, element, adventure) {
 		damage *= 2;
 	}
 	addModifier(user, "powerup", 25);
-	return dealDamage(target, user, damage, element, adventure); // result text
+	return dealDamage(target, user, damage, element, adventure).then(damageText => {
+		return damageText;
+	}); // result text
 }
