@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { dealDamage, addModifier, calculateTotalSpeed } = require("../combatantDAO.js");
 
-module.exports = new Weapon("Reactive Spear", "An attack that deals more damage against faster foes (crit: inflict Stagger)", "light", effect, [])
+module.exports = new Weapon("Reactive Spear", "An attack that deals more damage against faster foes (crit: inflict Stagger)", "Light", effect, [])
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setUses(10);
 

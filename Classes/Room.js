@@ -1,5 +1,6 @@
 const Enemy = require("./Enemy.js");
 const { getEnemy } = require("./../Data/Enemies/_enemyDictionary");
+const { ELEMENTS } = require("../helpers.js");
 
 module.exports = class Room {
 	constructor() {
@@ -36,7 +37,7 @@ module.exports = class Room {
 		return this;
 	}
 
-	populate(delverCount) {
+	populate(delverCount, adventureElementIndex) {
 		return new Promise((resolve, reject) => {
 			this.round = 0;
 			this.moves = [];
@@ -51,6 +52,8 @@ module.exports = class Room {
 				for (let i = 0; i < Math.ceil(enemyCount); i++) {
 					let enemy = new Enemy();
 					Object.assign(enemy, getEnemy(enemyName));
+					enemy.setElement(enemy.element.replace("@{adventure}", ELEMENTS[adventureElementIndex]))
+						.setElement(enemy.element.replace("@{adventureReverse}", ELEMENTS[(adventureElementIndex + 3) % 6]));
 					this.enemies.push(enemy);
 					Enemy.setEnemyTitle(this.enemyTitles, enemy);
 				}

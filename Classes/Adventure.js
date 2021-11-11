@@ -5,6 +5,7 @@ module.exports = class Adventure {
 	}
 	id; // the id of the channel created for the adventure
 	name;
+	element;
 	rnIndex = 0;
 	rnIndexBattle = 0;
 	messageIds = {
@@ -23,13 +24,18 @@ module.exports = class Adventure {
 	lives = 2;
 	gold = 100;
 
+	setId(textChannelId) {
+		this.id = textChannelId;
+		return this;
+	}
+
 	setName(nameInput) {
 		this.name = nameInput;
 		return this;
 	}
 
-	setId(textChannelId) {
-		this.id = textChannelId;
+	setElement(elementEnum) {
+		this.element = elementEnum;
 		return this;
 	}
 

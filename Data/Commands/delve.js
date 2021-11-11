@@ -2,6 +2,7 @@ const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
 const Adventure = require('../../Classes/Adventure.js');
 const Command = require('../../Classes/Command.js');
 const Delver = require('../../Classes/Delver.js');
+const { ELEMENTS } = require('../../helpers.js');
 const { setAdventure, generateRandomNumber } = require("../adventureDAO.js");
 const { getGuild } = require('../guildDAO.js');
 
@@ -10,7 +11,6 @@ module.exports.data.addStringOption(option => option.setName("seed").setDescript
 
 let DESCRIPTORS = ["Shining", "New", "Dusty", "Old", "Floating", "Undersea", "Future"];
 let LOCATIONS = ["Adventure", "Castle", "Labyrinth", "Ruins", "Plateau", "Dungeon", "Maze", "Fortress"];
-let ELEMENTS = ["Fire", "Water", "Earth", "Wind", "Light", "Darkness"];
 let ELEMENT_COLORS = ["RED", "BLUE", "ORANGE", "GREEN", "YELLOW", "PURPLE"];
 
 module.exports.execute = (interaction) => {
@@ -19,7 +19,8 @@ module.exports.execute = (interaction) => {
 	if (interaction.channel.id === guildProfile.centralId) {
 		let adventure = new Adventure(interaction.options.getString("seed"));
 		let elementIndex = generateRandomNumber(adventure, ELEMENTS.length, "general");
-		adventure.setName(`${DESCRIPTORS[generateRandomNumber(adventure, DESCRIPTORS.length, "general")]} ${LOCATIONS[generateRandomNumber(adventure, LOCATIONS.length, "general")]} of ${ELEMENTS[elementIndex]}`);
+		adventure.setName(`${DESCRIPTORS[generateRandomNumber(adventure, DESCRIPTORS.length, "general")]} ${LOCATIONS[generateRandomNumber(adventure, LOCATIONS.length, "general")]} of ${ELEMENTS[elementIndex]}`)
+			.setElement(ELEMENTS[elementIndex]);
 		interaction.guild.channels.fetch(guildProfile.categoryId).then(category => {
 			interaction.guild.channels.create(adventure.name, {
 				parent: category,

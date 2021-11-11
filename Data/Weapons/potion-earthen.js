@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { dealDamage, gainHealth, removeModifier, addModifier } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Earthen Potion", "Heal a earth element combatant, damage everyone else (crit: more healing/damage)", "earth", effect, [])
+module.exports = new Weapon("Earthen Potion", "Heal a earth element combatant, damage everyone else (crit: more healing/damage)", "Earth", effect, [])
 	.setTargetingTags({ target: "single", team: "any" })
 	.setUses(5);
 
@@ -10,7 +10,7 @@ function effect(target, user, isCrit, element, adventure) {
 	if (isCrit) {
 		value *= 2;
 	}
-	if (target.element === "earth") {
+	if (target.element === "Earth") {
 		value /= 2;
 		if (user.element === element) {
 			removeModifier(target, "Stagger", 1);

@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { dealDamage, addModifier } = require('../combatantDAO.js');
 
-module.exports = new Weapon("prideclaw", "Deal a large amount of damage that won't strike elemental weakness (crit: more damage)", "element", effect, [])
+module.exports = new Weapon("prideclaw", "Deal a large amount of damage that won't strike elemental weakness (crit: more damage)", "untyped", effect, [])
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setUses(10);
 

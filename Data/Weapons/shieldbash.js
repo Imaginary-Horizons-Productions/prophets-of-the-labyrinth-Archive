@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { dealDamage, addModifier } = require('../combatantDAO.js');
 
-module.exports = new Weapon("shieldbash", "Deal damage equal to your block (crit: more damage)", "earth", effect, [])
+module.exports = new Weapon("shieldbash", "Deal damage equal to your block (crit: more damage)", "Earth", effect, [])
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setUses(5);
 

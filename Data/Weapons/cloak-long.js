@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { addModifier, removeModifier } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Long Cloak", "Evade two incoming attacks (crit: evade another attack)", "wind", effect, [])
+module.exports = new Weapon("Long Cloak", "Evade two incoming attacks (crit: evade another attack)", "Wind", effect, [])
 	.setTargetingTags({ target: "self", team: "self" })
 	.setUses(5);
 

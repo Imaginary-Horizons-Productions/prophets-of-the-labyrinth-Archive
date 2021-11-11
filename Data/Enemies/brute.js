@@ -4,7 +4,7 @@ const { dealDamage, addModifier } = require("../combatantDAO.js");
 module.exports = new Enemy("brute")
 	.setHp(500)
 	.setSpeed(105)
-	.setElement("earth")
+	.setElement("Earth")
 	.setStaggerThreshold(3)
 	.addAction({ name: "punch", weight: 3, effect: punchEffect })
 	.addAction({ name: "big punch", weight: 1, effect: bigPunchEffect });

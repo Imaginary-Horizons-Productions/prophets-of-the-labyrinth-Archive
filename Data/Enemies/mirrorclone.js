@@ -4,7 +4,7 @@ const { dealDamage, addModifier } = require("../combatantDAO.js");
 module.exports = new Enemy("mirrorclone")
 	.setHp(300)
 	.setSpeed(100)
-	.setElement("dark")
+	.setElement("Darkness")
 	.setStaggerThreshold(3)
 	.addAction({ name: "glass shard", weight: 1, effect: glassShardEffect });
 

@@ -1,8 +1,8 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { dealDamage, addModifier } = require('../combatantDAO.js');
 
-module.exports = new Weapon("firecracker", "A damaging explosion that hits a random enemy (crit: more damage)", "fire", effect, [])
-	.setTargetingTags({ target: "random", team: "enemy" }) // tagObject {target: ["single", "all", "random", "self"], team: ["ally", "enemy", "any"]}
+module.exports = new Weapon("firecracker", "A damaging explosion that hits a random enemy (crit: more damage)", "Fire", effect, [])
+	.setTargetingTags({ target: "random", team: "enemy" })
 	.setUses(5);
 
 function effect(target, user, isCrit, element, adventure) {

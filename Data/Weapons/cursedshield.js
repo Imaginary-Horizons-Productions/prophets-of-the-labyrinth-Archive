@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { dealDamage, addBlock, removeModifier } = require("../combatantDAO.js");
 
-module.exports = new Weapon("cursedshield", "Pay some hp to use a strong shield (crit: more shield)", "dark", effect, [])
+module.exports = new Weapon("cursedshield", "Pay some hp to use a strong shield (crit: more shield)", "Darkness", effect, [])
 	.setTargetingTags({ target: "single", team: "ally" })
 	.setUses(10);
 

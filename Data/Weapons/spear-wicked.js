@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { dealDamage, addModifier } = require("../combatantDAO.js");
 
-module.exports = new Weapon("Wicked Spear", "An attack that inflicts stagger and increased damage on a crit (crit: Stagger and more damage)", "light", effect, [])
+module.exports = new Weapon("Wicked Spear", "An attack that inflicts stagger and increased damage on a crit (crit: Stagger and more damage)", "Light", effect, [])
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setUses(10);
 

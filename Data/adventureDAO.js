@@ -1,5 +1,5 @@
 const fs = require("fs");
-const { ensuredPathSave } = require("../helpers.js");
+const { ensuredPathSave, ELEMENTS } = require("../helpers.js");
 const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
 const Adventure = require("../Classes/Adventure.js");
 const { setPlayer, getPlayer } = require("./playerDAO.js");
@@ -124,7 +124,7 @@ exports.nextRoom = function (adventure, channel) {
 			roomTemplate = roomPool[exports.generateRandomNumber(adventure, roomPool.length, "general")];
 		}
 		Object.assign(new Room(), roomTemplate)
-			.populate(adventure.delvers.length).then(room => {
+			.populate(adventure.delvers.length, ELEMENTS.findIndex(element => element === adventure.element)).then(room => {
 				adventure.room = room;
 				let embed = new MessageEmbed()
 					.setAuthor(`Lives: ${adventure.lives} - Party Gold: ${adventure.gold} - Score: ${adventure.accumulatedScore}`, channel.client.user.displayAvatarURL())

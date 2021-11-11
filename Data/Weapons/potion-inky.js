@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { dealDamage, gainHealth, removeModifier, addModifier } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Inky Potion", "Heal a dark element combatant, damage everyone else (crit: more healing/damage)", "dark", effect, [])
+module.exports = new Weapon("Inky Potion", "Heal a darkness element combatant, damage everyone else (crit: more healing/damage)", "Darkness", effect, [])
 	.setTargetingTags({ target: "single", team: "any" })
 	.setUses(5);
 
@@ -10,7 +10,7 @@ function effect(target, user, isCrit, element, adventure) {
 	if (isCrit) {
 		value *= 2;
 	}
-	if (target.element === "dark") {
+	if (target.element === "Darkness") {
 		value /= 2;
 		if (user.element === element) {
 			removeModifier(target, "Stagger", 1);

@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { dealDamage, addBlock, addModifier } = require("../combatantDAO.js");
 
-module.exports = new Weapon("fireshield", "Defend yourself while bashing a target with a flaming shield (crit: more damage)", "fire", effect, [])
+module.exports = new Weapon("fireshield", "Defend yourself while bashing a target with a flaming shield (crit: more damage)", "Fire", effect, [])
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setUses(5);
 

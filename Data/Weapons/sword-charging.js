@@ -1,8 +1,8 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { dealDamage, addModifier } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Charging Sword", "Deal additional damage to a target if not blocking, then gain power (crit: more damage)", "earth", effect, [])
-	.setTargetingTags({ target: "single", team: "enemy" }) // tagObject {target: ["single", "all", "random", "self"], team: ["ally", "enemy", "any", "self"]}
+module.exports = new Weapon("Charging Sword", "Deal additional damage to a target if not blocking, then gain power (crit: more damage)", "Earth", effect, [])
+	.setTargetingTags({ target: "single", team: "enemy" })
 	.setUses(5);
 
 function effect(target, user, isCrit, element, adventure) {

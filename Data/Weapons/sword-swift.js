@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { dealDamage, addModifier } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Swift Sword", "Deal additional damage to a target if not blocking, then gain Quicken (crit: more damage)", "earth", effect, [])
+module.exports = new Weapon("Swift Sword", "Deal additional damage to a target if not blocking, then gain Quicken (crit: more damage)", "Earth", effect, [])
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setUses(10);
 

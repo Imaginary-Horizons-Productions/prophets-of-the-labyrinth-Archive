@@ -42,18 +42,18 @@ module.exports = class Combatant {
 
 	static getWeaknesses(element) {
 		switch (element) {
-			case "light":
-				return ["fire", "earth"];
-			case "dark":
-				return ["wind", "water"];
-			case "fire":
-				return ["earth", "dark"];
-			case "water":
-				return ["wind", "light"];
-			case "earth":
-				return ["water", "dark"];
-			case "wind":
-				return ["light", "fire"];
+			case "Light":
+				return ["Fire", "Earth"];
+			case "Darkness":
+				return ["Wind", "Water"];
+			case "Fire":
+				return ["Earth", "Darkness"];
+			case "Water":
+				return ["Wind", "Light"];
+			case "Earth":
+				return ["Water", "Darkness"];
+			case "Wind":
+				return ["Light", "Fire"];
 			default:
 				return ["none"];
 		}
@@ -61,18 +61,18 @@ module.exports = class Combatant {
 
 	static getResistances(element) {
 		switch (element) {
-			case "light":
-				return ["wind", "water"];
-			case "dark":
-				return ["earth", "fire"];
-			case "fire":
-				return ["light", "wind"];
-			case "water":
-				return ["dark", "earth"];
-			case "earth":
-				return ["fire", "light"];
-			case "wind":
-				return ["water", "dark"];
+			case "Light":
+				return ["Wind", "Water"];
+			case "Darkness":
+				return ["Earth", "Fire"];
+			case "Fire":
+				return ["Light", "Wind"];
+			case "Water":
+				return ["Darkness", "Earth"];
+			case "Earth":
+				return ["Fire", "Light"];
+			case "Wind":
+				return ["Water", "Darkness"];
 			default:
 				return ["none"];
 		}

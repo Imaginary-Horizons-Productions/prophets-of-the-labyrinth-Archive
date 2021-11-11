@@ -1,6 +1,8 @@
 var enemyWhitelist = [
 	"brute.js",
-	"mirrorclone.js"
+	"mirrorclone.js",
+	"ooze.js",
+	"slime.js"
 ];
 
 const enemyDictionary = {};
@@ -10,6 +12,6 @@ for (const file of enemyWhitelist) {
 	enemyDictionary[enemy.name] = enemy;
 }
 
-exports.getEnemy = (enemyName) => {
+exports.getEnemy = function (enemyName) {
 	return enemyDictionary[enemyName];
 }

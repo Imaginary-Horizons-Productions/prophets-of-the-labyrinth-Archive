@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { dealDamage, addModifier } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Unfinished Potion", "Damage a target (crit: more damage)", "untyped", effect, ["Earthen Potion", "Inky Potion", "Watery Potion"])
+module.exports = new Weapon("Unfinished Potion", "Damage a target (crit: more damage)", "Water", effect, ["Earthen Potion", "Inky Potion", "Watery Potion"])
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setUses(5);
 

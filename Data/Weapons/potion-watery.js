@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { dealDamage, gainHealth, removeModifier, addModifier } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Watery Potion", "Heal a water element combatant, damage everyone else (crit: more healing/damage)", "water", effect, [])
+module.exports = new Weapon("Watery Potion", "Heal a water element combatant, damage everyone else (crit: more healing/damage)", "Water", effect, [])
 	.setTargetingTags({ target: "single", team: "any" })
 	.setUses(5);
 
@@ -10,7 +10,7 @@ function effect(target, user, isCrit, element, adventure) {
 	if (isCrit) {
 		value *= 2;
 	}
-	if (target.element === "water") {
+	if (target.element === "Water") {
 		value /= 2;
 		if (user.element === element) {
 			removeModifier(target, "Stagger", 1);
