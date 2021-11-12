@@ -20,6 +20,10 @@ exports.resolveMove = async function (move, adventure) {
 				}
 				targetAll = weapon.targetingTags.target === "all";
 				effect = getWeapon(move.name).effect; // get from dictionary because weapons saved from file don't have their effect function any more
+			} else if (move.userTeam === "clone") {
+				let weapon = adventure.delvers[move.userIndex].weapons.find(weapon => weapon.name === move.name);
+				targetAll = weapon.targetingTags.target === "all";
+				effect = getWeapon(move.name).effect; // get from dictionary because weapons saved from file don't have their effect function any more
 			} else {
 				effect = getEnemy(user.lookupName).actions[move.name].effect;
 			}

@@ -1,12 +1,11 @@
 var roomWhitelist = [
-	"goldonfire.js",
-	"hpshare.js",
-	"forge.js",
-	"freegold.js",
-	"bruteconvention.js",
-	"brutefight.js",
+	// "goldonfire.js",
+	// "hpshare.js",
+	// "forge.js",
+	// "freegold.js",
 	"counterpartfight.js",
-	"slimefight.js"
+	// "hawkfight.js",
+	// "slimefight.js"
 ];
 
 exports.roomDictionary = {};

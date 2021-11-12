@@ -124,7 +124,7 @@ exports.nextRoom = function (adventure, channel) {
 			roomTemplate = roomPool[exports.generateRandomNumber(adventure, roomPool.length, "general")];
 		}
 		Object.assign(new Room(), roomTemplate)
-			.populate(adventure.delvers.length, ELEMENTS.findIndex(element => element === adventure.element)).then(room => {
+			.populate(adventure.delvers, ELEMENTS.findIndex(element => element === adventure.element)).then(room => {
 				adventure.room = room;
 				let embed = new MessageEmbed()
 					.setAuthor(`Lives: ${adventure.lives} - Party Gold: ${adventure.gold} - Score: ${adventure.accumulatedScore}`, channel.client.user.displayAvatarURL())
@@ -240,20 +240,34 @@ exports.endRound = async function (adventure, channel) {
 
 	// Roll Enemy Moves
 	adventure.room.enemies.forEach((enemy, index) => {
-		let actionPool = [];
-		Object.values(enemy.actions).forEach(action => {
-			for (let i = 0; i < action.weight; i++) {
-				actionPool.push(action);
-			}
-		})
-		let action = actionPool[exports.generateRandomNumber(adventure, actionPool.length, "battle")]; //TODO #19 nonrandom AI
-		adventure.room.moves.push(new Move()
+		let move = new Move()
 			.setSpeed(enemy)
 			.setElement(enemy.element)
 			.setIsCrit(enemy.crit)
-			.setMoveName(action.name)
-			.setUser(enemy.team, index)
-			.addTarget("ally", exports.generateRandomNumber(adventure, adventure.delvers.length, "battle")));
+		if (enemy.lookupName !== "Clone") {
+			let actionPool = [];
+			Object.values(enemy.actions).forEach(action => {
+				for (let i = 0; i < action.weight; i++) {
+					actionPool.push(action);
+				}
+			})
+			//TODO #19 nonrandom AI
+			move.setUser(enemy.team, index)
+				.setMoveName(actionPool[exports.generateRandomNumber(adventure, actionPool.length, "battle")].name)
+				.addTarget("ally", exports.generateRandomNumber(adventure, adventure.delvers.length, "battle"));
+		} else {
+			let counterpartMove = adventure.room.moves.find(move => move.userTeam === "ally" && move.userIndex == index);
+			move.setUser("clone", index)
+				.setMoveName(counterpartMove.name);
+			counterpartMove.targets.forEach(target => {
+				if (target.team === "enemy") {
+					move.addTarget("ally", target.index);
+				} else {
+					move.addTarget("enemy", target.index);
+				}
+			})
+		}
+		adventure.room.moves.push(move);
 	})
 
 	// Resolve moves

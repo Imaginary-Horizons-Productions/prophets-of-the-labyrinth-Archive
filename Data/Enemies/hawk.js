@@ -1,14 +1,14 @@
 const Enemy = require("../../Classes/Enemy.js");
 const { dealDamage, addModifier } = require("../combatantDAO.js");
 
-module.exports = new Enemy("mirrorclone")
-	.setHp(300)
-	.setSpeed(100)
-	.setElement("Darkness")
-	.setStaggerThreshold(3)
-	.addAction({ name: "glass shard", weight: 1, effect: glassShardEffect });
+module.exports = new Enemy("Bloodtail Hawk")
+	.setHp(200)
+	.setSpeed(105)
+	.setElement("Wind")
+	.setStaggerThreshold(1)
+	.addAction({ name: "Rake", weight: 3, effect: rakeEffect });
 
-function glassShardEffect(target, user, isCrit, element, adventure) {
+function rakeEffect(target, user, isCrit, element, adventure) {
 	let damage = 50;
 	if (isCrit) {
 		damage *= 2;
@@ -16,5 +16,5 @@ function glassShardEffect(target, user, isCrit, element, adventure) {
 	addModifier(target, "Stagger", 1);
 	return dealDamage(target, user, damage, element, adventure).then(damageText => {
 		return damageText;
-	});;
+	});
 }

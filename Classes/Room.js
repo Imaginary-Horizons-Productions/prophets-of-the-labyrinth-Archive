@@ -37,7 +37,7 @@ module.exports = class Room {
 		return this;
 	}
 
-	populate(delverCount, adventureElementIndex) {
+	populate(delvers, adventureElementIndex) {
 		return new Promise((resolve, reject) => {
 			this.round = 0;
 			this.moves = [];
@@ -49,15 +49,17 @@ module.exports = class Room {
 			for (let enemyName in this.enemyList) {
 				let countExpression = this.enemyList[enemyName];
 				let enemyCount = countExpression.split("*").reduce((total, term) => {
-					return total * (term === "n" ? delverCount : new Number(term));
+					return total * (term === "n" ? delvers.length : new Number(term));
 				}, 1);
 				for (let i = 0; i < Math.ceil(enemyCount); i++) {
 					let enemy = new Enemy();
 					Object.assign(enemy, getEnemy(enemyName));
 					enemy.name = enemy.name.replace("@{adventure}", adventureElement);
 					enemy.name = enemy.name.replace("@{adventureReverse}", reverseAdventureElement);
+					enemy.name = enemy.name.replace("Clone", `Mirror ${delvers[i].name}`);
 					enemy.setElement(enemy.element.replace("@{adventure}", adventureElement))
-						.setElement(enemy.element.replace("@{adventureReverse}", reverseAdventureElement));
+						.setElement(enemy.element.replace("@{adventureReverse}", reverseAdventureElement))
+						.setElement(enemy.element.replace("Clone", delvers[i].element));
 					this.enemies.push(enemy);
 					Enemy.setEnemyTitle(this.enemyTitles, enemy);
 				}
@@ -66,7 +68,7 @@ module.exports = class Room {
 			for (let reward in this.lootList) {
 				let rewardExpression = this.lootList[reward];
 				let rewardCount = rewardExpression.split("*").reduce((total, term) => {
-					return total * (term === "n" ? delverCount : new Number(term));
+					return total * (term === "n" ? delvers : new Number(term));
 				}, 1);
 				this.loot[reward] = rewardCount;
 			}
