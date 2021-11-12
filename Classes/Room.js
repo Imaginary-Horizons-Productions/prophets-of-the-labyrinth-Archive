@@ -1,6 +1,6 @@
 const Enemy = require("./Enemy.js");
 const { getEnemy } = require("./../Data/Enemies/_enemyDictionary");
-const { ELEMENTS } = require("../helpers.js");
+const { ELEMENTS, parseCount } = require("../helpers.js");
 
 module.exports = class Room {
 	constructor() {
@@ -47,15 +47,7 @@ module.exports = class Room {
 			let adventureElement = ELEMENTS[adventureElementIndex];
 			let reverseAdventureElement = ELEMENTS[(adventureElementIndex + 3) % 6];
 			for (let enemyName in this.enemyList) {
-				let countExpression = this.enemyList[enemyName];
-				let enemyCount = countExpression.split("*").reduce((total, term) => {
-					if (term === "n") {
-						return total * delvers.length;
-					} else {
-						return total * Number(term);
-					}
-				}, 1);
-				for (let i = 0; i < Math.ceil(enemyCount); i++) {
+				for (let i = 0; i < parseCount(this.enemyList[enemyName], delvers.length); i++) {
 					let enemy = new Enemy();
 					Object.assign(enemy, getEnemy(enemyName));
 					enemy.name = enemy.name.replace("@{adventure}", adventureElement);
@@ -70,11 +62,7 @@ module.exports = class Room {
 			}
 
 			for (let reward in this.lootList) {
-				let rewardExpression = this.lootList[reward];
-				let rewardCount = rewardExpression.split("*").reduce((total, term) => {
-					return total * (term === "n" ? delvers : new Number(term));
-				}, 1);
-				this.loot[reward] = rewardCount;
+				this.loot[reward] = parseCount(this.lootList[reward], delvers.length);
 			}
 			resolve(this);
 		})
