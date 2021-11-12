@@ -5,7 +5,7 @@ module.exports = class Move {
 		this.name = "";
 		this.speed = 0;
 		this.isCrit = false;
-		this.userTeam = ""; //TODO convert to array to support joint/combo moves
+		this.userTeam = ""; //TODO #76 convert to array to support joint/combo moves
 		this.userIndex = "";
 		this.targets = [];
 	}

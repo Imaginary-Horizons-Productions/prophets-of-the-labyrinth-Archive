@@ -10,7 +10,7 @@ module.exports = class Room {
 		this.components = [];
 		this.enemyList = {};
 		this.lootList = {};
-		this.round = 0;
+		this.round = -1;
 		this.moves = [];
 		this.enemies = [];
 		this.enemyTitles = {};
@@ -39,7 +39,7 @@ module.exports = class Room {
 
 	populate(delvers, adventureElementIndex) {
 		return new Promise((resolve, reject) => {
-			this.round = 0;
+			this.round = -1;
 			this.moves = [];
 			this.enemies = [];
 			this.enemyTitles = {};
@@ -49,7 +49,11 @@ module.exports = class Room {
 			for (let enemyName in this.enemyList) {
 				let countExpression = this.enemyList[enemyName];
 				let enemyCount = countExpression.split("*").reduce((total, term) => {
-					return total * (term === "n" ? delvers.length : new Number(term));
+					if (term === "n") {
+						return total * delvers.length;
+					} else {
+						return total * Number(term);
+					}
 				}, 1);
 				for (let i = 0; i < Math.ceil(enemyCount); i++) {
 					let enemy = new Enemy();
