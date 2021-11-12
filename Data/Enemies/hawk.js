@@ -8,13 +8,11 @@ module.exports = new Enemy("Bloodtail Hawk")
 	.setStaggerThreshold(1)
 	.addAction({ name: "Rake", weight: 3, effect: rakeEffect });
 
-function rakeEffect(target, user, isCrit, element, adventure) {
+function rakeEffect(target, user, isCrit, adventure) {
 	let damage = 50;
 	if (isCrit) {
 		damage *= 2;
 	}
 	addModifier(target, "Stagger", 1);
-	return dealDamage(target, user, damage, element, adventure).then(damageText => {
-		return damageText;
-	});
+	return dealDamage(target, user, damage, module.exports.element, adventure);
 }

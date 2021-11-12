@@ -1,7 +1,7 @@
 const Button = require('../../Classes/Button.js');
 const { MessageEmbed, MessageActionRow, MessageSelectMenu, MessageButton } = require('discord.js');
 const { getAdventure } = require('../adventureDAO.js');
-const { getFullName, modifiersToString } = require("../combatantDAO.js");
+const { getFullName, modifiersToString, weaponToEmbedField } = require("../combatantDAO.js");
 
 module.exports = new Button("readymove");
 
@@ -46,7 +46,7 @@ module.exports.execute = (interaction, args) => {
 			for (let i = 0; i < delver.weapons.length; i++) {
 				let weapon = delver.weapons[i];
 				if (weapon.uses > 0) {
-					embed.addField(`${weapon.name}`, `Uses: ${weapon.uses}/${weapon.maxUses}\nElement: ${weapon.element}\n${weapon.description}`);
+					embed.addField(...weaponToEmbedField(weapon));
 					if (weapon.targetingTags.target === "single") {
 						// Select Menu
 						let targetOptions = [];

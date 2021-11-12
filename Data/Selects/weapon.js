@@ -23,7 +23,6 @@ module.exports.execute = (interaction, [weaponIndex]) => {
 		let [targetTeam, targetIndex] = interaction.values[0].split("-");
 		let newMove = new Move()
 			.setSpeed(user)
-			.setElement(weapon.element)
 			.setIsCrit(user.crit)
 			.setMoveName(weapon.name)
 			.setUser(user.team, userIndex)

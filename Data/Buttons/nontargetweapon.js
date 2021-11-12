@@ -15,7 +15,6 @@ module.exports.execute = (interaction, [weaponIndex]) => {
 		let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
 		let newMove = new Move()
 			.setSpeed(user)
-			.setElement(weapon.element)
 			.setIsCrit(user.crit)
 			.setMoveName(weapon.name)
 			.setUser(user.team, userIndex);

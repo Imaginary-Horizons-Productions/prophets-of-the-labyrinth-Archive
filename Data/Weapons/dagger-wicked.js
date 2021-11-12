@@ -1,19 +1,23 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { dealDamage, addModifier } = require("../combatantDAO.js");
 
-module.exports = new Weapon("Wicked Dagger", "An attack that deals extra damage on a critical hit and against enemies that aren't blocking (crit: even more damage)", "Wind", effect, [])
+module.exports = new Weapon("Wicked Dagger", "*Strike a foe for @{damage} (+@{bonusDamage} if foe has 0 block) @{element} damage*\nCritical Hit: Damage x@{critMultiplier}", "Wind", effect, [])
 	.setTargetingTags({ target: "single", team: "enemy" })
-	.setUses(10);
+	.setUses(10)
+	.setCritMultiplier(3)
+	.setDamage(75)
+	.setBonusDamage(50);
 
-function effect(target, user, isCrit, element, adventure) {
-	let damage = 100;
-	if (user.element === element) {
+function effect(target, user, isCrit, adventure) {
+	let { element: weaponElement, damage, bonusDamage, critMultiplier } = module.exports;
+	if (target.block === 0) {
+		damage += bonusDamage;
+	}
+	if (user.element === weaponElement) {
 		addModifier(target, "Stagger", 1);
 	}
 	if (isCrit) {
-		damage *= 3;
+		damage *= critMultiplier;
 	}
-	return dealDamage(target, user, damage, element, adventure).then(damageText => {
-		return damageText;
-	});
+	return dealDamage(target, user, damage, weaponElement, adventure);
 }

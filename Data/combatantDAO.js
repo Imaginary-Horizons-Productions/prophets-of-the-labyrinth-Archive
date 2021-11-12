@@ -139,3 +139,15 @@ exports.modifiersToString = function (combatant) {
 	}
 	return modifiersText;
 }
+
+exports.weaponToEmbedField = function (weapon) {
+	return [
+		`${weapon.name} (${weapon.uses}/${weapon.maxUses})`,
+		`${weapon.description.replace("@{element}", weapon.element)
+			.replace("@{critMultiplier}", weapon.critMultiplier)
+			.replace("@{damage}", weapon.damage)
+			.replace("@{bonusDamage}", weapon.bonusDamage)
+			.replace("@{block}", weapon.block)
+			.replace("@{hpCost}", weapon.hpCost)}`
+	];
+}

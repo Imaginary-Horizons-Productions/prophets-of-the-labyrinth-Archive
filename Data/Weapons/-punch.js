@@ -3,15 +3,14 @@ const { dealDamage } = require('../combatantDAO.js');
 
 module.exports = new Weapon("Punch", "description", "untyped", effect, [])
 	.setTargetingTags({ target: "single", team: "enemy" })
-	.setUses(0);
+	.setUses(0)
+	.setDamage(50);
 
 function effect(target, user, isCrit, element, adventure) {
-	let damage = 50;
+	let { damage, critMultiplier } = module.exports;
 	// No same element effect boost due to untyped
 	if (isCrit) {
-		damage *= 2;
+		damage *= critMultiplier;
 	}
-	return dealDamage(target, user, damage, element, adventure).then(damageText => {
-		return damageText;
-	});
+	return dealDamage(target, user, damage, element, adventure);
 }

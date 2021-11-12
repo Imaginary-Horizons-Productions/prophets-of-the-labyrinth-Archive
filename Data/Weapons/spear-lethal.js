@@ -1,10 +1,10 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { dealDamage, addModifier } = require("../combatantDAO.js");
 
-module.exports = new Weapon("icespear", "*Strike a foe for @{damage} @{element} damage*\nCritical Hit: Damage x@{critMultiplier}", "Water", effect, [])
+module.exports = new Weapon("Lethal Spear", "*Strike a foe for @{damage} @{element} damage*\nCritical Hit: Inflict 1 Stagger and damage x@{critMultiplier}", "Light", effect, [])
 	.setTargetingTags({ target: "single", team: "enemy" })
-	.setUses(3)
-	.setDamage(200);
+	.setUses(10)
+	.setDamage(100);
 
 function effect(target, user, isCrit, adventure) {
 	let { element: weaponElement, damage, critMultiplier } = module.exports;
@@ -13,6 +13,7 @@ function effect(target, user, isCrit, adventure) {
 	}
 	if (isCrit) {
 		damage *= critMultiplier;
+		addModifier(target, "Stagger", 1);
 	}
 	return dealDamage(target, user, damage, weaponElement, adventure);
 }

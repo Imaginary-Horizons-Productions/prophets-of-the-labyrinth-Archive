@@ -2,17 +2,17 @@ const Weapon = require('../../Classes/Weapon.js');
 const { addBlock, removeModifier, getFullName } = require('../combatantDAO.js');
 const { isDebuff } = require('../Modifiers/_modifierDictionary.js');
 
-module.exports = new Weapon("Purifying Barrier", "Block an immense amount of damage and remove all debuffs once (crit: more block)", "Light", effect, [])
+module.exports = new Weapon("Purifying Barrier", "*Grant an ally @{block} block and cure them of all debuffs*\nCritical Hit: Block x@{critMultiplier}", "Light", effect, [])
 	.setTargetingTags({ target: "single", team: "ally" })
 	.setUses(1);
 
-function effect(target, user, isCrit, element, adventure) {
-	let block = 1000;
-	if (user.element === element) {
+function effect(target, user, isCrit, adventure) {
+	let { element: weaponElement, block, critMultiplier } = module.exports;
+	if (user.element === weaponElement) {
 		removeModifier(user, "Stagger", 1);
 	}
 	if (isCrit) {
-		block *= 2;
+		block *= critMultiplier;
 	}
 	addBlock(target, block);
 	let debuffs = [];

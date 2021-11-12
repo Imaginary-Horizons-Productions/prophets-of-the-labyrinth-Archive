@@ -184,7 +184,6 @@ exports.newRound = function (adventure, channel, embed = new MessageEmbed()) {
 						// Dummy move for Stunned players
 						adventure.room.moves.push(new Move()
 							.setSpeed(combatant)
-							.setElement(combatant.element)
 							.setIsCrit(combatant.crit)
 							.setMoveName("Stun")
 							.setUser(teamName, i));
@@ -242,7 +241,6 @@ exports.endRound = async function (adventure, channel) {
 	adventure.room.enemies.forEach((enemy, index) => {
 		let move = new Move()
 			.setSpeed(enemy)
-			.setElement(enemy.element)
 			.setIsCrit(enemy.crit)
 		if (enemy.lookupName !== "Clone") {
 			let actionPool = [];

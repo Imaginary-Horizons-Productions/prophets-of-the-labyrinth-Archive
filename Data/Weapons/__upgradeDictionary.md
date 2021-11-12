@@ -37,6 +37,13 @@ Affects Dark element combatants
 #### Available on
 - Potion (Water)
 
+### Lethal
+Increased crit damage
+
+#### Avaialble on
+- all Daggers (Wind)
+- Spear (Light)
+
 ### Long
 Increased stack count of buff/debuff applied
 
@@ -92,12 +99,10 @@ Affects Water element combatants
 - Potion (Water)
 
 ### Wicked
-Increased crit damage
+Increased damage against enemies with 0 block
 
 #### Available on
-- All Daggers (Wind)
 - Dagger (Wind)
-- Spear (Light)
 
 ## Unnamed
 - Spear (add stagger on crit)

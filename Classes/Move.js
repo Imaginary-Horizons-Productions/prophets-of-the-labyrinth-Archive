@@ -4,7 +4,6 @@ module.exports = class Move {
 	constructor() {
 		this.name = "";
 		this.speed = 0;
-		this.element = "";
 		this.isCrit = false;
 		this.userTeam = ""; //TODO convert to array to support joint/combo moves
 		this.userIndex = "";
@@ -13,11 +12,6 @@ module.exports = class Move {
 
 	setSpeed(combatant) {
 		this.speed = calculateTotalSpeed(combatant);
-		return this;
-	}
-
-	setElement(elementInput) {
-		this.element = elementInput;
 		return this;
 	}
 
@@ -39,11 +33,6 @@ module.exports = class Move {
 
 	addTarget(team, index) {
 		this.targets.push({ team: team, index: index });
-		return this;
-	}
-
-	setEffect(effectFunction) {
-		this.effect = effectFunction;
 		return this;
 	}
 }

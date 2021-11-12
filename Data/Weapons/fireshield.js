@@ -1,21 +1,20 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { dealDamage, addBlock, addModifier } = require("../combatantDAO.js");
 
-module.exports = new Weapon("fireshield", "Defend yourself while bashing a target with a flaming shield (crit: more damage)", "Fire", effect, [])
+module.exports = new Weapon("fireshield", "*Strike a foe for @{damage} @{element} damage and gain @{block} block*\nCritical Hit: Damage x@{critMultiplier}", "Fire", effect, [])
 	.setTargetingTags({ target: "single", team: "enemy" })
-	.setUses(5);
+	.setUses(5)
+	.setDamage(75)
+	.setBlock(50);
 
-function effect(target, user, isCrit, element, adventure) {
-	let damage = 75;
-	let block = 50;
-	if (user.element === element) {
+function effect(target, user, isCrit, adventure) {
+	let { element: weaponElement, damage, block, critMultiplier } = module.exports;
+	if (user.element === weaponElement) {
 		addModifier(target, "Stagger", 1);
 	}
 	if (isCrit) {
-		damage *= 2;
+		damage *= critMultiplier;
 	}
 	addBlock(user, block);
-	return dealDamage(target, user, damage, element, adventure).then(damageText => {
-		return damageText;
-	});
+	return dealDamage(target, user, damage, weaponElement, adventure);
 }

@@ -34,7 +34,7 @@ exports.resolveMove = async function (move, adventure) {
 				} else {
 					targetTeam = adventure.room.enemies;
 				}
-				let result = await effect(targetTeam[targetDatum.index], user, move.isCrit, move.element, adventure);
+				let result = await effect(targetTeam[targetDatum.index], user, move.isCrit, adventure);
 				if (targetAll && result.endsWith("was already dead!")) {
 					return "";
 				} else {

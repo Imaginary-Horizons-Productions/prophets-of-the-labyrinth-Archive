@@ -9,15 +9,13 @@ module.exports = new Enemy("@{adventure} Slime")
 	.addAction({ name: "Tackle", weight: 1, effect: tackleEffect })
 	.addAction({ name: "Goop Spray", weight: 1, effect: goopSprayEffect });
 
-function tackleEffect(target, user, isCrit, element, adventure) {
+function tackleEffect(target, user, isCrit, adventure) {
 	let damage = 25;
 	if (isCrit) {
 		damage *= 2;
 	}
 	addModifier(target, "Stagger", 1);
-	return dealDamage(target, user, damage, element, adventure).then(damageText => {
-		return damageText;
-	});
+	return dealDamage(target, user, damage, adventure.element, adventure);
 }
 
 function goopSprayEffect(target, user, isCrit, element, adventure) {
