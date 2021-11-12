@@ -6,13 +6,12 @@ const { getFullName } = require("./../combatantDAO.js");
 
 module.exports = new Select("weapon");
 
-module.exports.execute = (interaction, args) => {
+module.exports.execute = (interaction, [weaponIndex]) => {
 	// Add move object to adventure
 	let adventure = getAdventure(interaction.channel.id);
 	let user = adventure.delvers.find(delver => delver.id === interaction.user.id);
-	let weaponIndex = args[0];
-	let weapon;
 	if (weaponIndex === "punch" || parseInt(weaponIndex) < user.weapons.length) {
+		let weapon;
 		if (weaponIndex !== "punch") {
 			weapon = user.weapons[weaponIndex];
 		} else {

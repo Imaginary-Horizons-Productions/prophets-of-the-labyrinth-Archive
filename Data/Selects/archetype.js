@@ -26,42 +26,30 @@ module.exports.execute = (interaction, args) => {
 				.setElement(archetypeTemplate.element)
 				.setPredict(archetypeTemplate.predict);
 
-			// Check if all ready
-			let confirmationText = "";
-			let readyButton = [];
-			let readyCount = adventure.delvers.reduce((count, delver) => {
-				if (delver.title !== "") {
-					return ++count;
-				} else {
-					return count;
-				}
-			}, 0);
-			let allReady = adventure.lives - 1 === readyCount;
-			if (allReady) { // Lives equals player count + 1; no opportunity to lose lives before adventure starts
-				readyButton.push(new MessageActionRow()
-					.addComponents(
-						new MessageButton()
-							.setCustomId(`ready-${interaction.channel.id}`)
-							.setLabel("Ready!")
-							.setStyle("SUCCESS")
-					))
-				confirmationText += "\n\nAll players are ready, the adventure will start when the leader clicks the button below!";
+			// Send confirmation text
+			interaction.reply(`${interaction.user} will be playing as ${interaction.values[0]}`).then(() => {
+				// Check if all ready
+				if (adventure.delvers.every(delver => delver.title)) {
+					let readyButton = [
+						new MessageActionRow().addComponents(
+							new MessageButton().setCustomId(`ready-${interaction.channel.id}`)
+								.setLabel("Ready!")
+								.setStyle("SUCCESS")
+						)
+					];
 
-				// if startMessageId already exists, player has changed class, so delete extra start button
-				if (adventure.messageIds.start) {
-					interaction.channel.messages.fetch(adventure.messageIds.start).then(startMessage => {
-						startMessage.edit({ components: [] });
+					// if startMessageId already exists, player has changed class, so delete extra start button
+					if (adventure.messageIds.start) {
+						interaction.channel.messages.fetch(adventure.messageIds.start).then(startMessage => {
+							startMessage.edit({ components: [] });
+						})
+					}
+
+					interaction.channel.send({ content: "All players are ready, the adventure will start when the leader clicks the button below!", components: readyButton }).then(message => {
+						adventure.setMessageId("start", message.id);
 					})
 				}
-			}
-
-			// Send confirmation text
-			confirmationText = `${interaction.user} will be playing as ${interaction.values[0]}.${confirmationText}`;
-			interaction.reply({ content: confirmationText, components: readyButton, fetchReply: allReady }).then(message => {
-				if (allReady) {
-					adventure.setMessageId("start", message.id);
-				}
-			}).catch(console.error);
+			})
 			saveAdventures();
 		} else {
 			let join = new MessageActionRow().addComponents(

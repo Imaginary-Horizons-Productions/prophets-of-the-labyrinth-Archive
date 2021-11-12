@@ -2,7 +2,7 @@ const { getFullName } = require("./combatantDAO.js");
 const { getEnemy } = require("./Enemies/_enemyDictionary.js");
 const { getWeapon } = require("./Weapons/_weaponDictionary.js");
 
-exports.resolveMove = function (move, adventure) {
+exports.resolveMove = async function (move, adventure) {
 	let userTeam = move.userTeam === "ally" ? adventure.delvers : adventure.room.enemies;
 	let user = userTeam[move.userIndex];
 	if (!user.modifiers.Stun) {
@@ -23,22 +23,22 @@ exports.resolveMove = function (move, adventure) {
 			} else {
 				effect = getEnemy(user.name).actions[move.name].effect;
 			}
-			let resultTexts = move.targets.map(targetDatum => {
+			let resultText = await Promise.all(move.targets.map(async targetDatum => {
 				let targetTeam;
 				if (targetDatum.team === "ally") {
 					targetTeam = adventure.delvers;
 				} else {
 					targetTeam = adventure.room.enemies;
 				}
-				let resultText = effect(targetTeam[targetDatum.index], user, move.isCrit, move.element, adventure);
-				if (targetAll && resultText.endsWith("was already dead!")) {
+				let result = await effect(targetTeam[targetDatum.index], user, move.isCrit, move.element, adventure);
+				if (targetAll && result.endsWith("was already dead!")) {
 					return "";
 				} else {
-					return resultText;
+					return result;
 				}
-			});
+			}));
 			let targetNames = exports.getTargetList(move.targets, adventure);
-			moveText += ` ${targetNames.join(", ")}.${move.isCrit ? " *Critical Hit!*" : ""} ${resultTexts.join(" ")}${breakText !== "" ? breakText : ""}\n`;
+			moveText += ` ${targetNames.join(", ")}.${move.isCrit ? " *Critical Hit!*" : ""} ${resultText.join(" ")}${breakText !== "" ? breakText : ""}\n`;
 		}
 		return moveText;
 	} else {

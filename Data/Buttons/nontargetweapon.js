@@ -4,14 +4,12 @@ const { getAdventure, saveAdventures, checkNextRound, updateRoundMessage, genera
 
 module.exports = new Button("nontargetweapon");
 
-module.exports.execute = (interaction, args) => {
+module.exports.execute = (interaction, [weaponIndex]) => {
 	// Add move object to adventure
 	let adventure = getAdventure(interaction.channel.id);
 	let user = adventure.delvers.find(delver => delver.id === interaction.user.id);
-	let weaponIndex = args[0];
-	let weapon;
 	if (parseInt(weaponIndex) < user.weapons.length) {
-		weapon = user.weapons[weaponIndex];
+		let weapon = user.weapons[weaponIndex];
 
 		// Add move to round list (overwrite exisiting readied move)
 		let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);

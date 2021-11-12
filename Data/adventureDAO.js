@@ -233,7 +233,7 @@ exports.updateRoundMessage = function (messageManager, adventure) {
 	})
 }
 
-exports.endRound = function (adventure, channel) {
+exports.endRound = async function (adventure, channel) {
 	// Generate results embed
 	let embed = new MessageEmbed().setAuthor(`Lives: ${adventure.lives} - Party Gold: ${adventure.gold} - Score: ${adventure.accumulatedScore}`, channel.client.user.displayAvatarURL())
 		.setTitle(adventure.room.title);
@@ -262,7 +262,7 @@ exports.endRound = function (adventure, channel) {
 	})
 	let lastRoundText = "";
 	for (let move of adventure.room.moves) {
-		lastRoundText += resolveMove(move, adventure);
+		lastRoundText += await resolveMove(move, adventure);
 		if (adventure.lives <= 0) {
 			channel.send({
 				embeds: [embed.setTitle("Defeat!").setDescription(lastRoundText)]
