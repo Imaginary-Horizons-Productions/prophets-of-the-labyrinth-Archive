@@ -21,7 +21,7 @@ exports.resolveMove = async function (move, adventure) {
 				targetAll = weapon.targetingTags.target === "all";
 				effect = getWeapon(move.name).effect; // get from dictionary because weapons saved from file don't have their effect function any more
 			} else {
-				effect = getEnemy(user.name).actions[move.name].effect;
+				effect = getEnemy(user.lookupName).actions[move.name].effect;
 			}
 			let resultText = await Promise.all(move.targets.map(async targetDatum => {
 				let targetTeam;
