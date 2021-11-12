@@ -119,7 +119,7 @@ exports.nextRoom = function (adventure, channel) {
 		exports.completeAdventure(adventure, channel, "success");
 	} else {
 		let roomPool = Object.values(roomDictionary);
-		let roomTemplate = roomDictionary["Brute Convention"]; //TODO #53 refactor room selector AI
+		let roomTemplate = roomDictionary["Hall of Mirrors"]; //TODO #53 refactor room selector AI
 		if (adventure.depth !== 10) {
 			roomTemplate = roomPool[exports.generateRandomNumber(adventure, roomPool.length, "general")];
 		}
