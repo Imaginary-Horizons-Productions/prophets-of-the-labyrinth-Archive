@@ -83,28 +83,29 @@ exports.updateStartingMessage = function (startMessage, adventure) {
 }
 
 exports.generateRandomNumber = function (adventure, exclusiveMax, branch) {
-	let start;
-	let end;
-	switch (branch) {
-		case "general":
-			start = adventure.rnIndex;
-			end = start + exclusiveMax - 1;
-			adventure.rnIndex = end % adventure.rnTable.length;
-			break;
-		case "battle":
-			start = adventure.rnIndexBattle;
-			end = start + exclusiveMax - 1;
-			adventure.rnIndexBattle = end % adventure.rnTable.length;
-			break;
-	}
-	let generated = 0;
-	for (let i = start; i < end; i++) {
-		let index = i % adventure.rnTable.length;
-		if (Number(adventure.rnTable[index])) {
-			generated++;
+	if (exclusiveMax === 1) {
+		return 0;
+	} else {
+		let bits = Math.ceil(Math.log2(exclusiveMax) / Math.log2(12));
+		let start;
+		let end;
+		switch (branch) {
+			case "general":
+				start = adventure.rnIndex;
+				end = start + bits;
+				adventure.rnIndex = end % adventure.rnTable.length;
+				break;
+			case "battle":
+				start = adventure.rnIndexBattle;
+				end = start + bits;
+				adventure.rnIndexBattle = end % adventure.rnTable.length;
+				break;
 		}
+		let max = 12 ** bits;
+		let sectionLength = max / exclusiveMax;
+		let roll = parseInt(adventure.rnTable.slice(start, end), 12);
+		return Math.floor(roll / sectionLength);
 	}
-	return generated;
 }
 
 exports.nextRoom = function (adventure, channel) {
@@ -311,7 +312,6 @@ exports.checkNextRound = function (adventure) {
 
 //{channelId: guildId} A list of adventure channels that restarting the bot interrupted deleting
 let completedAdventures = {};
-
 exports.completeAdventure = function (adventure, channel, result) { //TODO #54 end of adventure embed (accept embed argument)
 	var baseScore = adventure.depth;
 	switch (result) {
