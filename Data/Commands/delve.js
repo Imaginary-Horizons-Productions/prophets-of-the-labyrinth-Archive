@@ -18,6 +18,11 @@ module.exports.execute = (interaction) => {
 	let guildProfile = getGuild(interaction.guild.id);
 	if (interaction.channel.id === guildProfile.centralId) {
 		let adventure = new Adventure(interaction.options.getString("seed"));
+
+		//TODO #77 roll bosses
+		adventure.finalBoss = "Hall of Mirrors";
+		adventure.bosses = [];
+
 		let elementIndex = generateRandomNumber(adventure, ELEMENTS.length, "general");
 		adventure.setName(`${DESCRIPTORS[generateRandomNumber(adventure, DESCRIPTORS.length, "general")]} ${LOCATIONS[generateRandomNumber(adventure, LOCATIONS.length, "general")]} of ${ELEMENTS[elementIndex]}`)
 			.setElement(ELEMENTS[elementIndex]);

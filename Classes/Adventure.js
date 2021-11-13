@@ -8,6 +8,13 @@ module.exports = class Adventure {
 	id; // the id of the channel created for the adventure
 	name;
 	element;
+	scouting = {
+		finalBoss: false,
+		midBosses: 0,
+		midBossesEncountered: 0
+	}
+	finalBoss = "Hall of Mirrors";
+	midBosses = [];
 	rnIndex = 0;
 	rnIndexBattle = 0;
 	messageIds = {

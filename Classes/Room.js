@@ -4,7 +4,7 @@ const { ELEMENTS, parseCount } = require("../helpers.js");
 
 module.exports = class Room {
 	constructor() {
-		this.type = ""; // enum: "battle", "merchant", "event", "rest", "boss"
+		this.type = ""; // enum: "battle", "merchant", "event", "rest", "finalboss", "midboss"
 		this.title = "";
 		this.description = "";
 		this.components = [];
