@@ -3,7 +3,6 @@ const { sha256 } = require("js-sha256");
 module.exports = class Adventure {
 	constructor(seedInput) {
 		this.initialSeed = seedInput || Date.now().toString();
-		this.rnTable = parseInt(sha256(this.initialSeed), 16).toString(12);
 	}
 	id; // the id of the channel created for the adventure
 	name;
@@ -32,6 +31,17 @@ module.exports = class Adventure {
 	room;
 	lives = 2;
 	gold = 100;
+	rnTable = "";
+
+	generateRNTable() {
+		let hash = sha256(this.initialSeed);
+		let segments = [];
+		for (let i = 0; i < hash.length; i += 4) {
+			segments.push(hash.slice(i, i + 4));
+		}
+		this.rnTable = segments.reduce((table, segment) => table + parseInt(segment, 16).toString(12), "");
+		return this;
+	}
 
 	setId(textChannelId) {
 		this.id = textChannelId;

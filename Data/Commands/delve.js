@@ -9,15 +9,15 @@ const { getGuild } = require('../guildDAO.js');
 module.exports = new Command("delve", "Start a new adventure", false, false);
 module.exports.data.addStringOption(option => option.setName("seed").setDescription("The value to base the random events of the run on").setRequired(false));
 
-let DESCRIPTORS = ["Shining", "New", "Dusty", "Old", "Floating", "Undersea", "Future"];
-let LOCATIONS = ["Adventure", "Castle", "Labyrinth", "Ruins", "Plateau", "Dungeon", "Maze", "Fortress"];
+let DESCRIPTORS = ["Shining", "New", "Dusty", "Old", "Floating", "Undersea", "Future", "Intense"];
+let LOCATIONS = ["Adventure", "Castle", "Labyrinth", "Ruins", "Plateau", "Dungeon", "Maze", "Fortress", "Dream"];
 let ELEMENT_COLORS = ["RED", "ORANGE", "YELLOW", "BLUE", "GREEN", "PURPLE"];
 
 module.exports.execute = (interaction) => {
 	// Start a new adventure
 	let guildProfile = getGuild(interaction.guild.id);
 	if (interaction.channel.id === guildProfile.centralId) {
-		let adventure = new Adventure(interaction.options.getString("seed"));
+		let adventure = new Adventure(interaction.options.getString("seed")).generateRNTable();
 
 		//TODO #77 roll bosses
 		adventure.finalBoss = "Hall of Mirrors";
