@@ -41,14 +41,14 @@ client.on("ready", () => {
 	// Delete Completed Adventure Channels
 	new Promise((resolve, reject) => {
 		if (fs.existsSync("./Saves/completedAdventures.json")) {
-			var completedAdventures = require("./Saves/completedAdventures.json");
-			Object.keys(completedAdventures).forEach(channelId => {
+			let completedAdventures = require("./Saves/completedAdventures.json");
+			for (let channelId in completedAdventures) {
 				client.guilds.fetch(completedAdventures[channelId]).then(guild => {
 					guild.channels.fetch(channelId).then(channel => {
 						channel.delete("adventure completed");
 					}).catch(console.error);
 				})
-			})
+			}
 		}
 		resolve();
 	}).then(() => {

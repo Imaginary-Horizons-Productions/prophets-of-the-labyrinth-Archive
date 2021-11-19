@@ -243,7 +243,7 @@ exports.endRound = async function (adventure, channel) {
 		let move = new Move()
 			.setSpeed(enemy)
 			.setIsCrit(enemy.crit)
-		if (enemy.lookupName !== "Clone") {
+		if (enemy.lookupName !== "@{clone}") {
 			let actionPool = [];
 			Object.values(enemy.actions).forEach(action => {
 				for (let i = 0; i < action.weight; i++) {

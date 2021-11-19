@@ -1,6 +1,7 @@
 var archetype = [
 	"assassin.js",
 	"chemist.js",
+	"hemomancer.js",
 	"knight.js",
 	"martialartist.js"
 ];

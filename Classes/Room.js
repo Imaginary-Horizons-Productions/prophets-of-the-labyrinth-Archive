@@ -50,12 +50,17 @@ module.exports = class Room {
 				for (let i = 0; i < parseCount(this.enemyList[enemyName], delvers.length); i++) {
 					let enemy = new Enemy();
 					Object.assign(enemy, getEnemy(enemyName));
-					enemy.name = enemy.name.replace("@{adventure}", adventureElement);
-					enemy.name = enemy.name.replace("@{adventureReverse}", reverseAdventureElement);
-					enemy.name = enemy.name.replace("Clone", `Mirror ${delvers[i].name}`);
-					enemy.setElement(enemy.element.replace("@{adventure}", adventureElement))
-						.setElement(enemy.element.replace("@{adventureReverse}", reverseAdventureElement))
-						.setElement(enemy.element.replace("Clone", delvers[i].element));
+					let tagRegex = /@{[a-zA-Z]+}/;
+					if (tagRegex.test(enemy.name)) {
+						enemy.name = enemy.name.replace("@{adventure}", adventureElement);
+						enemy.name = enemy.name.replace("@{adventureReverse}", reverseAdventureElement);
+						enemy.name = enemy.name.replace("@{clone}", `Mirror ${delvers[i].title}`);
+					}
+					if (tagRegex.test(enemy.element)) {
+						enemy.setElement(enemy.element.replace("@{adventure}", adventureElement))
+							.setElement(enemy.element.replace("@{adventureReverse}", reverseAdventureElement))
+							.setElement(enemy.element.replace("@{clone}", delvers[i].element));
+					}
 					this.enemies.push(enemy);
 					Enemy.setEnemyTitle(this.enemyTitles, enemy);
 				}

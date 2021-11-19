@@ -1,7 +1,6 @@
 const Weapon = require('../../Classes/Weapon.js');
-const { dealDamage, addBlock, removeModifier } = require("../combatantDAO.js");
 
-module.exports = new Weapon("cursedshield", "*Pay @{hpCost} hp to grant an ally @{block} block*\nCritical Hit: Block x@{critMultiplier}", "Darkness", effect, [])
+module.exports = new Weapon("Spell: Charging Blood Aegis", "*Pay @{hpCost} hp to grant an ally @{block} block, then gain 25 powerup*\nCritical Hit: Block x@{critMultiplier}", "Darkness", effect, [])
 	.setTargetingTags({ target: "single", team: "ally" })
 	.setUses(10)
 	.setHpCost(25)
@@ -16,5 +15,6 @@ function effect(target, user, isCrit, adventure) {
 		block *= critMultiplier;
 	}
 	addBlock(target, block);
+	addModifier(user, "powerup", 25);
 	return dealDamage(user, null, hpCost, "untyped", adventure); // user pays health
 }

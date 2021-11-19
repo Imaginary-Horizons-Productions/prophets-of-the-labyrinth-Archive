@@ -18,7 +18,7 @@ function tackleEffect(target, user, isCrit, adventure) {
 	return dealDamage(target, user, damage, adventure.element, adventure);
 }
 
-function goopSprayEffect(target, user, isCrit, element, adventure) {
+function goopSprayEffect(target, user, isCrit, adventure) {
 	if (isCrit) {
 		addModifier(target, "Slow", 3);
 		addModifier(target, "Stagger", 1);

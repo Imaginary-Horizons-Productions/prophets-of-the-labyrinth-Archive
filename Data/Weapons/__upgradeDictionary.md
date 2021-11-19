@@ -5,6 +5,13 @@ User gains Power Up modifier
 
 #### Available on
 - Sword (Earth)
+- Blood Aegis (Darkness)
+
+### Cursed
+User pays hp to use
+
+#### Available on
+- all Blood Aegis (Darkness)
 
 ### Earthen
 Affects Earth element combatants
@@ -24,6 +31,7 @@ Increased base block
 
 #### Available on
 - Buckler (Earth)
+- Blood Aegis (Darkness)
 
 ### Hunter's
 Gain gold on kill
@@ -75,6 +83,7 @@ Hits all enemes/allies
 #### Available on
 - Dagger (Wind)
 - Spear (Light)
+- Blood Aegis (Darkness)
 
 ### Swift
 Grants the user the Quicken modifier
@@ -108,13 +117,13 @@ Increased damage against enemies with 0 block
 - Spear (add stagger on crit)
 - Sword (bonus damage if user has no block)
 - Sickle (10% max hp bonus damage)
+- Life Drain (attack a foe and gain hp)
 
 ## Ideas
 - Mercurial ___ - Damage type (but not stagger) matches user, non-starting weapon (FIRECRACKER) (chameleonsword for implementation reference)
 - Catalyst ___ - Adds stacks to debuffs
 - Urgent ___ - Gives a bonus to the user's speed for this move
 - Empowering ___ - Adds stacks to buffs
-- Cursed ___ - costs hp to use
 - Reaper's ___ - kills an enemy if they are at 15% hp or below
 - Toxic ___ - applies Poison modifier
 - Double ___ - doubles number of (random) targets

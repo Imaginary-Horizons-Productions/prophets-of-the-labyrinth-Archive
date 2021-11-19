@@ -1,7 +1,7 @@
 const Enemy = require("../../Classes/Enemy.js");
 
-module.exports = new Enemy("Clone")
+module.exports = new Enemy("@{clone}")
 	.setHp(300)
 	.setSpeed(100)
-	.setElement("Clone")
+	.setElement("@{clone}")
 	.setStaggerThreshold(3);
