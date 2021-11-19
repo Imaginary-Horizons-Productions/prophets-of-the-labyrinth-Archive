@@ -1,18 +1,19 @@
 const Weapon = require('../../Classes/Weapon.js');
-const { dealDamage, addModifier } = require('../combatantDAO.js');
+const { addModifier } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Unfinished Potion", "*Strike a foe for @{damage} @{element} damage*\nCritical Hit: Damage x@{critMultiplier}", "Water", effect, ["Earthen Potion", "Inky Potion", "Watery Potion"])
+module.exports = new Weapon("Unfinished Potion", "Apply 4 Poison to a foe*\nCritical Hit: Poison x@{critMultiplier}", "Water", effect, ["Earthen Potion", "Inky Potion", "Watery Potion"])
 	.setTargetingTags({ target: "single", team: "enemy" })
-	.setUses(5)
-	.setDamage(100);
+	.setUses(5);
 
 function effect(target, user, isCrit, adventure) {
-	let { element: weaponElement, damage: value, critMultiplier } = module.exports;
+	let { element: weaponElement, critMultiplier } = module.exports;
+	let value = 4;
 	if (user.element === weaponElement) {
 		addModifier(target, "Stagger", 1);
 	}
 	if (isCrit) {
 		value *= critMultiplier;
 	}
-	return dealDamage(target, user, value, weaponElement, adventure);
+	addModifier(target, "Poison", value);
+	return "";
 }

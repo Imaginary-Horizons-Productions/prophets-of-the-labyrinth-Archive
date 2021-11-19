@@ -1,27 +1,27 @@
 const Weapon = require('../../Classes/Weapon.js');
-const { dealDamage, gainHealth, removeModifier, addModifier } = require('../combatantDAO.js');
+const { removeModifier, addModifier } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Inky Potion", "*Grant a combatant @{bonusDamage} hp if they are Darkness element, otherwise deal @{damage} @{element} damage*\nCritical Hit: Damage/Healing x@{critMultiplier}", "Darkness", effect, [])
+module.exports = new Weapon("Inky Potion", "*Apply 4 Regen to a Darkness element combatant, or 4 Poison to someone else*\nCritical Hit: Poison/Regen x@{critMultiplier}", "Darkness", effect, [])
 	.setTargetingTags({ target: "single", team: "any" })
-	.setUses(5)
-	.setDamage(100)
-	.setBonusDamage(50);
+	.setUses(5);
 
 function effect(target, user, isCrit, adventure) {
-	let { element: weaponElement, damage: value, critMultiplier } = module.exports;
+	let { element: weaponElement, critMultiplier } = module.exports;
+	let value = 4;
 	if (isCrit) {
 		value *= critMultiplier;
 	}
 	if (target.element === weaponElement) {
-		value /= 2;
 		if (user.element === weaponElement) {
 			removeModifier(target, "Stagger", 1);
 		}
-		return gainHealth(target, value, adventure.room.enemyTitles);
+		addModifier(target, "Regen", value);
+		return;
 	} else {
 		if (user.element === weaponElement) {
 			addModifier(target, "Stagger", 1);
 		}
-		return dealDamage(target, user, value, weaponElement, adventure);
+		addModifier(target, "Poison", value);
+		return;
 	}
 }

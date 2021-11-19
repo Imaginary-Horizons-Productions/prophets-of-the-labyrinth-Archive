@@ -48,8 +48,9 @@ module.exports = class Room {
 			let reverseAdventureElement = ELEMENTS[(adventureElementIndex + 3) % 6];
 			for (let enemyName in this.enemyList) {
 				for (let i = 0; i < parseCount(this.enemyList[enemyName], delvers.length); i++) {
-					let enemy = new Enemy();
-					Object.assign(enemy, getEnemy(enemyName));
+					let enemyTemplate = getEnemy(enemyName);
+					enemyTemplate.modifiers = {}; // breaks shared reference to modifiers object by enemies of same name
+					let enemy = Object.assign(new Enemy(), enemyTemplate);
 					let tagRegex = /@{[a-zA-Z]+}/;
 					if (tagRegex.test(enemy.name)) {
 						enemy.name = enemy.name.replace("@{adventure}", adventureElement);

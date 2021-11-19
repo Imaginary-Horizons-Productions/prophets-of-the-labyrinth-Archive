@@ -1,4 +1,4 @@
-const { getFullName } = require("./combatantDAO.js");
+const { getFullName, dealDamage, gainHealth } = require("./combatantDAO.js");
 const { getEnemy } = require("./Enemies/_enemyDictionary.js");
 const { getWeapon } = require("./Weapons/_weaponDictionary.js");
 
@@ -42,13 +42,20 @@ exports.resolveMove = async function (move, adventure) {
 				}
 			}));
 			let targetNames = exports.getTargetList(move.targets, adventure);
-			moveText += ` ${targetNames.join(", ")}.${move.isCrit ? " *Critical Hit!*" : ""} ${resultText.join(" ")}${breakText !== "" ? breakText : ""}\n`;
+			moveText += ` ${targetNames.join(", ")}.${move.isCrit ? " *Critical Hit!*" : ""} ${resultText.join(" ")}${breakText !== "" ? breakText : ""}`;
 		} else {
 			delete user.modifiers.Stun;
-			moveText = `${user.name} is Stunned!\n`;
+			moveText = `${user.name} is Stunned!`;
+		}
+
+		// Poison/Regen
+		if (user.modifiers.Poison) {
+			moveText += ` ${await dealDamage(user, null, user.modifiers.Poison * 10, "Poison", adventure)}`;
+		} else if (user.modifiers.Regen) {
+			moveText += ` ${gainHealth(user, user.modifiers.Regen * 10, adventure.room.enemyTitles)}`;
 		}
 	}
-	return moveText;
+	return moveText + "\n";
 }
 
 exports.getTargetList = function (targets, adventure) {

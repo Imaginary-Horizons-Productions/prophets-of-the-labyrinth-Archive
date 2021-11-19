@@ -40,17 +40,19 @@ exports.dealDamage = async function (target, user, damage, element, adventure) {
 			}
 			pendingDamage = Math.ceil(pendingDamage);
 			let blockedDamage = 0;
-			if (pendingDamage >= target.block) {
-				pendingDamage -= target.block;
-				blockedDamage = target.block;
-				target.block = 0;
-			} else {
-				target.block -= pendingDamage;
-				blockedDamage = pendingDamage;
-				pendingDamage = 0;
+			if (element !== "Poison") {
+				if (pendingDamage >= target.block) {
+					pendingDamage -= target.block;
+					blockedDamage = target.block;
+					target.block = 0;
+				} else {
+					target.block -= pendingDamage;
+					blockedDamage = pendingDamage;
+					pendingDamage = 0;
+				}
 			}
 			target.hp -= pendingDamage;
-			let damageText = ` ${exports.getFullName(target, adventure.room.enemyTitles)} takes ${pendingDamage} damage${blockedDamage > 0 ? ` (${blockedDamage} blocked)` : ""}${isWeakness ? "!!!" : isResistance ? "." : "!"}`;
+			let damageText = ` ${exports.getFullName(target, adventure.room.enemyTitles)} takes ${pendingDamage} damage${blockedDamage > 0 ? ` (${blockedDamage} blocked)` : ""}${element === "Poison" ? " from Poison" : ""}${isWeakness ? "!!!" : isResistance ? "." : "!"}`;
 			if (target.hp <= 0) {
 				if (target.team === "ally") {
 					target.hp = target.maxHp;

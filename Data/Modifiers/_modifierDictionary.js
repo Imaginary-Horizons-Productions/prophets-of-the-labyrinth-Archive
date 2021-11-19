@@ -1,8 +1,10 @@
 var modifierWhitelist = [
 	"evade.js",
+	"poison.js",
 	"powerdown.js",
 	"powerup.js",
 	"quicken.js",
+	"regen.js",
 	"slow.js",
 	"stagger.js",
 	"stun.js"

@@ -281,8 +281,28 @@ exports.endRound = async function (adventure, channel) {
 	let lastRoundText = "";
 	for (let move of adventure.room.moves) {
 		lastRoundText += await resolveMove(move, adventure);
+		// Check for Defeat
 		if (adventure.lives <= 0) {
 			exports.completeAdventure(adventure, channel, embed.setTitle("Defeat").setDescription(lastRoundText));
+			return;
+		}
+
+		// Check for Victory
+		if (adventure.room.enemies.every(enemy => enemy.hp === 0)) {
+			channel.send({
+				embeds: [embed.setTitle("Victory!")]
+			}).then(message => {
+				adventure.delvers.forEach(delver => {
+					delver.modifiers = {};
+				})
+				return adventure;
+			}).then(adventure => {
+				exports.nextRoom(adventure, channel);
+			});
+			if (lastRoundText !== "") {
+				embed.setDescription(lastRoundText);
+			}
+			adventure.room.moves = [];
 			return;
 		}
 	}
@@ -290,22 +310,7 @@ exports.endRound = async function (adventure, channel) {
 		embed.setDescription(lastRoundText);
 	}
 	adventure.room.moves = [];
-
-	// Check for Victory
-	if (adventure.room.enemies.every(enemy => enemy.hp === 0)) {
-		channel.send({
-			embeds: [embed.setTitle("Victory!")]
-		}).then(message => {
-			adventure.delvers.forEach(delver => {
-				delver.modifiers = {};
-			})
-			return adventure;
-		}).then(adventure => {
-			exports.nextRoom(adventure, channel);
-		});
-	} else {
-		exports.newRound(adventure, channel, embed);
-	}
+	exports.newRound(adventure, channel, embed);
 }
 
 exports.checkNextRound = function (adventure) {
