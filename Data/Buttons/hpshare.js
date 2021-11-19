@@ -1,3 +1,4 @@
+const { MessageEmbed } = require('discord.js');
 const Button = require('../../Classes/Button.js');
 const { getAdventure, nextRoom, completeAdventure } = require('../adventureDAO.js');
 const { gainHealth, dealDamage } = require("../combatantDAO.js");
@@ -17,7 +18,7 @@ module.exports.execute = (interaction, args) => {
 		if (adventure.lives > 0) {
 			nextRoom(adventure, interaction.channel);
 		} else {
-			completeAdventure(adventure, interaction.channel, "defeat");
+			completeAdventure(adventure, interaction.channel, new MessageEmbed().setTitle("Defeat"));
 		}
 	})
 	interaction.message.edit({ components: [] })

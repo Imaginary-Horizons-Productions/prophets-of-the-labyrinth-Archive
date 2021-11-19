@@ -115,13 +115,15 @@ exports.nextRoom = function (adventure, channel) {
 			message.edit({ components: [] });
 		}).catch(console.error);
 	}
-	if (adventure.depth === 11) {
-		adventure.accumulatedScore = 10;
-		exports.completeAdventure(adventure, channel, "success");
-	} else {
-		let roomPool = Object.values(roomDictionary);
-		let roomTemplate = roomDictionary[adventure.finalBoss]; //TODO #53 refactor room selector AI
-		if (adventure.depth !== 10) {
+	if (adventure.depth < 11) {
+		let preRolledDepths = [10];
+		let roomTemplate;
+		if (preRolledDepths.includes(adventure.depth)) {
+			// Prerolled Room
+			roomTemplate = roomDictionary[adventure.finalBoss];
+		} else {
+			// Non-prerolled Room
+			let roomPool = Object.values(roomDictionary); //TODO #53 refactor room selector AI
 			roomTemplate = roomPool[exports.generateRandomNumber(adventure, roomPool.length, "general")];
 		}
 		Object.assign(new Room(), roomTemplate)
@@ -142,6 +144,9 @@ exports.nextRoom = function (adventure, channel) {
 					});
 				}
 			})
+	} else {
+		adventure.accumulatedScore = 10;
+		exports.completeAdventure(adventure, channel, new MessageEmbed().setTitle("Success"));
 	}
 }
 
@@ -277,10 +282,7 @@ exports.endRound = async function (adventure, channel) {
 	for (let move of adventure.room.moves) {
 		lastRoundText += await resolveMove(move, adventure);
 		if (adventure.lives <= 0) {
-			channel.send({
-				embeds: [embed.setTitle("Defeat!").setDescription(lastRoundText)]
-			});
-			exports.completeAdventure(adventure, channel, "defeat");
+			exports.completeAdventure(adventure, channel, embed.setTitle("Defeat").setDescription(lastRoundText));
 			return;
 		}
 	}
@@ -312,16 +314,19 @@ exports.checkNextRound = function (adventure) {
 
 //{channelId: guildId} A list of adventure channels that restarting the bot interrupted deleting
 let completedAdventures = {};
-exports.completeAdventure = function (adventure, channel, result) { //TODO #54 end of adventure embed (accept embed argument)
-	var baseScore = adventure.depth;
-	switch (result) {
-		case "success":
-			baseScore += adventure.accumulatedScore;
-			break;
-		case "defeat":
-			baseScore += Math.floor(adventure.accumulatedScore / 2);
-			break;
+exports.completeAdventure = function (adventure, channel, embed) {
+	let isSuccess = embed.title === "Success";
+	let baseScore = adventure.depth;
+	let goldScore = Math.log10(adventure.gold) * 5; //TODO #84 base goldScore on peak gold instead of end gold
+	if (isSuccess) {
+		baseScore += goldScore;
+		baseScore += adventure.accumulatedScore;
+	} else {
+		baseScore += Math.floor(goldScore / 2);
+		baseScore += Math.floor(adventure.accumulatedScore / 2);
 	}
+	embed.addField("Score", `Depth: ${adventure.depth}\nGold: ${goldScore}${isSuccess ? "" : ` ÷ 2  = ${Math.floor(goldScore / 2)} (Defeat)`}\nBonus: ${adventure.accumulatedScore}${isSuccess ? "" : ` ÷ 2  = ${Math.floor(adventure.accumulatedScore / 2)} (Defeat)`}\nTotal: ${baseScore}`)
+		.addField("Clean-Up", "This channel will be cleaned up in 5 minutes.");
 
 	adventure.delvers.forEach(delver => {
 		let player = getPlayer(delver.id, channel.guild.id);
@@ -350,7 +355,7 @@ exports.completeAdventure = function (adventure, channel, result) { //TODO #54 e
 		delete completedAdventures[channel.id];
 		ensuredPathSave("./Saves", "completedAdventures.json", JSON.stringify(completedAdventures));
 	}, 300000);
-	channel.send(`The adventure has been completed! Delvers have earned ${baseScore} score (times their personal multiplier). This channel will be cleaned up in 5 minutes.`);
+	channel.send({ embeds: [embed] });
 }
 
 exports.saveAdventures = function () {
