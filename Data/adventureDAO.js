@@ -316,25 +316,25 @@ exports.checkNextRound = function (adventure) {
 let completedAdventures = {};
 exports.completeAdventure = function (adventure, channel, embed) {
 	let isSuccess = embed.title === "Success";
-	let baseScore = adventure.depth;
+	let score = adventure.depth;
 	let goldScore = Math.log10(adventure.gold) * 5; //TODO #84 base goldScore on peak gold instead of end gold
 	if (isSuccess) {
-		baseScore += goldScore;
-		baseScore += adventure.accumulatedScore;
+		score += goldScore;
+		score += adventure.accumulatedScore;
 	} else {
-		baseScore += Math.floor(goldScore / 2);
-		baseScore += Math.floor(adventure.accumulatedScore / 2);
+		score += Math.floor(goldScore / 2);
+		score += Math.floor(adventure.accumulatedScore / 2);
 	}
-	embed.addField("Score", `Depth: ${adventure.depth}\nGold: ${goldScore}${isSuccess ? "" : ` ÷ 2  = ${Math.floor(goldScore / 2)} (Defeat)`}\nBonus: ${adventure.accumulatedScore}${isSuccess ? "" : ` ÷ 2  = ${Math.floor(adventure.accumulatedScore / 2)} (Defeat)`}\nTotal: ${baseScore}`)
+	embed.addField("Score Breakdown", `Depth: ${adventure.depth}\nGold: ${goldScore}${isSuccess ? "" : ` ÷ 2  = ${Math.floor(goldScore / 2)} (Defeat)`}\nBonus: ${adventure.accumulatedScore}${isSuccess ? "" : ` ÷ 2  = ${Math.floor(adventure.accumulatedScore / 2)} (Defeat)`}\n__Total__: ${score}`)
 		.addField("Clean-Up", "This channel will be cleaned up in 5 minutes.");
 
 	adventure.delvers.forEach(delver => {
 		let player = getPlayer(delver.id, channel.guild.id);
 		let previousScore = player.scores[channel.guild.id];
 		if (previousScore) {
-			player.scores[channel.guild.id] += baseScore;
+			player.scores[channel.guild.id] += score;
 		} else {
-			player.scores[channel.guild.id] = baseScore;
+			player.scores[channel.guild.id] = score;
 		}
 		setPlayer(player);
 	})

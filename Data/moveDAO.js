@@ -5,9 +5,9 @@ const { getWeapon } = require("./Weapons/_weaponDictionary.js");
 exports.resolveMove = async function (move, adventure) {
 	let userTeam = move.userTeam === "ally" ? adventure.delvers : adventure.room.enemies;
 	let user = userTeam[move.userIndex];
-	if (!user.modifiers.Stun) {
-		let moveText = "";
-		if (user.hp > 0) {
+	let moveText = "";
+	if (user.hp > 0) {
+		if (!user.modifiers.Stun) {
 			moveText = `${user.name} used ${move.name} on`;
 			let effect;
 			let breakText = "";
@@ -43,12 +43,12 @@ exports.resolveMove = async function (move, adventure) {
 			}));
 			let targetNames = exports.getTargetList(move.targets, adventure);
 			moveText += ` ${targetNames.join(", ")}.${move.isCrit ? " *Critical Hit!*" : ""} ${resultText.join(" ")}${breakText !== "" ? breakText : ""}\n`;
+		} else {
+			delete user.modifiers.Stun;
+			moveText = `${user.name} is Stunned!\n`;
 		}
-		return moveText;
-	} else {
-		delete user.modifiers.Stun;
-		return `${user.name} is Stunned!\n`;
 	}
+	return moveText;
 }
 
 exports.getTargetList = function (targets, adventure) {
