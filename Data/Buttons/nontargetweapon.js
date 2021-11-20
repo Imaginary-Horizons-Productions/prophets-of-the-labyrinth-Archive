@@ -33,13 +33,18 @@ module.exports.execute = (interaction, [weaponIndex]) => {
 			for (let i = 0; i < targetCount; i++) {
 				newMove.addTarget(targetTeam, i);
 			}
-		} else if (weapon.targetingTags.target === "random") {
+		} else if (weapon.targetingTags.target.startsWith("random")) {
+			let randomCount = Number(weapon.targetingTags.target.split("-")[1]);
+			let poolSize = 0;
 			if (targetTeam === "ally") {
-				newMove.addTarget(targetTeam, generateRandomNumber(adventure, adventure.delvers.length, "battle"));
-				targetText = "a random ally";
+				poolSize = adventure.delvers.length;
+				targetText = `${randomCount} random all${randomCount === 1 ? "y" : "ies"}`;
 			} else if (targetTeam === "enemy") {
-				newMove.addTarget(targetTeam, generateRandomNumber(adventure, adventure.room.enemies.length, "battle"));
-				targetText = "a random enemy";
+				poolSize = adventure.room.enemies.length;
+				targetText = `${randomCount} random enem${randomCount === 1 ? "y" : "ies"}`;
+			}
+			for (let i = 0; i < randomCount; i++) {
+				newMove.addTarget(targetTeam, generateRandomNumber(adventure, poolSize, "battle"));
 			}
 		} else if (weapon.targetingTags.target === "self") {
 			newMove.addTarget(targetTeam, userIndex);

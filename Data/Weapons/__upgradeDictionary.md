@@ -58,6 +58,12 @@ Increased stack count of buff/debuff applied
 #### Available on
 - Cloak (Wind)
 
+### Mercurial
+Damage type matches user
+
+#### Available on
+- Fire Cracker (Fire)
+
 ### Purifying
 Removes all debuffs on target
 
@@ -101,6 +107,12 @@ Increased durability, grants the differences in uses when upgraded.
 - Cloak (Wind)
 - Sickle (Water)
 
+### Toxic
+Applies Poison
+
+#### Avaialble on
+- Fire Cracker (Fire)
+
 ### Watery
 Affects Water element combatants
 
@@ -120,12 +132,10 @@ Increased damage against enemies with 0 block
 - Life Drain (attack a foe and gain hp)
 
 ## Ideas
-- Mercurial ___ - Damage type (but not stagger) matches user, non-starting weapon (FIRECRACKER) (chameleonsword for implementation reference)
 - Catalyst ___ - Adds stacks to debuffs
 - Urgent ___ - Gives a bonus to the user's speed for this move
 - Empowering ___ - Adds stacks to buffs
 - Reaper's ___ - kills an enemy if they are at 15% hp or below
-- Toxic ___ - applies Poison modifier
 - Double ___ - doubles number of (random) targets
 - Seeking ___ - targets lowest hp enemy
 - Kite Shield - single target attack that grants user block (Guarding)
