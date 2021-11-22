@@ -6,14 +6,20 @@ module.exports = class Enemy extends Combatant {
 	constructor(nameInput) {
 		super(nameInput, "enemy");
 		this.lookupName = nameInput;
-		this.actions = {};
 	}
+	actions = {};
+	bounty = 0;
 
 	setTitle = super.setTitle;
 	setStaggerThreshold = super.setStaggerThreshold;
 
 	addAction(actionsInput) {
 		this.actions[actionsInput.name] = actionsInput;
+		return this;
+	}
+
+	setBounty(integer) {
+		this.bounty = integer;
 		return this;
 	}
 

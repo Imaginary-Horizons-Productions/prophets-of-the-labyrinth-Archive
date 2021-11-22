@@ -6,7 +6,8 @@ module.exports = new Enemy("Bloodtail Hawk")
 	.setSpeed(105)
 	.setElement("Wind")
 	.setStaggerThreshold(1)
-	.addAction({ name: "Rake", weight: 3, effect: rakeEffect });
+	.addAction({ name: "Rake", weight: 3, effect: rakeEffect })
+	.setBounty(25);
 
 function rakeEffect(target, user, isCrit, adventure) {
 	let damage = 50;

@@ -289,28 +289,45 @@ exports.endRound = async function (adventure, channel) {
 
 		// Check for Victory
 		if (adventure.room.enemies.every(enemy => enemy.hp === 0)) {
-			channel.send({
-				embeds: [embed.setTitle("Victory!")]
+			// Generate gold
+			let totalBounty = adventure.room.enemies.reduce((total, enemy) => total + enemy.bounty, adventure.room.loot.Gold);
+			totalBounty *= (90 + exports.generateRandomNumber(adventure, 21, "general")) / 100;
+			totalBounty = Math.ceil(totalBounty);
+			adventure.room.loot.Gold = totalBounty;
+
+			//TODO weapon drops
+			//TODO relic drops
+
+			// Setup UI to pick up loot
+			let lootButtons = [new MessageActionRow().addComponents(
+				new MessageButton().setCustomId("continue")
+					.setLabel("Move on")
+					.setStyle("PRIMARY")
+			)];
+			if (totalBounty > 0) {
+				embed.addField("Spoils of Combat", `${totalBounty > 0 ? `Gold: ${totalBounty}` : ""}`);
+				lootButtons.unshift(new MessageActionRow().addComponents(
+					new MessageButton().setCustomId("take")
+						.setLabel(`Take ${totalBounty} gold`)
+						.setStyle("SUCCESS")
+				))
+			}
+			return channel.send({
+				embeds: [embed.setTitle("Victory!").setDescription(lastRoundText)],
+				components: lootButtons
 			}).then(message => {
+				adventure.room.moves = [];
 				adventure.delvers.forEach(delver => {
 					delver.modifiers = {};
 				})
 				return adventure;
 			}).then(adventure => {
-				exports.nextRoom(adventure, channel);
+				exports.saveAdventures();
 			});
-			if (lastRoundText !== "") {
-				embed.setDescription(lastRoundText);
-			}
-			adventure.room.moves = [];
-			return;
 		}
 	}
-	if (lastRoundText !== "") {
-		embed.setDescription(lastRoundText);
-	}
 	adventure.room.moves = [];
-	exports.newRound(adventure, channel, embed);
+	exports.newRound(adventure, channel, embed.setDescription(lastRoundText));
 }
 
 exports.checkNextRound = function (adventure) {

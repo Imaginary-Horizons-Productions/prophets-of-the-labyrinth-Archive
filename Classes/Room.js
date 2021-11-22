@@ -3,19 +3,18 @@ const { getEnemy } = require("./../Data/Enemies/_enemyDictionary");
 const { ELEMENTS, parseCount } = require("../helpers.js");
 
 module.exports = class Room {
-	constructor() {
-		this.type = ""; // enum: "battle", "merchant", "event", "rest", "finalboss", "midboss"
-		this.title = "";
-		this.description = "";
-		this.components = [];
-		this.enemyList = {};
-		this.lootList = {};
-		this.round = -1;
-		this.moves = [];
-		this.enemies = [];
-		this.enemyTitles = {};
-		this.loot = {};
-	}
+	constructor() { }
+	type = ""; // enum: "battle", "merchant", "event", "rest", "finalboss", "midboss"
+	title = "";
+	description = "";
+	components = [];
+	enemyList = {};
+	lootList = {};
+	round = -1;
+	moves = [];
+	enemies = [];
+	enemyTitles = {};
+	loot = { "Gold": 0 };
 
 	setType(typeEnum) {
 		this.type = typeEnum;
@@ -43,7 +42,7 @@ module.exports = class Room {
 			this.moves = [];
 			this.enemies = [];
 			this.enemyTitles = {};
-			this.loot = {};
+			this.loot = { "Gold": 0 };
 			let adventureElement = ELEMENTS[adventureElementIndex];
 			let reverseAdventureElement = ELEMENTS[(adventureElementIndex + 3) % 6];
 			for (let enemyName in this.enemyList) {

@@ -8,7 +8,8 @@ module.exports = new Enemy("@{adventureReverse} Ooze")
 	.setElement("@{adventureReverse}")
 	.setStaggerThreshold(5)
 	.addAction({ name: "Goop Spray", weight: 1, effect: goopSprayEffect })
-	.addAction({ name: "Tackle", weight: 1, effect: tackleEffect });
+	.addAction({ name: "Tackle", weight: 1, effect: tackleEffect })
+	.setBounty(25);
 
 function tackleEffect(target, user, isCrit, adventure) {
 	let damage = 25;
