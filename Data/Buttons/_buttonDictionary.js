@@ -12,7 +12,8 @@ var buttonWhitelist = [
 	"readymove.js",
 	"repair.js",
 	"self.js",
-	"take.js",
+	"takegold.js",
+	"takeweapon.js",
 	"upgrade.js"
 ];
 

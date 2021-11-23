@@ -7,7 +7,7 @@ module.exports = new Room()
 	.setDescription("A large pile of gold sits quietly in the middle of the room, seemingly alone.");
 
 module.exports.components.push(new MessageActionRow().addComponents(
-	new MessageButton().setCustomId("take")
+	new MessageButton().setCustomId("takegold")
 		.setLabel("Would be a waste to leave it there [+30 gold]")
 		.setStyle("SUCCESS"),
 	new MessageButton().setCustomId("continue")

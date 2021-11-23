@@ -289,32 +289,55 @@ exports.endRound = async function (adventure, channel) {
 
 		// Check for Victory
 		if (adventure.room.enemies.every(enemy => enemy.hp === 0)) {
+			let spoilsText = "";
+			let lootRow = [];
+
 			// Generate gold
 			let totalBounty = adventure.room.enemies.reduce((total, enemy) => total + enemy.bounty, adventure.room.loot.gold);
 			totalBounty *= (90 + exports.generateRandomNumber(adventure, 21, "general")) / 100;
 			totalBounty = Math.ceil(totalBounty);
 			adventure.room.loot.gold = totalBounty;
+			if (totalBounty > 0) {
+				spoilsText += `${totalBounty > 0 ? `Gold: ${totalBounty}` : ""}`;
+				lootRow.push(new MessageButton().setCustomId("takegold")
+					.setLabel(`Take ${totalBounty} gold`)
+					.setStyle("SUCCESS")
+				)
+			}
 
-			//TODO weapon drops
-			//TODO relic drops
+			// Weapon drops
+			adventure.room.loot["weapon-Firecracker"] = 1;
+			if (Object.keys(adventure.room.loot).length - 1 > 0) {
+				for (let item in adventure.room.loot) {
+					let itemName = "";
+					if (item.startsWith("weapon-")) {
+						itemName = item.split("-")[1];
+						let label = `${itemName} x${adventure.room.loot[item]}`
+						spoilsText += `\n${label}`;
+						lootRow.push(new MessageButton().setCustomId(`takeweapon-${itemName}`)
+							.setLabel(`${label} remaining`)
+							.setStyle("PRIMARY"))
+					} else if (item.startsWith("relic-")) {
+						itemName = item.split("-")[1];
+						//TODO relic drops
+					}
+				}
+			}
 
-			// Setup UI to pick up loot
-			let lootButtons = [new MessageActionRow().addComponents(
+			// Finalize UI
+			let componentContainer = [new MessageActionRow().addComponents(
 				new MessageButton().setCustomId("continue")
 					.setLabel("Move on")
 					.setStyle("PRIMARY")
 			)];
-			if (totalBounty > 0) {
-				embed.addField("Spoils of Combat", `${totalBounty > 0 ? `Gold: ${totalBounty}` : ""}`);
-				lootButtons.unshift(new MessageActionRow().addComponents(
-					new MessageButton().setCustomId("take")
-						.setLabel(`Take ${totalBounty} gold`)
-						.setStyle("SUCCESS")
-				))
+			if (lootRow.length > 0) {
+				embed.addField("Spoils of Combat", spoilsText);
+				componentContainer.unshift(new MessageActionRow().addComponents(...lootRow));
 			}
+
 			return channel.send({
 				embeds: [embed.setTitle("Victory!").setDescription(lastRoundText)],
-				components: lootButtons
+				components: componentContainer
 			}).then(message => {
 				adventure.room.moves = [];
 				adventure.delvers.forEach(delver => {

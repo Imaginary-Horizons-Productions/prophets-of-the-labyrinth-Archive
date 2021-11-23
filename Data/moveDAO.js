@@ -25,14 +25,14 @@ exports.resolveMove = async function (move, adventure) {
 			} else {
 				effect = getEnemy(user.lookupName).actions[move.name].effect;
 			}
-			let resultText = await Promise.all(move.targets.map(async targetDatum => {
+			let resultText = await Promise.all(move.targets.map(async ({ team, index: targetIndex }) => {
 				let targetTeam;
-				if (targetDatum.team === "ally") {
+				if (team === "ally") {
 					targetTeam = adventure.delvers;
 				} else {
 					targetTeam = adventure.room.enemies;
 				}
-				let result = await effect(targetTeam[targetDatum.index], user, move.isCrit, adventure);
+				let result = await effect(targetTeam[targetIndex], user, move.isCrit, adventure);
 				if (targetAll && result.endsWith("was already dead!")) {
 					return "";
 				} else {
