@@ -14,7 +14,7 @@ module.exports = class Room {
 	moves = [];
 	enemies = [];
 	enemyTitles = {};
-	loot = { "Gold": 0 };
+	loot = { "gold": 0 };
 
 	setType(typeEnum) {
 		this.type = typeEnum;
@@ -42,7 +42,7 @@ module.exports = class Room {
 			this.moves = [];
 			this.enemies = [];
 			this.enemyTitles = {};
-			this.loot = { "Gold": 0 };
+			this.loot = { "gold": 0 };
 			let adventureElement = ELEMENTS[adventureElementIndex];
 			let reverseAdventureElement = ELEMENTS[(adventureElementIndex + 3) % 6];
 			for (let enemyName in this.enemyList) {

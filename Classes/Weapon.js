@@ -1,3 +1,4 @@
+// A readonly object containing stats for a delver's weapon
 module.exports = class Weapon {
 	constructor(nameInput, descriptionInput, elementInput, effectInput, upgradeNames) {
 		this.name = nameInput;
@@ -7,7 +8,6 @@ module.exports = class Weapon {
 		this.upgrades = upgradeNames;
 	}
 	targetingTags = {};
-	uses = 10;
 	maxUses = 10;
 	critMultiplier = 2;
 	damage = 0;
@@ -21,7 +21,6 @@ module.exports = class Weapon {
 	}
 
 	setUses(integer) {
-		this.uses = integer;
 		this.maxUses = integer;
 		return this;
 	}

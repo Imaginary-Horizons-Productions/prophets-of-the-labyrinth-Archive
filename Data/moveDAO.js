@@ -1,6 +1,6 @@
 const { getFullName, dealDamage, gainHealth } = require("./combatantDAO.js");
 const { getEnemy } = require("./Enemies/_enemyDictionary.js");
-const { getWeapon } = require("./Weapons/_weaponDictionary.js");
+const { getWeaponProperty } = require("./Weapons/_weaponDictionary.js");
 
 exports.resolveMove = async function (move, adventure) {
 	let userTeam = move.userTeam === "ally" ? adventure.delvers : adventure.room.enemies;
@@ -13,17 +13,15 @@ exports.resolveMove = async function (move, adventure) {
 			let breakText = "";
 			let targetAll = false;
 			if (move.userTeam === "ally") {
-				let weapon = user.weapons.find(weapon => weapon.name === move.name);
-				weapon.uses--;
-				if (weapon.uses === 0) {
-					breakText = ` The ${weapon.name} broke!`;
+				user.weapons[move.name]--;
+				if (user.weapons[move.name] === 0) {
+					breakText = ` The ${move.name} broke!`;
 				}
-				targetAll = weapon.targetingTags.target === "all";
-				effect = getWeapon(move.name).effect; // get from dictionary because weapons saved from file don't have their effect function any more
+				targetAll = getWeaponProperty(move.name, "targetingTags").target === "all";
+				effect = getWeaponProperty(move.name, "effect");
 			} else if (move.userTeam === "clone") {
-				let weapon = adventure.delvers[move.userIndex].weapons.find(weapon => weapon.name === move.name);
-				targetAll = weapon.targetingTags.target === "all";
-				effect = getWeapon(move.name).effect; // get from dictionary because weapons saved from file don't have their effect function any more
+				targetAll = getWeaponProperty(move.name, "targetingTags").target === "all";
+				effect = getWeaponProperty(move.name, "effect");
 			} else {
 				effect = getEnemy(user.lookupName).actions[move.name].effect;
 			}

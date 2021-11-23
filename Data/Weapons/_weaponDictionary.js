@@ -51,6 +51,6 @@ for (const file of weaponWhitelist) {
 	weaponDictionary[weapon.name] = weapon;
 }
 
-exports.getWeapon = (weaponName) => {
-	return weaponDictionary[weaponName];
+exports.getWeaponProperty = function (weaponName, propertyName) {
+	return weaponDictionary[weaponName][propertyName];
 }

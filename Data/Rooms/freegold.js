@@ -15,4 +15,4 @@ module.exports.components.push(new MessageActionRow().addComponents(
 		.setStyle("SECONDARY")
 ))
 
-module.exports.lootList = { "Gold": "30" };
+module.exports.lootList = { "gold": "30" };

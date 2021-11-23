@@ -1,6 +1,6 @@
 const Select = require('../../Classes/Select.js');
 const { getAdventure, generateRandomNumber, saveAdventures } = require('../adventureDAO.js');
-const { getWeapon } = require('../Weapons/_weaponDictionary.js');
+const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
 
 module.exports = new Select("randomupgrade");
 
@@ -9,19 +9,18 @@ module.exports.execute = (interaction, args) => {
 	let adventure = getAdventure(interaction.channel.id);
 	if (adventure.room.loot.forgeSupplies > 0) {
 		let user = adventure.delvers.find(delver => delver.id === interaction.user.id);
-		let weaponIndex = interaction.values[0];
-		let weapon = user.weapons[weaponIndex];
-		let upgradePool = weapon.upgrades;
-		let upgradeName = weapon.upgrades[generateRandomNumber(adventure, upgradePool.length, "general")];
-		let upgrade = getWeapon(upgradeName);
-		let usesDifference = upgrade.maxUses - weapon.maxUses;
+		let weaponName = interaction.values[0];
+		let upgradePool = getWeaponProperty(weaponName, "upgrades");
+		let upgradeName = upgradePool[generateRandomNumber(adventure, upgradePool.length, "general")];
+		let upgradeUses = getWeaponProperty(upgradeName, "maxUses");
+		let usesDifference = upgradeUses - getWeaponProperty(weaponName, "maxUses");
 		if (usesDifference > 0) {
-			weapon.uses += usesDifference;
+			user.weapons[weaponName] += usesDifference;
 		}
-		upgrade.uses = Math.min(upgrade.maxUses, weapon.uses);
-		user.weapons.splice(weaponIndex, 1, upgrade);
+		user.weapons[upgradeName] = Math.min(upgradeUses, user.weapons[weaponName]);
+		delete user.weapons[weaponName];
 		adventure.room.loot.forgeSupplies--;
-		interaction.reply({ content: `Your *${weapon.name}* has been upgraded to **${upgradeName}**!`, ephemeral: true });
+		interaction.reply({ content: `Your *${weaponName}* has been upgraded to **${upgradeName}**!`, ephemeral: true });
 		saveAdventures();
 	} else {
 		interaction.reply({ content: "The forge's supplies have been exhausted.", ephemeral: true });

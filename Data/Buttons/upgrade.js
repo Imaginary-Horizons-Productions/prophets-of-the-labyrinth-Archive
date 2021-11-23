@@ -1,5 +1,6 @@
 const { MessageActionRow, MessageSelectMenu } = require('discord.js');
 const Button = require('../../Classes/Button.js');
+const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
 const { getAdventure } = require("./../adventureDAO.js");
 
 module.exports = new Button("upgrade");
@@ -9,15 +10,16 @@ module.exports.execute = (interaction, args) => {
 	let adventure = getAdventure(interaction.channel.id);
 	let user = adventure.delvers.find(delver => delver.id === interaction.user.id);
 	let weaponOptions = [];
-	user.weapons.forEach((weapon, i) => {
-		if (weapon.upgrades.length > 0) {
+	for (let weaponName in user.weapons) {
+		let upgrades = getWeaponProperty(weaponName, "upgrades");
+		if (upgrades.length > 0) {
 			weaponOptions.push({
-				label: weapon.name,
-				description: `Upgrades: ${weapon.upgrades.join(", ")}`,
-				value: `${i}`
+				label: weaponName,
+				description: `Upgrades: ${upgrades.join(", ")}`,
+				value: `${weaponName}`
 			})
 		}
-	})
+	}
 	if (adventure.room.loot.forgeSupplies > 0) {
 		if (weaponOptions.length > 0) {
 			let upgradeSelect = new MessageActionRow().addComponents(

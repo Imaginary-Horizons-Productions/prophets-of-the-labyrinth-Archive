@@ -1,30 +1,22 @@
 const Move = require('../../Classes/Move');
 const Select = require('../../Classes/Select.js');
 const { getAdventure, saveAdventures, checkNextRound, updateRoundMessage, endRound } = require('../adventureDAO');
-const { getWeapon } = require('../Weapons/_weaponDictionary');
 const { getFullName } = require("./../combatantDAO.js");
 
 module.exports = new Select("weapon");
 
-module.exports.execute = (interaction, [weaponIndex]) => {
+module.exports.execute = (interaction, [weaponName]) => {
 	// Add move object to adventure
 	let adventure = getAdventure(interaction.channel.id);
 	let user = adventure.delvers.find(delver => delver.id === interaction.user.id);
-	if (weaponIndex === "punch" || parseInt(weaponIndex) < user.weapons.length) {
-		let weapon;
-		if (weaponIndex !== "punch") {
-			weapon = user.weapons[weaponIndex];
-		} else {
-			weapon = getWeapon("Punch");
-		}
-
+	if (weaponName === "punch" || weaponName in user.weapons) {
 		// Add move to round list (overwrite exisiting readied move)
 		let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
 		let [targetTeam, targetIndex] = interaction.values[0].split("-");
 		let newMove = new Move()
 			.setSpeed(user)
 			.setIsCrit(user.crit)
-			.setMoveName(weapon.name)
+			.setMoveName(weaponName)
 			.setUser(user.team, userIndex)
 			.addTarget(targetTeam, targetIndex);
 
@@ -48,7 +40,7 @@ module.exports.execute = (interaction, [weaponIndex]) => {
 		} else if (targetTeam === "enemy") {
 			target = adventure.room.enemies[targetIndex];
 		}
-		interaction.reply(`${interaction.user} readies **${weapon.name}** to use on **${getFullName(target, adventure.room.enemyTitles)}**.`).then(() => {
+		interaction.reply(`${interaction.user} readies **${weaponName}** to use on **${getFullName(target, adventure.room.enemyTitles)}**.`).then(() => {
 			saveAdventures();
 			updateRoundMessage(interaction.channel.messages, adventure);
 			if (checkNextRound(adventure)) {

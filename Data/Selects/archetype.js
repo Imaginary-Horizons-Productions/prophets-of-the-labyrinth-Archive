@@ -1,10 +1,9 @@
 const Archetype = require('../../Classes/Archetype.js');
-const Weapon = require('../../Classes/Weapon.js');
 const Select = require('../../Classes/Select.js');
 const { getAdventure, saveAdventures } = require('../adventureDAO');
 const { getArchetype } = require('../Archetypes/_archetypeDictionary.js');
-const { getWeapon } = require('../Weapons/_weaponDictionary');
 const { MessageActionRow, MessageButton } = require('discord.js');
+const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
 
 module.exports = new Select("archetype");
 
@@ -16,10 +15,9 @@ module.exports.execute = (interaction, args) => {
 		let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
 		if (userIndex !== -1) {
 			let archetypeTemplate = Object.assign(new Archetype(), getArchetype(interaction.values[0]));
-			adventure.delvers[userIndex].weapons = archetypeTemplate.signatureWeapons.map(weaponName => {
-				// Reassign weapons (instead of pushing) in case player is changing archetype
-				return Object.assign(new Weapon(), getWeapon(weaponName));
-			});
+			for (let signatureWeapon of archetypeTemplate.signatureWeapons) {
+				adventure.delvers[userIndex].weapons[signatureWeapon] = getWeaponProperty(signatureWeapon, "maxUses");
+			}
 			adventure.delvers[userIndex].setTitle(archetypeTemplate.title)
 				.setHp(archetypeTemplate.maxHp)
 				.setSpeed(archetypeTemplate.speed)

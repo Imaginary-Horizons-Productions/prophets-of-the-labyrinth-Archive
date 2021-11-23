@@ -290,10 +290,10 @@ exports.endRound = async function (adventure, channel) {
 		// Check for Victory
 		if (adventure.room.enemies.every(enemy => enemy.hp === 0)) {
 			// Generate gold
-			let totalBounty = adventure.room.enemies.reduce((total, enemy) => total + enemy.bounty, adventure.room.loot.Gold);
+			let totalBounty = adventure.room.enemies.reduce((total, enemy) => total + enemy.bounty, adventure.room.loot.gold);
 			totalBounty *= (90 + exports.generateRandomNumber(adventure, 21, "general")) / 100;
 			totalBounty = Math.ceil(totalBounty);
-			adventure.room.loot.Gold = totalBounty;
+			adventure.room.loot.gold = totalBounty;
 
 			//TODO weapon drops
 			//TODO relic drops
