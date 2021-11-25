@@ -33,7 +33,7 @@ module.exports.execute = (interaction, args) => {
 			break;
 		case "Health": // Shows current HP, max HP, block, and element of all combatants
 			adventure.room.enemies.concat(adventure.delvers).filter(combatant => combatant.hp > 0).forEach(combatant => {
-				descriptionText += `__${combatant.name}__\n${combatant.hp}/${combatant.maxHp} HP${combatant.block ? `, ${combatant.block} Block` : ""}\nElement: ${combatant.element}\n`;
+				descriptionText += `\n__${combatant.name}__\n${combatant.hp}/${combatant.maxHp} HP${combatant.block ? `, ${combatant.block} Block` : ""}\nElement: ${combatant.element}\n`;
 			})
 			break;
 		case "Move Order": // Shows roundly random speed bonuses and order of move resolution
@@ -46,7 +46,7 @@ module.exports.execute = (interaction, args) => {
 		case "Modifiers": // Shows modifiers and stagger thresholds for all combatants
 			adventure.room.enemies.concat(adventure.delvers).filter(combatant => combatant.hp > 0).forEach(combatant => {
 				let modifiersText = modifiersToString(combatant);
-				descriptionText += `__${getFullName(combatant, adventure.room.enemyTitles)}__\nStunned at *${combatant.staggerThreshold} Stagger*\n${modifiersText ? `${modifiersText}` : ""}\n`;
+				descriptionText += `\n__${getFullName(combatant, adventure.room.enemyTitles)}__\nStunned at *${combatant.staggerThreshold} Stagger*\n${modifiersText ? `${modifiersText}` : ""}\n`;
 			})
 			break;
 	}

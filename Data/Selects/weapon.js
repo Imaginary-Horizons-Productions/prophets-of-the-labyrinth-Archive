@@ -5,7 +5,7 @@ const { getFullName } = require("./../combatantDAO.js");
 
 module.exports = new Select("weapon");
 
-module.exports.execute = (interaction, [weaponName]) => {
+module.exports.execute = async function (interaction, [weaponName]) {
 	// Add move object to adventure
 	let adventure = getAdventure(interaction.channel.id);
 	let user = adventure.delvers.find(delver => delver.id === interaction.user.id);
@@ -24,13 +24,13 @@ module.exports.execute = (interaction, [weaponName]) => {
 		for (let i = 0; i < adventure.room.moves.length; i++) {
 			let move = adventure.room.moves[i];
 			if (move.userTeam === user.team && move.userIndex === userIndex) {
-				adventure.room.moves.splice(i, 1, newMove);
+				await adventure.room.moves.splice(i, 1, newMove);
 				overwritten = true;
 				break;
 			}
 		}
 		if (!overwritten) {
-			adventure.room.moves.push(newMove);
+			await adventure.room.moves.push(newMove);
 		}
 
 		// Send confirmation text
