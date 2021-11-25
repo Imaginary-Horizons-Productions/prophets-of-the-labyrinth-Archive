@@ -1,5 +1,5 @@
 const fs = require("fs");
-const { ensuredPathSave, ELEMENTS } = require("../helpers.js");
+const { ensuredPathSave, parseCount } = require("../helpers.js");
 const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
 const Adventure = require("../Classes/Adventure.js");
 const { setPlayer, getPlayer } = require("./playerDAO.js");
@@ -67,7 +67,7 @@ exports.getAdventure = function (id) {
 
 exports.setAdventure = function (adventure) {
 	adventureDictionary.set(adventure.id, adventure);
-	exports.saveAdventures()
+	exports.saveAdventures();
 }
 
 exports.updateStartingMessage = function (startMessage, adventure) {
@@ -126,15 +126,23 @@ exports.nextRoom = function (adventure, channel) {
 			let roomPool = Object.values(roomDictionary); //TODO #53 refactor room selector AI
 			roomTemplate = roomPool[exports.generateRandomNumber(adventure, roomPool.length, "general")];
 		}
+		let totalEnemyCount = 1;
+		for (let enemy in roomTemplate.enemyList) {
+			totalEnemyCount *= parseCount(roomTemplate.enemyList[enemy], adventure.delvers.length);
+		}
+		let hpRNs = [];
+		for (let i = 0; i < totalEnemyCount; i++) {
+			hpRNs.push(exports.generateRandomNumber(adventure, 4, "battle"));
+		}
 		Object.assign(new Room(), roomTemplate)
-			.populate(adventure.delvers, ELEMENTS.findIndex(element => element === adventure.element)).then(room => {
+			.populate(adventure, hpRNs).then(room => {
 				adventure.room = room;
 				let embed = new MessageEmbed()
 					.setAuthor(`Lives: ${adventure.lives} - Party Gold: ${adventure.gold} - Score: ${adventure.accumulatedScore}`, channel.client.user.displayAvatarURL())
 					.setTitle(room.title)
 					.setDescription(room.description)
 					.setFooter(`Room #${adventure.depth}`);
-				if (room.type === "battle" || room.type === "boss") {
+				if (room.type === "battle" || room.type.endsWith("boss")) {
 					exports.newRound(adventure, channel, embed);
 					exports.saveAdventures();
 				} else {
@@ -177,23 +185,43 @@ exports.newRound = function (adventure, channel, embed = new MessageEmbed()) {
 			let critRoll = exports.generateRandomNumber(adventure, 4, "battle");
 			combatant.crit = critRoll > 2;
 
+			// Roll Enemy Moves and Generate Dummy Moves
+			let move = new Move()
+				.setSpeed(combatant)
+				.setIsCrit(combatant.crit)
+				.setUser(teamName, i)
+			if (combatant.modifiers.Stun > 0) {
+				// Dummy move for Stunned combatants
+				move.setMoveName("Stun")
+			} else {
+				if (teamName === "enemy") {
+					if (combatant.lookupName !== "@{clone}") {
+						let actionPool = [];
+						Object.values(combatant.actions).forEach(action => {
+							for (let i = 0; i < action.weight; i++) {
+								actionPool.push(action);
+							}
+						})
+						if (actionPool.length) {
+							//TODO #19 nonrandom AI
+							move.setMoveName(actionPool[exports.generateRandomNumber(adventure, actionPool.length, "battle")].name)
+								.addTarget("ally", exports.generateRandomNumber(adventure, adventure.delvers.length, "battle"));
+						}
+					} else {
+						move.setMoveName("${clone}");
+					}
+				}
+			}
+			if (move.name) {
+				adventure.room.moves.push(move);
+			}
+
 			// Decrement Modifiers
 			for (let modifierName in combatant.modifiers) {
-				if (modifierName !== "Stun") {
-					combatant.modifiers[modifierName] -= getTurnDecrement(modifierName);
+				combatant.modifiers[modifierName] -= getTurnDecrement(modifierName);
 
-					if (combatant.modifiers[modifierName] <= 0) {
-						delete combatant.modifiers[modifierName];
-					}
-				} else {
-					if (teamName === "ally") {
-						// Dummy move for Stunned players
-						adventure.room.moves.push(new Move()
-							.setSpeed(combatant)
-							.setIsCrit(combatant.crit)
-							.setMoveName("Stun")
-							.setUser(teamName, i));
-					}
+				if (combatant.modifiers[modifierName] <= 0) {
+					delete combatant.modifiers[modifierName];
 				}
 			}
 		})
@@ -243,23 +271,12 @@ exports.endRound = async function (adventure, channel) {
 	let embed = new MessageEmbed().setAuthor(`Lives: ${adventure.lives} - Party Gold: ${adventure.gold} - Score: ${adventure.accumulatedScore}`, channel.client.user.displayAvatarURL())
 		.setTitle(adventure.room.title);
 
-	// Roll Enemy Moves
+	// Generate Reactive Moves by Enemies
 	adventure.room.enemies.forEach((enemy, index) => {
-		let move = new Move()
-			.setSpeed(enemy)
-			.setIsCrit(enemy.crit)
-		if (enemy.lookupName !== "@{clone}") {
-			let actionPool = [];
-			Object.values(enemy.actions).forEach(action => {
-				for (let i = 0; i < action.weight; i++) {
-					actionPool.push(action);
-				}
-			})
-			//TODO #19 nonrandom AI
-			move.setUser(enemy.team, index)
-				.setMoveName(actionPool[exports.generateRandomNumber(adventure, actionPool.length, "battle")].name)
-				.addTarget("ally", exports.generateRandomNumber(adventure, adventure.delvers.length, "battle"));
-		} else {
+		if (enemy.lookupName === "@{clone}") {
+			let move = new Move()
+				.setSpeed(enemy)
+				.setIsCrit(enemy.crit)
 			let counterpartMove = adventure.room.moves.find(move => move.userTeam === "ally" && move.userIndex == index);
 			move.setUser("clone", index)
 				.setMoveName(counterpartMove.name);
@@ -270,8 +287,8 @@ exports.endRound = async function (adventure, channel) {
 					move.addTarget("enemy", target.index);
 				}
 			})
+			adventure.room.moves.splice(adventure.room.moves.findIndex(move => move.userTeam === "enemy" && move.userIndex == index), 1, move);
 		}
-		adventure.room.moves.push(move);
 	})
 
 	// Resolve moves
@@ -354,7 +371,7 @@ exports.endRound = async function (adventure, channel) {
 }
 
 exports.checkNextRound = function (adventure) {
-	return adventure.room.moves.length === adventure.delvers.length;
+	return adventure.room.moves.length - adventure.room.enemies.length === adventure.delvers.length;
 }
 
 //{channelId: guildId} A list of adventure channels that restarting the bot interrupted deleting

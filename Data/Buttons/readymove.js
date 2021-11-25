@@ -58,22 +58,18 @@ module.exports.execute = (interaction, args) => {
 					if (team === "ally" || team === "any") {
 						targetOptions = targetOptions.concat(allyOptions);
 					}
-					moveMenu.push(new MessageActionRow()
-						.addComponents(
-							new MessageSelectMenu()
-								.setCustomId(`weapon-${weaponName}`)
-								.setPlaceholder(`Use ${weaponName} on...`)
-								.addOptions(targetOptions)
-						));
+					moveMenu.push(new MessageActionRow().addComponents(
+						new MessageSelectMenu().setCustomId(`weapon-${weaponName}`)
+							.setPlaceholder(`Use ${weaponName} on...`)
+							.addOptions(targetOptions)
+					));
 				} else {
 					// Button
-					moveMenu.push(new MessageActionRow()
-						.addComponents(
-							new MessageButton()
-								.setCustomId(`nontargetweapon-${weaponName}`)
-								.setLabel(`Use ${weaponName}`)
-								.setStyle("PRIMARY")
-						))
+					moveMenu.push(new MessageActionRow().addComponents(
+						new MessageButton().setCustomId(`nontargetweapon-${weaponName}`)
+							.setLabel(`Use ${weaponName}`)
+							.setStyle("PRIMARY")
+					))
 				}
 			}
 		} else {

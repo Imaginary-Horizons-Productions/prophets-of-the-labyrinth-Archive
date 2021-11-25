@@ -10,6 +10,7 @@ module.exports = class Enemy extends Combatant {
 	actions = {};
 	bounty = 0;
 
+	setHp = super.setHp;
 	setTitle = super.setTitle;
 	setStaggerThreshold = super.setStaggerThreshold;
 
