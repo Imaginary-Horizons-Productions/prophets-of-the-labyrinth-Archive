@@ -1,5 +1,6 @@
 const Select = require('../../Classes/Select.js');
-const { getAdventure, generateRandomNumber, saveAdventures } = require('../adventureDAO.js');
+const { generateRandomNumber } = require('../../helpers.js');
+const { getAdventure, saveAdventures } = require('../adventureDAO.js');
 const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
 
 module.exports = new Select("randomupgrade");

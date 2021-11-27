@@ -1,16 +1,18 @@
 const fs = require("fs");
-const { ensuredPathSave, parseCount } = require("../helpers.js");
+const { ensuredPathSave, parseCount, ELEMENTS, generateRandomNumber } = require("../helpers.js");
 const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
 const Adventure = require("../Classes/Adventure.js");
 const { setPlayer, getPlayer } = require("./playerDAO.js");
-const { roomDictionary } = require("./Rooms/_roomDictionary.js");
+const { getRoomTemplate } = require("./Rooms/_roomDictionary.js");
 const Move = require("../Classes/Move.js");
 const { resolveMove } = require("./moveDAO.js");
 const Enemy = require("../Classes/Enemy.js");
 const { clearBlock } = require("./combatantDAO.js");
 const Delver = require("../Classes/Delver.js");
 const { getTurnDecrement } = require("./Modifiers/_modifierDictionary.js");
+const { getEnemy } = require("./Enemies/_enemyDictionary");
 const Room = require("../Classes/Room.js");
+const RoomCombat = require("../Classes/RoomCombat.js");
 
 var filePath = "./Saves/adventures.json";
 var requirePath = "./../Saves/adventures.json";
@@ -30,18 +32,22 @@ exports.loadAdventures = function () {
 
 				if (adventure.room) {
 					// Cast enemies into Enemy class
-					let castEnemies = [];
-					for (let enemy of adventure.room.enemies) {
-						castEnemies.push(Object.assign(new Enemy(), enemy));
+					if (adventure.room.enemies) {
+						let castEnemies = [];
+						for (let enemy of adventure.room.enemies) {
+							castEnemies.push(Object.assign(new Enemy(), enemy));
+						}
+						adventure.room.enemies = castEnemies;
 					}
-					adventure.room.enemies = castEnemies;
 
 					// Cast moves into Move class
-					let castMoves = [];
-					for (let move of adventure?.room.moves) {
-						castMoves.push(Object.assign(new Move(), move));
+					if (adventure.room.moves) {
+						let castMoves = [];
+						for (let move of adventure.room.moves) {
+							castMoves.push(Object.assign(new Move(), move));
+						}
+						adventure.room.moves = castMoves;
 					}
-					adventure.room.moves = castMoves;
 				}
 
 				// Set adventure
@@ -82,76 +88,60 @@ exports.updateStartingMessage = function (startMessage, adventure) {
 	startMessage.edit({ embeds: [embed] });
 }
 
-exports.generateRandomNumber = function (adventure, exclusiveMax, branch) {
-	if (exclusiveMax === 1) {
-		return 0;
-	} else {
-		let digits = Math.ceil(Math.log2(exclusiveMax) / Math.log2(12));
-		let start;
-		let end;
-		switch (branch) {
-			case "general":
-				start = adventure.rnIndex;
-				end = start + digits;
-				adventure.rnIndex = end % adventure.rnTable.length;
-				break;
-			case "battle":
-				start = adventure.rnIndexBattle;
-				end = start + digits;
-				adventure.rnIndexBattle = end % adventure.rnTable.length;
-				break;
-		}
-		let max = 12 ** digits;
-		let sectionLength = max / exclusiveMax;
-		let roll = parseInt(adventure.rnTable.slice(start, end), 12);
-		return Math.floor(roll / sectionLength);
-	}
-}
-
-exports.nextRoom = function (adventure, channel) {
+exports.nextRoom = async function (adventure, channel) {
 	adventure.depth++;
+	adventure.room = {};
 	if (adventure.messageIds.lastComponent) {
 		channel.messages.fetch(adventure.messageIds.lastComponent).then(message => {
 			message.edit({ components: [] });
 		}).catch(console.error);
 	}
 	if (adventure.depth < 11) {
-		let preRolledDepths = [10];
-		let roomTemplate;
-		if (preRolledDepths.includes(adventure.depth)) {
-			// Prerolled Room
-			roomTemplate = roomDictionary[adventure.finalBoss];
-		} else {
-			// Non-prerolled Room
-			let roomPool = Object.values(roomDictionary); //TODO #53 refactor room selector AI
-			roomTemplate = roomPool[exports.generateRandomNumber(adventure, roomPool.length, "general")];
-		}
-		let totalEnemyCount = 1;
-		for (let enemy in roomTemplate.enemyList) {
-			totalEnemyCount *= parseCount(roomTemplate.enemyList[enemy], adventure.delvers.length);
-		}
-		let hpRNs = [];
-		for (let i = 0; i < totalEnemyCount; i++) {
-			hpRNs.push(exports.generateRandomNumber(adventure, 4, "battle"));
-		}
-		Object.assign(new Room(), roomTemplate)
-			.populate(adventure, hpRNs).then(room => {
-				adventure.room = room;
-				let embed = new MessageEmbed()
-					.setAuthor(`Lives: ${adventure.lives} - Party Gold: ${adventure.gold} - Score: ${adventure.accumulatedScore}`, channel.client.user.displayAvatarURL())
-					.setTitle(room.title)
-					.setDescription(room.description)
-					.setFooter(`Room #${adventure.depth}`);
-				if (room.type === "battle" || room.type.endsWith("boss")) {
-					exports.newRound(adventure, channel, embed);
-					exports.saveAdventures();
-				} else {
-					channel.send({ embeds: [embed], components: room.components }).then(message => {
-						adventure.setMessageId("lastComponent", message.id);
-						exports.saveAdventures();
-					});
+		let roomTypes = ["battle", "event", "forge"];
+		let roomTemplate = getRoomTemplate(roomTypes[generateRandomNumber(adventure, roomTypes.length, "general")], adventure); //TODO #73 voting on room type
+		let embed = new MessageEmbed()
+			.setAuthor(`Lives: ${adventure.lives} - Party Gold: ${adventure.gold} - Score: ${adventure.accumulatedScore}`, channel.client.user.displayAvatarURL())
+			.setTitle(roomTemplate.title)
+			.setDescription(roomTemplate.description)
+			.setFooter(`Room #${adventure.depth}`);
+		if (roomTemplate.types.includes("battle") || roomTemplate.types.includes("finalboss") || roomTemplate.types.includes("midboss")) {
+			adventure.room = new RoomCombat(roomTemplate.title);
+			let reverseAdventureElement = ELEMENTS[(ELEMENTS.findIndex(element => element === adventure.element) + 3) % 6];
+			for (let enemyName in roomTemplate.enemyList) {
+				for (let i = 0; i < parseCount(roomTemplate.enemyList[enemyName], adventure.delvers.length); i++) {
+					let enemyTemplate = getEnemy(enemyName);
+					enemyTemplate.modifiers = {}; // breaks shared reference to modifiers object by enemies of same name
+					let enemy = Object.assign(new Enemy(), enemyTemplate);
+					if (!roomTemplate.types.includes("finalboss") && !roomTemplate.types.includes("midboss")) {
+						// Randomize minor enemy hp
+						let hpPercent = (10 * generateRandomNumber(adventure, 4, "battle") + 80) / 100;
+						enemy.setHp(Math.ceil(enemy.maxHp * hpPercent));
+					}
+					let tagRegex = /@{[a-zA-Z]+}/;
+					if (tagRegex.test(enemy.name)) {
+						enemy.name = enemy.name.replace("@{adventure}", adventure.element);
+						enemy.name = enemy.name.replace("@{adventureReverse}", reverseAdventureElement);
+						enemy.name = enemy.name.replace("@{clone}", `Mirror ${adventure.delvers[i].title}`);
+					}
+					if (tagRegex.test(enemy.element)) {
+						enemy.setElement(enemy.element.replace("@{adventure}", adventure.element))
+							.setElement(enemy.element.replace("@{adventureReverse}", reverseAdventureElement))
+							.setElement(enemy.element.replace("@{clone}", adventure.delvers[i].element));
+					}
+					adventure.room.enemies.push(enemy);
+					Enemy.setEnemyTitle(adventure.room.enemyTitles, enemy);
 				}
-			})
+			}
+			exports.newRound(adventure, channel, embed);
+		} else {
+			adventure.room = new Room(roomTemplate.title);
+			let message = await channel.send({ embeds: [embed], components: roomTemplate.components });
+			adventure.setMessageId("lastComponent", message.id);
+		}
+		for (let reward in roomTemplate.lootList) {
+			adventure.room.loot[reward] = parseCount(roomTemplate.lootList[reward], adventure.delvers.length);
+		}
+		exports.saveAdventures();
 	} else {
 		adventure.accumulatedScore = 10;
 		exports.completeAdventure(adventure, channel, new MessageEmbed().setTitle("Success"));
@@ -178,11 +168,11 @@ exports.newRound = function (adventure, channel, embed = new MessageEmbed()) {
 			clearBlock(combatant);
 
 			// Roll Round Speed
-			let percentBonus = (exports.generateRandomNumber(adventure, 21, "battle") - 10) / 100;
+			let percentBonus = (generateRandomNumber(adventure, 21, "battle") - 10) / 100;
 			combatant.roundSpeed = Math.floor(combatant.speed * percentBonus);
 
 			// Roll Critical Hit
-			let critRoll = exports.generateRandomNumber(adventure, 4, "battle");
+			let critRoll = generateRandomNumber(adventure, 4, "battle");
 			combatant.crit = critRoll > 2;
 
 			// Roll Enemy Moves and Generate Dummy Moves
@@ -204,8 +194,8 @@ exports.newRound = function (adventure, channel, embed = new MessageEmbed()) {
 						})
 						if (actionPool.length) {
 							//TODO #19 nonrandom AI
-							move.setMoveName(actionPool[exports.generateRandomNumber(adventure, actionPool.length, "battle")].name)
-								.addTarget("ally", exports.generateRandomNumber(adventure, adventure.delvers.length, "battle"));
+							move.setMoveName(actionPool[generateRandomNumber(adventure, actionPool.length, "battle")].name)
+								.addTarget("ally", generateRandomNumber(adventure, adventure.delvers.length, "battle"));
 						}
 					} else {
 						move.setMoveName("${clone}");
@@ -311,7 +301,7 @@ exports.endRound = async function (adventure, channel) {
 
 			// Generate gold
 			let totalBounty = adventure.room.enemies.reduce((total, enemy) => total + enemy.bounty, adventure.room.loot.gold);
-			totalBounty *= (90 + exports.generateRandomNumber(adventure, 21, "general")) / 100;
+			totalBounty *= (90 + generateRandomNumber(adventure, 21, "general")) / 100;
 			totalBounty = Math.ceil(totalBounty);
 			adventure.room.loot.gold = totalBounty;
 			if (totalBounty > 0) {
@@ -336,7 +326,7 @@ exports.endRound = async function (adventure, channel) {
 							.setStyle("PRIMARY"))
 					} else if (item.startsWith("relic-")) {
 						itemName = item.split("-")[1];
-						//TODO relic drops
+						//TODO #101 relic drops
 					}
 				}
 			}

@@ -1,6 +1,7 @@
 const Button = require('../../Classes/Button.js');
 const Move = require('../../Classes/Move');
-const { getAdventure, saveAdventures, checkNextRound, updateRoundMessage, generateRandomNumber, endRound } = require('../adventureDAO');
+const { generateRandomNumber } = require('../../helpers.js');
+const { getAdventure, saveAdventures, checkNextRound, updateRoundMessage, endRound } = require('../adventureDAO');
 const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
 
 module.exports = new Button("nontargetweapon");

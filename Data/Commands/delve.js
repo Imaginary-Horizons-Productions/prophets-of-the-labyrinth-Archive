@@ -2,8 +2,8 @@ const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
 const Adventure = require('../../Classes/Adventure.js');
 const Command = require('../../Classes/Command.js');
 const Delver = require('../../Classes/Delver.js');
-const { ELEMENTS } = require('../../helpers.js');
-const { setAdventure, generateRandomNumber } = require("../adventureDAO.js");
+const { ELEMENTS, generateRandomNumber } = require('../../helpers.js');
+const { setAdventure } = require("../adventureDAO.js");
 const { getGuild } = require('../guildDAO.js');
 
 module.exports = new Command("delve", "Start a new adventure", false, false);

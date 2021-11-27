@@ -28,7 +28,7 @@ module.exports = class Adventure {
 	difficultyOptions = [];
 	accumulatedScore = 0;
 	depth = 0;
-	room;
+	room = {};
 	lives = 2;
 	gold = 100;
 	rnTable = "";

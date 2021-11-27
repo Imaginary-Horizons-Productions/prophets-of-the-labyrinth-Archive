@@ -11,7 +11,7 @@ module.exports.execute = (interaction, args) => {
 	adventure.gold += 50;
 	dealDamage(adventure.delvers.find(delver => delver.id == interaction.user.id), null, 100, "untyped", adventure).then(damageText => {
 		interaction.reply(`${interaction.user} reaches into the flames and grabs some coin. ${damageText}`);
-		//TODO update room message (gold in particular)
+		//TODO #102 update room message (gold in particular)
 		if (adventure.lives < 1) {
 			completeAdventure(adventure, interaction.channel, new MessageEmbed().setTitle("Defeat"));
 		} else {

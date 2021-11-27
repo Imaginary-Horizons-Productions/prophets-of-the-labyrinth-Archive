@@ -1,8 +1,8 @@
 const { MessageActionRow, MessageButton } = require("discord.js");
-const Room = require("../../Classes/Room.js")
+const RoomTemplate = require("../../Classes/RoomTemplate.js")
 
-module.exports = new Room()
-	.setType("event")
+module.exports = new RoomTemplate()
+	.setTypes("event")
 	.setTitle("Free Gold?")
 	.setDescription("A large pile of gold sits quietly in the middle of the room, seemingly alone.");
 
