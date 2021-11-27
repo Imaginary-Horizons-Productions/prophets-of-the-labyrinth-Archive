@@ -11,15 +11,7 @@ With characters having 2 elements, limiting deployments to 2 characers per playe
 Characters can be deployed at any level below the highest level reached to increase drop rates
 
 == In-dungeon rewards ==
-- move changes
 - temporary artifacts
-
-=== Purchaseable Rewards ===
-- moves
-- upgrades
-- consumables
-- scouting (who's the boss?)
-- move refills
 
 == Permanent Rewards ==
 - artifacts
