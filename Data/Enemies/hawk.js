@@ -15,5 +15,5 @@ function rakeEffect(target, user, isCrit, adventure) {
 		damage *= 2;
 	}
 	addModifier(target, "Stagger", 1);
-	return dealDamage(target, user, damage, module.exports.element, adventure);
+	return dealDamage(target, user, damage, user.element, adventure);
 }

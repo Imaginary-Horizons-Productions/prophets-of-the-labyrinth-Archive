@@ -1,5 +1,4 @@
 const Enemy = require("../../Classes/Enemy.js");
-const { ELEMENTS } = require("../../helpers.js");
 const { addModifier, getFullName, dealDamage } = require("../combatantDAO.js");
 
 module.exports = new Enemy("@{adventureReverse} Ooze")
@@ -17,8 +16,7 @@ function tackleEffect(target, user, isCrit, adventure) {
 		damage *= 2;
 	}
 	addModifier(target, "Stagger", 1);
-	let adventureElementIndex = ELEMENTS.findIndex(element => element === adventure.element);
-	return dealDamage(target, user, damage, ELEMENTS[(adventureElementIndex + 3) % 6], adventure);
+	return dealDamage(target, user, damage, user.element, adventure);
 }
 
 function goopSprayEffect(target, user, isCrit, adventure) {

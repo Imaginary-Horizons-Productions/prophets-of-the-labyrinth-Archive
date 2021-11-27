@@ -5,7 +5,8 @@ var roomWhitelist = [
 	"freegold.js",
 	"counterpartfight.js",
 	"hawkfight.js",
-	"slimefight.js"
+	"slimefight.js",
+	"tortoisefight.js"
 ];
 
 exports.roomDictionary = {};
