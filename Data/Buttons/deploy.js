@@ -13,8 +13,8 @@ module.exports.execute = (interaction, args) => {
 		if (playerProfile.archetypes[className] > 0) {
 			let archetype = getArchetype(className);
 			classOptions.push({
-				label: className,
-				description: `${archetype.element} - ${archetype.predict}`,
+				label: `${className}`,
+				description: `Predicts: ${archetype.predict} ~-~-~ Element: ${archetype.element}`,
 				value: className
 			})
 		}
@@ -27,5 +27,5 @@ module.exports.execute = (interaction, args) => {
 				.addOptions(classOptions),
 		)
 	];
-	interaction.reply({ content: `Select your archetype for this adventure!`, components: archetypeSelect, ephemeral: true });
+	interaction.reply({ content: `Select your archetype for this adventure!\n\nArchetypes can predict different information in combat and have different weaknesses and resistances based on their element.`, components: archetypeSelect, ephemeral: true });
 }

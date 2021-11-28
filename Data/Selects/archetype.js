@@ -14,7 +14,9 @@ module.exports.execute = (interaction, args) => {
 		// Add delver to list (or overwrite)
 		let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
 		if (userIndex !== -1) {
+			let isSwitching = adventure.delvers[userIndex].title !== "";
 			let archetypeTemplate = Object.assign(new Archetype(), getArchetype(interaction.values[0]));
+			adventure.delvers[userIndex].weapons = {};
 			for (let signatureWeapon of archetypeTemplate.signatureWeapons) {
 				adventure.delvers[userIndex].weapons[signatureWeapon] = getWeaponProperty(signatureWeapon, "maxUses");
 			}
@@ -25,7 +27,7 @@ module.exports.execute = (interaction, args) => {
 				.setPredict(archetypeTemplate.predict);
 
 			// Send confirmation text
-			interaction.reply(`${interaction.user} will be playing as ${interaction.values[0]}`).then(() => {
+			interaction.reply(`${interaction.user} ${isSwitching ? "has switched to" : "will be playing as"} ${interaction.values[0]}`).then(() => {
 				// Check if all ready
 				if (adventure.delvers.every(delver => delver.title)) {
 					let readyButton = [
