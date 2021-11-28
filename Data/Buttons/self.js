@@ -2,6 +2,7 @@ const Button = require('../../Classes/Button.js');
 const { MessageEmbed } = require('discord.js');
 const { getAdventure } = require('../adventureDAO.js');
 const { weaponToEmbedField } = require('../weaponDAO.js');
+const { getFullName } = require('../combatantDAO.js');
 
 module.exports = new Button("self");
 
@@ -10,8 +11,8 @@ module.exports.execute = (interaction, args) => {
 	let adventure = getAdventure(interaction.channel.id);
 	let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 	let embed = new MessageEmbed()
-		.setTitle(delver.name)
-		.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nPredicts: ${delver.predict}`)
+		.setTitle(getFullName(delver, adventure.room.enemyTitles))
+		.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nPredicts: ${delver.predict}\nElement: ${delver.element}`)
 		.setFooter("Imaginary Horizons Productions", "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png");
 	for (let weaponName in delver.weapons) {
 		embed.addField(...weaponToEmbedField(weaponName, delver.weapons[weaponName]));

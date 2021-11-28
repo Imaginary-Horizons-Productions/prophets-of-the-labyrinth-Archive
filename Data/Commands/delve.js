@@ -69,6 +69,7 @@ module.exports.execute = (interaction) => {
 							.setDisabled(true)
 					)
 					channel.send({ content: "The adventure will begin when everyone has picked an archetype and the leader clicks the \"Ready!\" button.", components: [ready] }).then(message => {
+						channel.send(`${interaction.user} Here's the channel for your new adventure. As adventure leader your vote will be the tie breaker!`);
 						adventure.setId(channel.id)
 							.setMessageId("recruit", recruitMessage.id)
 							.setMessageId("deploy", message.id)

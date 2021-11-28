@@ -12,7 +12,7 @@ module.exports.execute = (interaction, args) => {
 	let adventure = getAdventure(interaction.channel.id);
 	let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 	let embed = new MessageEmbed()
-		.setTitle(`Predicting: ${delver.predict}`)
+		.setTitle(`${delver.predict} Predictions for Round ${adventure.room.round + 1}`)
 		.setFooter(`Room #${adventure.depth} - Round ${adventure.room.round}`);
 	let descriptionText = "";
 	switch (delver.predict) {
