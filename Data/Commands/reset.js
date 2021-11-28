@@ -8,5 +8,5 @@ module.exports.execute = (interaction) => {
 	// Creates a new category and main text channel, storing the values in the guildDictionary
 	let guildProfile = guildSetup(interaction.guild);
 	resetScores(guildProfile.userIds, interaction.guild.id);
-	interaction.reply("The score wipe and reset of the Dungeon Tamers category and central text channel has begun.")
+	interaction.reply("The score wipe and reset of the Dungeon Tamers category and central text channel has begun.");
 }

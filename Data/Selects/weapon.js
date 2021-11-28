@@ -1,6 +1,7 @@
 const Move = require('../../Classes/Move');
 const Select = require('../../Classes/Select.js');
 const { getAdventure, saveAdventures, checkNextRound, updateRoundMessage, endRound } = require('../adventureDAO');
+const { getWeaponProperty } = require('../Weapons/_weaponDictionary');
 const { getFullName } = require("./../combatantDAO.js");
 
 module.exports = new Select("weapon");
@@ -13,6 +14,7 @@ module.exports.execute = async function (interaction, [weaponName]) {
 		// Add move to round list (overwrite exisiting readied move)
 		let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
 		let [targetTeam, targetIndex] = interaction.values[0].split("-");
+		user.actionSpeed = getWeaponProperty(weaponName, "speedBonus") || 0;
 		let newMove = new Move()
 			.setSpeed(user)
 			.setIsCrit(user.crit)

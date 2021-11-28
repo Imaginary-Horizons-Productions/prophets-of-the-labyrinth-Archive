@@ -9,6 +9,7 @@ module.exports = class Combatant {
 	block = 0;
 	speed = 100;
 	roundSpeed = 0;
+	actionSpeed = 0;
 	crit = false;
 	element = "water";
 	modifiers = {};

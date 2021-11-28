@@ -14,6 +14,8 @@ module.exports = class Weapon {
 	bonusDamage = 0;
 	block = 0;
 	hpCost = 0;
+	healing = 0;
+	speedBonus = 0;
 
 	setTargetingTags(tagObject) {  // tagObject {target: ["single", "all", "random", "self"], team: ["ally", "enemy", "any"]}
 		this.targetingTags = tagObject;
@@ -47,6 +49,16 @@ module.exports = class Weapon {
 
 	setHpCost(integer) {
 		this.hpCost = integer;
+		return this;
+	}
+
+	setHealing(integer) {
+		this.healing = integer;
+		return this;
+	}
+
+	setSpeedBonus(integer) {
+		this.speedBonus = integer;
 		return this;
 	}
 }

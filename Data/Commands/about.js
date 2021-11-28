@@ -13,8 +13,8 @@ module.exports.execute = (interaction) => {
 		.addField(`Design & Engineering`, `Nathaniel Tseng ( <@106122478715150336> | [Twitter](https://twitter.com/Arcane_ish) )`)
 		.addField("Random Number Generator", "Alex Frank")
 		.addField("Room Loader", "Michel Momeyer")
-		.addField("Playtesting", "Lucas Ensign")
-		.addField(`Embed Thumbnails`, `[game-icons.net](https://game-icons.net/)`)
+		.addField("Playtesting", "Lucas Ensign, Henry Hu, Ralph Beishline, Eric Hu")
+		// .addField(`Embed Thumbnails`, `[game-icons.net](https://game-icons.net/)`)
 		.setFooter("Imaginary Horizons Productions", "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png");
 
 	interaction.reply({ embeds: [embed], ephemeral: true })

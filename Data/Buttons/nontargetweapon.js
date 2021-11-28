@@ -13,6 +13,7 @@ module.exports.execute = async function (interaction, [weaponName]) {
 	if (weaponName in user.weapons) {
 		// Add move to round list (overwrite exisiting readied move)
 		let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
+		user.actionSpeed = getWeaponProperty(weaponName, "speedBonus") || 0;
 		let newMove = new Move()
 			.setSpeed(user)
 			.setIsCrit(user.crit)

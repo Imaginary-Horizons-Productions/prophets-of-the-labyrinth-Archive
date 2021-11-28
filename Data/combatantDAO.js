@@ -16,7 +16,7 @@ exports.getFullName = function (combatant, titleObject) {
 }
 
 exports.calculateTotalSpeed = function (combatant) {
-	let totalSpeed = combatant.speed + combatant.roundSpeed;
+	let totalSpeed = combatant.speed + combatant.roundSpeed + combatant.actionSpeed;
 	if (Object.keys(combatant.modifiers).includes("Slow")) {
 		totalSpeed /= 2;
 	}

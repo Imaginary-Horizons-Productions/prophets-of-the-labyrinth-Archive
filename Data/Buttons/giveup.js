@@ -10,6 +10,6 @@ module.exports.execute = (interaction, args) => {
 	if (interaction.user.id === adventure.leaderId) {
 		completeAdventure(adventure, interaction.channel, new MessageEmbed().setTitle("Defeat"));
 	} else {
-		interaction.reply("Please ask the leader to end the adventure.");
+		interaction.reply({ content: "Please ask the leader to end the adventure.", ephemeral: true });
 	}
 }

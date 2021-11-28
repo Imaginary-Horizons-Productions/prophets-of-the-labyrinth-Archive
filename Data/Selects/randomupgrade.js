@@ -21,7 +21,7 @@ module.exports.execute = (interaction, args) => {
 		user.weapons[upgradeName] = Math.min(upgradeUses, user.weapons[weaponName]);
 		delete user.weapons[weaponName];
 		adventure.room.loot.forgeSupplies--;
-		interaction.reply({ content: `Your *${weaponName}* has been upgraded to **${upgradeName}**!`, ephemeral: true });
+		interaction.reply(`Your *${weaponName}* has been upgraded to **${upgradeName}**!`);
 		saveAdventures();
 	} else {
 		interaction.reply({ content: "The forge's supplies have been exhausted.", ephemeral: true });

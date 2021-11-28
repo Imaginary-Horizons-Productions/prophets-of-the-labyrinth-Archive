@@ -75,6 +75,7 @@ Increased damage against a foe with higher speed
 
 #### Available on
 - Spear (Light)
+- Life Drain (Darkness)
 
 ### Sharpened
 Increased base damage
@@ -113,6 +114,16 @@ Applies Poison
 #### Avaialble on
 - Fire Cracker (Fire)
 
+### Urgent
+Bonus speed
+
+#### Avaialble on
+- all Bows (Wind)
+- all Solar Flare (Light)
+- Barrier (Light)
+- Buckler (Earth)
+- Life Drain (Darkness)
+
 ### Watery
 Affects Water element combatants
 
@@ -143,6 +154,5 @@ Increased damage against enemies with 0 block
 - Prideful - high value non-elemental damage
 - Bashing - bonus damage for block on user
 - Scythe
-- Bow
 - Bloodthirsty ___ - heal user if killing blow
 - Siphoning ___ - regain uses if killing blow
