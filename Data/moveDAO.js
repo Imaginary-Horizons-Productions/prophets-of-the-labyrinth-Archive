@@ -8,7 +8,7 @@ exports.resolveMove = async function (move, adventure) {
 	let moveText = "";
 	if (user.hp > 0) {
 		if (!user.modifiers.Stun) {
-			moveText = `${user.name} used ${move.name} on`;
+			moveText = `${getFullName(user, adventure.room.enemyTitles)} used ${move.name} on`;
 			let effect;
 			let breakText = "";
 			let targetAll = false;
@@ -43,7 +43,7 @@ exports.resolveMove = async function (move, adventure) {
 			moveText += ` ${targetNames.join(", ")}.${move.isCrit ? " *Critical Hit!*" : ""} ${resultText.join(" ")}${breakText !== "" ? breakText : ""}`;
 		} else {
 			delete user.modifiers.Stun;
-			moveText = `${user.name} is Stunned!`;
+			moveText = `${getFullName(user, adventure.room.enemyTitles)} is Stunned!`;
 		}
 
 		// Poison/Regen

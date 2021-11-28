@@ -282,7 +282,7 @@ exports.endRound = async function (adventure, channel) {
 	})
 
 	// Resolve moves
-	adventure.room.moves.sort((first, second) => {
+	adventure.room.moves.sort((first, second) => { //TODO #106 randomize speed ties
 		return second.speed - first.speed;
 	})
 	let lastRoundText = "";
