@@ -1,4 +1,5 @@
 var buttonWhitelist = [
+	"buylife.js",
 	"continue.js",
 	"deploy.js",
 	"getgoldonfire.js",

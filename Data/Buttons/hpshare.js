@@ -1,6 +1,6 @@
 const { MessageEmbed } = require('discord.js');
 const Button = require('../../Classes/Button.js');
-const { getAdventure, nextRoom, completeAdventure } = require('../adventureDAO.js');
+const { getAdventure, nextRoom, completeAdventure, updateRoomHeader } = require('../adventureDAO.js');
 const { gainHealth, dealDamage } = require("../combatantDAO.js");
 
 module.exports = new Button("hpshare");
@@ -14,7 +14,9 @@ module.exports.execute = (interaction, args) => {
 		}
 	})
 	dealDamage(adventure.delvers.find(delver => delver.id == interaction.user.id), null, 10, "untyped", adventure).then(damageText => {
-		interaction.reply(`${damageText} Everyone else gains 5 hp.`);
+		updateRoomHeader(adventure, interaction.message);
+		return interaction.reply(`${damageText} Everyone else gains 5 hp.`);
+	}).then(() => {
 		if (adventure.lives > 0) {
 			nextRoom(adventure, interaction.channel);
 		} else {

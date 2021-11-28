@@ -3,6 +3,7 @@ const { generateRandomNumber } = require("../../helpers");
 let roomWhitelist = [
 	"goldonfire.js",
 	"hpshare.js",
+	"scorebeggar.js",
 	"forge.js",
 	"freegold.js",
 	"counterpartfight.js",

@@ -77,7 +77,7 @@ module.exports.execute = (interaction, args) => {
 			moveMenu.push(new MessageActionRow()
 				.addComponents(
 					new MessageSelectMenu()
-						.setCustomId(`weapon-punch`)
+						.setCustomId(`weapon-Punch`)
 						.setPlaceholder(`Use Punch on...`)
 						.addOptions(enemyOptions)
 				));

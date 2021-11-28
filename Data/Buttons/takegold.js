@@ -1,6 +1,6 @@
 const { MessageActionRow } = require('discord.js');
 const Button = require('../../Classes/Button.js');
-const { setAdventure, getAdventure } = require('../adventureDAO.js');
+const { setAdventure, getAdventure, updateRoomHeader } = require('../adventureDAO.js');
 
 module.exports = new Button("takegold");
 
@@ -22,7 +22,7 @@ module.exports.execute = (interaction, args) => {
 		})
 		]
 	});
-	interaction.followUp({ content: `The party is now has ${adventure.gold} gold total.` });
+	updateRoomHeader(adventure, interaction.message);
 	adventure.room.loot.gold = 0;
 	setAdventure(adventure);
 }

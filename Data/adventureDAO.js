@@ -88,6 +88,14 @@ exports.updateStartingMessage = function (startMessage, adventure) {
 	startMessage.edit({ embeds: [embed] });
 }
 
+function roomHeaderString(adventure) {
+	return `Lives: ${adventure.lives} - Party Gold: ${adventure.gold} - Score: ${adventure.accumulatedScore}`;
+}
+
+exports.updateRoomHeader = function (adventure, message) {
+	message.edit({embeds: [message.embeds[0].setAuthor(roomHeaderString(adventure), message.client.user.displayAvatarURL())]})
+}
+
 exports.nextRoom = async function (adventure, channel) {
 	adventure.depth++;
 	adventure.room = {};
@@ -100,7 +108,7 @@ exports.nextRoom = async function (adventure, channel) {
 		let roomTypes = ["battle", "event", "forge"];
 		let roomTemplate = getRoomTemplate(roomTypes[generateRandomNumber(adventure, roomTypes.length, "general")], adventure); //TODO #73 voting on room type
 		let embed = new MessageEmbed()
-			.setAuthor(`Lives: ${adventure.lives} - Party Gold: ${adventure.gold} - Score: ${adventure.accumulatedScore}`, channel.client.user.displayAvatarURL())
+			.setAuthor(roomHeaderString(adventure), channel.client.user.displayAvatarURL())
 			.setTitle(roomTemplate.title)
 			.setDescription(roomTemplate.description)
 			.setFooter(`Room #${adventure.depth}`);
@@ -229,6 +237,7 @@ exports.newRound = function (adventure, channel, embed = new MessageEmbed()) {
 				.setStyle("PRIMARY")
 		)];
 		channel.send({ embeds: [embed], components: battleMenu }).then(message => {
+			exports.updateRoomHeader(adventure, message);
 			adventure.setMessageId("lastComponent", message.id);
 			exports.saveAdventures();
 		});
@@ -258,7 +267,7 @@ exports.updateRoundMessage = function (messageManager, adventure) {
 
 exports.endRound = async function (adventure, channel) {
 	// Generate results embed
-	let embed = new MessageEmbed().setAuthor(`Lives: ${adventure.lives} - Party Gold: ${adventure.gold} - Score: ${adventure.accumulatedScore}`, channel.client.user.displayAvatarURL())
+	let embed = new MessageEmbed().setAuthor(roomHeaderString(adventure), channel.client.user.displayAvatarURL())
 		.setTitle(adventure.room.title);
 
 	// Generate Reactive Moves by Enemies
@@ -369,15 +378,15 @@ let completedAdventures = {};
 exports.completeAdventure = function (adventure, channel, embed) {
 	let isSuccess = embed.title === "Success";
 	let score = adventure.depth;
+	let livesScore = adventure.lives * 10;
 	let goldScore = Math.log10(adventure.gold) * 5; //TODO #84 base goldScore on peak gold instead of end gold
-	if (isSuccess) {
-		score += goldScore;
-		score += adventure.accumulatedScore;
-	} else {
-		score += Math.floor(goldScore / 2);
-		score += Math.floor(adventure.accumulatedScore / 2);
+	score += livesScore;
+	score += goldScore;
+	score += adventure.accumulatedScore;
+	if (!isSuccess && score > 0) {
+		score = Math.floor(score / 2);
 	}
-	embed.addField("Score Breakdown", `Depth: ${adventure.depth}\nGold: ${goldScore}${isSuccess ? "" : ` ÷ 2  = ${Math.floor(goldScore / 2)} (Defeat)`}\nBonus: ${adventure.accumulatedScore}${isSuccess ? "" : ` ÷ 2  = ${Math.floor(adventure.accumulatedScore / 2)} (Defeat)`}\n__Total__: ${score}`)
+	embed.addField("Score Breakdown", `Depth: ${adventure.depth}\nLives: ${livesScore}\nGold: ${goldScore}\nBonus: ${adventure.accumulatedScore}\n\n__Total__: ${!isSuccess && score > 0 ? `score ÷ 2  = ${score} (Defeat)` : score}`)
 		.addField("Clean-Up", "This channel will be cleaned up in 5 minutes.");
 
 	adventure.delvers.forEach(delver => {
