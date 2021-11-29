@@ -49,10 +49,11 @@ module.exports.execute = (interaction) => {
 			}).then(channel => {
 				adventure.delvers.push(new Delver(interaction.user.id, interaction.member.displayName, channel.id));
 				let embed = new MessageEmbed().setColor(ELEMENT_COLORS[elementIndex])
+					.setAuthor("Imaginary Horizons Productions", "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png", "https://github.com/Imaginary-Horizons-Productions/dungeon-tamers")
 					.setTitle(adventure.name)
+					.setThumbnail("https://cdn.discordapp.com/attachments/545684759276421120/734093574031016006/bountyboard.png")
 					.setDescription("A new adventure is starting!")
 					.addField("1 Party Member", `Leader: ${interaction.member}`)
-					.setFooter("Imaginary Horizons Productions", "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png")
 				let join = new MessageActionRow().addComponents(
 					new MessageButton().setCustomId(`join-${channel.id}`)
 						.setLabel("Join")

@@ -13,6 +13,7 @@ const { getTurnDecrement } = require("./Modifiers/_modifierDictionary.js");
 const { getEnemy } = require("./Enemies/_enemyDictionary");
 const Room = require("../Classes/Room.js");
 const RoomCombat = require("../Classes/RoomCombat.js");
+const { getGuild } = require("./guildDAO.js");
 
 var filePath = "./Saves/adventures.json";
 var requirePath = "./../Saves/adventures.json";
@@ -93,7 +94,7 @@ function roomHeaderString(adventure) {
 }
 
 exports.updateRoomHeader = function (adventure, message) {
-	message.edit({embeds: [message.embeds[0].setAuthor(roomHeaderString(adventure), message.client.user.displayAvatarURL())]})
+	message.edit({ embeds: [message.embeds[0].setAuthor(roomHeaderString(adventure), message.client.user.displayAvatarURL())] })
 }
 
 exports.nextRoom = async function (adventure, channel) {
@@ -400,6 +401,14 @@ exports.completeAdventure = function (adventure, channel, embed) {
 		setPlayer(player);
 	})
 
+	channel.guild.channels.fetch(getGuild(channel.guild.id).centralId).then(centralChannel => {
+		return centralChannel.messages.fetch(adventure.messageIds.recruit);
+	}).then(message => {
+		let embed = message.embeds[0];
+		embed.setTitle(embed.title + ": COMPLETE!")
+			.setThumbnail("https://cdn.discordapp.com/attachments/545684759276421120/734092918369026108/completion.png");
+		message.edit({ embeds: [embed] });
+	})
 	channel.messages.fetch(adventure.messageIds.lastComponent).then(message => {
 		message.edit({ components: [] });
 	})

@@ -14,7 +14,7 @@ module.exports.execute = (interaction) => {
 		.addField("Random Number Generator", "Alex Frank")
 		.addField("Room Loader", "Michel Momeyer")
 		.addField("Playtesting", "Lucas Ensign, Henry Hu, Ralph Beishline, Eric Hu")
-		// .addField(`Embed Thumbnails`, `[game-icons.net](https://game-icons.net/)`)
+		.addField(`Embed Thumbnails`, `[game-icons.net](https://game-icons.net/)`)
 		.setFooter("Imaginary Horizons Productions", "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png");
 
 	interaction.reply({ embeds: [embed], ephemeral: true })
