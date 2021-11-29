@@ -66,7 +66,7 @@ module.exports.execute = async function (interaction, [weaponName]) {
 		}
 
 		// Send confirmation text
-		interaction.reply(`${interaction.user} readies **${weaponName}** to use on **${targetText}**.`).then(() => {
+		interaction.reply(`${interaction.user} ${overwritten ? "switches to ready": "readies"} **${weaponName}** to use on **${targetText}**.`).then(() => {
 			saveAdventures();
 			updateRoundMessage(interaction.channel.messages, adventure);
 			if (checkNextRound(adventure)) {
