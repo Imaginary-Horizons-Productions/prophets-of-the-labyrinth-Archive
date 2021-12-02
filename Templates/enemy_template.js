@@ -5,4 +5,5 @@ module.exports = new Enemy("name")
 	.setSpeed()
 	.setElement() // enum: "Fire", "Water", "Earth", "Wind", "Light", "Darkness", "@{adventure}", "@{adventureReverse}"
 	.setStaggerThreshold()
-	.addAction();
+	.setFirstAction()
+	.addAction(); // {name: string, effect: function, selector: function, next: function}

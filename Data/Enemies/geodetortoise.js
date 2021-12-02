@@ -1,13 +1,15 @@
 const Enemy = require("../../Classes/Enemy.js");
 const { addBlock, addModifier, removeModifier, dealDamage } = require("../combatantDAO.js");
+const { selectRandomFoe, selectSelf, nextRandom } = require("../enemyDAO.js");
 
 module.exports = new Enemy("Geode Tortoise")
 	.setHp(350)
 	.setSpeed(85)
 	.setElement("Earth")
 	.setStaggerThreshold(5)
-	.addAction({ name: "Bite", weight: 1, effect: biteEffect })
-	.addAction({ name: "Crystallize", weight: 1, effect: crystallizeEffect });
+	.setFirstAction("random")
+	.addAction({ name: "Bite", effect: biteEffect, selector: selectRandomFoe, next: nextRandom })
+	.addAction({ name: "Crystallize", effect: crystallizeEffect, selector: selectSelf, next: nextRandom });
 
 function biteEffect(target, user, isCrit, adventure) {
 	let damage = 50;

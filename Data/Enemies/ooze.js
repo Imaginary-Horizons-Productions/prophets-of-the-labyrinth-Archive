@@ -1,13 +1,15 @@
 const Enemy = require("../../Classes/Enemy.js");
 const { addModifier, getFullName, dealDamage } = require("../combatantDAO.js");
+const { selectRandomFoe, nextRandom } = require("../enemyDAO.js");
 
 module.exports = new Enemy("@{adventureReverse} Ooze")
 	.setHp(200)
 	.setSpeed(90)
 	.setElement("@{adventureReverse}")
 	.setStaggerThreshold(5)
-	.addAction({ name: "Goop Spray", weight: 1, effect: goopSprayEffect })
-	.addAction({ name: "Tackle", weight: 1, effect: tackleEffect })
+	.setFirstAction("Goop Spray")
+	.addAction({ name: "Goop Spray", effect: goopSprayEffect, selector: selectRandomFoe, next: nextRandom })
+	.addAction({ name: "Tackle", effect: tackleEffect, selector: selectRandomFoe, next: nextRandom })
 	.setBounty(25);
 
 function tackleEffect(target, user, isCrit, adventure) {

@@ -8,6 +8,7 @@ let roomWhitelist = [
 	"freegold.js",
 	"counterpartfight.js",
 	"hawkfight.js",
+	"mechabeefight.js",
 	"slimefight.js",
 	"tortoisefight.js"
 ];

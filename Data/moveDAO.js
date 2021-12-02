@@ -5,45 +5,39 @@ const { getWeaponProperty } = require("./Weapons/_weaponDictionary.js");
 exports.resolveMove = async function (move, adventure) {
 	let userTeam = move.userTeam === "ally" ? adventure.delvers : adventure.room.enemies;
 	let user = userTeam[move.userIndex];
-	let moveText = "";
 	if (user.hp > 0) {
+		let moveText = `${getFullName(user, adventure.room.enemyTitles)} `;
 		if (!user.modifiers.Stun) {
-			moveText = `${getFullName(user, adventure.room.enemyTitles)} used ${move.name} on`;
+			let targetNames = exports.getTargetList(move.targets, adventure).join(", ");
 			let effect;
-			let breakText = "";
 			let targetAll = false;
-			if (move.userTeam === "ally") {
-				user.weapons[move.name]--;
-				if (user.weapons[move.name] === 0) {
-					breakText = ` The ${move.name} broke!`;
+			if (move.userTeam === "ally" || move.userTeam === "clone") {
+				effect = getWeaponProperty(move.name, "effect");
+				if (move.userTeam !== "clone") {
+					targetAll = getWeaponProperty(move.name, "targetingTags").target === "all";
+					user.weapons[move.name]--;
 				}
-				targetAll = getWeaponProperty(move.name, "targetingTags").target === "all";
-				effect = getWeaponProperty(move.name, "effect");
-			} else if (move.userTeam === "clone") {
-				targetAll = getWeaponProperty(move.name, "targetingTags").target === "all";
-				effect = getWeaponProperty(move.name, "effect");
 			} else {
 				effect = getEnemy(user.lookupName).actions[move.name].effect;
 			}
-			let resultText = await Promise.all(move.targets.map(async ({ team, index: targetIndex }) => {
-				let targetTeam;
+			let resultTexts = await Promise.all(move.targets.map(async ({ team, index: targetIndex }) => {
 				if (team === "ally") {
-					targetTeam = adventure.delvers;
+					let result = await effect(adventure.delvers[targetIndex], user, move.isCrit, adventure);
+					if (!targetAll || !result.endsWith("was already dead!")) {
+						return result;
+					} else {
+						return "";
+					}
+				} else if (team === "enemy") {
+					return await effect(adventure.room.enemies[targetIndex], user, move.isCrit, adventure);
 				} else {
-					targetTeam = adventure.room.enemies;
-				}
-				let result = await effect(targetTeam[targetIndex], user, move.isCrit, adventure);
-				if (targetAll && result.endsWith("was already dead!")) {
-					return "";
-				} else {
-					return result;
+					return await effect(null, user, move.isCrit, adventure);
 				}
 			}));
-			let targetNames = exports.getTargetList(move.targets, adventure);
-			moveText += ` ${targetNames.join(", ")}.${move.isCrit ? " *Critical Hit!*" : ""} ${resultText.join(" ")}${breakText !== "" ? breakText : ""}`;
+			moveText += `used ${move.name}${move.targets[0].team !== "none" && move.targets[0].team !== "self" ? ` on ${targetNames}` : ""}.${move.isCrit ? " *Critical Hit!*" : ""} ${resultTexts.join(" ")}${user.weapons?.[move.name] === 0 ? ` The ${move.name} broke!` : ""}`;
 		} else {
 			delete user.modifiers.Stun;
-			moveText = `${getFullName(user, adventure.room.enemyTitles)} is Stunned!`;
+			moveText += "is Stunned!";
 		}
 
 		// Poison/Regen
@@ -52,22 +46,20 @@ exports.resolveMove = async function (move, adventure) {
 		} else if (user.modifiers.Regen) {
 			moveText += ` ${gainHealth(user, user.modifiers.Regen * 10, adventure.room.enemyTitles)}`;
 		}
+		return `${moveText}\n`;
+	} else {
+		return "";
 	}
-	return moveText + "\n";
 }
 
 exports.getTargetList = function (targets, adventure) {
 	return targets.map(targetIds => {
-		if (targetIds.team === "self") {
-			return "themself";
+		let targetTeam;
+		if (targetIds.team === "ally") {
+			targetTeam = adventure.delvers;
 		} else {
-			let targetTeam;
-			if (targetIds.team === "ally") {
-				targetTeam = adventure.delvers;
-			} else {
-				targetTeam = adventure.room.enemies;
-			}
-			return getFullName(targetTeam[targetIds.index], adventure.room.enemyTitles);
+			targetTeam = adventure.room.enemies;
 		}
+		return getFullName(targetTeam[targetIds.index], adventure.room.enemyTitles);
 	})
 }

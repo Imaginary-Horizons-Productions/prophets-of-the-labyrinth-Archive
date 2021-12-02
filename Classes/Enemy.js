@@ -8,6 +8,7 @@ module.exports = class Enemy extends Combatant {
 		this.lookupName = nameInput;
 	}
 	actions = {};
+	nextAction = "";
 	bounty = 0;
 
 	setHp = super.setHp;
@@ -16,6 +17,11 @@ module.exports = class Enemy extends Combatant {
 
 	addAction(actionsInput) {
 		this.actions[actionsInput.name] = actionsInput;
+		return this;
+	}
+
+	setFirstAction(actionName) {
+		this.nextAction = actionName;
 		return this;
 	}
 

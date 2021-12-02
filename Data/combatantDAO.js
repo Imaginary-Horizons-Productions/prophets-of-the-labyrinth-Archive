@@ -28,7 +28,7 @@ exports.calculateTotalSpeed = function (combatant) {
 
 exports.dealDamage = async function (target, user, damage, element, adventure) {
 	if (target.hp > 0) {
-		if (!Object.keys(target.modifiers).includes("evade")) {
+		if (!Object.keys(target.modifiers).includes("evade") || element === "Poison") {
 			let pendingDamage = damage + (user?.modifiers["powerup"] || 0);
 			let isWeakness = Combatant.getWeaknesses(target.element).includes(element);
 			if (isWeakness) {

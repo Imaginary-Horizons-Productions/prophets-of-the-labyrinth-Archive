@@ -49,7 +49,8 @@ module.exports.execute = async function (interaction, [weaponName]) {
 			}
 		} else if (target === "self") {
 			newMove.addTarget(team, userIndex);
-			targetText = "themself";
+		} else if (target === "none") {
+			newMove.addTarget("none", "none");
 		}
 
 		let overwritten = false;
@@ -66,7 +67,7 @@ module.exports.execute = async function (interaction, [weaponName]) {
 		}
 
 		// Send confirmation text
-		interaction.reply(`${interaction.user} ${overwritten ? "switches to ready": "readies"} **${weaponName}** to use on **${targetText}**.`).then(() => {
+		interaction.reply(`${interaction.user} ${overwritten ? "switches to ready" : "readies"} **${weaponName}**${target !== "none" && target !== "self" ? ` to use on **${targetText}**` : ""}.`).then(() => {
 			saveAdventures();
 			updateRoundMessage(interaction.channel.messages, adventure);
 			if (checkNextRound(adventure)) {

@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 
 module.exports = new Weapon("name", "description", "element", effect, [])
-	.setTargetingTags({ target: "", team: "" }) // tagObject {target: ["single", "all", "random", "self"], team: ["ally", "enemy", "any", "self"]}
+	.setTargetingTags({ target: "", team: "" }) // tagObject {target: ["single", "all", "random", "self", "none"], team: ["ally", "enemy", "any", "self", "none"]}
 	.setUses();
 
 function effect(target, user, isCrit, adventure) {

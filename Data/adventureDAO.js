@@ -1,5 +1,5 @@
 const fs = require("fs");
-const { ensuredPathSave, parseCount, ELEMENTS, generateRandomNumber } = require("../helpers.js");
+const { ensuredPathSave, parseCount, generateRandomNumber } = require("../helpers.js");
 const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
 const Adventure = require("../Classes/Adventure.js");
 const { setPlayer, getPlayer } = require("./playerDAO.js");
@@ -14,6 +14,7 @@ const { getEnemy } = require("./Enemies/_enemyDictionary");
 const Room = require("../Classes/Room.js");
 const RoomCombat = require("../Classes/RoomCombat.js");
 const { getGuild } = require("./guildDAO.js");
+const { spawnEnemy } = require("./enemyDAO.js");
 
 var filePath = "./Saves/adventures.json";
 var requirePath = "./../Saves/adventures.json";
@@ -106,7 +107,7 @@ exports.nextRoom = async function (adventure, channel) {
 		}).catch(console.error);
 	}
 	if (adventure.depth < 11) {
-		let roomTypes = ["battle", "event", "forge"];
+		let roomTypes = ["battle"/*, "event", "forge"*/];
 		let roomTemplate = getRoomTemplate(roomTypes[generateRandomNumber(adventure, roomTypes.length, "general")], adventure); //TODO #73 voting on room type
 		let embed = new MessageEmbed()
 			.setAuthor(roomHeaderString(adventure), channel.client.user.displayAvatarURL())
@@ -115,30 +116,9 @@ exports.nextRoom = async function (adventure, channel) {
 			.setFooter(`Room #${adventure.depth}`);
 		if (roomTemplate.types.includes("battle") || roomTemplate.types.includes("finalboss") || roomTemplate.types.includes("midboss")) {
 			adventure.room = new RoomCombat(roomTemplate.title);
-			let reverseAdventureElement = ELEMENTS[(ELEMENTS.findIndex(element => element === adventure.element) + 3) % 6];
 			for (let enemyName in roomTemplate.enemyList) {
 				for (let i = 0; i < parseCount(roomTemplate.enemyList[enemyName], adventure.delvers.length); i++) {
-					let enemyTemplate = getEnemy(enemyName);
-					enemyTemplate.modifiers = {}; // breaks shared reference to modifiers object by enemies of same name
-					let enemy = Object.assign(new Enemy(), enemyTemplate);
-					if (!roomTemplate.types.includes("finalboss") && !roomTemplate.types.includes("midboss")) {
-						// Randomize minor enemy hp
-						let hpPercent = (10 * generateRandomNumber(adventure, 4, "battle") + 80) / 100;
-						enemy.setHp(Math.ceil(enemy.maxHp * hpPercent));
-					}
-					let tagRegex = /@{[a-zA-Z]+}/;
-					if (tagRegex.test(enemy.name)) {
-						enemy.name = enemy.name.replace("@{adventure}", adventure.element);
-						enemy.name = enemy.name.replace("@{adventureReverse}", reverseAdventureElement);
-						enemy.name = enemy.name.replace("@{clone}", `Mirror ${adventure.delvers[i].title}`);
-					}
-					if (tagRegex.test(enemy.element)) {
-						enemy.setElement(enemy.element.replace("@{adventure}", adventure.element))
-							.setElement(enemy.element.replace("@{adventureReverse}", reverseAdventureElement))
-							.setElement(enemy.element.replace("@{clone}", adventure.delvers[i].element));
-					}
-					adventure.room.enemies.push(enemy);
-					Enemy.setEnemyTitle(adventure.room.enemyTitles, enemy);
+					spawnEnemy(adventure, getEnemy(enemyName), !roomTemplate.types.includes("finalboss") && !roomTemplate.types.includes("midboss"));
 				}
 			}
 			exports.newRound(adventure, channel, embed);
@@ -195,17 +175,17 @@ exports.newRound = function (adventure, channel, embed = new MessageEmbed()) {
 			} else {
 				if (teamName === "enemy") {
 					if (combatant.lookupName !== "@{clone}") {
-						let actionPool = [];
-						Object.values(combatant.actions).forEach(action => {
-							for (let i = 0; i < action.weight; i++) {
-								actionPool.push(action);
-							}
-						})
-						if (actionPool.length) {
-							//TODO #19 nonrandom AI
-							move.setMoveName(actionPool[generateRandomNumber(adventure, actionPool.length, "battle")].name)
-								.addTarget("ally", generateRandomNumber(adventure, adventure.delvers.length, "battle"));
+						let enemyTemplate = getEnemy(combatant.lookupName);
+						let actionName = combatant.nextAction;
+						if (actionName === "random") {
+							let actionPool = Object.keys(enemyTemplate.actions);
+							actionName = actionPool[generateRandomNumber(adventure, actionPool.length, "battle")];
 						}
+						move.setMoveName(actionName);
+						enemyTemplate.actions[actionName].selector(adventure, combatant).forEach(({ team, index }) => {
+							move.addTarget(team, index);
+						})
+						combatant.nextAction = enemyTemplate.actions[actionName].next(actionName);
 					} else {
 						move.setMoveName("${clone}");
 					}
