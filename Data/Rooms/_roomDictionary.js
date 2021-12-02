@@ -1,3 +1,5 @@
+const { MessageActionRow, MessageButton } = require("discord.js");
+const RoomTemplate = require("../../Classes/RoomTemplate");
 const { generateRandomNumber } = require("../../helpers");
 
 let roomWhitelist = [
@@ -81,6 +83,13 @@ exports.getRoomTemplate = function (type, adventure) {
 			return forgeRooms[generateRandomNumber(adventure, forgeRooms.length, "general")];
 		default:
 			console.error("Attempt to create room of unidentified type: " + type);
-			return null; //TODO #104 return empty room
+			let empty = new RoomTemplate().setTitle("Empty Room")
+				.setDescription("This room is empty. Lucky you?");
+			empty.components.push(new MessageActionRow().addComponents(
+				new MessageButton().setCustomId("continue")
+					.setLabel("Move on")
+					.setStyle("SECONDARY")
+			))
+			return empty;
 	}
 }
