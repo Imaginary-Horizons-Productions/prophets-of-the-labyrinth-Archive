@@ -54,7 +54,7 @@ module.exports.selectAllFoes = function (adventure, self) {
 }
 
 module.exports.selectSelf = function (adventure, self) {
-	let team = "enemy";
+	let team = "self";
 	let index = adventure.room.enemies.findIndex(enemy => enemy.name === self.name && enemy.title === self.title);
 	return [{ team, index }];
 }

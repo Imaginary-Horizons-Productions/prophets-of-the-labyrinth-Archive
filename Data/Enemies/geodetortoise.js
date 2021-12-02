@@ -9,7 +9,8 @@ module.exports = new Enemy("Geode Tortoise")
 	.setStaggerThreshold(5)
 	.setFirstAction("random")
 	.addAction({ name: "Bite", effect: biteEffect, selector: selectRandomFoe, next: nextRandom })
-	.addAction({ name: "Crystallize", effect: crystallizeEffect, selector: selectSelf, next: nextRandom });
+	.addAction({ name: "Crystallize", effect: crystallizeEffect, selector: selectSelf, next: nextRandom })
+	.setBounty(40);
 
 function biteEffect(target, user, isCrit, adventure) {
 	let damage = 50;

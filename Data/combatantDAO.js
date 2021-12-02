@@ -52,15 +52,15 @@ exports.dealDamage = async function (target, user, damage, element, adventure) {
 				}
 			}
 			target.hp -= pendingDamage;
-			let damageText = ` ${exports.getFullName(target, adventure.room.enemyTitles)} takes ${pendingDamage} damage${blockedDamage > 0 ? ` (${blockedDamage} blocked)` : ""}${element === "Poison" ? " from Poison" : ""}${isWeakness ? "!!!" : isResistance ? "." : "!"}`;
+			let damageText = ` ${exports.getFullName(target, adventure.room.enemyTitles)} takes *${pendingDamage} damage*${blockedDamage > 0 ? ` (${blockedDamage} blocked)` : ""}${element === "Poison" ? " from Poison" : ""}${isWeakness ? "!!!" : isResistance ? "." : "!"}`;
 			if (target.hp <= 0) {
 				if (target.team === "ally") {
 					target.hp = target.maxHp;
 					adventure.lives -= 1;
-					damageText += ` ${exports.getFullName(target, adventure.room.enemyTitles)} has died and been revived. ${adventure.lives} lives remain.`;
+					damageText += ` *${exports.getFullName(target, adventure.room.enemyTitles)} has died* and been revived. ***${adventure.lives} lives remain.***`;
 				} else {
 					target.hp = 0;
-					damageText += ` ${exports.getFullName(target, adventure.room.enemyTitles)} has died.`;
+					damageText += ` *${exports.getFullName(target, adventure.room.enemyTitles)} has died*.`;
 				}
 			}
 			return damageText;
@@ -85,7 +85,7 @@ exports.gainHealth = function (combatant, healing, titleObject) {
 	if (combatant.hp === combatant.maxHp) {
 		return `${exports.getFullName(combatant, titleObject)} was fully healed!`;
 	} else {
-		return `${exports.getFullName(combatant, titleObject)} gained ${healing} hp.`
+		return `${exports.getFullName(combatant, titleObject)} *gained ${healing} hp*.`
 	}
 }
 
