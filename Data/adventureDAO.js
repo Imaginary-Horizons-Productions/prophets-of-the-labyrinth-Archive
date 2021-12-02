@@ -122,7 +122,7 @@ exports.nextRoom = async function (adventure, channel) {
 			.setDescription(roomTemplate.description)
 			.setFooter(`Room #${adventure.depth}`);
 		if (roomTemplate.types.includes("battle") || roomTemplate.types.includes("finalboss") || roomTemplate.types.includes("midboss")) {
-			adventure.room = new RoomCombat(roomTemplate.title);
+			adventure.room = new RoomCombat(roomTemplate.title, roomColor);
 			for (let enemyName in roomTemplate.enemyList) {
 				for (let i = 0; i < parseCount(roomTemplate.enemyList[enemyName], adventure.delvers.length); i++) {
 					spawnEnemy(adventure, getEnemy(enemyName), !roomTemplate.types.includes("finalboss") && !roomTemplate.types.includes("midboss"));
@@ -130,7 +130,7 @@ exports.nextRoom = async function (adventure, channel) {
 			}
 			exports.newRound(adventure, channel, embed);
 		} else {
-			adventure.room = new Room(roomTemplate.title);
+			adventure.room = new Room(roomTemplate.title, roomColor);
 			let message = await channel.send({ embeds: [embed], components: roomTemplate.components });
 			adventure.setMessageId("lastComponent", message.id);
 		}
@@ -213,7 +213,8 @@ exports.newRound = function (adventure, channel, embed = new MessageEmbed()) {
 		})
 	}
 
-	embed.setFooter(`Room #${adventure.depth} - Round ${adventure.room.round}`);
+	embed.setColor(adventure.room.embedColor)
+		.setFooter(`Room #${adventure.depth} - Round ${adventure.room.round}`);
 	if (!exports.checkNextRound(adventure)) {
 		embed.addField(`0/${adventure.delvers.length} Moves Readied`, "Ready party members will be listed here");
 		let battleMenu = [new MessageActionRow().addComponents(

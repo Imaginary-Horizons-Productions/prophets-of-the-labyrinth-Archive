@@ -12,7 +12,7 @@ module.exports.execute = (interaction, args) => {
 	let adventure = getAdventure(interaction.channel.id);
 	let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 	if (!delver.modifiers.Stun) { // Early out if stunned
-		let embed = new MessageEmbed()
+		let embed = new MessageEmbed().setColor(adventure.room.embedColor)
 			.setTitle(getFullName(delver, adventure.room.enemyTitles))
 			.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nElement: ${delver.element}`)
 			.setFooter("Imaginary Horizons Productions", "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png");

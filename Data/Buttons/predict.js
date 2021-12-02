@@ -11,7 +11,8 @@ module.exports.execute = (interaction, args) => {
 	// Based on type, show the user information on the next battle round in an ephemeral message
 	let adventure = getAdventure(interaction.channel.id);
 	let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
-	let embed = new MessageEmbed().setFooter(`Room #${adventure.depth} - Round ${adventure.room.round}`);
+	let embed = new MessageEmbed().setColor(adventure.room.embedColor)
+		.setFooter(`Room #${adventure.depth} - Round ${adventure.room.round}`);
 	let infoForNextRound = true;
 	let descriptionText = "";
 	switch (delver.predict) {

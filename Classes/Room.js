@@ -1,8 +1,8 @@
 // Read and write object represeting a room in an adventure
 module.exports = class Room {
-	constructor(titleInput, elementEnum) {
+	constructor(titleInput, embedColorInput) {
 		this.title = titleInput;
-		this.element = elementEnum;
+		this.embedColor = embedColorInput;
 		this.loot = { "gold": 0 };
 	}
 }
