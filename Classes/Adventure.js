@@ -31,6 +31,7 @@ module.exports = class Adventure {
 	room = {};
 	lives = 2;
 	gold = 100;
+	peakGold = 100;
 	rnTable = "";
 
 	generateRNTable() {
@@ -66,5 +67,13 @@ module.exports = class Adventure {
 	setLeaderId(id) {
 		this.leaderId = id;
 		return this;
+	}
+
+	gainGold(integer) {
+		this.gold += integer;
+		if (this.gold > this.peakGold) {
+			this.peakGold = this.gold;
+		}
+		return this.gold;
 	}
 }

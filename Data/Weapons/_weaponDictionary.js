@@ -5,6 +5,7 @@ var weaponWhitelist = [
 	"barrier-thick.js",
 	"barrier-urgent.js",
 	"bloodaegis-base.js",
+	"bloodaegis-charging.js",
 	"bloodaegis-heavy.js",
 	"bloodaegis-sweeping.js",
 	"bow-base.js",
@@ -56,5 +57,9 @@ for (const file of weaponWhitelist) {
 }
 
 exports.getWeaponProperty = function (weaponName, propertyName) {
-	return weaponDictionary[weaponName][propertyName];
+	if (!weaponDictionary[weaponName]) {
+		console.error("Fetching property from illegal weapon: " + weaponName);
+	} else {
+		return weaponDictionary[weaponName][propertyName];
+	}
 }

@@ -14,7 +14,7 @@ module.exports.execute = (interaction, [channelId]) => {
 				VIEW_CHANNEL: true
 			})
 			adventure.lives++;
-			adventure.gold += 50;
+			adventure.gainGold(50);
 			setAdventure(adventure);
 			interaction.reply({ content: `You have joined the adventure! Here's a link to the channel: ${channel}`, ephemeral: true });
 			channel.send(`${interaction.member} joined the adventure.`).then(() => {

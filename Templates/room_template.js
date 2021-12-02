@@ -4,4 +4,4 @@ module.exports = new RoomTemplate()
 	.setTypes("type") // enum: "battle", "merchant", "event", "rest", "finalboss", "midboss", "forge"
 	.setTitle("title")
 	.setDescription("description")
-	.setTitle("embedColor");
+	.setElement("embedColor");

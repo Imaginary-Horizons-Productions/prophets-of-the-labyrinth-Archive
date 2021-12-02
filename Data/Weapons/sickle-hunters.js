@@ -17,9 +17,10 @@ function effect(target, user, isCrit, adventure) {
 	}
 	return dealDamage(target, user, damage, weaponElement, adventure).then(damageText => {
 		if (target.hp < 1) {
-			adventure.gold += 15;
-			damageText += ` ${getFullName(user, adventure.room.enemyTitles)} harvests 15g of alchemical reagents.`;
+			let bonusBounty = 15;
+			adventure.gainGold(bonusBounty);
+			damageText += ` ${getFullName(user, adventure.room.enemyTitles)} harvests ${bonusBounty}g of alchemical reagents.`;
 		}
 		return damageText;
-	}); // result text
+	});
 }

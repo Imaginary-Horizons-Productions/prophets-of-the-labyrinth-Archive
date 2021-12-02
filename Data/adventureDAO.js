@@ -368,7 +368,7 @@ exports.completeAdventure = function (adventure, channel, embed) {
 	let isSuccess = embed.title === "Success";
 	let score = adventure.depth;
 	let livesScore = adventure.lives * 10;
-	let goldScore = Math.log10(adventure.gold) * 5; //TODO #84 base goldScore on peak gold instead of end gold
+	let goldScore = Math.log10(adventure.peakGold) * 5;
 	score += livesScore;
 	score += goldScore;
 	score += adventure.accumulatedScore;

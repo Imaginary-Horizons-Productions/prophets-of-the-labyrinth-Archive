@@ -7,7 +7,7 @@ module.exports = new Button("takegold");
 module.exports.execute = (interaction, args) => {
 	// Move the gold and relics from loot into party inventory
 	let adventure = getAdventure(interaction.channel.id);
-	adventure.gold += adventure.room.loot.gold;
+	adventure.gainGold(adventure.room.loot.gold);
 	interaction.update({
 		components: [...interaction.message.components.map(row => {
 			return new MessageActionRow().addComponents(...row.components.map(component => {
