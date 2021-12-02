@@ -7,7 +7,7 @@ exports.resolveMove = async function (move, adventure) {
 	let user = userTeam[move.userIndex];
 	if (user.hp > 0) {
 		let moveText = `• ${getFullName(user, adventure.room.enemyTitles)} `;
-		if (!user.modifiers.Stun) {
+		if (move.name !== "Stun" && !user.modifiers.Stun) {
 			let targetNames = exports.getTargetList(move.targets, adventure).join(", ");
 			let effect;
 			let targetAll = false;
