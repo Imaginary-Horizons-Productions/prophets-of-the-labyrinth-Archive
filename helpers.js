@@ -1,7 +1,5 @@
 const fs = require("fs");
 
-exports.ELEMENTS = ["Fire", "Earth", "Light", "Water", "Wind", "Darkness"];
-
 exports.generateRandomNumber = function (adventure, exclusiveMax, branch) {
 	if (exclusiveMax === 1) {
 		return 0;

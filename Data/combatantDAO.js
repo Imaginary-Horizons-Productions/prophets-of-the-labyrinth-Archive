@@ -1,7 +1,7 @@
 const Enemy = require("../Classes/Enemy.js");
 const Delver = require("../Classes/Delver.js");
-const Combatant = require("./../Classes/Combatant.js");
 const { getInverse, isNonStacking, getModifierDescription } = require("./Modifiers/_modifierDictionary.js");
+const DamageType = require("../Classes/DamageType.js");
 
 exports.getFullName = function (combatant, titleObject) {
 	if (combatant instanceof Enemy) {
@@ -30,11 +30,11 @@ exports.dealDamage = async function (target, user, damage, element, adventure) {
 	if (target.hp > 0) {
 		if (!Object.keys(target.modifiers).includes("evade") || element === "Poison") {
 			let pendingDamage = damage + (user?.modifiers["powerup"] || 0);
-			let isWeakness = Combatant.getWeaknesses(target.element).includes(element);
+			let isWeakness = DamageType.getWeaknesses(target.element).includes(element);
 			if (isWeakness) {
 				pendingDamage *= 2;
 			}
-			let isResistance = Combatant.getResistances(target.element).includes(element);
+			let isResistance = DamageType.getResistances(target.element).includes(element);
 			if (isResistance) {
 				pendingDamage = pendingDamage / 2;
 			}

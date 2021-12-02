@@ -1,8 +1,9 @@
 const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
 const Adventure = require('../../Classes/Adventure.js');
 const Command = require('../../Classes/Command.js');
+const DamageType = require('../../Classes/DamageType.js');
 const Delver = require('../../Classes/Delver.js');
-const { ELEMENTS, generateRandomNumber } = require('../../helpers.js');
+const { generateRandomNumber } = require('../../helpers.js');
 const { setAdventure } = require("../adventureDAO.js");
 const { getGuild } = require('../guildDAO.js');
 
@@ -11,7 +12,6 @@ module.exports.data.addStringOption(option => option.setName("seed").setDescript
 
 let DESCRIPTORS = ["Shining", "New", "Dusty", "Old", "Floating", "Undersea", "Future", "Intense"];
 let LOCATIONS = ["Adventure", "Castle", "Labyrinth", "Ruins", "Plateau", "Dungeon", "Maze", "Fortress", "Dream"];
-let ELEMENT_COLORS = ["RED", "ORANGE", "YELLOW", "BLUE", "GREEN", "PURPLE"];
 
 module.exports.execute = (interaction) => {
 	// Start a new adventure
@@ -23,9 +23,9 @@ module.exports.execute = (interaction) => {
 		adventure.finalBoss = "Hall of Mirrors";
 		adventure.bosses = [];
 
-		let elementIndex = generateRandomNumber(adventure, ELEMENTS.length, "general");
-		adventure.setName(`${DESCRIPTORS[generateRandomNumber(adventure, DESCRIPTORS.length, "general")]} ${LOCATIONS[generateRandomNumber(adventure, LOCATIONS.length, "general")]} of ${ELEMENTS[elementIndex]}`)
-			.setElement(ELEMENTS[elementIndex]);
+		let elementIndex = generateRandomNumber(adventure, DamageType.elementsList().length, "general");
+		adventure.setName(`${DESCRIPTORS[generateRandomNumber(adventure, DESCRIPTORS.length, "general")]} ${LOCATIONS[generateRandomNumber(adventure, LOCATIONS.length, "general")]} of ${DamageType.elementsList()[elementIndex]}`)
+			.setElement(DamageType.elementsList()[elementIndex]);
 		interaction.guild.channels.fetch(guildProfile.categoryId).then(category => {
 			interaction.guild.channels.create(adventure.name, {
 				parent: category,
@@ -48,7 +48,7 @@ module.exports.execute = (interaction) => {
 				]
 			}).then(channel => {
 				adventure.delvers.push(new Delver(interaction.user.id, interaction.member.displayName, channel.id));
-				let embed = new MessageEmbed().setColor(ELEMENT_COLORS[elementIndex])
+				let embed = new MessageEmbed().setColor(DamageType.getColor(adventure.element))
 					.setAuthor("Imaginary Horizons Productions", "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png", "https://github.com/Imaginary-Horizons-Productions/dungeon-tamers")
 					.setTitle(adventure.name)
 					.setThumbnail("https://cdn.discordapp.com/attachments/545684759276421120/734093574031016006/bountyboard.png")

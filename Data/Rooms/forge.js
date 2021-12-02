@@ -4,7 +4,8 @@ const RoomTemplate = require("../../Classes/RoomTemplate.js")
 module.exports = new RoomTemplate()
 	.setTypes("event", "forge")
 	.setTitle("Abandoned Forge")
-	.setDescription("The room contains an abandoned forge. There seem to be enough supplies leftover for everyone to do something.");
+	.setDescription("The room contains an abandoned forge. There seem to be enough supplies leftover for everyone to do something.")
+	.setElement("@{adventure}");
 
 module.exports.components.push(new MessageActionRow().addComponents(
 	new MessageButton().setCustomId("upgrade")

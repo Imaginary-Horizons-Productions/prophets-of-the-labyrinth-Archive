@@ -4,6 +4,7 @@ module.exports = class RoomTemplate {
 	types = []; // enum: "battle", "merchant", "event", "rest", "finalboss", "midboss", "forge"
 	title = "";
 	description = "";
+	element = "";
 	components = [];
 	enemyList = {};
 	lootList = {};
@@ -20,6 +21,11 @@ module.exports = class RoomTemplate {
 
 	setDescription(descriptionText) {
 		this.description = descriptionText;
+		return this;
+	}
+
+	setElement(elementEnum) {
+		this.element = elementEnum;
 		return this;
 	}
 

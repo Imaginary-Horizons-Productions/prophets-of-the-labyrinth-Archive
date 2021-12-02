@@ -4,7 +4,8 @@ const RoomTemplate = require("../../Classes/RoomTemplate.js")
 module.exports = new RoomTemplate()
 	.setTypes("event")
 	.setTitle("Gold on Fire")
-	.setDescription("In the center of the room, there is a huge fire. In the center of the fire, there is a pile of gold.");
+	.setDescription("In the center of the room, there is a huge fire. In the center of the fire, there is a pile of gold.")
+	.setElement("Fire");
 
 module.exports.components.push(new MessageActionRow().addComponents(
 	new MessageButton()

@@ -2,10 +2,10 @@ const Enemy = require("../../Classes/Enemy.js");
 const { addModifier, getFullName, dealDamage } = require("../combatantDAO.js");
 const { selectRandomFoe, nextRandom } = require("../enemyDAO.js");
 
-module.exports = new Enemy("@{adventureReverse} Ooze")
+module.exports = new Enemy("@{adventureOpposite} Ooze")
 	.setHp(200)
 	.setSpeed(90)
-	.setElement("@{adventureReverse}")
+	.setElement("@{adventureOpposite}")
 	.setStaggerThreshold(5)
 	.setFirstAction("Goop Spray")
 	.addAction({ name: "Goop Spray", effect: goopSprayEffect, selector: selectRandomFoe, next: nextRandom })

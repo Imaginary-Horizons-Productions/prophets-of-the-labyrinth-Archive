@@ -15,6 +15,7 @@ const Room = require("../Classes/Room.js");
 const RoomCombat = require("../Classes/RoomCombat.js");
 const { getGuild } = require("./guildDAO.js");
 const { spawnEnemy } = require("./enemyDAO.js");
+const DamageType = require("../Classes/DamageType.js");
 
 var filePath = "./Saves/adventures.json";
 var requirePath = "./../Saves/adventures.json";
@@ -107,9 +108,15 @@ exports.nextRoom = async function (adventure, channel) {
 		}).catch(console.error);
 	}
 	if (adventure.depth < 11) {
-		let roomTypes = ["battle"/*, "event", "forge"*/];
-		let roomTemplate = getRoomTemplate(roomTypes[generateRandomNumber(adventure, roomTypes.length, "general")], adventure); //TODO #73 voting on room type
-		let embed = new MessageEmbed()
+		let roomTypes = ["battle", "event", "forge"]; //TODO #73 voting on room type
+		let roomTemplate = getRoomTemplate(roomTypes[generateRandomNumber(adventure, roomTypes.length, "general")], adventure);
+		let roomColor = roomTemplate.element;
+		if (roomColor === "@{adventure}") {
+			roomColor = DamageType.getColor(adventure.element);
+		} else {
+			roomColor = DamageType.getColor(roomColor);
+		}
+		let embed = new MessageEmbed().setColor(roomColor)
 			.setAuthor(roomHeaderString(adventure), channel.client.user.displayAvatarURL())
 			.setTitle(roomTemplate.title)
 			.setDescription(roomTemplate.description)

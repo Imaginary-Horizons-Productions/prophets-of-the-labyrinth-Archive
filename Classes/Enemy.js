@@ -2,7 +2,7 @@ const Combatant = require("./Combatant");
 
 // Represents an enemy for players to fight
 module.exports = class Enemy extends Combatant {
-	// Properties from Combatant: hp, maxHp, speed, roundSpeed, elements, setHp, setSpeed, setElement
+	// Properties from Combatant: hp, maxHp, speed, roundSpeed, element, setHp, setSpeed, setElement
 	constructor(nameInput) {
 		super(nameInput, "enemy");
 		this.lookupName = nameInput;

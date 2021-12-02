@@ -1,5 +1,6 @@
+const DamageType = require("../Classes/DamageType");
 const Enemy = require("../Classes/Enemy");
-const { generateRandomNumber, ELEMENTS } = require("../helpers");
+const { generateRandomNumber } = require("../helpers");
 
 module.exports.spawnEnemy = function (adventure, enemyTemplate, randomizeHp) {
 	enemyTemplate.modifiers = {}; // breaks shared reference to modifiers object by enemies of same name
@@ -13,9 +14,8 @@ module.exports.spawnEnemy = function (adventure, enemyTemplate, randomizeHp) {
 		case "adventure":
 			enemy.name = enemy.name.replace("@{adventure}", adventure.element);
 			break;
-		case "adventureReverse":
-			let reverseAdventureElement = ELEMENTS[(ELEMENTS.findIndex(element => element === adventure.element) + 3) % 6];
-			enemy.name = enemy.name.replace("@{adventureReverse}", reverseAdventureElement);
+		case "adventureOpposite":
+			enemy.name = enemy.name.replace("@{adventureOpposite}", DamageType.getOpposite(adventure.element));
 			break;
 		case "clone":
 			enemy.name = enemy.name.replace("@{clone}", `Mirror ${adventure.delvers[adventure.room.enemies.length].title}`);
@@ -26,9 +26,8 @@ module.exports.spawnEnemy = function (adventure, enemyTemplate, randomizeHp) {
 		case "adventure":
 			enemy.setElement(enemy.element.replace("@{adventure}", adventure.element));
 			break;
-		case "adventureReverse":
-			let reverseAdventureElement = ELEMENTS[(ELEMENTS.findIndex(element => element === adventure.element) + 3) % 6];
-			enemy.setElement(enemy.element.replace("@{adventureReverse}", reverseAdventureElement));
+		case "adventureOpposite":
+			enemy.setElement(enemy.element.replace("@{adventureOpposite}", DamageType.getOpposite(adventure.element)));
 			break;
 		case "clone":
 			enemy.setElement(enemy.element.replace("@{clone}", adventure.delvers[adventure.room.enemies.length].element));
