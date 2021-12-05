@@ -12,7 +12,7 @@ module.exports.execute = (interaction, args) => {
 		let user = adventure.delvers.find(delver => delver.id === interaction.user.id);
 		let weaponName = interaction.values[0];
 		let upgradePool = getWeaponProperty(weaponName, "upgrades");
-		let upgradeName = upgradePool[generateRandomNumber(adventure, upgradePool.length, "general")];
+		let upgradeName = upgradePool[generateRandomNumber(adventure, upgradePool.length, "General")];
 		let upgradeUses = getWeaponProperty(upgradeName, "maxUses");
 		let usesDifference = upgradeUses - getWeaponProperty(weaponName, "maxUses");
 		if (usesDifference > 0) {

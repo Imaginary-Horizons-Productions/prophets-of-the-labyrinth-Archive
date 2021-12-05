@@ -1,7 +1,7 @@
 const RoomTemplate = require("../../Classes/RoomTemplate.js");
 
 module.exports = new RoomTemplate()
-	.setTypes("battle")
+	.setTypes("Battle")
 	.setTitle("Slime Fight")
 	.setDescription("Some slimes and oozes approach...")
 	.setElement("@{adventure}")

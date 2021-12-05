@@ -1,11 +1,11 @@
 // A readonly object containing stats for a room
 module.exports = class RoomTemplate {
 	constructor() { }
-	types = []; // enum: "battle", "merchant", "event", "rest", "finalboss", "midboss", "forge"
+	types = []; // enum: "Battle", "Merchant", "Event", "Rest Site", "Final Battle", "Relic Guardian", "Forge"
 	title = "";
 	description = "";
 	element = "";
-	components = [];
+	uiRows = [];
 	enemyList = {};
 	lootList = {};
 

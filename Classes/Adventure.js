@@ -9,11 +9,11 @@ module.exports = class Adventure {
 	element;
 	scouting = {
 		finalBoss: false,
-		midBosses: 0,
-		midBossesEncountered: 0
+		relicGuardians: 0,
+		relicGuardiansEncountered: 0
 	}
 	finalBoss = "Hall of Mirrors";
-	midBosses = [];
+	relicGuardians = [];
 	rnIndex = 0;
 	rnIndexBattle = 0;
 	messageIds = {
@@ -29,6 +29,7 @@ module.exports = class Adventure {
 	accumulatedScore = 0;
 	depth = 0;
 	room = {};
+	roomCandidates = {};
 	lives = 2;
 	gold = 100;
 	peakGold = 100;

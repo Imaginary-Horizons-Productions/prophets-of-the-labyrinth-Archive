@@ -23,8 +23,8 @@ module.exports.execute = (interaction) => {
 		adventure.finalBoss = "Hall of Mirrors";
 		adventure.bosses = [];
 
-		let elementIndex = generateRandomNumber(adventure, DamageType.elementsList().length, "general");
-		adventure.setName(`${DESCRIPTORS[generateRandomNumber(adventure, DESCRIPTORS.length, "general")]} ${LOCATIONS[generateRandomNumber(adventure, LOCATIONS.length, "general")]} of ${DamageType.elementsList()[elementIndex]}`)
+		let elementIndex = generateRandomNumber(adventure, DamageType.elementsList().length, "General");
+		adventure.setName(`${DESCRIPTORS[generateRandomNumber(adventure, DESCRIPTORS.length, "General")]} ${LOCATIONS[generateRandomNumber(adventure, LOCATIONS.length, "General")]} of ${DamageType.elementsList()[elementIndex]}`)
 			.setElement(DamageType.elementsList()[elementIndex]);
 		interaction.guild.channels.fetch(guildProfile.categoryId).then(category => {
 			interaction.guild.channels.create(adventure.name, {
@@ -70,7 +70,7 @@ module.exports.execute = (interaction) => {
 							.setDisabled(true)
 					)
 					channel.send({ content: "The adventure will begin when everyone has picked an archetype and the leader clicks the \"Ready!\" button.", components: [ready] }).then(message => {
-						channel.send(`${interaction.user} Here's the channel for your new adventure. As adventure leader your vote will be the tie breaker!`);
+						channel.send(`${interaction.user} Here's the channel for your new adventure. As adventure leader you're responsible for indicating when everyone's ready.`);
 						adventure.setId(channel.id)
 							.setMessageId("recruit", recruitMessage.id)
 							.setMessageId("deploy", message.id)

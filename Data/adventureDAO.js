@@ -99,7 +99,8 @@ exports.updateRoomHeader = function (adventure, message) {
 	message.edit({ embeds: [message.embeds[0].setAuthor(roomHeaderString(adventure), message.client.user.displayAvatarURL())] })
 }
 
-exports.nextRoom = async function (adventure, channel) {
+exports.nextRoom = async function (roomType, adventure, channel) {
+	// Clean up old room
 	adventure.depth++;
 	adventure.room = {};
 	if (adventure.messageIds.lastComponent) {
@@ -107,9 +108,28 @@ exports.nextRoom = async function (adventure, channel) {
 			message.edit({ components: [] });
 		}).catch(console.error);
 	}
+
+	// Roll options for next room type
+	let roomTypes = ["Battle", "Event", "Forge"];
+	let finalBossDepths = [10];
+	let candidateType = "";
+	if (!finalBossDepths.includes(adventure.depth + 1)) {
+		adventure.roomCandidates = {};
+		let numCandidates = 2; // Should not execed 5, as only 5 buttons can be in a MessageActionRow
+		for (let i = 0; i < numCandidates; i++) {
+			candidateType = roomTypes[generateRandomNumber(adventure, roomTypes.length, "General")];
+			adventure.roomCandidates[candidateType] = [];
+			roomTypes = roomTypes.filter(type => type != candidateType);
+		}
+	} else {
+		adventure.roomCandidates = {
+			"Final Battle": true
+		};
+	}
+
+	// Generate current room
 	if (adventure.depth < 11) {
-		let roomTypes = ["battle", "event", "forge"]; //TODO #73 voting on room type
-		let roomTemplate = getRoomTemplate(roomTypes[generateRandomNumber(adventure, roomTypes.length, "general")], adventure);
+		let roomTemplate = getRoomTemplate(roomType, adventure);
 		let roomColor = roomTemplate.element;
 		if (roomColor === "@{adventure}") {
 			roomColor = DamageType.getColor(adventure.element);
@@ -121,17 +141,22 @@ exports.nextRoom = async function (adventure, channel) {
 			.setTitle(roomTemplate.title)
 			.setDescription(roomTemplate.description)
 			.setFooter(`Room #${adventure.depth}`);
-		if (roomTemplate.types.includes("battle") || roomTemplate.types.includes("finalboss") || roomTemplate.types.includes("midboss")) {
+		if (["Battle", "Final Battle", "Relic Guardian"].includes(roomType)) {
+			if (roomType === "Relic Guardian") {
+				adventure.scouting.relicGuardiansEncountered++;
+			}
 			adventure.room = new RoomCombat(roomTemplate.title, roomColor);
+			let isBossRoom = roomType !== "Battle";
 			for (let enemyName in roomTemplate.enemyList) {
 				for (let i = 0; i < parseCount(roomTemplate.enemyList[enemyName], adventure.delvers.length); i++) {
-					spawnEnemy(adventure, getEnemy(enemyName), !roomTemplate.types.includes("finalboss") && !roomTemplate.types.includes("midboss"));
+					spawnEnemy(adventure, getEnemy(enemyName), !isBossRoom);
 				}
 			}
 			exports.newRound(adventure, channel, embed);
 		} else {
 			adventure.room = new Room(roomTemplate.title, roomColor);
-			let message = await channel.send({ embeds: [embed], components: roomTemplate.components });
+			const { embed: embedFinal, uiRows } = exports.addRoutingUI(embed, roomTemplate.uiRows, adventure);
+			let message = await channel.send({ embeds: [embedFinal], components: uiRows });
 			adventure.setMessageId("lastComponent", message.id);
 		}
 		for (let reward in roomTemplate.lootList) {
@@ -164,11 +189,11 @@ exports.newRound = function (adventure, channel, embed = new MessageEmbed()) {
 			clearBlock(combatant);
 
 			// Roll Round Speed
-			let percentBonus = (generateRandomNumber(adventure, 21, "battle") - 10) / 100;
+			let percentBonus = (generateRandomNumber(adventure, 21, "Battle") - 10) / 100;
 			combatant.roundSpeed = Math.floor(combatant.speed * percentBonus);
 
 			// Roll Critical Hit
-			let critRoll = generateRandomNumber(adventure, 4, "battle");
+			let critRoll = generateRandomNumber(adventure, 4, "Battle");
 			combatant.crit = critRoll > 2;
 
 			// Roll Enemy Moves and Generate Dummy Moves
@@ -186,7 +211,7 @@ exports.newRound = function (adventure, channel, embed = new MessageEmbed()) {
 						let actionName = combatant.nextAction;
 						if (actionName === "random") {
 							let actionPool = Object.keys(enemyTemplate.actions);
-							actionName = actionPool[generateRandomNumber(adventure, actionPool.length, "battle")];
+							actionName = actionPool[generateRandomNumber(adventure, actionPool.length, "Battle")];
 						}
 						move.setMoveName(actionName);
 						enemyTemplate.actions[actionName].selector(adventure, combatant).forEach(({ team, index }) => {
@@ -254,6 +279,32 @@ exports.updateRoundMessage = function (messageManager, adventure) {
 	})
 }
 
+exports.addRoutingUI = function (embed, components, adventure) {
+	let candidateKeys = Object.keys(adventure.roomCandidates);
+	let uiRows = [...components];
+	if (candidateKeys.length > 1) {
+		uiRows.push(new MessageActionRow().addComponents(
+			...candidateKeys.map(roomType => {
+				return new MessageButton().setCustomId(`routevote-${roomType}`)
+					.setLabel(`Next room: ${roomType}`)
+					.setStyle("SECONDARY")
+			})));
+		let delverIds = adventure.delvers.map(delver => delver.id);
+		let allVotes = [].concat(...Object.values(adventure.roomCandidates));
+		let notVoted = delverIds.filter(id => !allVotes.includes(id));
+		embed.addField("Decide the next room",
+			`Each delver can pick or change their pick for the next room. The party will move on when the decision is unanimous.\n\nUndecided:\n<@${notVoted.join(">, <@")}>`);
+	} else {
+		uiRows.push(new MessageActionRow().addComponents(
+			new MessageButton().setCustomId("continue")
+				.setLabel(`Continue to the ${roomType}`)
+				.setStyle("SECONDARY")
+		));
+	}
+
+	return { embed, uiRows };
+}
+
 exports.endRound = async function (adventure, channel) {
 	// Generate results embed
 	let embed = new MessageEmbed().setAuthor(roomHeaderString(adventure), channel.client.user.displayAvatarURL())
@@ -299,7 +350,7 @@ exports.endRound = async function (adventure, channel) {
 
 			// Generate gold
 			let totalBounty = adventure.room.enemies.reduce((total, enemy) => total + enemy.bounty, adventure.room.loot.gold);
-			totalBounty *= (90 + generateRandomNumber(adventure, 21, "general")) / 100;
+			totalBounty *= (90 + generateRandomNumber(adventure, 21, "General")) / 100;
 			totalBounty = Math.ceil(totalBounty);
 			adventure.room.loot.gold = totalBounty;
 			if (totalBounty > 0) {
@@ -330,19 +381,15 @@ exports.endRound = async function (adventure, channel) {
 			}
 
 			// Finalize UI
-			let componentContainer = [new MessageActionRow().addComponents(
-				new MessageButton().setCustomId("continue")
-					.setLabel("Move on")
-					.setStyle("PRIMARY")
-			)];
+			let roomUI = [];
 			if (lootRow.length > 0) {
 				embed.addField("Spoils of Combat", spoilsText);
-				componentContainer.unshift(new MessageActionRow().addComponents(...lootRow));
+				roomUI.unshift(new MessageActionRow().addComponents(...lootRow));
 			}
-
+			const { embed: embedFinal, uiRows } = exports.addRoutingUI(embed, roomUI, adventure);
 			return channel.send({
-				embeds: [embed.setTitle("Victory!").setDescription(lastRoundText)],
-				components: componentContainer
+				embeds: [embedFinal.setTitle("Victory!").setDescription(lastRoundText)],
+				components: uiRows
 			}).then(message => {
 				adventure.room.moves = [];
 				adventure.delvers.forEach(delver => {
@@ -372,9 +419,10 @@ exports.completeAdventure = function (adventure, channel, embed) {
 	score += livesScore;
 	score += goldScore;
 	score += adventure.accumulatedScore;
-	if (!isSuccess && score > 0) {
+	if (!isSuccess) {
 		score = Math.floor(score / 2);
 	}
+	score = Math.max(1, score);
 	embed.addField("Score Breakdown", `Depth: ${adventure.depth}\nLives: ${livesScore}\nGold: ${goldScore}\nBonus: ${adventure.accumulatedScore}\n\n__Total__: ${!isSuccess && score > 0 ? `score ÷ 2  = ${score} (Defeat)` : score}`)
 		.addField("Clean-Up", "This channel will be cleaned up in 5 minutes.");
 

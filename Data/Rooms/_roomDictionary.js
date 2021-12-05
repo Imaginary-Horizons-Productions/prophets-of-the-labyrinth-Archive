@@ -27,25 +27,25 @@ for (const file of roomWhitelist) {
 	const room = require(`./${file}`);
 	room.types.forEach(type => {
 		switch (type) {
-			case "event":
+			case "Event":
 				eventRooms.push(room);
 				break;
-			case "battle":
+			case "Battle":
 				battleRooms.push(room);
 				break;
-			case "merchant":
+			case "Merchant":
 				merchantRooms.push(room);
 				break;
-			case "rest":
+			case "Rest Site":
 				restRooms.push(room);
 				break;
-			case "finalboss":
+			case "Final Battle":
 				finalBossRooms.push(room);
 				break;
-			case "midboss":
+			case "Relic Guardian":
 				midbossRooms.push(room);
 				break;
-			case "forge":
+			case "Forge":
 				forgeRooms.push(room);
 				break;
 			default:
@@ -56,36 +56,29 @@ for (const file of roomWhitelist) {
 }
 
 exports.getRoomTemplate = function (type, adventure) {
-	// Prerolled Room
-	let finalBossDepths = [10];
-	let midbossDepths = [];
-	if (finalBossDepths.includes(adventure.depth)) {
-		return finalBossRooms[adventure.finalBoss];
-	} else if (midbossDepths.includes(adventure.depth)) {
-		return midbossRooms[adventure.midbosses[adventure.depth]]; //TODO #103 verify implementation after midbosses exist
-	}
-
-	// Nonprerolled Room
 	switch (type) {
-		case "event":
-			return eventRooms[generateRandomNumber(adventure, eventRooms.length, "general")];
-		case "battle":
-			return battleRooms[generateRandomNumber(adventure, battleRooms.length, "general")];
-		case "merchant":
-			return merchantRooms[generateRandomNumber(adventure, merchantRooms.length, "general")];
-		case "rest":
-			return restRooms[generateRandomNumber(adventure, restRooms.length, "general")];
-		case "finalboss":
-			return finalBossRooms[generateRandomNumber(adventure, finalBossRooms.length, "general")];
-		case "midboss":
-			return midbossRooms[generateRandomNumber(adventure, midbossRooms.length, "general")];
-		case "forge":
-			return forgeRooms[generateRandomNumber(adventure, forgeRooms.length, "general")];
+		case "Event":
+			return eventRooms[generateRandomNumber(adventure, eventRooms.length, "General")];
+		case "Battle":
+			return battleRooms[generateRandomNumber(adventure, battleRooms.length, "General")];
+		case "Merchant":
+			return merchantRooms[generateRandomNumber(adventure, merchantRooms.length, "General")];
+		case "Rest Site":
+			return restRooms[generateRandomNumber(adventure, restRooms.length, "General")];
+		case "Final Battle":
+			return finalBossRooms[adventure.finalBoss];
+		case "Relic Guardian":
+			return midbossRooms[adventure.relicGuardians[adventure.scouting.relicGuardiansEncountered]]; //TODO #103 verify implementation after midbosses exist
+		case "Forge":
+			return forgeRooms[generateRandomNumber(adventure, forgeRooms.length, "General")];
 		default:
 			console.error("Attempt to create room of unidentified type: " + type);
 			let empty = new RoomTemplate().setTitle("Empty Room")
 				.setDescription("This room is empty. Lucky you?");
-			empty.components.push(new MessageActionRow().addComponents(
+			adventure.roomCandidates = {
+				"Battle": true
+			};
+			empty.uiRows.push(new MessageActionRow().addComponents(
 				new MessageButton().setCustomId("continue")
 					.setLabel("Move on")
 					.setStyle("SECONDARY")

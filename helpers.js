@@ -1,3 +1,4 @@
+const { MessageActionRow } = require("discord.js");
 const fs = require("fs");
 
 exports.generateRandomNumber = function (adventure, exclusiveMax, branch) {
@@ -7,7 +8,7 @@ exports.generateRandomNumber = function (adventure, exclusiveMax, branch) {
 		let digits = Math.ceil(Math.log2(exclusiveMax) / Math.log2(12));
 		let start;
 		let end;
-		switch (branch) {
+		switch (branch.toLowerCase()) {
 			case "general":
 				start = adventure.rnIndex;
 				end = start + digits;
@@ -34,6 +35,26 @@ exports.parseCount = function (countExpression, nValue) {
 			return total * Number(term);
 		}
 	}, 1));
+}
+
+exports.editButton = function (interaction, customId, preventUse, emoji, label) {
+	return interaction.update({
+		components: [...interaction.message.components.map(row => {
+			return new MessageActionRow().addComponents(...row.components.map(component => {
+				if (component.customId === customId) {
+					let editedButton = component.setDisabled(preventUse)
+						.setLabel(label);
+					if (emoji) {
+						editedButton.setEmoji(emoji);
+					}
+					return editedButton;
+				} else {
+					return component;
+				}
+			}));
+		})
+		]
+	})
 }
 
 exports.ensuredPathSave = function (path, fileName, data) {

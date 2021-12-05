@@ -6,8 +6,8 @@ const { getArchetype } = require('../Archetypes/_archetypeDictionary.js');
 module.exports = new Button("deploy");
 
 module.exports.execute = (interaction, args) => {
-	// Start an adventure if clicked by adventure leader
-	let playerProfile = getPlayer(interaction.user.id, interaction.guild.id);
+	// Send the player a message with a select to pick an archetype
+	let playerProfile = getPlayer(interaction.user.id, interaction.guild.id); //TODO if player hasn't joined adventure, allow them to join
 	let classOptions = [];
 	for (const className in playerProfile.archetypes) {
 		if (playerProfile.archetypes[className] > 0) {
