@@ -3,16 +3,17 @@ const RoomTemplate = require("../../Classes/RoomTemplate");
 const { generateRandomNumber } = require("../../helpers");
 
 let roomWhitelist = [
-	"goldonfire.js",
-	"hpshare.js",
-	"scorebeggar.js",
-	"forge.js",
-	"freegold.js",
-	"counterpartfight.js",
-	"hawkfight.js",
-	"mechabeefight.js",
-	"slimefight.js",
-	"tortoisefight.js"
+	"battle-hawks.js",
+	"battle-mechabees.js",
+	"battle-slimes.js",
+	"battle-tortoises.js",
+	"event-freegold.js",
+	"event-goldonfire.js",
+	"event-hpshare.js",
+	"event-scorebeggar.js",
+	"finalBattle-mirrors.js",
+	"forge-basic.js",
+	"restsite-basic.js"
 ];
 
 let eventRooms = [];

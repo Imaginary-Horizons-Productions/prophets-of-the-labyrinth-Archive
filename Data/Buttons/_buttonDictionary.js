@@ -1,5 +1,6 @@
 var buttonWhitelist = [
 	"buylife.js",
+	"challenge.js",
 	"continue.js",
 	"deploy.js",
 	"getgoldonfire.js",
@@ -12,6 +13,7 @@ var buttonWhitelist = [
 	"ready.js",
 	"readymove.js",
 	"repair.js",
+	"rest.js",
 	"routevote.js",
 	"self.js",
 	"takegold.js",

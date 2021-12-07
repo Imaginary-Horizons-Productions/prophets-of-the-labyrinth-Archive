@@ -103,14 +103,14 @@ exports.nextRoom = async function (roomType, adventure, channel) {
 	// Clean up old room
 	adventure.depth++;
 	adventure.room = {};
-	if (adventure.messageIds.lastComponent) {
+	if (adventure.messageIds.lastComponent) {//TODO #127 leave events and route components, but remove battle components
 		channel.messages.fetch(adventure.messageIds.lastComponent).then(message => {
 			message.edit({ components: [] });
 		}).catch(console.error);
 	}
 
 	// Roll options for next room type
-	let roomTypes = ["Battle", "Event", "Forge"];
+	let roomTypes = ["Battle", "Event", "Forge", "Rest Site"]; //TODO #126 add weights to room types
 	let finalBossDepths = [10];
 	let candidateType = "";
 	if (!finalBossDepths.includes(adventure.depth + 1)) {
