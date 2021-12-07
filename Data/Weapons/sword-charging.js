@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { dealDamage, addModifier } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Charging Sword", "*Strike a foe for @{damage} (+@{bonusDamage} if you have 0 block) @{element} damage and gain 25 powerup*\nCritical Hit: Damage x@{critMultiplier}", "Earth", effect, [])
+module.exports = new Weapon("Charging Sword", "*Strike a foe for @{damage} (+@{bonusDamage} if you have 0 block) @{element} damage and gain 25 powerup*\nCritical Hit: Damage x@{critMultiplier}", "Earth", effect, ["Guarding Sword", "Swift Sword"])
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setUses(5)
 	.setDamage(75)
@@ -19,5 +19,5 @@ function effect(target, user, isCrit, adventure) {
 		damage *= critMultiplier;
 	}
 	addModifier(user, "powerup", 25);
-	return dealDamage(target, user, damage, weaponElement, adventure); // result text
+	return dealDamage(target, user, damage, weaponElement, adventure);
 }

@@ -1,6 +1,6 @@
 # Upgrade Names
 
-### Chargning
+### Chargeing
 User gains Power Up modifier
 
 #### Available on
@@ -63,6 +63,7 @@ Damage type matches user
 
 #### Available on
 - Fire Cracker (Fire)
+- Bow (Wind)
 
 ### Purifying
 Removes all debuffs on target
@@ -144,15 +145,13 @@ Increased damage against enemies with 0 block
 
 ## Ideas
 - Catalyst ___ - Adds stacks to debuffs
-- Urgent ___ - Gives a bonus to the user's speed for this move
 - Empowering ___ - Adds stacks to buffs
 - Reaper's ___ - kills an enemy if they are at 15% hp or below
-- Double ___ - doubles number of (random) targets
 - Seeking ___ - targets lowest hp enemy
 - Kite Shield - single target attack that grants user block (Guarding)
 - Tower Shield - blocks for target and user (non-starting weapon)
 - Prideful - high value non-elemental damage
 - Bashing - bonus damage for block on user
-- Scythe
+- Scythe - kills an enemy if they are at 15% hp or below (Reaper's)
 - Bloodthirsty ___ - heal user if killing blow
 - Siphoning ___ - regain uses if killing blow

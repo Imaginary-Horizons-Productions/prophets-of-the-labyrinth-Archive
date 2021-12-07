@@ -32,18 +32,14 @@ module.exports.execute = (interaction, args) => {
 				if (adventure.delvers.every(delver => delver.title)) {
 					let readyButton = [
 						new MessageActionRow().addComponents(
-							new MessageButton().setCustomId(`ready-${interaction.channel.id}`)
+							new MessageButton().setCustomId("ready")
 								.setLabel("Ready!")
 								.setStyle("SUCCESS")
 						)
 					];
 
 					// if startMessageId already exists, player has changed class, so delete extra start button
-					if (adventure.messageIds.start) {
-						interaction.channel.messages.fetch(adventure.messageIds.start).then(startMessage => {
-							startMessage.edit({ components: [] });
-						})
-					}
+					clearComponents(adventure.messageIds.start, interaction.channel.messages);
 
 					interaction.channel.send({ content: "All players are ready, the adventure will start when the leader clicks the button below!", components: readyButton }).then(message => {
 						adventure.setMessageId("start", message.id);

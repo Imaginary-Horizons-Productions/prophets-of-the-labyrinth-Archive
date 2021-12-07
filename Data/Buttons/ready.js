@@ -2,6 +2,7 @@ const { getAdventure, nextRoom } = require('../adventureDAO.js');
 const Button = require('../../Classes/Button.js');
 const { getGuild } = require('../guildDAO.js');
 const { MessageActionRow, MessageButton } = require('discord.js');
+const { clearComponents } = require('../../helpers.js');
 
 module.exports = new Button("ready");
 
@@ -12,16 +13,10 @@ module.exports.execute = (interaction, args) => {
 		// Clear components from recruitment, start, and deploy messages
 		let guildProfile = getGuild(interaction.guild.id);
 		interaction.guild.channels.fetch(guildProfile.centralId).then(channel => {
-			channel.messages.fetch(adventure.messageIds.recruit).then(recruitMessage => {
-				recruitMessage.edit({ components: [] });
-			})
+			clearComponents(adventure.messageIds.recruit, channel.messages);
 		}).catch(console.error);
-		interaction.channel.messages.fetch(adventure.messageIds.deploy).then(deployMessage => {
-			deployMessage.edit({ components: [] });
-		}).catch(console.error);
-		interaction.channel.messages.fetch(adventure.messageIds.start).then(startMessage => {
-			startMessage.edit({ components: [] });
-		}).catch(console.error);
+		clearComponents(adventure.messageIds.deploy, interaction.channel.messages);
+		clearComponents(adventure.messageIds.start, interaction.channel.messages);
 
 		// Post utilities message
 		let utilities = [new MessageActionRow()

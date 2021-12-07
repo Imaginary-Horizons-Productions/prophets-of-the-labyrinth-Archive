@@ -1,5 +1,7 @@
 const { nextRoom, getAdventure } = require('../adventureDAO.js');
 const Button = require('../../Classes/Button.js');
+const { MessageActionRow, MessageButton } = require('discord.js');
+const { clearComponents } = require('../../helpers.js');
 
 module.exports = new Button("routevote");
 
@@ -31,12 +33,28 @@ module.exports.execute = (interaction, [direction]) => {
 		}
 
 		let embed = interaction.message.embeds[0];
-		embed.spliceFields(embed.fields.length - 1, 1, { name: "Decide the next room", value: routingText });
+		embed.spliceFields(embed.fields.findIndex(field => field.title === "Decide the next room"), 1, { name: "Decide the next room", value: routingText });
 		interaction.message.edit({ embeds: [embed] });
 		interaction.reply(`${interaction.user} ${changeVote ? "changed votes to " : "voted for"} ${direction}.`);
 
 		// Decide by unanimous vote
 		if (adventure.roomCandidates[direction].length === adventure.delvers.length) {
+			embed.spliceFields(embed.fields.findIndex(field => field.title === "Decide the next room"), 1);
+			clearComponents(adventure.messageIds.battleRound, interaction.channel.messages);
+			let uiRows = [...interaction.message.components.map(row => {
+				return new MessageActionRow().addComponents(...row.components.map(component => {
+					let editedComponent = component.setDisabled(true);
+					if (component.customId === `routevote-${direction}`) {
+						editedComponent.setEmoji("✔️");
+					} else {
+						if (component instanceof MessageButton && !component.emoji?.name) {
+							editedComponent.setEmoji("✖️");
+						}
+					}
+					return editedComponent;
+				}));
+			})];
+			interaction.message.edit({ embeds: [embed], components: uiRows });
 			interaction.followUp(`The party moves on to ${direction}.`).then(message => {
 				nextRoom(direction, adventure, interaction.channel);
 			});

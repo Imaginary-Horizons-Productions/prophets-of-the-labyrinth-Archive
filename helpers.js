@@ -57,6 +57,14 @@ exports.editButton = function (interaction, customId, preventUse, emoji, label) 
 	})
 }
 
+exports.clearComponents = function (messageId, messageManager) {
+	if (messageId) {
+		messageManager.fetch(messageId).then(message => {
+			message.edit({ components: [] });
+		})
+	}
+}
+
 exports.ensuredPathSave = function (path, fileName, data) {
 	if (!fs.existsSync(path)) {
 		fs.mkdirSync(path, { recursive: true });

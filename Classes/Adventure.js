@@ -21,7 +21,7 @@ module.exports = class Adventure {
 		deploy: "",
 		start: "",
 		utility: "",
-		lastComponent: ""
+		battleRound: ""
 	};
 	leaderId = "";
 	delvers = [];

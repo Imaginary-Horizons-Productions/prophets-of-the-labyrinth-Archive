@@ -1,6 +1,6 @@
 const Weapon = require('../../Classes/Weapon.js');
 
-module.exports = new Weapon("Spell: Charging Blood Aegis", "*Pay @{hpCost} hp to grant an ally @{block} block, then gain 25 powerup*\nCritical Hit: Block x@{critMultiplier}", "Darkness", effect, [])
+module.exports = new Weapon("Spell: Charging Blood Aegis", "*Pay @{hpCost} hp to grant an ally @{block} block, then gain 25 powerup*\nCritical Hit: Block x@{critMultiplier}", "Darkness", effect, ["Spell: Heavy Blood Aegis", "Spell: Sweeping Blood Aegis"])
 	.setTargetingTags({ target: "single", team: "ally" })
 	.setUses(10)
 	.setHpCost(25)

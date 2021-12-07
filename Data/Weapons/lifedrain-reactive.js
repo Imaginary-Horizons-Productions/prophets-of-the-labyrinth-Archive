@@ -1,8 +1,8 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { addModifier, dealDamage, gainHealth, calculateTotalSpeed } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Spell: Reactive Life Drain", "*Strike a foe for @{damage} (+@{bonusDamage} if foe went first) @{element} damage, then gain @{healing} hp*\nCritical Hit: Healing x@{critMultiplier}", "Darkness", effect, [])
-	.setTargetingTags({ target: "single", team: "enemy" }) // tagObject {target: ["single", "all", "random", "self"], team: ["ally", "enemy", "any", "self"]}
+module.exports = new Weapon("Spell: Reactive Life Drain", "*Strike a foe for @{damage} (+@{bonusDamage} if foe went first) @{element} damage, then gain @{healing} hp*\nCritical Hit: Healing x@{critMultiplier}", "Darkness", effect, ["Spell: Urgent Life Drain"])
+	.setTargetingTags({ target: "single", team: "enemy" })
 	.setUses(10)
 	.setDamage(105)
 	.setHealing(35)
@@ -19,5 +19,5 @@ async function effect(target, user, isCrit, adventure) {
 	if (isCrit) {
 		healing *= critMultiplier;
 	}
-	return `${await dealDamage(target, user, damage, weaponElement, adventure)} ${gainHealth(user, healing, adventure.room.enemyTitles)}`; // result text
+	return `${await dealDamage(target, user, damage, weaponElement, adventure)} ${gainHealth(user, healing, adventure.room.enemyTitles)}`;
 }

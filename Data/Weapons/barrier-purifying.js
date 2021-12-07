@@ -2,7 +2,7 @@ const Weapon = require('../../Classes/Weapon.js');
 const { addBlock, removeModifier, getFullName } = require('../combatantDAO.js');
 const { isDebuff } = require('../Modifiers/_modifierDictionary.js');
 
-module.exports = new Weapon("Purifying Barrier", "*Grant an ally @{block} block and cure them of all debuffs*\nCritical Hit: Block x@{critMultiplier}", "Light", effect, [])
+module.exports = new Weapon("Purifying Barrier", "*Grant an ally @{block} block and cure them of all debuffs*\nCritical Hit: Block x@{critMultiplier}", "Light", effect, ["Thick Barrier", "Urgent Barrier"])
 	.setTargetingTags({ target: "single", team: "ally" })
 	.setUses(1);
 

@@ -1,5 +1,5 @@
 const fs = require("fs");
-const { ensuredPathSave, parseCount, generateRandomNumber } = require("../helpers.js");
+const { ensuredPathSave, parseCount, generateRandomNumber, clearComponents } = require("../helpers.js");
 const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
 const Adventure = require("../Classes/Adventure.js");
 const { setPlayer, getPlayer } = require("./playerDAO.js");
@@ -103,11 +103,6 @@ exports.nextRoom = async function (roomType, adventure, channel) {
 	// Clean up old room
 	adventure.depth++;
 	adventure.room = {};
-	if (adventure.messageIds.lastComponent) {//TODO #127 leave events and route components, but remove battle components
-		channel.messages.fetch(adventure.messageIds.lastComponent).then(message => {
-			message.edit({ components: [] });
-		}).catch(console.error);
-	}
 
 	// Roll options for next room type
 	let roomTypes = ["Battle", "Event", "Forge", "Rest Site"]; //TODO #126 add weights to room types
@@ -156,8 +151,7 @@ exports.nextRoom = async function (roomType, adventure, channel) {
 		} else {
 			adventure.room = new Room(roomTemplate.title, roomColor);
 			const { embed: embedFinal, uiRows } = exports.addRoutingUI(embed, roomTemplate.uiRows, adventure);
-			let message = await channel.send({ embeds: [embedFinal], components: uiRows });
-			adventure.setMessageId("lastComponent", message.id);
+			await channel.send({ embeds: [embedFinal], components: uiRows });
 		}
 		for (let reward in roomTemplate.lootList) {
 			adventure.room.loot[reward] = parseCount(roomTemplate.lootList[reward], adventure.delvers.length);
@@ -172,11 +166,7 @@ exports.nextRoom = async function (roomType, adventure, channel) {
 exports.newRound = function (adventure, channel, embed = new MessageEmbed()) {
 	// Increment round and clear last round's components
 	adventure.room.round++;
-	if (adventure.messageIds.lastComponent) {
-		channel.messages.fetch(adventure.messageIds.lastComponent).then(message => {
-			message.edit({ components: [] });
-		})
-	}
+	clearComponents(adventure.messageIds.battleRound, channel.messages);
 
 	// Logistics for Next Round
 	let teams = {
@@ -252,7 +242,7 @@ exports.newRound = function (adventure, channel, embed = new MessageEmbed()) {
 		)];
 		channel.send({ embeds: [embed], components: battleMenu }).then(message => {
 			exports.updateRoomHeader(adventure, message);
-			adventure.setMessageId("lastComponent", message.id);
+			adventure.setMessageId("battleRound", message.id);
 			exports.saveAdventures();
 		});
 	} else {
@@ -263,7 +253,7 @@ exports.newRound = function (adventure, channel, embed = new MessageEmbed()) {
 }
 
 exports.updateRoundMessage = function (messageManager, adventure) {
-	messageManager.fetch(adventure.messageIds.lastComponent).then(roundMessage => {
+	messageManager.fetch(adventure.messageIds.battleRound).then(roundMessage => {
 		let embed = roundMessage.embeds[0];
 		let readyList = "";
 		for (var move of adventure.room.moves) {
@@ -445,12 +435,8 @@ exports.completeAdventure = function (adventure, channel, embed) {
 			.setThumbnail("https://cdn.discordapp.com/attachments/545684759276421120/734092918369026108/completion.png");
 		message.edit({ embeds: [embed] });
 	})
-	channel.messages.fetch(adventure.messageIds.lastComponent).then(message => {
-		message.edit({ components: [] });
-	})
-	channel.messages.fetch(adventure.messageIds.utility).then(message => {
-		message.edit({ components: [] });
-	})
+	clearComponents(adventure.messageIds.battleRound, channel.messages);
+	clearComponents(adventure.messageIds.utility, channel.messages);
 
 	adventureDictionary.delete(channel.id);
 	exports.saveAdventures();
