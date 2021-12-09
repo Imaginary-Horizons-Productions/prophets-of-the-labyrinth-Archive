@@ -4,11 +4,17 @@ var weaponWhitelist = [
 	"barrier-purifying.js",
 	"barrier-thick.js",
 	"barrier-urgent.js",
+	"battleaxe-base.js",
+	"battleaxe-prideful.js",
+	"battleaxe-thick.js",
+	"battleaxe-thirsting.js",
 	"bloodaegis-base.js",
 	"bloodaegis-charging.js",
 	"bloodaegis-heavy.js",
 	"bloodaegis-sweeping.js",
 	"bow-base.js",
+	"bow-evasive.js",
+	"bow-hunters.js",
 	"bow-mercurial.js",
 	"buckler-base.js",
 	"buckler-guarding.js",
@@ -33,6 +39,9 @@ var weaponWhitelist = [
 	"potion-earthen.js",
 	"potion-inky.js",
 	"potion-watery.js",
+	"scythe-base.js",
+	"scythe-lethal.js",
+	"scythe-toxic.js",
 	"sickle-base.js",
 	"sickle-hunters",
 	"sickle-sharpened",
@@ -46,9 +55,10 @@ var weaponWhitelist = [
 	"sunflare-swift.js",
 	"sunflare-tormenting.js",
 	"sword-base.js",
-	"sword-charging.js",
 	"sword-guarding.js",
-	"sword-swift.js"
+	"sword-reckless.js",
+	"sword-swift.js",
+	"warhammer-base.js"
 ];
 
 const weaponDictionary = {};

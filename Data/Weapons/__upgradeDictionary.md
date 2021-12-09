@@ -45,6 +45,7 @@ Gain gold on kill
 
 #### Available on
 - Sickle (Water)
+- Bow (Wind)
 
 ### Inky
 Affects Dark element combatants
@@ -58,6 +59,7 @@ Increased crit damage
 #### Avaialble on
 - all Daggers (Wind)
 - Spear (Light)
+- Scythe (Darkness)
 
 ### Long
 Increased stack count of buff/debuff applied
@@ -72,6 +74,12 @@ Damage type matches user
 - Fire Cracker (Fire)
 - Bow (Wind)
 
+### Prideful
+High value non-elemental damage
+
+#### Available on
+- Battleaxe (Fire)
+
 ### Purifying
 Removes all debuffs on target
 
@@ -85,10 +93,17 @@ Increased damage against a foe with higher speed
 - Spear (Light)
 - Life Drain (Darkness)
 
+### Reaper's
+Instant death if target is below hp threshold
+
+#### Available on
+- all Scythes (Darkness)
+
 ### Reckless
 Increased damage if user has 0 block
 
 #### Available on
+- all Battleaxes (Fire)
 - Sword (Earth)
 
 ### Sharpened
@@ -121,6 +136,13 @@ Increased durability, grants the differences in uses when upgraded.
 - Barrier (Light)
 - Cloak (Wind)
 - Sickle (Water)
+- Battleaxe (Fire)
+
+### Thirsting
+User regains hp on kill
+
+#### Available on
+- Battleaxe (Fire)
 
 ### Tormenting
 Adds stacks to debuffs
@@ -133,6 +155,7 @@ Applies Poison
 
 #### Avaialble on
 - Fire Cracker (Fire)
+- Scythe (Darkness)
 
 ### Urgent
 Bonus speed
@@ -160,15 +183,12 @@ Increased damage against enemies with 0 block
 - Spear (add stagger on crit)
 - Sickle (10% max hp bonus damage)
 - Life Drain (attack a foe and gain hp)
+- Warhammer (bonus damage on stunned enemy)
 
 ## Ideas
 - Empowering ___ - Adds stacks to buffs
-- Reaper's ___ - kills an enemy if they are at 15% hp or below
 - Seeking ___ - targets lowest hp enemy
 - Kite Shield - single target attack that grants user block (Guarding)
 - Tower Shield - blocks for target and user (non-starting weapon)
-- Prideful - high value non-elemental damage
 - Bashing - bonus damage for block on user
-- Scythe - kills an enemy if they are at 15% hp or below (Reaper's)
-- Bloodthirsty ___ - heal user if killing blow
 - Siphoning ___ - regain uses if killing blow

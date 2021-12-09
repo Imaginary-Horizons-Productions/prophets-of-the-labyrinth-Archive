@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { dealDamage, addModifier } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Evasive Bow", "*Strike a foe for @{damage} @{element} damage and gain 1 evade (+@{speedBonus})*\nCritical Hit: Damage x@{critMultiplier}", "Wind", effect, ["Mercurial Bow"])
+module.exports = new Weapon("Evasive Bow", "*Strike a foe for @{damage} @{element} damage and gain 1 evade (+@{speedBonus})*\nCritical Hit: Damage x@{critMultiplier}", "Wind", effect, ["Hunter's Bow", "Mercurial Bow"])
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setUses(10)
 	.setDamage(75)

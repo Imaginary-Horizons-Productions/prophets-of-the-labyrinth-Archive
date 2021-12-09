@@ -1,14 +1,17 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { dealDamage, addModifier } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Bow", "*Strike a foe for @{damage} @{element} damage (+@{speedBonus})*\nCritical Hit: Damage x@{critMultiplier}", "Wind", effect, ["Evasive Bow", "Hunter's Bow", "Mercurial Bow"])
+module.exports = new Weapon("Warhammer", "*Strike a foe for @{damage} (+@{bonusDamage} if foe is already stunned) @{element} damage*\nCritical Hit: Damage x@{critMultiplier}", "Earth", effect, [])
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setUses(10)
-	.setDamage(75)
-	.setSpeedBonus(10);
+	.setDamage(100)
+	.setBonusDamage(75);
 
 function effect(target, user, isCrit, adventure) {
-	let { element: weaponElement, damage, critMultiplier } = module.exports;
+	let { element: weaponElement, damage, bonusDamage, critMultiplier } = module.exports;
+	if (target.modifiers.Stun) {
+		damage += bonusDamage;
+	}
 	if (user.element === weaponElement) {
 		addModifier(target, "Stagger", 1);
 	}
