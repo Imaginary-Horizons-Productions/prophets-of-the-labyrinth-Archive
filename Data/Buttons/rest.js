@@ -13,7 +13,8 @@ module.exports.execute = (interaction, args) => {
 		for (let delver of adventure.delvers) {
 			healText.push(gainHealth(delver, delver.maxHp * 0.15, adventure.room.enemyTitles));
 		}
-		editButton(interaction, "rest", true, "✔️", "The party rested").then(() => {
+		let updatedUI = editButton(interaction.message, "rest", true, "✔️", "The party rested")
+		interaction.update({ components: updatedUI }).then(() => {
 			interaction.followUp(healText.join(" "));
 			setAdventure(adventure);
 		});

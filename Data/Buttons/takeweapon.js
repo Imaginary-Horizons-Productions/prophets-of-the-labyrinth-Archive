@@ -1,3 +1,4 @@
+const { MessageActionRow, MessageButton } = require('discord.js');
 const Button = require('../../Classes/Button.js');
 const { setAdventure, getAdventure } = require('../adventureDAO.js');
 const { editButton } = require('../roomDAO.js');
@@ -13,15 +14,24 @@ module.exports.execute = (interaction, [weaponName]) => {
 		if (delver.weapons.length < 4) {
 			delver.weapons.push({ name: weaponName, uses: getWeaponProperty(weaponName, "maxUses") });
 			let remaining = --adventure.room.loot[`weapon-${weaponName}`];
+			let updatedUI;
 			if (remaining !== 0) {
-				editButton(interaction, `takeweapon-${weaponName}`, false, "", `${weaponName} x${remaining} remaining`);
+				updatedUI = editButton(interaction.message, `takeweapon-${weaponName}`, false, "", `${weaponName} x${remaining} remaining`);
 			} else {
-				editButton(interaction, `takeweapon-${weaponName}`, true, "✔️", `${weaponName} GET`);
+				updatedUI = editButton(interaction.message, `takeweapon-${weaponName}`, true, "✔️", `${weaponName} GET`);
 			}
-			interaction.followUp({ content: `${interaction.member.displayName} takes a ${weaponName}.` });
+			interaction.message.edit({ components: updatedUI });
+			interaction.reply({ content: `${interaction.member.displayName} takes a ${weaponName}.` });
 			setAdventure(adventure);
 		} else {
-			interaction.reply("You can only carry 4 weapons at a time. (Weapon replacement coming soon).");
+			let replaceUI = [new MessageActionRow().addComponents(
+				...delver.weapons.map((weapon, index) => {
+					return new MessageButton().setCustomId(`replaceweapon-${weaponName}-${index}-${interaction.message.id}`)
+						.setLabel(`Discard ${weapon.name}`)
+						.setStyle("PRIMARY")
+				})
+			)];
+			interaction.reply({ content: "You can only carry 4 weapons at a time. Pick one to replace:", components: replaceUI, ephemeral: true });
 		}
 	} else {
 		interaction.reply({ content: "Please take weapons in adventures you've joined.", ephemeral: true });

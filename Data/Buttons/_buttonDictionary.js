@@ -13,6 +13,7 @@ var buttonWhitelist = [
 	"ready.js",
 	"readymove.js",
 	"repair.js",
+	"replaceweapon.js",
 	"rest.js",
 	"routevote.js",
 	"self.js",

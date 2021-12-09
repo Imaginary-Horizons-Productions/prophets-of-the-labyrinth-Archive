@@ -20,11 +20,12 @@ module.exports.execute = (interaction, args) => {
 			})
 			return interaction.reply(`${damageText} Everyone else gains 5 hp.`);
 		}).then(() => {
+			let updatedUI = editButton(interaction.message, "hpshare", true, "✔️", `${interaction.user} shared HP.`);
+			interaction.update({ components: updatedUI });
 			if (adventure.lives === 0) {
 				completeAdventure(adventure, interaction.channel, new MessageEmbed().setTitle("Defeat"));
 			}
 		})
-		editButton(interaction, "hpshare", true, "✔️", `${interaction.user} shared HP.`);
 	} else {
 		interaction.reply({ content: "Please share hp in adventures you've joined.", ephemeral: true });
 	}

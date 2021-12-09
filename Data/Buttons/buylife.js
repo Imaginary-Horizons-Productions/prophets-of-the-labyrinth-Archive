@@ -11,7 +11,8 @@ module.exports.execute = (interaction, args) => {
 		adventure.lives++;
 		adventure.accumulatedScore -= 50;
 		updateRoomHeader(adventure, interaction.message);
-		editButton(interaction, "buylife", true, "✔️", "-50 score, +1 life").then(() => {
+		let updatedUI = editButton(interaction.message, "buylife", true, "✔️", "-50 score, +1 life");
+		interaction.update({ components: updatedUI }).then(() => {
 			saveAdventures();
 		});
 	} else {
