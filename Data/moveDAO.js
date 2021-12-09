@@ -11,11 +11,14 @@ exports.resolveMove = async function (move, adventure) {
 			let targetNames = exports.getTargetList(move.targets, adventure).join(", ");
 			let effect;
 			let targetAll = false;
+			let weaponBroke = false;
 			if (move.userTeam === "ally" || move.userTeam === "clone") {
 				effect = getWeaponProperty(move.name, "effect");
 				if (move.userTeam !== "clone") {
 					targetAll = getWeaponProperty(move.name, "targetingTags").target === "all";
-					user.weapons[move.name]--;
+					let weapon = user.weapons.find(weapon => weapon.name === move.name);
+					weapon.uses--;
+					weaponBroke = weapon.uses === 0;
 				}
 			} else {
 				effect = getEnemy(user.lookupName).actions[move.name].effect;
@@ -34,7 +37,7 @@ exports.resolveMove = async function (move, adventure) {
 					return await effect(null, user, move.isCrit, adventure);
 				}
 			}));
-			moveText += `used ${move.name}${move.targets[0].team !== "none" && move.targets[0].team !== "self" ? ` on ${targetNames}` : ""}.${move.isCrit ? " *Critical Hit!*" : ""} ${resultTexts.join(" ")}${user.weapons?.[move.name] === 0 ? ` The ${move.name} broke!` : ""}`;
+			moveText += `used ${move.name}${move.targets[0].team !== "none" && move.targets[0].team !== "self" ? ` on ${targetNames}` : ""}.${move.isCrit ? " *Critical Hit!*" : ""} ${resultTexts.join(" ")}${weaponBroke ? ` The ${move.name} broke!` : ""}`;
 		} else {
 			delete user.modifiers.Stun;
 			moveText += "is Stunned!";

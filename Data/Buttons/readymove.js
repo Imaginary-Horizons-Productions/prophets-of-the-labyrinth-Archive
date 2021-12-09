@@ -38,17 +38,11 @@ module.exports.execute = (interaction, args) => {
 					value: `ally-${i}`
 				}
 			})
-			let usableWeapons = Object.keys(delver.weapons).filter(weaponName => {
-				if (delver.weapons[weaponName] > 0) {
-					return true;
-				} else {
-					return false;
-				}
-			})
+			let usableWeapons = delver.weapons.filter(weapon => weapon.uses > 0);
 			if (usableWeapons.length > 0) {
-				for (let weaponName of usableWeapons) {
-					embed.addField(...weaponToEmbedField(weaponName, delver.weapons[weaponName]));
-					let { target, team } = getWeaponProperty(weaponName, "targetingTags");
+				for (const weapon of usableWeapons) {
+					embed.addField(...weaponToEmbedField(weapon.name, weapon.uses));
+					let { target, team } = getWeaponProperty(weapon.name, "targetingTags");
 					if (target === "single") {
 						// Select Menu
 						let targetOptions = [];
@@ -60,15 +54,15 @@ module.exports.execute = (interaction, args) => {
 							targetOptions = targetOptions.concat(allyOptions);
 						}
 						moveMenu.push(new MessageActionRow().addComponents(
-							new MessageSelectMenu().setCustomId(`weapon-${weaponName}`)
-								.setPlaceholder(`Use ${weaponName} on...`)
+							new MessageSelectMenu().setCustomId(`weapon-${weapon.name}`)
+								.setPlaceholder(`Use ${weapon.name} on...`)
 								.addOptions(targetOptions)
 						));
 					} else {
 						// Button
 						moveMenu.push(new MessageActionRow().addComponents(
-							new MessageButton().setCustomId(`nontargetweapon-${weaponName}`)
-								.setLabel(`Use ${weaponName}`)
+							new MessageButton().setCustomId(`nontargetweapon-${weapon.name}`)
+								.setLabel(`Use ${weapon.name}`)
 								.setStyle("PRIMARY")
 						))
 					}

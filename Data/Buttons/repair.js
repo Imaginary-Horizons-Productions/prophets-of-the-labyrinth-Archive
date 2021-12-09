@@ -11,17 +11,17 @@ module.exports.execute = (interaction, args) => {
 	let user = adventure.delvers.find(delver => delver.id === interaction.user.id);
 	if (user) {
 		let weaponOptions = [];
-		for (let weaponName in user.weapons) {
-			let maxUses = getWeaponProperty(weaponName, "maxUses");
-			if (user.weapons[weaponName] < maxUses) {
-				let value = Math.min(Math.ceil(maxUses / 2), maxUses - user.weapons[weaponName]);
+		user.weapons.forEach((weapon, index) => {
+			let maxUses = getWeaponProperty(weapon.name, "maxUses");
+			if (weapon.uses < maxUses) {
+				let value = Math.min(Math.ceil(maxUses / 2), maxUses - weapon.uses);
 				weaponOptions.push({
-					label: weaponName,
+					label: weapon.name,
 					description: `Regain ${value} uses`,
-					value: `${weaponName}`
+					value: `${weapon.name}-${index}-${value}`
 				})
 			}
-		}
+		})
 		if (adventure.room.loot.forgeSupplies > 0) {
 			if (weaponOptions.length > 0) {
 				let upgradeSelect = new MessageActionRow().addComponents(

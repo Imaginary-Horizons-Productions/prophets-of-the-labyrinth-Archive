@@ -10,7 +10,7 @@ module.exports.execute = async function (interaction, [weaponName]) {
 	// Add move object to adventure
 	let adventure = getAdventure(interaction.channel.id);
 	let user = adventure.delvers.find(delver => delver.id === interaction.user.id);
-	if (weaponName in user.weapons) {
+	if (user.weapons.some(weapon => weapon.name === weaponName && weapon.uses > 0)) {
 		// Add move to round list (overwrite exisiting readied move)
 		let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
 		user.actionSpeed = getWeaponProperty(weaponName, "speedBonus") || 0;
@@ -75,7 +75,7 @@ module.exports.execute = async function (interaction, [weaponName]) {
 			};
 		}).catch(console.error);
 	} else {
-		interaction.reply({ content: `You don't have that weapon anymore.`, ephemeral: true })
+		interaction.reply({ content: `You don't have a ${weaponName} with uses remaining.`, ephemeral: true })
 			.catch(console.error);
 	}
 }

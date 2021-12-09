@@ -10,8 +10,8 @@ module.exports.execute = (interaction, [weaponName]) => {
 	let adventure = getAdventure(interaction.channel.id);
 	let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 	if (delver) {
-		if (Object.keys(delver.weapons).length < 4) {
-			delver.weapons[weaponName] = getWeaponProperty(weaponName, "maxUses");
+		if (delver.weapons.length < 4) {
+			delver.weapons.push({ name: weaponName, uses: getWeaponProperty(weaponName, "maxUses") });
 			let remaining = --adventure.room.loot[`weapon-${weaponName}`];
 			if (remaining !== 0) {
 				editButton(interaction, `takeweapon-${weaponName}`, false, "", `${weaponName} x${remaining} remaining`);

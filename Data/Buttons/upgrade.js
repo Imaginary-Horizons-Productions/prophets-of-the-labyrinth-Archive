@@ -11,16 +11,16 @@ module.exports.execute = (interaction, args) => {
 	let user = adventure.delvers.find(delver => delver.id === interaction.user.id);
 	if (user) {
 		let weaponOptions = [];
-		for (let weaponName in user.weapons) {
-			let upgrades = getWeaponProperty(weaponName, "upgrades");
+		user.weapons.forEach((weapon, index) => {
+			let upgrades = getWeaponProperty(weapon.name, "upgrades");
 			if (upgrades.length > 0) {
 				weaponOptions.push({
-					label: weaponName,
+					label: weapon.name,
 					description: `Results: ${upgrades.join(", ")}`,
-					value: `${weaponName}`
+					value: `${weapon.name}-${index}`
 				})
 			}
-		}
+		})
 		if (adventure.room.loot.forgeSupplies > 0) {
 			if (weaponOptions.length > 0) {
 				let upgradeSelect = new MessageActionRow().addComponents(

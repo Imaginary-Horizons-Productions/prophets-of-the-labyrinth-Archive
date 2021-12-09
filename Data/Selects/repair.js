@@ -10,10 +10,8 @@ module.exports.execute = (interaction, [roomMessageId]) => {
 	let adventure = getAdventure(interaction.channel.id);
 	if (adventure.room.loot.forgeSupplies > 0) {
 		let user = adventure.delvers.find(delver => delver.id === interaction.user.id);
-		let weaponName = interaction.values[0];
-		let maxUses = getWeaponProperty(weaponName, "maxUses");
-		let repairValue = Math.min(Math.ceil(maxUses / 2), maxUses - user.weapons[weaponName]);
-		user.weapons[weaponName] += repairValue;
+		let [weaponName, weaponIndex, value] = interaction.values[0].split("-");
+		user.weapons[weaponIndex].uses += value;
 		decrementForgeSupplies(interaction, roomMessageId, adventure).then(() => {
 			interaction.reply({ content: `Your ${weaponName} regained ${repairValue} uses.`, ephemeral: true });
 			setAdventure(adventure);

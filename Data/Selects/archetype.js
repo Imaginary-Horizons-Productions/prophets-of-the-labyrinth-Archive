@@ -17,10 +17,9 @@ module.exports.execute = (interaction, args) => {
 		if (userIndex !== -1) {
 			let isSwitching = adventure.delvers[userIndex].title !== "";
 			let archetypeTemplate = Object.assign(new Archetype(), getArchetype(interaction.values[0]));
-			adventure.delvers[userIndex].weapons = {};
-			for (let signatureWeapon of archetypeTemplate.signatureWeapons) {
-				adventure.delvers[userIndex].weapons[signatureWeapon] = getWeaponProperty(signatureWeapon, "maxUses");
-			}
+			adventure.delvers[userIndex].weapons = archetypeTemplate.signatureWeapons.map(signatureWeapon => {
+				return { name: signatureWeapon, uses: getWeaponProperty(signatureWeapon, "maxUses") }
+			});
 			adventure.delvers[userIndex].setTitle(archetypeTemplate.title)
 				.setHp(archetypeTemplate.maxHp)
 				.setSpeed(archetypeTemplate.speed)
