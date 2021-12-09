@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { dealDamage, addModifier } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Mercurial Bow", "*Strike a foe for @{damage} damage matching the user's element (+@{speedBonus})*\nCritical Hit: Damage x@{critMultiplier}", "Wind", effect, ["Evasive Bow"])
+module.exports = new Weapon("Evasive Bow", "*Strike a foe for @{damage} @{element} damage and gain 1 evade (+@{speedBonus})*\nCritical Hit: Damage x@{critMultiplier}", "Wind", effect, ["Mercurial Bow"])
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setUses(10)
 	.setDamage(75)
@@ -15,5 +15,6 @@ function effect(target, user, isCrit, adventure) {
 	if (isCrit) {
 		damage *= critMultiplier;
 	}
+	addModifier(user, "evade", 1);
 	return dealDamage(target, user, damage, weaponElement, adventure);
 }

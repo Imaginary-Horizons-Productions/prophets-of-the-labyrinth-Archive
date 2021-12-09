@@ -1,10 +1,10 @@
 # Upgrade Names
 
-### Chargeing
+### Charging
 User gains Power Up modifier
 
 #### Available on
-- Sword (Earth)
+- all Swords (Earth)
 - Blood Aegis (Darkness)
 
 ### Cursed
@@ -18,6 +18,13 @@ Affects Earth element combatants
 
 #### Available on
 - Potion (Water)
+
+### Evasive
+User gains evade
+
+#### Available on
+- Sun Flare (Light)
+- Bow (Wind)
 
 ### Guarding
 Adds block on the user
@@ -78,6 +85,12 @@ Increased damage against a foe with higher speed
 - Spear (Light)
 - Life Drain (Darkness)
 
+### Reckless
+Increased damage if user has 0 block
+
+#### Available on
+- Sword (Earth)
+
 ### Sharpened
 Increased base damage
 
@@ -97,7 +110,7 @@ Hits all enemes/allies
 Grants the user the Quicken modifier
 
 #### Available on
-- Buckler (Earth)
+- Sun Flare (Light)
 - Cloak (Wind)
 - Sword (Earth)
 
@@ -108,6 +121,12 @@ Increased durability, grants the differences in uses when upgraded.
 - Barrier (Light)
 - Cloak (Wind)
 - Sickle (Water)
+
+### Tormenting
+Adds stacks to debuffs
+
+#### Avaialble on
+- Sun Flare (Light)
 
 ### Toxic
 Applies Poison
@@ -120,7 +139,7 @@ Bonus speed
 
 #### Avaialble on
 - all Bows (Wind)
-- all Solar Flare (Light)
+- all Sun Flare (Light)
 - Barrier (Light)
 - Buckler (Earth)
 - Life Drain (Darkness)
@@ -139,12 +158,10 @@ Increased damage against enemies with 0 block
 
 ## Unnamed
 - Spear (add stagger on crit)
-- Sword (bonus damage if user has no block)
 - Sickle (10% max hp bonus damage)
 - Life Drain (attack a foe and gain hp)
 
 ## Ideas
-- Catalyst ___ - Adds stacks to debuffs
 - Empowering ___ - Adds stacks to buffs
 - Reaper's ___ - kills an enemy if they are at 15% hp or below
 - Seeking ___ - targets lowest hp enemy
