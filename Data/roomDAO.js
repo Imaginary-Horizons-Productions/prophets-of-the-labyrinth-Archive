@@ -24,7 +24,7 @@ exports.decrementForgeSupplies = function (interaction, roomMessageId, adventure
 	adventure.room.loot.forgeSupplies--;
 	return interaction.channel.messages.fetch(roomMessageId).then(roomMessage => {
 		let roomEmbed = roomMessage.embeds[0];
-		roomEmbed.spliceFields(roomEmbed.fields.findIndex(field => field.title === "Remaining Forge Supplies") - 1, 1, { name: "Remaining Forge Supplies", value: adventure.room.loot.forgeSupplies.toString() })
+		roomEmbed.spliceFields(roomEmbed.fields.findIndex(field => field.name === "Remaining Forge Supplies"), 1, { name: "Remaining Forge Supplies", value: adventure.room.loot.forgeSupplies.toString() })
 		if (adventure.room.loot.forgeSupplies === 0) {
 			return roomMessage.edit({
 				embeds: [roomEmbed],

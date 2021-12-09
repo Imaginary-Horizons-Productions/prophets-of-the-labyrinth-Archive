@@ -69,8 +69,8 @@ module.exports.execute = (interaction) => {
 							.setStyle("DANGER")
 							.setDisabled(true)
 					)
-					channel.send({ content: "The adventure will begin when everyone has picked an archetype and the leader clicks the \"Ready!\" button.", components: [ready] }).then(message => {
-						channel.send(`${interaction.user} Here's the channel for your new adventure. As adventure leader you're responsible for indicating when everyone's ready.`);
+					channel.send(`${interaction.user} Here's the channel for your new adventure. As adventure leader you're responsible for indicating when everyone's ready.`).then(message => {
+						channel.send({ content: "The adventure will begin when everyone has picked an archetype and the leader clicks the \"Ready!\" button.", components: [ready] });
 						adventure.setId(channel.id)
 							.setMessageId("recruit", recruitMessage.id)
 							.setMessageId("deploy", message.id)

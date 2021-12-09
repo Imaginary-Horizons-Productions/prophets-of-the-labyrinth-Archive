@@ -441,6 +441,7 @@ exports.completeAdventure = function (adventure, channel, embed) {
 	})
 	clearComponents(adventure.messageIds.battleRound, channel.messages);
 	clearComponents(adventure.messageIds.utility, channel.messages);
+	//TODO clear last room ui in case of give up
 
 	adventureDictionary.delete(channel.id);
 	exports.saveAdventures();
