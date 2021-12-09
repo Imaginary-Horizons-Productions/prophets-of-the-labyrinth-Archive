@@ -1,4 +1,3 @@
-const { MessageActionRow } = require("discord.js");
 const fs = require("fs");
 
 exports.generateRandomNumber = function (adventure, exclusiveMax, branch) {
@@ -35,26 +34,6 @@ exports.parseCount = function (countExpression, nValue) {
 			return total * Number(term);
 		}
 	}, 1));
-}
-
-exports.editButton = function (interaction, customId, preventUse, emoji, label) {
-	return interaction.update({
-		components: [...interaction.message.components.map(row => {
-			return new MessageActionRow().addComponents(...row.components.map(component => {
-				if (component.customId === customId) {
-					let editedButton = component.setDisabled(preventUse)
-						.setLabel(label);
-					if (emoji) {
-						editedButton.setEmoji(emoji);
-					}
-					return editedButton;
-				} else {
-					return component;
-				}
-			}));
-		})
-		]
-	})
 }
 
 exports.clearComponents = function (messageId, messageManager) {

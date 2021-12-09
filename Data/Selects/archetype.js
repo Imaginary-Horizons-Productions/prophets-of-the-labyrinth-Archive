@@ -4,6 +4,7 @@ const { getAdventure, saveAdventures } = require('../adventureDAO');
 const { getArchetype } = require('../Archetypes/_archetypeDictionary.js');
 const { MessageActionRow, MessageButton } = require('discord.js');
 const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
+const { clearComponents } = require('../../helpers.js');
 
 module.exports = new Select("archetype");
 

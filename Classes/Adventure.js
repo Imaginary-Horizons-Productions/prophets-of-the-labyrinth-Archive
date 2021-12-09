@@ -1,4 +1,4 @@
-const { sha256 } = require("js-sha256");
+const crypto = require("crypto");
 
 module.exports = class Adventure {
 	constructor(seedInput) {
@@ -36,7 +36,7 @@ module.exports = class Adventure {
 	rnTable = "";
 
 	generateRNTable() {
-		let hash = sha256(this.initialSeed);
+		let hash = crypto.createHash("sha256").update(this.initialSeed).digest("hex");
 		let segments = [];
 		for (let i = 0; i < hash.length; i += 4) {
 			segments.push(hash.slice(i, i + 4));

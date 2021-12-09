@@ -1,8 +1,8 @@
 const { MessageEmbed } = require('discord.js');
 const Button = require('../../Classes/Button.js');
-const { editButton } = require('../../helpers.js');
 const { getAdventure, completeAdventure, updateRoomHeader } = require('../adventureDAO.js');
 const { gainHealth, dealDamage } = require("../combatantDAO.js");
+const { editButton } = require('../roomDAO.js');
 
 module.exports = new Button("hpshare");
 

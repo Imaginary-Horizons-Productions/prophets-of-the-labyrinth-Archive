@@ -1,6 +1,6 @@
 const Button = require('../../Classes/Button.js');
-const { editButton } = require('../../helpers.js');
 const { setAdventure, getAdventure } = require('../adventureDAO.js');
+const { editButton } = require('../roomDAO.js');
 const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
 
 module.exports = new Button("takeweapon");

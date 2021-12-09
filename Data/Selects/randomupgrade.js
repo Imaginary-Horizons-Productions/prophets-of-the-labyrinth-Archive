@@ -1,11 +1,12 @@
 const Select = require('../../Classes/Select.js');
 const { generateRandomNumber } = require('../../helpers.js');
-const { getAdventure, saveAdventures } = require('../adventureDAO.js');
+const { getAdventure, setAdventure } = require('../adventureDAO.js');
+const { decrementForgeSupplies } = require('../roomDAO.js');
 const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
 
 module.exports = new Select("randomupgrade");
 
-module.exports.execute = (interaction, args) => {
+module.exports.execute = (interaction, [roomMessageId]) => {
 	// Randomly select an upgrade for a given weapon
 	let adventure = getAdventure(interaction.channel.id);
 	if (adventure.room.loot.forgeSupplies > 0) {
@@ -20,9 +21,10 @@ module.exports.execute = (interaction, args) => {
 		}
 		user.weapons[upgradeName] = Math.min(upgradeUses, user.weapons[weaponName]);
 		delete user.weapons[weaponName];
-		adventure.room.loot.forgeSupplies--;
-		interaction.reply(`Your *${weaponName}* has been upgraded to **${upgradeName}**!`);
-		saveAdventures();
+		decrementForgeSupplies(interaction, roomMessageId, adventure).then(() => {
+			interaction.reply(`Your *${weaponName}* has been upgraded to **${upgradeName}**!`);
+			setAdventure(adventure);
+		});
 	} else {
 		interaction.reply({ content: "The forge's supplies have been exhausted.", ephemeral: true });
 	}

@@ -25,7 +25,7 @@ module.exports.execute = (interaction, args) => {
 		if (adventure.room.loot.forgeSupplies > 0) {
 			if (weaponOptions.length > 0) {
 				let upgradeSelect = new MessageActionRow().addComponents(
-					new MessageSelectMenu().setCustomId("repair")
+					new MessageSelectMenu().setCustomId(`repair-${interaction.message.id}`)
 						.setPlaceholder("Pick a weapon to repair...")
 						.setOptions(weaponOptions)
 				)

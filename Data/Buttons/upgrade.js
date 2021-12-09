@@ -16,7 +16,7 @@ module.exports.execute = (interaction, args) => {
 			if (upgrades.length > 0) {
 				weaponOptions.push({
 					label: weaponName,
-					description: `Upgrades: ${upgrades.join(", ")}`,
+					description: `Results: ${upgrades.join(", ")}`,
 					value: `${weaponName}`
 				})
 			}
@@ -24,18 +24,18 @@ module.exports.execute = (interaction, args) => {
 		if (adventure.room.loot.forgeSupplies > 0) {
 			if (weaponOptions.length > 0) {
 				let upgradeSelect = new MessageActionRow().addComponents(
-					new MessageSelectMenu().setCustomId("randomupgrade")
-						.setPlaceholder("Pick a weapon to randomly upgrade...")
+					new MessageSelectMenu().setCustomId(`randomupgrade-${interaction.message.id}`)
+						.setPlaceholder("Pick a weapon to randomly tinker with...")
 						.setOptions(weaponOptions)
 				)
-				interaction.reply({ content: `You can pick a weapon to upgrade, but you're not sure what you'll get:`, components: [upgradeSelect], ephemeral: true });
+				interaction.reply({ content: `You can pick a weapon to tinker with, but you're not sure what you'll get:`, components: [upgradeSelect], ephemeral: true });
 			} else {
-				interaction.reply({ content: "You don't have any weapons that can be upgraded.", ephemeral: true });
+				interaction.reply({ content: "You don't have any weapons that can be tinkered with.", ephemeral: true });
 			}
 		} else {
 			interaction.reply({ content: "The forge's supplies have been exhausted.", ephemeral: true });
 		}
 	} else {
-		interaction.reply({ content: "Please upgrade weapons in adventures you've joined.", ephemeral: true });
+		interaction.reply({ content: "Please tinker with weapons in adventures you've joined.", ephemeral: true });
 	}
 }

@@ -150,13 +150,17 @@ exports.nextRoom = async function (roomType, adventure, channel) {
 			exports.newRound(adventure, channel, embed);
 		} else {
 			adventure.room = new Room(roomTemplate.title, roomColor);
+			for (let reward in roomTemplate.lootList) {
+				let rewardCount = parseCount(roomTemplate.lootList[reward], adventure.delvers.length);
+				if (reward === "forgeSupplies") {
+					embed.addField("Remaining Forge Supplies", rewardCount.toString());
+				}
+				adventure.room.loot[reward] = rewardCount;
+			}
 			const { embed: embedFinal, uiRows } = exports.addRoutingUI(embed, roomTemplate.uiRows, adventure);
 			await channel.send({ embeds: [embedFinal], components: uiRows });
 		}
-		for (let reward in roomTemplate.lootList) {
-			adventure.room.loot[reward] = parseCount(roomTemplate.lootList[reward], adventure.delvers.length);
-		}
-		exports.saveAdventures();
+		exports.setAdventure(adventure);
 	} else {
 		adventure.accumulatedScore = 10;
 		exports.completeAdventure(adventure, channel, new MessageEmbed().setTitle("Success"));
