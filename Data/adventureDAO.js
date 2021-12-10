@@ -13,7 +13,6 @@ const { getTurnDecrement } = require("./Modifiers/_modifierDictionary.js");
 const { getEnemy } = require("./Enemies/_enemyDictionary");
 const Room = require("../Classes/Room.js");
 const RoomCombat = require("../Classes/RoomCombat.js");
-const { getGuild } = require("./guildDAO.js");
 const { spawnEnemy } = require("./enemyDAO.js");
 const DamageType = require("../Classes/DamageType.js");
 
@@ -77,18 +76,6 @@ exports.getAdventure = function (id) {
 exports.setAdventure = function (adventure) {
 	adventureDictionary.set(adventure.id, adventure);
 	exports.saveAdventures();
-}
-
-exports.updateStartingMessage = function (startMessage, adventure) {
-	let embed = startMessage.embeds[0];
-	let partyList = `Leader: <@${adventure.leaderId}>`;
-	for (let i = 0; i < adventure.delvers.length; i++) {
-		if (adventure.delvers[i].id !== adventure.leaderId) {
-			partyList += `\n<@${adventure.delvers[i].id}>`;
-		}
-	}
-	embed.spliceFields(0, 1, { name: `${adventure.delvers.length} Party Member${adventure.delvers.length == 1 ? "" : "s"}`, value: partyList });
-	startMessage.edit({ embeds: [embed] });
 }
 
 function roomHeaderString(adventure) {
@@ -403,10 +390,8 @@ exports.checkNextRound = function (adventure) {
 	return adventure.room.moves.length - adventure.room.enemies.length === adventure.delvers.length;
 }
 
-//{channelId: guildId} A list of adventure channels that restarting the bot interrupted deleting
-let completedAdventures = {};
-exports.completeAdventure = function (adventure, channel, embed) {
-	let isSuccess = embed.title === "Success";
+exports.completeAdventure = function (adventure, thread, scoreEmbed) {
+	let isSuccess = scoreEmbed.title === "Success";
 	let score = adventure.depth;
 	let livesScore = adventure.lives * 10;
 	let goldScore = Math.log10(adventure.peakGold) * 5;
@@ -417,42 +402,32 @@ exports.completeAdventure = function (adventure, channel, embed) {
 		score = Math.floor(score / 2);
 	}
 	score = Math.max(1, score);
-	embed.addField("Score Breakdown", `Depth: ${adventure.depth}\nLives: ${livesScore}\nGold: ${goldScore}\nBonus: ${adventure.accumulatedScore}\n\n__Total__: ${!isSuccess && score > 0 ? `score ÷ 2  = ${score} (Defeat)` : score}`)
-		.addField("Clean-Up", "This channel will be cleaned up in 5 minutes.");
+	scoreEmbed.addField("Score Breakdown", `Depth: ${adventure.depth}\nLives: ${livesScore}\nGold: ${goldScore}\nBonus: ${adventure.accumulatedScore}\n\n__Total__: ${!isSuccess && score > 0 ? `score ÷ 2  = ${score} (Defeat)` : score}`);
 
 	adventure.delvers.forEach(delver => {
-		let player = getPlayer(delver.id, channel.guild.id);
-		let previousScore = player.scores[channel.guild.id];
+		let player = getPlayer(delver.id, thread.guildId);
+		let previousScore = player.scores[thread.guildId];
 		if (previousScore) {
-			player.scores[channel.guild.id] += score;
+			player.scores[thread.guildId] += score;
 		} else {
-			player.scores[channel.guild.id] = score;
+			player.scores[thread.guildId] = score;
 		}
 		setPlayer(player);
 	})
 
-	channel.guild.channels.fetch(getGuild(channel.guild.id).centralId).then(centralChannel => {
-		return centralChannel.messages.fetch(adventure.messageIds.recruit);
-	}).then(message => {
-		let embed = message.embeds[0];
-		embed.setTitle(embed.title + ": COMPLETE!")
+	thread.fetchStarterMessage({ cache: false, force: true }).then(recruitMessage => {
+		let recruitEmbed = recruitMessage.embeds[0];
+		recruitEmbed.setTitle(recruitEmbed.title + ": COMPLETE!")
 			.setThumbnail("https://cdn.discordapp.com/attachments/545684759276421120/734092918369026108/completion.png");
-		message.edit({ embeds: [embed] });
+		recruitMessage.edit({ embeds: [recruitEmbed] });
 	})
-	clearComponents(adventure.messageIds.battleRound, channel.messages);
-	clearComponents(adventure.messageIds.utility, channel.messages);
+	clearComponents(adventure.messageIds.battleRound, thread.messages);
+	clearComponents(adventure.messageIds.utility, thread.messages);
 	//TODO clear last room ui in case of give up
 
-	adventureDictionary.delete(channel.id);
+	adventureDictionary.delete(thread.id);
 	exports.saveAdventures();
-	completedAdventures[channel.id] = channel.guild.id;
-	ensuredPathSave("./Saves", "completedAdventures.json", JSON.stringify(completedAdventures));
-	setTimeout(() => {
-		channel.delete("Adventure complete!");
-		delete completedAdventures[channel.id];
-		ensuredPathSave("./Saves", "completedAdventures.json", JSON.stringify(completedAdventures));
-	}, 300000);
-	channel.send({ embeds: [embed] });
+	thread.send({ embeds: [scoreEmbed] });
 }
 
 exports.saveAdventures = function () {

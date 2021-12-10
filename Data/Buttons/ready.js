@@ -1,6 +1,5 @@
 const { getAdventure, nextRoom } = require('../adventureDAO.js');
 const Button = require('../../Classes/Button.js');
-const { getGuild } = require('../guildDAO.js');
 const { MessageActionRow, MessageButton } = require('discord.js');
 const { clearComponents } = require('../../helpers.js');
 
@@ -11,9 +10,8 @@ module.exports.execute = (interaction, args) => {
 	let adventure = getAdventure(interaction.channel.id);
 	if (interaction.user.id === adventure.leaderId) {
 		// Clear components from recruitment, start, and deploy messages
-		let guildProfile = getGuild(interaction.guild.id);
-		interaction.guild.channels.fetch(guildProfile.centralId).then(channel => {
-			clearComponents(adventure.messageIds.recruit, channel.messages);
+		interaction.channel.fetchStarterMessage().then(recruitMessage => {
+			recruitMessage.edit({ components: [] });
 		}).catch(console.error);
 		clearComponents(adventure.messageIds.deploy, interaction.channel.messages);
 		clearComponents(adventure.messageIds.start, interaction.channel.messages);

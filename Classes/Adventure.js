@@ -4,7 +4,7 @@ module.exports = class Adventure {
 	constructor(seedInput) {
 		this.initialSeed = seedInput || Date.now().toString();
 	}
-	id; // the id of the channel created for the adventure
+	id; // the id of the thread created for the adventure
 	name;
 	element;
 	scouting = {
@@ -17,7 +17,6 @@ module.exports = class Adventure {
 	rnIndex = 0;
 	rnIndexBattle = 0;
 	messageIds = {
-		recruit: "",
 		deploy: "",
 		start: "",
 		utility: "",
