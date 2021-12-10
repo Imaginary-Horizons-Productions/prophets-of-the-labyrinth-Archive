@@ -20,6 +20,7 @@ module.exports = class Adventure {
 		deploy: "",
 		start: "",
 		utility: "",
+		room: "",
 		battleRound: ""
 	};
 	leaderId = "";

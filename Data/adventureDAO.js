@@ -145,7 +145,8 @@ exports.nextRoom = async function (roomType, adventure, channel) {
 				adventure.room.loot[reward] = rewardCount;
 			}
 			const { embed: embedFinal, uiRows } = exports.addRoutingUI(embed, roomTemplate.uiRows, adventure);
-			await channel.send({ embeds: [embedFinal], components: uiRows });
+			let roomMessage = await channel.send({ embeds: [embedFinal], components: uiRows });
+			adventure.setMessageId("room", roomMessage.id);
 		}
 		exports.setAdventure(adventure);
 	} else {
@@ -423,7 +424,7 @@ exports.completeAdventure = function (adventure, thread, scoreEmbed) {
 	})
 	clearComponents(adventure.messageIds.battleRound, thread.messages);
 	clearComponents(adventure.messageIds.utility, thread.messages);
-	//TODO clear last room ui in case of give up
+	clearComponents(adventure.messageIds.room, thread.messages);
 
 	adventureDictionary.delete(thread.id);
 	exports.saveAdventures();
