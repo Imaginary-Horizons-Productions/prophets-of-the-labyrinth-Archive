@@ -1,3 +1,5 @@
+const { generateRandomNumber } = require("../../helpers");
+
 var weaponWhitelist = [
 	"-punch.js",
 	"barrier-base.js",
@@ -61,17 +63,41 @@ var weaponWhitelist = [
 	"warhammer-base.js"
 ];
 
-const weaponDictionary = {};
+const allWeapons = {};
+const weaponElements = {
+	Earth: [],
+	Wind: [],
+	Water: [],
+	Fire: [],
+	Light: [],
+	Darkness: [],
+	untyped: []
+};
 
 for (const file of weaponWhitelist) {
 	const weapon = require(`./${file}`);
-	weaponDictionary[weapon.name] = weapon;
+	allWeapons[weapon.name] = weapon;
+	if (weapon.tier < 2) {
+		weaponElements[weapon.element].push(weapon.name);
+	}
 }
 
 exports.getWeaponProperty = function (weaponName, propertyName) {
-	if (!weaponDictionary[weaponName]) {
+	if (!allWeapons[weaponName]) {
 		console.error("Fetching property from illegal weapon: " + weaponName);
 	} else {
-		return weaponDictionary[weaponName][propertyName];
+		return allWeapons[weaponName][propertyName];
 	}
+}
+
+exports.rollWeaponDrop = function (elements, tier, adventure) {
+	let pool = elements.reduce((pool, element) => pool.concat(weaponElements[element]), []);
+	let weaponName = pool[generateRandomNumber(adventure, pool.length, "general")];
+	if (tier > 1) {
+		for (let i = exports.getWeaponProperty(weaponName, "tier"); i < tier; i++) {
+			let upgrades = exports.getWeaponProperty(weaponName, "upgrades");
+			weaponName = upgrades[generateRandomNumber(adventure, upgrades.length, "general")];
+		}
+	}
+	return weaponName;
 }

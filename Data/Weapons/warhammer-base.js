@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { dealDamage, addModifier } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Warhammer", "*Strike a foe for @{damage} (+@{bonusDamage} if foe is already stunned) @{element} damage*\nCritical Hit: Damage x@{critMultiplier}", "Earth", effect, [])
+module.exports = new Weapon("Warhammer", 1, "*Strike a foe for @{damage} (+@{bonusDamage} if foe is already stunned) @{element} damage*\nCritical Hit: Damage x@{critMultiplier}", "Earth", effect, [])
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setUses(10)
 	.setDamage(100)

@@ -16,13 +16,13 @@ let roomWhitelist = [
 	"restsite-basic.js"
 ];
 
-let eventRooms = [];
-let battleRooms = [];
-let merchantRooms = [];
-let restRooms = [];
-let finalBossRooms = [];
-let midbossRooms = [];
-let forgeRooms = [];
+const eventRooms = [];
+const battleRooms = [];
+const merchantRooms = [];
+const restRooms = [];
+const finalBossRooms = [];
+const midbossRooms = [];
+const forgeRooms = [];
 
 for (const file of roomWhitelist) {
 	const room = require(`./${file}`);

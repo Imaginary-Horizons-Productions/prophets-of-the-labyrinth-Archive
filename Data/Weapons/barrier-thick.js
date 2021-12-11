@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { addBlock, removeModifier } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Thick Barrier", "*Grant an ally @{block} block*\nCritical Hit: Block x@{critMultiplier}", "Light", effect, ["Purifiying Barrier", "Urgent Barrier"])
+module.exports = new Weapon("Thick Barrier", 2, "*Grant an ally @{block} block*\nCritical Hit: Block x@{critMultiplier}", "Light", effect, ["Purifiying Barrier", "Urgent Barrier"])
 	.setTargetingTags({ target: "single", team: "ally" })
 	.setUses(2)
 	.setBlock(1000);

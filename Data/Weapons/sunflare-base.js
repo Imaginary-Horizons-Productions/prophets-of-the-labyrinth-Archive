@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { addModifier } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Spell: Sun Flare", "*Inflict 2 Stagger on a foe (+@{speedBonus} speed)* Critical Hit: Inflict 2 Slow as well\n", "Light", effect, ["Spell: Evasive Sun Flare", "Spell: Swift Sun Flare", "Spell: Tormenting Sun Flare"])
+module.exports = new Weapon("Spell: Sun Flare", 1, "*Inflict 2 Stagger on a foe (+@{speedBonus} speed)*\nCritical Hit: Inflict 2 Slow as well\n", "Light", effect, ["Spell: Evasive Sun Flare", "Spell: Swift Sun Flare", "Spell: Tormenting Sun Flare"])
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setUses(10)
 	.setSpeedBonus(5);

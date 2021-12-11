@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { dealDamage, addModifier } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Swift Sword", "*Strike a foe for @{damage} @{element} damage, then gain 2 Quicken and 25 powerup*\nCritical Hit: Damage x@{critMultiplier}", "Earth", effect, ["Guarding Sword", "Reckless Sword"])
+module.exports = new Weapon("Swift Sword", 2, "*Strike a foe for @{damage} @{element} damage, then gain 2 Quicken and 25 powerup*\nCritical Hit: Damage x@{critMultiplier}", "Earth", effect, ["Guarding Sword", "Reckless Sword"])
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setUses(10)
 	.setDamage(75);

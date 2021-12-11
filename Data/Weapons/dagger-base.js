@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { dealDamage, addModifier } = require("../combatantDAO.js");
 
-module.exports = new Weapon("Dagger", "*Strike a foe for @{damage} @{element} damage*\nCritical Hit: Damage x@{critMultiplier}", "Wind", effect, ["Sharpened Dagger", "Sweeping Daggers", "Wicked Dagger"])
+module.exports = new Weapon("Dagger", 1, "*Strike a foe for @{damage} @{element} damage*\nCritical Hit: Damage x@{critMultiplier}", "Wind", effect, ["Sharpened Dagger", "Sweeping Daggers", "Wicked Dagger"])
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setUses(10)
 	.setDamage(75)

@@ -1,7 +1,8 @@
 // A readonly object containing stats for a delver's weapon
 module.exports = class Weapon {
-	constructor(nameInput, descriptionInput, elementInput, effectInput, upgradeNames) {
+	constructor(nameInput, tierInput, descriptionInput, elementInput, effectInput, upgradeNames) {
 		this.name = nameInput;
+		this.tier = tierInput;
 		this.description = descriptionInput;
 		this.element = elementInput;
 		this.effect = effectInput;

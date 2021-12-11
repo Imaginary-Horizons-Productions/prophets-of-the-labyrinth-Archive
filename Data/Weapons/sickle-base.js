@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { addModifier, dealDamage } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Sickle", "*Strike a foe for @{damage} (+10% foe max hp) @{element} damage*\nCritical Hit: Damage x@{critMultiplier}", "Water", effect, ["Hunter's Sickle", "Sharpened Sickle", "Thick Sickle"])
+module.exports = new Weapon("Sickle", 1, "*Strike a foe for @{damage} (+10% foe max hp) @{element} damage*\nCritical Hit: Damage x@{critMultiplier}", "Water", effect, ["Hunter's Sickle", "Sharpened Sickle", "Thick Sickle"])
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setUses(10)
 	.setDamage(75);

@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { addModifier, dealDamage, getFullName } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Lethal Scythe", "*Strike a foe for @{damage} @{element} damage; instant death if foe is at or below @{bonusDamage} hp*\nCritical Hit: Instant death threshold x@{critMultiplier}", "Darkness", effect, ["Toxic Scythe"])
+module.exports = new Weapon("Lethal Scythe", 2, "*Strike a foe for @{damage} @{element} damage; instant death if foe is at or below @{bonusDamage} hp*\nCritical Hit: Instant death threshold x@{critMultiplier}", "Darkness", effect, ["Toxic Scythe"])
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setUses(15)
 	.setDamage(75)

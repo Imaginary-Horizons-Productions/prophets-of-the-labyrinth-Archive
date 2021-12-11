@@ -15,6 +15,7 @@ const Room = require("../Classes/Room.js");
 const RoomCombat = require("../Classes/RoomCombat.js");
 const { spawnEnemy } = require("./enemyDAO.js");
 const DamageType = require("../Classes/DamageType.js");
+const { rollWeaponDrop } = require("./Weapons/_weaponDictionary.js");
 
 var filePath = "./Saves/adventures.json";
 var requirePath = "./../Saves/adventures.json";
@@ -344,7 +345,8 @@ exports.endRound = async function (adventure, channel) {
 			}
 
 			// Weapon drops
-			adventure.room.loot["weapon-Firecracker"] = 1;
+			let droppedWeapon = rollWeaponDrop(adventure.delvers.reduce((elements, delver) => [...elements, delver.element], []), 1, adventure);
+			adventure.room.loot[`weapon-${droppedWeapon}`] = 1;
 			if (Object.keys(adventure.room.loot).length - 1 > 0) {
 				for (let item in adventure.room.loot) {
 					let itemName = "";
