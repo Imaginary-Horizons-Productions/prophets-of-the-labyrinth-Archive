@@ -17,21 +17,21 @@ module.exports.execute = (interaction, args) => {
 		clearComponents(adventure.messageIds.start, interaction.channel.messages);
 
 		// Post utilities message
-		let utilities = [new MessageActionRow()
-			.addComponents(
-				new MessageButton()
-					.setCustomId("self")
-					.setLabel("Inspect self")
-					.setStyle("SECONDARY"),
-				new MessageButton()
-					.setCustomId("giveup")
-					.setLabel("Give Up")
-					.setStyle("DANGER")
-			)];
+		let utilities = [new MessageActionRow().addComponents(
+			new MessageButton().setCustomId("self")
+				.setLabel("Inspect self")
+				.setStyle("SECONDARY"),
+			new MessageButton().setCustomId("partystats")
+				.setLabel("Party Stats")
+				.setStyle("SECONDARY"),
+			new MessageButton().setCustomId("giveup")
+				.setLabel("Give Up")
+				.setStyle("DANGER")
+		)];
 		interaction.reply({ content: `The adventure has begun! Here are some utilities for the run (remember to \`Jump\` to the message if viewing from pins).`, components: utilities, fetchReply: true }).then(message => {
 			message.pin();
 			adventure.setMessageId("utility", message.id);
-			nextRoom("Battle", adventure, interaction.channel);
+			nextRoom("Merchant", adventure, interaction.channel);
 		});
 	} else {
 		interaction.reply({ content: "Please wait for the leader to start the adventure.", ephemeral: true });

@@ -1,6 +1,6 @@
 const fs = require("fs");
 const { ensuredPathSave, parseCount, generateRandomNumber, clearComponents } = require("../helpers.js");
-const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
+const { MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu } = require("discord.js");
 const Adventure = require("../Classes/Adventure.js");
 const { setPlayer, getPlayer } = require("./playerDAO.js");
 const { getRoomTemplate } = require("./Rooms/_roomDictionary.js");
@@ -15,7 +15,7 @@ const Room = require("../Classes/Room.js");
 const RoomCombat = require("../Classes/RoomCombat.js");
 const { spawnEnemy } = require("./enemyDAO.js");
 const DamageType = require("../Classes/DamageType.js");
-const { rollWeaponDrop } = require("./Weapons/_weaponDictionary.js");
+const { rollWeaponDrop, getWeaponProperty } = require("./Weapons/_weaponDictionary.js");
 
 var filePath = "./Saves/adventures.json";
 var requirePath = "./../Saves/adventures.json";
@@ -145,7 +145,47 @@ exports.nextRoom = async function (roomType, adventure, channel) {
 				}
 				adventure.room.loot[reward] = rewardCount;
 			}
-			const { embed: embedFinal, uiRows } = exports.addRoutingUI(embed, roomTemplate.uiRows, adventure);
+			let uiComponents = [...roomTemplate.uiRows];
+			for (let category in roomTemplate.saleList) {
+				if (category.startsWith("weapon")) {
+					let tier = category.split("-")[1];
+					let count = Math.min(25, parseCount(roomTemplate.saleList[category], adventure.delvers.length));
+					let weaponOptions = [];
+					for (let i = 0; i < count; i++) {
+						let weaponName = rollWeaponDrop(adventure.delvers.reduce((elements, delver) => [...elements, delver.element], []), tier, adventure);
+						let cost = getWeaponProperty(weaponName, "cost");
+						if (adventure.room.loot[weaponName]) {
+							adventure.room.loot[weaponName]++;
+						} else {
+							adventure.room.loot[weaponName] = 1;
+						}
+						weaponOptions.push({
+							label: `${cost}g: ${weaponName}`,
+							description: `(description coming soon)`, //TODO #136 weapon descriptions in select option description
+							value: `${weaponName}-${i}`
+						})
+					}
+					uiComponents.push(new MessageActionRow().addComponents(
+						new MessageSelectMenu().setCustomId(`buyweapon-${tier}`)
+							.setPlaceholder("Buy a weapon...")
+							.setOptions(weaponOptions)));
+				} else if (category === "scouting") {
+					let bossScoutingCost = 150;
+					let guardScoutingCost = 100;
+					uiComponents.push(new MessageActionRow().addComponents(
+						new MessageButton().setCustomId(`buyscouting-finalboss-${bossScoutingCost}`)
+							.setLabel(`${adventure.scouting.finalBoss ? `Final Boss: ${adventure.finalBoss}` : `${bossScoutingCost}g: Scout the Final Boss`}`)
+							.setStyle("SECONDARY")
+							.setDisabled(adventure.scouting.finalBoss),
+						new MessageButton().setCustomId(`buyscouting-relicguardian-${guardScoutingCost}`)
+							.setLabel(`${guardScoutingCost}g: Scout a Relic Guardian (${adventure.scouting.relicGuardians} so far) (coming soon)`)
+							.setStyle("SECONDARY")
+							.setDisabled(true)
+					));
+
+				}
+			}
+			const { embed: embedFinal, uiRows } = addRoutingUI(embed, uiComponents, adventure);
 			let roomMessage = await channel.send({ embeds: [embedFinal], components: uiRows });
 			adventure.setMessageId("room", roomMessage.id);
 		}
@@ -262,7 +302,7 @@ exports.updateRoundMessage = function (messageManager, adventure) {
 	})
 }
 
-exports.addRoutingUI = function (embed, components, adventure) {
+function addRoutingUI(embed, components, adventure) {
 	let candidateKeys = Object.keys(adventure.roomCandidates);
 	let uiRows = [...components];
 	if (candidateKeys.length > 1) {
@@ -370,7 +410,7 @@ exports.endRound = async function (adventure, channel) {
 				embed.addField("Spoils of Combat", spoilsText);
 				roomUI.unshift(new MessageActionRow().addComponents(...lootRow));
 			}
-			const { embed: embedFinal, uiRows } = exports.addRoutingUI(embed, roomUI, adventure);
+			const { embed: embedFinal, uiRows } = addRoutingUI(embed, roomUI, adventure);
 			return channel.send({
 				embeds: [embedFinal.setTitle("Victory!").setDescription(lastRoundText)],
 				components: uiRows

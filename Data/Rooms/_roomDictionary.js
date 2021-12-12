@@ -13,6 +13,7 @@ let roomWhitelist = [
 	"event-scorebeggar.js",
 	"finalBattle-mirrors.js",
 	"forge-basic.js",
+	"merchant-basic.js",
 	"restsite-basic.js"
 ];
 

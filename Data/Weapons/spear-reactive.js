@@ -3,6 +3,7 @@ const { dealDamage, addModifier, calculateTotalSpeed } = require("../combatantDA
 
 module.exports = new Weapon("Reactive Spear", 2, "*Strike a foe for @{damage} (+@{bonusDamage} if foe went first) @{element} damage*\nCritical Hit: Inflict 1 Stagger", "Light", effect, ["Lethal Spear", "Sweeping Spear"])
 	.setTargetingTags({ target: "single", team: "enemy" })
+	.setCost(350)
 	.setUses(10)
 	.setDamage(100)
 	.setBonusDamage(75);

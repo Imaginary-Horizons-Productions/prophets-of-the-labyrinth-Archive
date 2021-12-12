@@ -4,6 +4,7 @@ const { isDebuff } = require('../Modifiers/_modifierDictionary.js');
 
 module.exports = new Weapon("Purifying Barrier", 2, "*Grant an ally @{block} block and cure them of all debuffs*\nCritical Hit: Block x@{critMultiplier}", "Light", effect, ["Thick Barrier", "Urgent Barrier"])
 	.setTargetingTags({ target: "single", team: "ally" })
+	.setCost(350)
 	.setUses(1);
 
 function effect(target, user, isCrit, adventure) {

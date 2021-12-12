@@ -3,6 +3,7 @@ const { addBlock, removeModifier } = require('../combatantDAO.js');
 
 module.exports = new Weapon("Barrier", 1, "*Grant an ally @{block} block*\nCritical Hit: Block x@{critMultiplier}", "Light", effect, ["Purifiying Barrier", "Thick Barrier", "Urgent Barrier"])
 	.setTargetingTags({ target: "single", team: "ally" })
+	.setCost(200)
 	.setUses(1)
 	.setBlock(1000);
 
@@ -15,5 +16,5 @@ function effect(target, user, isCrit, adventure) {
 		block *= critMultiplier;
 	}
 	addBlock(target, block);
-	return ""; // result as text
+	return "";
 }

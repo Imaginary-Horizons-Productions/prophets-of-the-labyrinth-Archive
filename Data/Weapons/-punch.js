@@ -3,6 +3,7 @@ const { dealDamage } = require('../combatantDAO.js');
 
 module.exports = new Weapon("Punch", 0, "description", "untyped", effect, [])
 	.setTargetingTags({ target: "single", team: "enemy" })
+	.setCost(0)
 	.setUses(0)
 	.setDamage(50);
 

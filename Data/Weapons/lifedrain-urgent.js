@@ -3,6 +3,7 @@ const { addModifier, dealDamage, gainHealth } = require('../combatantDAO.js');
 
 module.exports = new Weapon("Spell: Urgent Life Drain", 2, "*Strike a foe for @{damage} @{element} damage, then gain @{healing} hp (+@{speedBonus} speed)*\nCritical Hit: Healing x@{critMultiplier}", "Darkness", effect, ["Spell: Reactive Life Drain"])
 	.setTargetingTags({ target: "single", team: "enemy" })
+	.setCost(350)
 	.setUses(10)
 	.setDamage(105)
 	.setHealing(35)

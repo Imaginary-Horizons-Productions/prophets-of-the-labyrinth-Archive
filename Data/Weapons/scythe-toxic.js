@@ -3,6 +3,7 @@ const { addModifier, dealDamage, getFullName } = require('../combatantDAO.js');
 
 module.exports = new Weapon("Toxic Scythe", 2, "*Strike a foe applying 3 Poison and @{damage} @{element} damage; instant death if foe is at or below @{bonusDamage} hp*\nCritical Hit: Instant death threshold x@{critMultiplier}", "Darkness", effect, ["Lethal Scythe"])
 	.setTargetingTags({ target: "single", team: "enemy" })
+	.setCost(350)
 	.setUses(15)
 	.setDamage(75)
 	.setBonusDamage(99);

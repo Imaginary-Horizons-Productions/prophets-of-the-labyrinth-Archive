@@ -3,6 +3,7 @@ const { addModifier, dealDamage, gainHealth, calculateTotalSpeed } = require('..
 
 module.exports = new Weapon("Spell: Reactive Life Drain", 2, "*Strike a foe for @{damage} (+@{bonusDamage} if foe went first) @{element} damage, then gain @{healing} hp*\nCritical Hit: Healing x@{critMultiplier}", "Darkness", effect, ["Spell: Urgent Life Drain"])
 	.setTargetingTags({ target: "single", team: "enemy" })
+	.setCost(350)
 	.setUses(10)
 	.setDamage(105)
 	.setHealing(35)

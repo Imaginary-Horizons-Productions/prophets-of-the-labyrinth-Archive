@@ -3,6 +3,7 @@ const { addModifier } = require('../combatantDAO.js');
 
 module.exports = new Weapon("Spell: Evasive Sun Flare", 2, "*Inflict 2 Stagger on a foe and gain 1 evade (+@{speedBonus} speed)*\nCritical Hit: Inflict 2 Slow as well\n", "Light", effect, ["Spell: Swift Sun Flare", "Spell: Tormenting Sun Flare"])
 	.setTargetingTags({ target: "single", team: "enemy" })
+	.setCost(350)
 	.setUses(10)
 	.setSpeedBonus(5)
 	.setBlock(50);

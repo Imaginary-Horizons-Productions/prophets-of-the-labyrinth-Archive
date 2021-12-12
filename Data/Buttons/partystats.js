@@ -12,7 +12,9 @@ module.exports.execute = (interaction, args) => {
 		.setDescription(`${adventure.name} - Depth: ${adventure.depth}`)
 		.addField(`${adventure.lives} Lives Remain`, "When a player runs out of HP, a life will be lost and they'll be returned to max HP. When all lives are lost, the adventure will end.")
 		.addField(`${adventure.gold} Gold`, "Gold is exchanged for goods and services within adventures. Gold *will be lost when an adventure ends*.")
-        .setFooter("Imaginary Horizons Productions", "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png");
+		.addField("Scouting", `Final Boss: ${adventure.scouting.finalBoss ? adventure.finalBoss : "???"}\nRelic Guardians (${adventure.scouting.relicGuardiansEncountered} encountered so far): ${adventure.relicGuardians.slice(0, adventure.scouting.relicGuardians).join(", ")}...`)
+		//TODO list difficulty options
+		.setFooter("Imaginary Horizons Productions", "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png");
 	interaction.reply({ embeds: [embed], ephemeral: true })
 		.catch(console.error);
 }

@@ -8,6 +8,7 @@ module.exports = class RoomTemplate {
 	uiRows = [];
 	enemyList = {};
 	lootList = {};
+	saleList = {};
 
 	setTypes(...typeEnum) {
 		this.types = typeEnum;

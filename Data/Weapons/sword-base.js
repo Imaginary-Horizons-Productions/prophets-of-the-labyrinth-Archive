@@ -3,6 +3,7 @@ const { dealDamage, addModifier } = require('../combatantDAO.js');
 
 module.exports = new Weapon("Sword", 1, "*Strike a foe for @{damage} @{element} damage and gain 25 powerup*\nCritical Hit: Damage x@{critMultiplier}", "Earth", effect, ["Guarding Sword", "Reckless Sword", "Swift Sword"])
 	.setTargetingTags({ target: "single", team: "enemy" })
+	.setCost(200)
 	.setUses(5)
 	.setDamage(75);
 

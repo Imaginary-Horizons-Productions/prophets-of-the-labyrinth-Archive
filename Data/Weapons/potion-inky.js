@@ -3,6 +3,7 @@ const { removeModifier, addModifier } = require('../combatantDAO.js');
 
 module.exports = new Weapon("Inky Potion", 2, "*Apply 4 Regen to a Darkness element combatant, or 4 Poison to someone else*\nCritical Hit: Poison/Regen x@{critMultiplier}", "Darkness", effect, ["Earthen Potion", "Watery Potion"])
 	.setTargetingTags({ target: "single", team: "any" })
+	.setCost(350)
 	.setUses(5);
 
 function effect(target, user, isCrit, adventure) {

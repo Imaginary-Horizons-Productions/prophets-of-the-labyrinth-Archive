@@ -3,6 +3,7 @@ const { addBlock, removeModifier } = require('../combatantDAO.js');
 
 module.exports = new Weapon("Heavy Buckler", 2, "*Grant an ally @{block} block*\nCritical Hit: Block x@{critMultiplier}", "Earth", effect, ["Guarding Buckler", "Urgent Buckler"])
 	.setTargetingTags({ target: "single", team: "ally" })
+	.setCost(350)
 	.setUses(10)
 	.setBlock(125);
 

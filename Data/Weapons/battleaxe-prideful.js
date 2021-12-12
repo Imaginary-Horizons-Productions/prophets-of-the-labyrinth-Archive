@@ -3,6 +3,7 @@ const { addModifier, dealDamage } = require('../combatantDAO.js');
 
 module.exports = new Weapon("Prideful Battleaxe", 2, "Strike a foe for @{damage} (+@{bonusDamage} if you have 0 block) @{element} damage*\nCritical Hit: Damage x@{critMultiplier}", "untyped", effect, ["Thick Battleaxe", "Thirsting Battleaxe"])
 	.setTargetingTags({ target: "single", team: "enemy" })
+	.setCost(350)
 	.setUses(10)
 	.setDamage(100)
 	.setBonusDamage(100);

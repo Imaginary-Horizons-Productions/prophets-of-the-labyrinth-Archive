@@ -9,6 +9,7 @@ module.exports = class Weapon {
 		this.upgrades = upgradeNames;
 	}
 	targetingTags = {};
+	cost = 100;
 	maxUses = 10;
 	critMultiplier = 2;
 	damage = 0;
@@ -20,6 +21,11 @@ module.exports = class Weapon {
 
 	setTargetingTags(tagObject) {  // tagObject {target: ["single", "all", "random", "self"], team: ["ally", "enemy", "any"]}
 		this.targetingTags = tagObject;
+		return this;
+	}
+
+	setCost(integer) {
+		this.cost = integer;
 		return this;
 	}
 

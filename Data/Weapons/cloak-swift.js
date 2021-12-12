@@ -3,6 +3,7 @@ const { addModifier, removeModifier } = require('../combatantDAO.js');
 
 module.exports = new Weapon("Swift Cloak", 2, "*Gain 1 evade and 2 Quicken*\nCritical Hit: Gain 1 additional evade and Quicken", "Wind", effect, ["Long Cloak", "Thick Cloak"])
 	.setTargetingTags({ target: "self", team: "self" })
+	.setCost(350)
 	.setUses(5);
 
 function effect(target, user, isCrit, adventure) {
@@ -17,5 +18,5 @@ function effect(target, user, isCrit, adventure) {
 		addModifier(user, "evade", 1);
 		addModifier(user, "Quicken", 2);
 	}
-	return ""; // result as text
+	return "";
 }

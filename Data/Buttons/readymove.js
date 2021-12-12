@@ -34,7 +34,7 @@ module.exports.execute = (interaction, args) => {
 			let allyOptions = adventure.delvers.map((ally, i) => {
 				return {
 					label: ally.name,
-					description: "",
+					description: "", //TODO #137 predict reminder in move target select
 					value: `ally-${i}`
 				}
 			})
