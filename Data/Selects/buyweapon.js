@@ -12,7 +12,7 @@ module.exports.execute = (interaction, [tier]) => {
 	if (delver) {
 		let [weaponName, menuIndex, cost] = interaction.values[0].split("-");
 		if (adventure.room.loot[weaponName] > 0) {
-			if (cost < adventure.gold) {
+			if (adventure.gold >= cost) {
 				adventure.gold -= cost;
 				adventure.room.loot[weaponName]--;
 				let uses = getWeaponProperty(weaponName, "maxUses");

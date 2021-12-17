@@ -187,7 +187,7 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 						new MessageButton().setCustomId(`buyscouting-finalboss-${bossScoutingCost}`)
 							.setLabel(`${adventure.scouting.finalBoss ? `Final Boss: ${adventure.finalBoss}` : `${bossScoutingCost}g: Scout the Final Boss`}`)
 							.setStyle("SECONDARY")
-							.setDisabled(adventure.scouting.finalBoss),
+							.setDisabled(adventure.scouting.finalBoss || adventure.gold < bossScoutingCost),
 						new MessageButton().setCustomId(`buyscouting-relicguardian-${guardScoutingCost}`)
 							.setLabel(`${guardScoutingCost}g: Scout a Relic Guardian (${adventure.scouting.relicGuardians} so far) (coming soon)`)
 							.setStyle("SECONDARY")
