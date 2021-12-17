@@ -26,7 +26,7 @@ module.exports.execute = (interaction, [weaponName]) => {
 		} else {
 			let replaceUI = [new MessageActionRow().addComponents(
 				...delver.weapons.map((weapon, index) => {
-					return new MessageButton().setCustomId(`replaceweapon-${weaponName}-${index}-${interaction.message.id}`)
+					return new MessageButton().setCustomId(`replaceweapon-${weaponName}-${index}-${interaction.message.id}-0`)
 						.setLabel(`Discard ${weapon.name}`)
 						.setStyle("PRIMARY")
 				})

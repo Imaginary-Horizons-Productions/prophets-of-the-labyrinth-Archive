@@ -5,7 +5,7 @@ const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
 
 module.exports = new Button("replaceweapon");
 
-module.exports.execute = (interaction, [weaponName, index, roomMessageId]) => {
+module.exports.execute = (interaction, [weaponName, index, roomMessageId, cost]) => {
 	// Replace the delver's weapon at the given index with the given weapon
 	let adventure = getAdventure(interaction.channel.id);
 	if (adventure.room.loot[`weapon-${weaponName}`] > 0) {
@@ -20,6 +20,7 @@ module.exports.execute = (interaction, [weaponName, index, roomMessageId]) => {
 			} else {
 				updatedUI = editButton(roomMessage, `takeweapon-${weaponName}`, true, "✔️", `${weaponName} GET`);
 			}
+			adventure.gold -= cost;
 			return roomMessage.edit({ components: updatedUI });
 		}).then(() => {
 			interaction.reply(`${interaction.user} discards ${discardedName} to take ${weaponName}.`);

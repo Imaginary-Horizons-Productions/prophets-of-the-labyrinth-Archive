@@ -18,7 +18,7 @@ module.exports.execute = (interaction) => {
 
 	//TODO #77 roll bosses
 	adventure.finalBoss = "Hall of Mirrors";
-	adventure.bosses = [];
+	adventure.relicGuardians = []; //TODO #138 roll relic guardians
 
 	let elementIndex = generateRandomNumber(adventure, DamageType.elementsList().length, "General");
 	adventure.setName(`${DESCRIPTORS[generateRandomNumber(adventure, DESCRIPTORS.length, "General")]} ${LOCATIONS[generateRandomNumber(adventure, LOCATIONS.length, "General")]} of ${DamageType.elementsList()[elementIndex]}`)
@@ -51,9 +51,10 @@ module.exports.execute = (interaction) => {
 					.setDisabled(true)
 			)
 
-			thread.send({ content: "The adventure will begin when everyone has picked an archetype and the leader clicks the \"Ready!\" button.", components: [ready] });
+			return thread.send({ content: "The adventure will begin when everyone has picked an archetype and the leader clicks the \"Ready!\" button.", components: [ready] });
+		}).then(deployMessage => {
 			adventure.setId(thread.id)
-				.setMessageId("deploy", message.id)
+				.setMessageId("deploy", deployMessage.id)
 				.setLeaderId(interaction.user.id);
 			setAdventure(adventure);
 		});

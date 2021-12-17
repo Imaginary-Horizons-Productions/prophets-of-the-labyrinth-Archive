@@ -7,7 +7,7 @@ module.exports = new RoomTemplate()
 	.setElement("@{adventure}");
 
 module.exports.saleList = {
-	"weapon-1": "n",
+	"weapon-?": "n",
 	"weapon-2": "1",
 	"scouting": "1"
 };

@@ -64,22 +64,49 @@ var weaponWhitelist = [
 ];
 
 const allWeapons = {};
-const weaponElements = {
-	Earth: [],
-	Wind: [],
-	Water: [],
-	Fire: [],
-	Light: [],
-	Darkness: [],
-	untyped: []
+const weaponDrops = {
+	Earth: {
+		"0": [],
+		"1": [],
+		"2": []
+	},
+	Wind: {
+		"0": [],
+		"1": [],
+		"2": []
+	},
+	Water: {
+		"0": [],
+		"1": [],
+		"2": []
+	},
+	Fire: {
+		"0": [],
+		"1": [],
+		"2": []
+	},
+	Light: {
+		"0": [],
+		"1": [],
+		"2": []
+	},
+	Darkness: {
+		"0": [],
+		"1": [],
+		"2": []
+	},
+	untyped: {
+		"-1": [],
+		"0": [],
+		"1": [],
+		"2": []
+	}
 };
 
 for (const file of weaponWhitelist) {
 	const weapon = require(`./${file}`);
 	allWeapons[weapon.name] = weapon;
-	if (weapon.tier < 2) {
-		weaponElements[weapon.element].push(weapon.name);
-	}
+	weaponDrops[weapon.element][weapon.tier.toString()].push(weapon.name);
 }
 
 exports.getWeaponProperty = function (weaponName, propertyName) {
@@ -91,13 +118,6 @@ exports.getWeaponProperty = function (weaponName, propertyName) {
 }
 
 exports.rollWeaponDrop = function (elements, tier, adventure) {
-	let pool = elements.reduce((pool, element) => pool.concat(weaponElements[element]), []);
-	let weaponName = pool[generateRandomNumber(adventure, pool.length, "general")];
-	if (tier > 1) {
-		for (let i = exports.getWeaponProperty(weaponName, "tier"); i < tier; i++) {
-			let upgrades = exports.getWeaponProperty(weaponName, "upgrades");
-			weaponName = upgrades[generateRandomNumber(adventure, upgrades.length, "general")];
-		}
-	}
-	return weaponName;
+	let pool = elements.reduce((pool, element) => pool.concat(weaponDrops[element][tier]), []);
+	return pool[generateRandomNumber(adventure, pool.length, "general")];
 }

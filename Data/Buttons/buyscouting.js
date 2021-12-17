@@ -14,6 +14,7 @@ module.exports.execute = (interaction, [type, cost]) => {
 			interaction.update({ components: editButton(interaction.message, `buyscouting-finalboss-${cost}`, true, "✔️", `Final Boss: ${adventure.finalBoss}`) });
 			interaction.followUp(`The merchant reveals that final boss for this adventure will be **${adventure.finalBoss}** (you can review this in Party Stats).`);
 		} else {
+			//TODO #138 if out of prerolled relic guardians, roll a new one
 			interaction.reply(`The merchant reveals that the next relic guardian for this adventure will be **${adventure.relicGuardians[adventure.scouting.relicGuardians]}** (you can review this in Party Stats).`);
 			adventure.scouting.relicGuardians++;
 		}

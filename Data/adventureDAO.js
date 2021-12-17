@@ -87,7 +87,7 @@ exports.updateRoomHeader = function (adventure, message) {
 	message.edit({ embeds: [message.embeds[0].setAuthor(roomHeaderString(adventure), message.client.user.displayAvatarURL())] })
 }
 
-exports.nextRoom = async function (roomType, adventure, channel) {
+exports.nextRoom = async function (roomType, adventure, thread) {
 	// Clean up old room
 	adventure.depth++;
 	adventure.room = {};
@@ -120,7 +120,7 @@ exports.nextRoom = async function (roomType, adventure, channel) {
 			roomColor = DamageType.getColor(roomColor);
 		}
 		let embed = new MessageEmbed().setColor(roomColor)
-			.setAuthor(roomHeaderString(adventure), channel.client.user.displayAvatarURL())
+			.setAuthor(roomHeaderString(adventure), thread.client.user.displayAvatarURL())
 			.setTitle(roomTemplate.title)
 			.setDescription(roomTemplate.description)
 			.setFooter(`Room #${adventure.depth}`);
@@ -135,8 +135,9 @@ exports.nextRoom = async function (roomType, adventure, channel) {
 					spawnEnemy(adventure, getEnemy(enemyName), !isBossRoom);
 				}
 			}
-			exports.newRound(adventure, channel, embed);
+			exports.newRound(adventure, thread, embed);
 		} else {
+			//TODO #138 if out of relic guardians, roll more
 			adventure.room = new Room(roomTemplate.title, roomColor);
 			for (let reward in roomTemplate.lootList) {
 				let rewardCount = parseCount(roomTemplate.lootList[reward], adventure.delvers.length);
@@ -149,10 +150,20 @@ exports.nextRoom = async function (roomType, adventure, channel) {
 			for (let category in roomTemplate.saleList) {
 				if (category.startsWith("weapon")) {
 					let tier = category.split("-")[1];
+					let parsedTier = tier;
 					let count = Math.min(25, parseCount(roomTemplate.saleList[category], adventure.delvers.length));
 					let weaponOptions = [];
 					for (let i = 0; i < count; i++) {
-						let weaponName = rollWeaponDrop(adventure.delvers.reduce((elements, delver) => [...elements, delver.element], []), tier, adventure);
+						if (tier === "?") {
+							let threshold = 1;
+							let max = 8;
+							if (generateRandomNumber(adventure, max, "general") < threshold) {
+								parsedTier = 2;
+							} else {
+								parsedTier = 1;
+							}
+						}
+						let weaponName = rollWeaponDrop(adventure.delvers.reduce((elements, delver) => [...elements, delver.element], []), parsedTier, adventure);
 						let cost = getWeaponProperty(weaponName, "cost");
 						if (adventure.room.loot[weaponName]) {
 							adventure.room.loot[weaponName]++;
@@ -162,12 +173,12 @@ exports.nextRoom = async function (roomType, adventure, channel) {
 						weaponOptions.push({
 							label: `${cost}g: ${weaponName}`,
 							description: `(description coming soon)`, //TODO #136 weapon descriptions in select option description
-							value: `${weaponName}-${i}`
+							value: `${weaponName}-${i}-${cost}`
 						})
 					}
 					uiComponents.push(new MessageActionRow().addComponents(
 						new MessageSelectMenu().setCustomId(`buyweapon-${tier}`)
-							.setPlaceholder("Buy a weapon...")
+							.setPlaceholder(`Check a ${tier === "2" ? "rare " : ""}weapon...`)
 							.setOptions(weaponOptions)));
 				} else if (category === "scouting") {
 					let bossScoutingCost = 150;
@@ -186,20 +197,20 @@ exports.nextRoom = async function (roomType, adventure, channel) {
 				}
 			}
 			const { embed: embedFinal, uiRows } = addRoutingUI(embed, uiComponents, adventure);
-			let roomMessage = await channel.send({ embeds: [embedFinal], components: uiRows });
+			let roomMessage = await thread.send({ embeds: [embedFinal], components: uiRows });
 			adventure.setMessageId("room", roomMessage.id);
 		}
 		exports.setAdventure(adventure);
 	} else {
 		adventure.accumulatedScore = 10;
-		exports.completeAdventure(adventure, channel, new MessageEmbed().setTitle("Success"));
+		exports.completeAdventure(adventure, thread, new MessageEmbed().setTitle("Success"));
 	}
 }
 
-exports.newRound = function (adventure, channel, embed = new MessageEmbed()) {
+exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 	// Increment round and clear last round's components
 	adventure.room.round++;
-	clearComponents(adventure.messageIds.battleRound, channel.messages);
+	clearComponents(adventure.messageIds.battleRound, thread.messages);
 
 	// Logistics for Next Round
 	let teams = {
@@ -273,14 +284,14 @@ exports.newRound = function (adventure, channel, embed = new MessageEmbed()) {
 				.setLabel("Ready a Move")
 				.setStyle("PRIMARY")
 		)];
-		channel.send({ embeds: [embed], components: battleMenu }).then(message => {
+		thread.send({ embeds: [embed], components: battleMenu }).then(message => {
 			exports.updateRoomHeader(adventure, message);
 			adventure.setMessageId("battleRound", message.id);
 			exports.saveAdventures();
 		});
 	} else {
-		channel.send({ embeds: [embed] });
-		exports.endRound(adventure, channel);
+		thread.send({ embeds: [embed] });
+		exports.endRound(adventure, thread);
 		exports.saveAdventures();
 	}
 }
@@ -328,9 +339,9 @@ function addRoutingUI(embed, components, adventure) {
 	return { embed, uiRows };
 }
 
-exports.endRound = async function (adventure, channel) {
+exports.endRound = async function (adventure, thread) {
 	// Generate results embed
-	let embed = new MessageEmbed().setAuthor(roomHeaderString(adventure), channel.client.user.displayAvatarURL())
+	let embed = new MessageEmbed().setAuthor(roomHeaderString(adventure), thread.client.user.displayAvatarURL())
 		.setTitle(adventure.room.title);
 
 	// Generate Reactive Moves by Enemies
@@ -362,7 +373,7 @@ exports.endRound = async function (adventure, channel) {
 		lastRoundText += await resolveMove(move, adventure);
 		// Check for Defeat
 		if (adventure.lives <= 0) {
-			exports.completeAdventure(adventure, channel, embed.setTitle("Defeat").setDescription(lastRoundText));
+			exports.completeAdventure(adventure, thread, embed.setTitle("Defeat").setDescription(lastRoundText));
 			return;
 		}
 
@@ -385,14 +396,24 @@ exports.endRound = async function (adventure, channel) {
 			}
 
 			// Weapon drops
-			let droppedWeapon = rollWeaponDrop(adventure.delvers.reduce((elements, delver) => [...elements, delver.element], []), 1, adventure);
-			adventure.room.loot[`weapon-${droppedWeapon}`] = 1;
+			let dropThreshold = 1;
+			let dropMax = 8;
+			if (generateRandomNumber(adventure, dropMax, "general") < dropThreshold) {
+				let tier = 1;
+				let upgradeThreshold = 1;
+				let upgradeMax = 8;
+				if (generateRandomNumber(adventure, upgradeMax, "general") < upgradeThreshold) {
+					tier = 2;
+				}
+				let droppedWeapon = rollWeaponDrop(adventure.delvers.reduce((elements, delver) => [...elements, delver.element], []), tier, adventure);
+				adventure.room.loot[`weapon-${droppedWeapon}`] = 1;
+			}
 			if (Object.keys(adventure.room.loot).length - 1 > 0) {
 				for (let item in adventure.room.loot) {
 					let itemName = "";
 					if (item.startsWith("weapon-")) {
 						itemName = item.split("-")[1];
-						let label = `${itemName} x${adventure.room.loot[item]}`
+						let label = `${itemName} x${adventure.room.loot[item]}`;
 						spoilsText += `\n${label}`;
 						lootRow.push(new MessageButton().setCustomId(`takeweapon-${itemName}`)
 							.setLabel(`${label} remaining`)
@@ -411,7 +432,7 @@ exports.endRound = async function (adventure, channel) {
 				roomUI.unshift(new MessageActionRow().addComponents(...lootRow));
 			}
 			const { embed: embedFinal, uiRows } = addRoutingUI(embed, roomUI, adventure);
-			return channel.send({
+			return thread.send({
 				embeds: [embedFinal.setTitle("Victory!").setDescription(lastRoundText)],
 				components: uiRows
 			}).then(message => {
@@ -426,7 +447,7 @@ exports.endRound = async function (adventure, channel) {
 		}
 	}
 	adventure.room.moves = [];
-	exports.newRound(adventure, channel, embed.setDescription(lastRoundText));
+	exports.newRound(adventure, thread, embed.setDescription(lastRoundText));
 }
 
 exports.checkNextRound = function (adventure) {
@@ -465,8 +486,8 @@ exports.completeAdventure = function (adventure, thread, scoreEmbed) {
 		recruitMessage.edit({ embeds: [recruitEmbed] });
 	})
 	clearComponents(adventure.messageIds.battleRound, thread.messages);
-	clearComponents(adventure.messageIds.utility, thread.messages);
 	clearComponents(adventure.messageIds.room, thread.messages);
+	thread.messages.delete(adventure.messageIds.utility);
 
 	adventureDictionary.delete(thread.id);
 	exports.saveAdventures();
