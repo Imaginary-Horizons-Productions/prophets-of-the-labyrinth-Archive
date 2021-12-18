@@ -11,6 +11,6 @@ module.exports.uiRows.push(new MessageActionRow()
 	.addComponents(
 		new MessageButton()
 			.setCustomId("hpshare")
-			.setLabel("Redistribute Health [-50g, -50 hp, +50 hp for everyone else]")
-			.setStyle("DANGER")
+			.setLabel("Sign the contract [-50g, -50 hp, +50 hp for everyone else]")
+			.setStyle("PRIMARY")
 	))

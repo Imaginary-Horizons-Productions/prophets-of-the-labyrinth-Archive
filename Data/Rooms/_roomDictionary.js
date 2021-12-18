@@ -7,6 +7,7 @@ let roomWhitelist = [
 	"battle-mechabees.js",
 	"battle-slimes.js",
 	"battle-tortoises.js",
+	"event-elementswap.js",
 	"event-freegold.js",
 	"event-goldonfire.js",
 	"event-hpshare.js",

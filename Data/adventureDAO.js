@@ -12,7 +12,6 @@ const Delver = require("../Classes/Delver.js");
 const { getTurnDecrement } = require("./Modifiers/_modifierDictionary.js");
 const { getEnemy } = require("./Enemies/_enemyDictionary");
 const Room = require("../Classes/Room.js");
-const RoomCombat = require("../Classes/RoomCombat.js");
 const { spawnEnemy } = require("./enemyDAO.js");
 const DamageType = require("../Classes/DamageType.js");
 const { rollWeaponDrop, getWeaponProperty } = require("./Weapons/_weaponDictionary.js");
@@ -112,23 +111,33 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 
 	// Generate current room
 	if (adventure.depth < 11) {
+		//TODO #138 if out of relic guardians, roll more
 		let roomTemplate = getRoomTemplate(roomType, adventure);
-		let roomColor = roomTemplate.element;
-		if (roomColor === "@{adventure}") {
-			roomColor = DamageType.getColor(adventure.element);
-		} else {
-			roomColor = DamageType.getColor(roomColor);
+		adventure.room = new Room(roomTemplate.title, roomTemplate.element);
+		if (adventure.room.element === "@{adventure}") {
+			adventure.room.element = adventure.element;
+		} else if (adventure.room.element === "@{adventureWeakness}") {
+			let weaknesses = DamageType.getWeaknesses(adventure.element);
+			adventure.room.element = weaknesses[generateRandomNumber(adventure, weaknesses.length, "general")];
 		}
-		let embed = new MessageEmbed().setColor(roomColor)
+		let embed = new MessageEmbed().setColor(DamageType.getColor(adventure.room.element))
 			.setAuthor(roomHeaderString(adventure), thread.client.user.displayAvatarURL())
 			.setTitle(roomTemplate.title)
-			.setDescription(roomTemplate.description)
+			.setDescription(roomTemplate.description.replace("@{roomElement}", adventure.room.element))
 			.setFooter(`Room #${adventure.depth}`);
+		for (let reward in roomTemplate.lootList) {
+			let rewardCount = parseCount(roomTemplate.lootList[reward], adventure.delvers.length);
+			if (reward === "forgeSupplies") {
+				embed.addField("Remaining Forge Supplies", rewardCount.toString());
+			}
+			adventure.room.loot[reward] = rewardCount;
+		}
 		if (["Battle", "Final Battle", "Relic Guardian"].includes(roomType)) {
+			// Generate combat room
 			if (roomType === "Relic Guardian") {
 				adventure.scouting.relicGuardiansEncountered++;
 			}
-			adventure.room = new RoomCombat(roomTemplate.title, roomColor);
+			adventure.room.initializeCombatProperties();
 			let isBossRoom = roomType !== "Battle";
 			for (let enemyName in roomTemplate.enemyList) {
 				for (let i = 0; i < parseCount(roomTemplate.enemyList[enemyName], adventure.delvers.length); i++) {
@@ -137,15 +146,7 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 			}
 			exports.newRound(adventure, thread, embed);
 		} else {
-			//TODO #138 if out of relic guardians, roll more
-			adventure.room = new Room(roomTemplate.title, roomColor);
-			for (let reward in roomTemplate.lootList) {
-				let rewardCount = parseCount(roomTemplate.lootList[reward], adventure.delvers.length);
-				if (reward === "forgeSupplies") {
-					embed.addField("Remaining Forge Supplies", rewardCount.toString());
-				}
-				adventure.room.loot[reward] = rewardCount;
-			}
+			// Generate non-combat room
 			let uiComponents = [...roomTemplate.uiRows];
 			for (let category in roomTemplate.saleList) {
 				if (category.startsWith("weapon")) {
@@ -163,7 +164,7 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 								parsedTier = 1;
 							}
 						}
-						let weaponName = rollWeaponDrop(adventure.delvers.reduce((elements, delver) => [...elements, delver.element], []), parsedTier, adventure);
+						let weaponName = rollWeaponDrop(adventure.delvers.map(delver => delver.element), parsedTier, adventure);
 						let cost = getWeaponProperty(weaponName, "cost");
 						if (adventure.room.loot[weaponName]) {
 							adventure.room.loot[weaponName]++;
@@ -193,7 +194,6 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 							.setStyle("SECONDARY")
 							.setDisabled(true)
 					));
-
 				}
 			}
 			const { embed: embedFinal, uiRows } = addRoutingUI(embed, uiComponents, adventure);
@@ -405,7 +405,7 @@ exports.endRound = async function (adventure, thread) {
 				if (generateRandomNumber(adventure, upgradeMax, "general") < upgradeThreshold) {
 					tier = 2;
 				}
-				let droppedWeapon = rollWeaponDrop(adventure.delvers.reduce((elements, delver) => [...elements, delver.element], []), tier, adventure);
+				let droppedWeapon = rollWeaponDrop(adventure.delvers.map(delver => delver.element), tier, adventure);
 				adventure.room.loot[`weapon-${droppedWeapon}`] = 1;
 			}
 			if (Object.keys(adventure.room.loot).length - 1 > 0) {

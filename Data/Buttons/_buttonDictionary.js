@@ -4,6 +4,7 @@ var buttonWhitelist = [
 	"challenge.js",
 	"continue.js",
 	"deploy.js",
+	"elementswap.js",
 	"getgoldonfire.js",
 	"giveup.js",
 	"hpshare.js",

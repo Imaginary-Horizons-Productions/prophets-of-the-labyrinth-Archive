@@ -20,7 +20,7 @@ module.exports.execute = (interaction, args) => {
 						gainHealth(delver, 50, adventure.room.enemyTitles);
 					}
 				})
-				return interaction.reply(`${damageText} Everyone else gains 5 hp.`);
+				return interaction.reply(`${damageText} Everyone else gains 50 hp.`);
 			}).then(() => {
 				let updatedUI = editButton(interaction.message, "hpshare", true, "✔️", `${interaction.user} shared HP.`);
 				interaction.update({ components: updatedUI });
@@ -28,6 +28,8 @@ module.exports.execute = (interaction, args) => {
 					completeAdventure(adventure, interaction.channel, new MessageEmbed().setTitle("Defeat"));
 				}
 			})
+		} else {
+			interaction.reply({ content: "You can't afford this contract.", ephemeral: true });
 		}
 	} else {
 		interaction.reply({ content: "Please share hp in adventures you've joined.", ephemeral: true });
