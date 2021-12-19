@@ -75,7 +75,7 @@ exports.getAdventure = function (id) {
 
 exports.setAdventure = function (adventure) {
 	adventureDictionary.set(adventure.id, adventure);
-	exports.saveAdventures();
+	saveAdventures();
 }
 
 function roomHeaderString(adventure) {
@@ -287,12 +287,12 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 		thread.send({ embeds: [embed], components: battleMenu }).then(message => {
 			exports.updateRoomHeader(adventure, message);
 			adventure.setMessageId("battleRound", message.id);
-			exports.saveAdventures();
+			exports.setAdventure(adventure);
 		});
 	} else {
 		thread.send({ embeds: [embed] });
 		exports.endRound(adventure, thread);
-		exports.saveAdventures();
+		exports.setAdventure(adventure);
 	}
 }
 
@@ -442,7 +442,7 @@ exports.endRound = async function (adventure, thread) {
 				})
 				return adventure;
 			}).then(adventure => {
-				exports.saveAdventures();
+				exports.setAdventure(adventure);
 			});
 		}
 	}
@@ -487,13 +487,14 @@ exports.completeAdventure = function (adventure, thread, scoreEmbed) {
 	})
 	clearComponents(adventure.messageIds.battleRound, thread.messages);
 	clearComponents(adventure.messageIds.room, thread.messages);
+	console.log(adventure.messageIds.utility);
 	thread.messages.delete(adventure.messageIds.utility);
 
 	adventureDictionary.delete(thread.id);
-	exports.saveAdventures();
+	saveAdventures();
 	thread.send({ embeds: [scoreEmbed] });
 }
 
-exports.saveAdventures = function () {
+function saveAdventures() {
 	ensuredPathSave("./Saves", "adventures.json", JSON.stringify(Array.from(adventureDictionary.values())));
 }

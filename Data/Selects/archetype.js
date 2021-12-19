@@ -1,6 +1,6 @@
 const Archetype = require('../../Classes/Archetype.js');
 const Select = require('../../Classes/Select.js');
-const { getAdventure, saveAdventures } = require('../adventureDAO');
+const { getAdventure, setAdventure } = require('../adventureDAO');
 const { getArchetype } = require('../Archetypes/_archetypeDictionary.js');
 const { MessageActionRow, MessageButton } = require('discord.js');
 const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
@@ -43,10 +43,11 @@ module.exports.execute = (interaction, args) => {
 
 					interaction.channel.send({ content: "All players are ready, the adventure will start when the leader clicks the button below!", components: readyButton }).then(message => {
 						adventure.setMessageId("start", message.id);
+						setAdventure(adventure);
 					})
 				}
+				setAdventure(adventure);
 			})
-			saveAdventures();
 		} else {
 			let join = new MessageActionRow().addComponents(
 				new MessageButton().setCustomId(`join-${interaction.channel.id}`)
