@@ -40,7 +40,7 @@ module.exports.execute = (interaction) => {
 	}).then(thread => {
 		adventure.delvers.push(new Delver(interaction.user.id, interaction.member.displayName, thread.id));
 
-		thread.send(`${interaction.user} Here's the channel for your new adventure. As adventure leader you're responsible for indicating when everyone's ready.`).then(message => {
+		thread.send(`${interaction.user} Here's the channel for your new adventure. As adventure leader you're responsible for indicating when everyone's ready.`).then(leaderMessage => {
 			let ready = new MessageActionRow().addComponents(
 				new MessageButton().setCustomId("deploy")
 					.setLabel("Pick an Archetype")
@@ -50,12 +50,12 @@ module.exports.execute = (interaction) => {
 					.setStyle("DANGER")
 					.setDisabled(true)
 			)
-
+			adventure.setId(thread.id)
+				.setLeaderId(interaction.user.id)
+				.setMessageId("leaderNotice", leaderMessage.id);
 			return thread.send({ content: "The adventure will begin when everyone has picked an archetype and the leader clicks the \"Ready!\" button.", components: [ready] });
 		}).then(deployMessage => {
-			adventure.setId(thread.id)
-				.setMessageId("deploy", deployMessage.id)
-				.setLeaderId(interaction.user.id);
+			adventure.setMessageId("deploy", deployMessage.id);
 			setAdventure(adventure);
 		});
 	}).catch(console.error);

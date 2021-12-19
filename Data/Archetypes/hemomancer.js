@@ -1,6 +1,7 @@
 const Archetype = require("../../Classes/Archetype.js");
 
 module.exports = new Archetype("Hemomancer")
-	.setElement("Darkness") // enum: "Fire", "Water", "Earth", "Wind", "Light", "Darkness"
-	.setPredictType("Move Order") // enum: "Targets", "Critical Hits", "Health", "Move Order", "Modifiers"
-	.setSignatureWeapons(["Spell: Life Drain", "Spell: Blood Aegis"]); // keys in weaponDictionary
+	.setElement("Darkness")
+	.setPredictType("Move Order")
+	.setDescription("Able to predict the order combatants will act, the Hemomancer excels at getting the last word.")
+	.setSignatureWeapons(["Spell: Life Drain", "Spell: Blood Aegis"]);

@@ -487,8 +487,14 @@ exports.completeAdventure = function (adventure, thread, scoreEmbed) {
 	})
 	clearComponents(adventure.messageIds.battleRound, thread.messages);
 	clearComponents(adventure.messageIds.room, thread.messages);
-	console.log(adventure.messageIds.utility);
-	thread.messages.delete(adventure.messageIds.utility);
+	if (adventure.messageIds.utility) {
+		thread.messages.delete(adventure.messageIds.utility);
+		delete adventure.messageIds.utility;
+	}
+	if (adventure.messageIds.leaderNotice) {
+		thread.messages.delete(adventure.messageIds.leaderNotice);
+		delete adventure.messageIds.leaderNotice;
+	}
 
 	adventureDictionary.delete(thread.id);
 	saveAdventures();

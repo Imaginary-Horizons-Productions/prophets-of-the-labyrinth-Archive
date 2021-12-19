@@ -1,7 +1,6 @@
 const { getAdventure, nextRoom } = require('../adventureDAO.js');
 const Button = require('../../Classes/Button.js');
 const { MessageActionRow, MessageButton } = require('discord.js');
-const { clearComponents } = require('../../helpers.js');
 
 module.exports = new Button("ready");
 
@@ -13,8 +12,12 @@ module.exports.execute = (interaction, args) => {
 		interaction.channel.fetchStarterMessage().then(recruitMessage => {
 			recruitMessage.edit({ components: [] });
 		}).catch(console.error);
-		interaction.channel.messages.delete(adventure.messageIds.deploy);
-		clearComponents(adventure.messageIds.start, interaction.channel.messages);
+		if (adventure.messageIds.deploy) {
+			interaction.channel.messages.delete(adventure.messageIds.deploy);
+			delete adventure.messageIds.deploy;
+		}
+		interaction.message.delete();
+		delete adventure.messageIds.start;
 
 		// Post utilities message
 		let utilities = [new MessageActionRow().addComponents(

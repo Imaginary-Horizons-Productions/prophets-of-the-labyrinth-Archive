@@ -4,7 +4,6 @@ const { getAdventure, setAdventure } = require('../adventureDAO');
 const { getArchetype } = require('../Archetypes/_archetypeDictionary.js');
 const { MessageActionRow, MessageButton } = require('discord.js');
 const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
-const { clearComponents } = require('../../helpers.js');
 
 module.exports = new Select("archetype");
 
@@ -15,8 +14,9 @@ module.exports.execute = (interaction, args) => {
 		// Add delver to list (or overwrite)
 		let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
 		if (userIndex !== -1) {
+			let archetype = interaction.values[0];
 			let isSwitching = adventure.delvers[userIndex].title !== "";
-			let archetypeTemplate = Object.assign(new Archetype(), getArchetype(interaction.values[0]));
+			let archetypeTemplate = Object.assign(new Archetype(), getArchetype(archetype));
 			adventure.delvers[userIndex].weapons = archetypeTemplate.signatureWeapons.map(signatureWeapon => {
 				return { name: signatureWeapon, uses: getWeaponProperty(signatureWeapon, "maxUses") }
 			});
@@ -27,7 +27,8 @@ module.exports.execute = (interaction, args) => {
 				.setPredict(archetypeTemplate.predict);
 
 			// Send confirmation text
-			interaction.reply(`${interaction.user} ${isSwitching ? "has switched to" : "will be playing as"} ${interaction.values[0]}`).then(() => {
+			interaction.reply({content: archetypeTemplate.description, ephemeral: true});
+			interaction.channel.send(`${interaction.user} ${isSwitching ? "has switched to" : "will be playing as"} ${archetype}.`).then(() => {
 				// Check if all ready
 				if (adventure.delvers.every(delver => delver.title)) {
 					let readyButton = [
@@ -38,8 +39,11 @@ module.exports.execute = (interaction, args) => {
 						)
 					];
 
-					// if startMessageId already exists, player has changed class, so delete extra start button
-					clearComponents(adventure.messageIds.start, interaction.channel.messages);
+					// if startMessageId already exists, player has changed class, so delete extra start message
+					if (adventure.messageIds.start) {
+						interaction.channel.messages.delete(adventure.messageIds.start);
+						delete adventure.messageIds.start;
+					}
 
 					interaction.channel.send({ content: "All players are ready, the adventure will start when the leader clicks the button below!", components: readyButton }).then(message => {
 						adventure.setMessageId("start", message.id);

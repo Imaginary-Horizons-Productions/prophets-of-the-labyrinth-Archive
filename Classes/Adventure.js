@@ -17,8 +17,9 @@ module.exports = class Adventure {
 	rnIndex = 0;
 	rnIndexBattle = 0;
 	messageIds = {
-		deploy: "",
 		start: "",
+		leaderNotice: "",
+		deploy: "",
 		utility: "",
 		room: "",
 		battleRound: ""
