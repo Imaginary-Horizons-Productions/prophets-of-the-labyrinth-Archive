@@ -1,5 +1,6 @@
 var selectWhitelist = [
 	"archetype.js",
+	"buyweapon.js",
 	"randomupgrade.js",
 	"repair.js",
 	"weapon.js"

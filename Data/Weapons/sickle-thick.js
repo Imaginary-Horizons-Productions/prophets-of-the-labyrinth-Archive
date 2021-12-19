@@ -1,8 +1,9 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { addModifier, dealDamage } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Thick Sickle", "*Strike a foe for @{damage} (+10% foe max hp) @{element} damage*\nCritical Hit: Damage x@{critMultiplier}", "Water", effect, [])
+module.exports = new Weapon("Thick Sickle", 2, "*Strike a foe for @{damage} (+10% foe max hp) @{element} damage*\nCritical Hit: Damage x@{critMultiplier}", "Water", effect, ["Hunter's Sickle", "Sharpened Sickle"])
 	.setTargetingTags({ target: "single", team: "enemy" })
+	.setCost(350)
 	.setUses(20)
 	.setDamage(75);
 
@@ -15,5 +16,5 @@ function effect(target, user, isCrit, adventure) {
 	if (isCrit) {
 		damage *= critMultiplier;
 	}
-	return dealDamage(target, user, damage, weaponElement, adventure); // result text
+	return dealDamage(target, user, damage, weaponElement, adventure);
 }

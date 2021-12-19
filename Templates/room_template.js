@@ -1,6 +1,7 @@
-const Room = require("../../Classes/Room.js")
+const RoomTemplate = require("../../Classes/RoomTemplate.js")
 
-module.exports = new Room()
-	.setType("type") // enum: "battle", "event"
+module.exports = new RoomTemplate()
+	.setTypes("type") // enum: "Battle", "Merchant", "Event", "Rest Site", "Final Battle", "Relic Guardian", "Forge"
 	.setTitle("title")
-	.setDescription("description");
+	.setDescription("description")
+	.setElement("embedColor");

@@ -1,6 +1,7 @@
 const Button = require('../../Classes/Button.js');
 const Move = require('../../Classes/Move');
-const { getAdventure, saveAdventures, checkNextRound, updateRoundMessage, generateRandomNumber, endRound } = require('../adventureDAO');
+const { generateRandomNumber } = require('../../helpers.js');
+const { getAdventure, checkNextRound, updateRoundMessage, endRound, setAdventure } = require('../adventureDAO');
 const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
 
 module.exports = new Button("nontargetweapon");
@@ -9,9 +10,10 @@ module.exports.execute = async function (interaction, [weaponName]) {
 	// Add move object to adventure
 	let adventure = getAdventure(interaction.channel.id);
 	let user = adventure.delvers.find(delver => delver.id === interaction.user.id);
-	if (weaponName in user.weapons) {
+	if (user.weapons.some(weapon => weapon.name === weaponName && weapon.uses > 0)) {
 		// Add move to round list (overwrite exisiting readied move)
 		let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
+		user.actionSpeed = getWeaponProperty(weaponName, "speedBonus") || 0;
 		let newMove = new Move()
 			.setSpeed(user)
 			.setIsCrit(user.crit)
@@ -43,11 +45,12 @@ module.exports.execute = async function (interaction, [weaponName]) {
 				targetText = `${targetCount} random enem${targetCount === 1 ? "y" : "ies"}`;
 			}
 			for (let i = 0; i < targetCount; i++) {
-				newMove.addTarget(team, generateRandomNumber(adventure, poolSize, "battle"));
+				newMove.addTarget(team, generateRandomNumber(adventure, poolSize, "Battle"));
 			}
 		} else if (target === "self") {
 			newMove.addTarget(team, userIndex);
-			targetText = "themself";
+		} else if (target === "none") {
+			newMove.addTarget("none", "none");
 		}
 
 		let overwritten = false;
@@ -64,15 +67,15 @@ module.exports.execute = async function (interaction, [weaponName]) {
 		}
 
 		// Send confirmation text
-		interaction.reply(`${interaction.user} readies **${weaponName}** to use on **${targetText}**.`).then(() => {
-			saveAdventures();
+		interaction.reply(`${interaction.user} ${overwritten ? "switches to ready" : "readies"} **${weaponName}**${target !== "none" && target !== "self" ? ` to use on **${targetText}**` : ""}.`).then(() => {
+			setAdventure(adventure);
 			updateRoundMessage(interaction.channel.messages, adventure);
 			if (checkNextRound(adventure)) {
 				endRound(adventure, interaction.channel);
 			};
 		}).catch(console.error);
 	} else {
-		interaction.reply({ content: `You don't have that weapon anymore.`, ephemeral: true })
+		interaction.reply({ content: `You don't have a ${weaponName} with uses remaining.`, ephemeral: true })
 			.catch(console.error);
 	}
 }

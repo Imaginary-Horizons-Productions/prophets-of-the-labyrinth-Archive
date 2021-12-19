@@ -1,6 +1,8 @@
 var enemyWhitelist = [
 	"clone.js",
+	"geodetortoise.js",
 	"hawk.js",
+	"mechabee.js",
 	"ooze.js",
 	"slime.js"
 ];

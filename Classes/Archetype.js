@@ -28,6 +28,11 @@ module.exports = class Archetype {
 		return this;
 	}
 
+	setDescription(text) {
+		this.description = text;
+		return this;
+	}
+
 	setSignatureWeapons(weaponArray) {
 		this.signatureWeapons = weaponArray;
 		return this;

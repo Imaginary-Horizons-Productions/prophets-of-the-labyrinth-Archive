@@ -1,10 +1,10 @@
 # Upgrade Names
 
-### Chargning
+### Charging
 User gains Power Up modifier
 
 #### Available on
-- Sword (Earth)
+- all Swords (Earth)
 - Blood Aegis (Darkness)
 
 ### Cursed
@@ -18,6 +18,13 @@ Affects Earth element combatants
 
 #### Available on
 - Potion (Water)
+
+### Evasive
+User gains evade
+
+#### Available on
+- Sun Flare (Light)
+- Bow (Wind)
 
 ### Guarding
 Adds block on the user
@@ -38,6 +45,7 @@ Gain gold on kill
 
 #### Available on
 - Sickle (Water)
+- Bow (Wind)
 
 ### Inky
 Affects Dark element combatants
@@ -51,6 +59,7 @@ Increased crit damage
 #### Avaialble on
 - all Daggers (Wind)
 - Spear (Light)
+- Scythe (Darkness)
 
 ### Long
 Increased stack count of buff/debuff applied
@@ -63,6 +72,13 @@ Damage type matches user
 
 #### Available on
 - Fire Cracker (Fire)
+- Bow (Wind)
+
+### Prideful
+High value non-elemental damage
+
+#### Available on
+- Battleaxe (Fire)
 
 ### Purifying
 Removes all debuffs on target
@@ -75,6 +91,20 @@ Increased damage against a foe with higher speed
 
 #### Available on
 - Spear (Light)
+- Life Drain (Darkness)
+
+### Reaper's
+Instant death if target is below hp threshold
+
+#### Available on
+- all Scythes (Darkness)
+
+### Reckless
+Increased damage if user has 0 block
+
+#### Available on
+- all Battleaxes (Fire)
+- Sword (Earth)
 
 ### Sharpened
 Increased base damage
@@ -95,7 +125,7 @@ Hits all enemes/allies
 Grants the user the Quicken modifier
 
 #### Available on
-- Buckler (Earth)
+- Sun Flare (Light)
 - Cloak (Wind)
 - Sword (Earth)
 
@@ -106,12 +136,36 @@ Increased durability, grants the differences in uses when upgraded.
 - Barrier (Light)
 - Cloak (Wind)
 - Sickle (Water)
+- Battleaxe (Fire)
+
+### Thirsting
+User regains hp on kill
+
+#### Available on
+- Battleaxe (Fire)
+
+### Tormenting
+Adds stacks to debuffs
+
+#### Avaialble on
+- Sun Flare (Light)
 
 ### Toxic
 Applies Poison
 
 #### Avaialble on
 - Fire Cracker (Fire)
+- Scythe (Darkness)
+
+### Urgent
+Bonus speed
+
+#### Avaialble on
+- all Bows (Wind)
+- all Sun Flare (Light)
+- Barrier (Light)
+- Buckler (Earth)
+- Life Drain (Darkness)
 
 ### Watery
 Affects Water element combatants
@@ -127,22 +181,14 @@ Increased damage against enemies with 0 block
 
 ## Unnamed
 - Spear (add stagger on crit)
-- Sword (bonus damage if user has no block)
 - Sickle (10% max hp bonus damage)
 - Life Drain (attack a foe and gain hp)
+- Warhammer (bonus damage on stunned enemy)
 
 ## Ideas
-- Catalyst ___ - Adds stacks to debuffs
-- Urgent ___ - Gives a bonus to the user's speed for this move
 - Empowering ___ - Adds stacks to buffs
-- Reaper's ___ - kills an enemy if they are at 15% hp or below
-- Double ___ - doubles number of (random) targets
 - Seeking ___ - targets lowest hp enemy
 - Kite Shield - single target attack that grants user block (Guarding)
 - Tower Shield - blocks for target and user (non-starting weapon)
-- Prideful - high value non-elemental damage
 - Bashing - bonus damage for block on user
-- Scythe
-- Bow
-- Bloodthirsty ___ - heal user if killing blow
 - Siphoning ___ - regain uses if killing blow

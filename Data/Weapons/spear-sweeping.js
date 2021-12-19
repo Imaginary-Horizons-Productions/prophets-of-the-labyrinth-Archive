@@ -1,8 +1,9 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { dealDamage, addModifier } = require("../combatantDAO.js");
 
-module.exports = new Weapon("Sweeping Spear", "*Strike all foes for @{damage} @{element} damage*\nCritical Hit: Inflict 1 Stagger", "Light", effect, [])
+module.exports = new Weapon("Sweeping Spear", 2, "*Strike all foes for @{damage} @{element} damage*\nCritical Hit: Inflict 1 Stagger", "Light", effect, ["Lethal Spear", "Reactive Spear"])
 	.setTargetingTags({ target: "all", team: "enemy" })
+	.setCost(350)
 	.setUses(10)
 	.setDamage(75);
 

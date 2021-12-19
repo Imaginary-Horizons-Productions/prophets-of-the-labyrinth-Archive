@@ -1,6 +1,7 @@
 const Move = require('../../Classes/Move');
 const Select = require('../../Classes/Select.js');
-const { getAdventure, saveAdventures, checkNextRound, updateRoundMessage, endRound } = require('../adventureDAO');
+const { getAdventure, checkNextRound, updateRoundMessage, endRound, setAdventure } = require('../adventureDAO');
+const { getWeaponProperty } = require('../Weapons/_weaponDictionary');
 const { getFullName } = require("./../combatantDAO.js");
 
 module.exports = new Select("weapon");
@@ -9,10 +10,11 @@ module.exports.execute = async function (interaction, [weaponName]) {
 	// Add move object to adventure
 	let adventure = getAdventure(interaction.channel.id);
 	let user = adventure.delvers.find(delver => delver.id === interaction.user.id);
-	if (weaponName === "punch" || weaponName in user.weapons) {
+	if (weaponName === "Punch" || user.weapons.some(weapon => weapon.name === weaponName && weapon.uses > 0)) {
 		// Add move to round list (overwrite exisiting readied move)
 		let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
 		let [targetTeam, targetIndex] = interaction.values[0].split("-");
+		user.actionSpeed = getWeaponProperty(weaponName, "speedBonus") || 0;
 		let newMove = new Move()
 			.setSpeed(user)
 			.setIsCrit(user.crit)
@@ -40,8 +42,8 @@ module.exports.execute = async function (interaction, [weaponName]) {
 		} else if (targetTeam === "enemy") {
 			target = adventure.room.enemies[targetIndex];
 		}
-		interaction.reply(`${interaction.user} readies **${weaponName}** to use on **${getFullName(target, adventure.room.enemyTitles)}**.`).then(() => {
-			saveAdventures();
+		interaction.reply(`${interaction.user} ${overwritten ? "switches to ready" : "readies"} **${weaponName}** to use on **${getFullName(target, adventure.room.enemyTitles)}**.`).then(() => {
+			setAdventure(adventure);
 			updateRoundMessage(interaction.channel.messages, adventure);
 			if (checkNextRound(adventure)) {
 				endRound(adventure, interaction.channel);
@@ -49,7 +51,7 @@ module.exports.execute = async function (interaction, [weaponName]) {
 		}).catch(console.error);
 	} else {
 		// Needed to prevent crashes in case users keep weapon menus around and uses one with a broken weapon
-		interaction.reply({ content: `You don't have that weapon anymore.`, ephemeral: true })
+		interaction.reply({ content: `You don't have a ${weaponName} with uses remaining.`, ephemeral: true })
 			.catch(console.error);
 	}
 }

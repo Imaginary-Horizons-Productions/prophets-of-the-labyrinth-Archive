@@ -2,12 +2,13 @@ const Combatant = require("./Combatant");
 
 // Represents an enemy for players to fight
 module.exports = class Enemy extends Combatant {
-	// Properties from Combatant: hp, maxHp, speed, roundSpeed, elements, setHp, setSpeed, setElement
+	// Properties from Combatant: hp, maxHp, speed, roundSpeed, element, setHp, setSpeed, setElement
 	constructor(nameInput) {
 		super(nameInput, "enemy");
 		this.lookupName = nameInput;
 	}
 	actions = {};
+	nextAction = "";
 	bounty = 0;
 
 	setHp = super.setHp;
@@ -16,6 +17,11 @@ module.exports = class Enemy extends Combatant {
 
 	addAction(actionsInput) {
 		this.actions[actionsInput.name] = actionsInput;
+		return this;
+	}
+
+	setFirstAction(actionName) {
+		this.nextAction = actionName;
 		return this;
 	}
 

@@ -38,23 +38,6 @@ const client = new Client({
 //#region Event Handlers
 client.on("ready", () => {
 	console.log(`Connected as ${client.user.tag}`);
-	// Delete Completed Adventure Channels
-	new Promise((resolve, reject) => {
-		if (fs.existsSync("./Saves/completedAdventures.json")) {
-			let completedAdventures = require("./Saves/completedAdventures.json");
-			for (let channelId in completedAdventures) {
-				client.guilds.fetch(completedAdventures[channelId]).then(guild => {
-					guild.channels.fetch(channelId).then(channel => {
-						channel.delete("adventure completed");
-					}).catch(console.error);
-				})
-			}
-		}
-		resolve();
-	}).then(() => {
-		ensuredPathSave("./Saves", "completedAdventures.json", "{}");
-	})
-
 	//TODO #2 upload slash commands gloabally
 	//TODO #3 post version notes
 })

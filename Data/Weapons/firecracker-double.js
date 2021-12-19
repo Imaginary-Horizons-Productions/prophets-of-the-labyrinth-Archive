@@ -1,8 +1,9 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { dealDamage, addModifier } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Double Firecracker", "*Strike 6 random foes for @{damage} @{element} damage*\nCritical Hit: Damage x@{critMultiplier}", "Fire", effect, [])
+module.exports = new Weapon("Double Firecracker", 2, "*Strike 6 random foes for @{damage} @{element} damage*\nCritical Hit: Damage x@{critMultiplier}", "Fire", effect, ["Mercurial Firecracker", "Toxic Firecracker"])
 	.setTargetingTags({ target: "random-6", team: "enemy" })
+	.setCost(350)
 	.setUses(5)
 	.setCritMultiplier(2)
 	.setDamage(50);

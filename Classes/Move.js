@@ -32,7 +32,7 @@ module.exports = class Move {
 	}
 
 	addTarget(team, index) {
-		this.targets.push({ team: team, index: index });
+		this.targets.push({ team, index });
 		return this;
 	}
 }

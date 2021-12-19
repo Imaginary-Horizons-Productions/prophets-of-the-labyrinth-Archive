@@ -1,6 +1,6 @@
 const Archetype = require('../../Classes/Archetype.js');
 const Select = require('../../Classes/Select.js');
-const { getAdventure, saveAdventures } = require('../adventureDAO');
+const { getAdventure, setAdventure } = require('../adventureDAO');
 const { getArchetype } = require('../Archetypes/_archetypeDictionary.js');
 const { MessageActionRow, MessageButton } = require('discord.js');
 const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
@@ -14,10 +14,12 @@ module.exports.execute = (interaction, args) => {
 		// Add delver to list (or overwrite)
 		let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
 		if (userIndex !== -1) {
-			let archetypeTemplate = Object.assign(new Archetype(), getArchetype(interaction.values[0]));
-			for (let signatureWeapon of archetypeTemplate.signatureWeapons) {
-				adventure.delvers[userIndex].weapons[signatureWeapon] = getWeaponProperty(signatureWeapon, "maxUses");
-			}
+			let archetype = interaction.values[0];
+			let isSwitching = adventure.delvers[userIndex].title !== "";
+			let archetypeTemplate = Object.assign(new Archetype(), getArchetype(archetype));
+			adventure.delvers[userIndex].weapons = archetypeTemplate.signatureWeapons.map(signatureWeapon => {
+				return { name: signatureWeapon, uses: getWeaponProperty(signatureWeapon, "maxUses") }
+			});
 			adventure.delvers[userIndex].setTitle(archetypeTemplate.title)
 				.setHp(archetypeTemplate.maxHp)
 				.setSpeed(archetypeTemplate.speed)
@@ -25,30 +27,31 @@ module.exports.execute = (interaction, args) => {
 				.setPredict(archetypeTemplate.predict);
 
 			// Send confirmation text
-			interaction.reply(`${interaction.user} will be playing as ${interaction.values[0]}`).then(() => {
+			interaction.reply({content: archetypeTemplate.description, ephemeral: true});
+			interaction.channel.send(`${interaction.user} ${isSwitching ? "has switched to" : "will be playing as"} ${archetype}.`).then(() => {
 				// Check if all ready
 				if (adventure.delvers.every(delver => delver.title)) {
 					let readyButton = [
 						new MessageActionRow().addComponents(
-							new MessageButton().setCustomId(`ready-${interaction.channel.id}`)
+							new MessageButton().setCustomId("ready")
 								.setLabel("Ready!")
 								.setStyle("SUCCESS")
 						)
 					];
 
-					// if startMessageId already exists, player has changed class, so delete extra start button
+					// if startMessageId already exists, player has changed class, so delete extra start message
 					if (adventure.messageIds.start) {
-						interaction.channel.messages.fetch(adventure.messageIds.start).then(startMessage => {
-							startMessage.edit({ components: [] });
-						})
+						interaction.channel.messages.delete(adventure.messageIds.start);
+						delete adventure.messageIds.start;
 					}
 
 					interaction.channel.send({ content: "All players are ready, the adventure will start when the leader clicks the button below!", components: readyButton }).then(message => {
 						adventure.setMessageId("start", message.id);
+						setAdventure(adventure);
 					})
 				}
+				setAdventure(adventure);
 			})
-			saveAdventures();
 		} else {
 			let join = new MessageActionRow().addComponents(
 				new MessageButton().setCustomId(`join-${interaction.channel.id}`)
