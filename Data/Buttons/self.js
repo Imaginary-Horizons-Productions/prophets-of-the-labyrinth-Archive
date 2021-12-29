@@ -14,7 +14,7 @@ module.exports.execute = (interaction, args) => {
 		let embed = new MessageEmbed()
 			.setTitle(getFullName(delver, adventure.room.enemyTitles))
 			.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nPredicts: ${delver.predict}\nElement: ${delver.element}`)
-			.setFooter("Imaginary Horizons Productions", "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png");
+			.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
 		for (let weapon of delver.weapons) {
 			embed.addField(...weaponToEmbedField(weapon.name, weapon.uses));
 		}

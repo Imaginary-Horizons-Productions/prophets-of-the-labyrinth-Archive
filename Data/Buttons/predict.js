@@ -12,7 +12,7 @@ module.exports.execute = (interaction, args) => {
 	let adventure = getAdventure(interaction.channel.id);
 	let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 	let embed = new MessageEmbed().setColor(adventure.room.embedColor)
-		.setFooter(`Room #${adventure.depth} - Round ${adventure.room.round}`);
+		.setFooter({ text: `Room #${adventure.depth} - Round ${adventure.room.round}` });
 	let infoForNextRound = true;
 	let descriptionText = "";
 	switch (delver.predict) {

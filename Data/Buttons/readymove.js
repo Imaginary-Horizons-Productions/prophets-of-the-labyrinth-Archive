@@ -16,7 +16,7 @@ module.exports.execute = (interaction, args) => {
 			let embed = new MessageEmbed().setColor(adventure.room.embedColor)
 				.setTitle(getFullName(delver, adventure.room.enemyTitles))
 				.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nElement: ${delver.element}`)
-				.setFooter("Imaginary Horizons Productions", "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png");
+				.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
 
 			let modifiersText = modifiersToString(delver);
 			if (modifiersText !== "") {

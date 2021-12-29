@@ -83,7 +83,7 @@ function roomHeaderString(adventure) {
 }
 
 exports.updateRoomHeader = function (adventure, message) {
-	message.edit({ embeds: [message.embeds[0].setAuthor(roomHeaderString(adventure), message.client.user.displayAvatarURL())] })
+	message.edit({ embeds: [message.embeds[0].setAuthor({ name: roomHeaderString(adventure), iconURL: message.client.user.displayAvatarURL() })] })
 }
 
 exports.nextRoom = async function (roomType, adventure, thread) {
@@ -121,10 +121,10 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 			adventure.room.element = weaknesses[generateRandomNumber(adventure, weaknesses.length, "general")];
 		}
 		let embed = new MessageEmbed().setColor(DamageType.getColor(adventure.room.element))
-			.setAuthor(roomHeaderString(adventure), thread.client.user.displayAvatarURL())
+			.setAuthor({ name: roomHeaderString(adventure), iconURL: thread.client.user.displayAvatarURL() })
 			.setTitle(roomTemplate.title)
 			.setDescription(roomTemplate.description.replace("@{roomElement}", adventure.room.element))
-			.setFooter(`Room #${adventure.depth}`);
+			.setFooter({ text: `Room #${adventure.depth}` });
 		for (let reward in roomTemplate.lootList) {
 			let rewardCount = parseCount(roomTemplate.lootList[reward], adventure.delvers.length);
 			if (reward === "forgeSupplies") {
@@ -273,7 +273,7 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 	}
 
 	embed.setColor(adventure.room.embedColor)
-		.setFooter(`Room #${adventure.depth} - Round ${adventure.room.round}`);
+		.setFooter({ text: `Room #${adventure.depth} - Round ${adventure.room.round}` });
 	if (!exports.checkNextRound(adventure)) {
 		embed.addField(`0/${adventure.delvers.length} Moves Readied`, "Ready party members will be listed here");
 		let battleMenu = [new MessageActionRow().addComponents(
@@ -341,7 +341,7 @@ function addRoutingUI(embed, components, adventure) {
 
 exports.endRound = async function (adventure, thread) {
 	// Generate results embed
-	let embed = new MessageEmbed().setAuthor(roomHeaderString(adventure), thread.client.user.displayAvatarURL())
+	let embed = new MessageEmbed().setAuthor({ name: roomHeaderString(adventure), iconURL: thread.client.user.displayAvatarURL() })
 		.setTitle(adventure.room.title);
 
 	// Generate Reactive Moves by Enemies

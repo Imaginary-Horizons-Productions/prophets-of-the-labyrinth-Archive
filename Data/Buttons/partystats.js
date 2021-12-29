@@ -14,7 +14,7 @@ module.exports.execute = (interaction, args) => {
 		.addField(`${adventure.gold} Gold`, "Gold is exchanged for goods and services within adventures. Gold *will be lost when an adventure ends*.")
 		.addField("Scouting", `Final Boss: ${adventure.scouting.finalBoss ? adventure.finalBoss : "???"}\nRelic Guardians (${adventure.scouting.relicGuardiansEncountered} encountered so far): ${adventure.relicGuardians.slice(0, adventure.scouting.relicGuardians).join(", ")}...`)
 		//TODO list difficulty options
-		.setFooter("Imaginary Horizons Productions", "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png");
+		.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
 	interaction.reply({ embeds: [embed], ephemeral: true })
 		.catch(console.error);
 }
