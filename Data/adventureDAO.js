@@ -111,7 +111,7 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 
 	// Generate current room
 	if (adventure.depth < 11) {
-		//TODO #138 if out of relic guardians, roll more
+		//TODO #138 if out of artifact guardians, roll more
 		let roomTemplate = getRoomTemplate(roomType, adventure);
 		adventure.room = new Room(roomTemplate.title, roomTemplate.element);
 		if (adventure.room.element === "@{adventure}") {
@@ -132,10 +132,10 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 			}
 			adventure.room.loot[reward] = rewardCount;
 		}
-		if (["Battle", "Final Battle", "Relic Guardian"].includes(roomType)) {
+		if (["Battle", "Final Battle", "Artifact Guardian"].includes(roomType)) {
 			// Generate combat room
-			if (roomType === "Relic Guardian") {
-				adventure.scouting.relicGuardiansEncountered++;
+			if (roomType === "Artifact Guardian") {
+				adventure.scouting.artifactGuardiansEncountered++;
 			}
 			adventure.room.initializeCombatProperties();
 			let isBossRoom = roomType !== "Battle";
@@ -189,8 +189,8 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 							.setLabel(`${adventure.scouting.finalBoss ? `Final Boss: ${adventure.finalBoss}` : `${bossScoutingCost}g: Scout the Final Boss`}`)
 							.setStyle("SECONDARY")
 							.setDisabled(adventure.scouting.finalBoss || adventure.gold < bossScoutingCost),
-						new MessageButton().setCustomId(`buyscouting-relicguardian-${guardScoutingCost}`)
-							.setLabel(`${guardScoutingCost}g: Scout a Relic Guardian (${adventure.scouting.relicGuardians} so far) (coming soon)`)
+						new MessageButton().setCustomId(`buyscouting-artifactguardian-${guardScoutingCost}`)
+							.setLabel(`${guardScoutingCost}g: Scout an Artifact Guardian (${adventure.scouting.artifactGuardians} so far) (coming soon)`)
 							.setStyle("SECONDARY")
 							.setDisabled(true)
 					));
@@ -418,9 +418,9 @@ exports.endRound = async function (adventure, thread) {
 						lootRow.push(new MessageButton().setCustomId(`takeweapon-${itemName}`)
 							.setLabel(`${label} remaining`)
 							.setStyle("PRIMARY"))
-					} else if (item.startsWith("relic-")) {
+					} else if (item.startsWith("artifact-")) {
 						itemName = item.split("-")[1];
-						//TODO #101 relic drops
+						//TODO #101 artifact drops
 					}
 				}
 			}

@@ -14,9 +14,9 @@ module.exports.execute = (interaction, [type, cost]) => {
 			interaction.update({ components: editButton(interaction.message, `buyscouting-finalboss-${cost}`, true, "✔️", `Final Boss: ${adventure.finalBoss}`) });
 			interaction.followUp(`The merchant reveals that final boss for this adventure will be **${adventure.finalBoss}** (you can review this in Party Stats).`);
 		} else {
-			//TODO #138 if out of prerolled relic guardians, roll a new one
-			interaction.reply(`The merchant reveals that the next relic guardian for this adventure will be **${adventure.relicGuardians[adventure.scouting.relicGuardians]}** (you can review this in Party Stats).`);
-			adventure.scouting.relicGuardians++;
+			//TODO #138 if out of prerolled artifact guardians, roll a new one
+			interaction.reply(`The merchant reveals that the next artifact guardian for this adventure will be **${adventure.artifactGuardians[adventure.scouting.artifactGuardians]}** (you can review this in Party Stats).`);
+			adventure.scouting.artifactGuardians++;
 		}
 		adventure.gold -= cost;
 		updateRoomHeader(adventure, interaction.message);

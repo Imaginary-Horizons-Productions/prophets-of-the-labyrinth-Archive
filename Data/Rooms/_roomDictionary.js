@@ -45,7 +45,7 @@ for (const file of roomWhitelist) {
 			case "Final Battle":
 				finalBossRooms.push(room);
 				break;
-			case "Relic Guardian":
+			case "artifact Guardian":
 				midbossRooms.push(room);
 				break;
 			case "Forge":
@@ -70,8 +70,8 @@ exports.getRoomTemplate = function (type, adventure) {
 			return restRooms[generateRandomNumber(adventure, restRooms.length, "General")];
 		case "Final Battle":
 			return finalBossRooms[adventure.finalBoss];
-		case "Relic Guardian":
-			return midbossRooms[adventure.relicGuardians[adventure.scouting.relicGuardiansEncountered]]; //TODO #103 verify implementation after midbosses exist
+		case "Artifact Guardian":
+			return midbossRooms[adventure.artifactGuardians[adventure.scouting.artifactGuardiansEncountered]]; //TODO #103 verify implementation after midbosses exist
 		case "Forge":
 			return forgeRooms[generateRandomNumber(adventure, forgeRooms.length, "General")];
 		default:
