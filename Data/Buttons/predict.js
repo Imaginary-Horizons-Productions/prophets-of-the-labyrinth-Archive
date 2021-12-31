@@ -18,7 +18,7 @@ module.exports.execute = (interaction, args) => {
 	switch (delver.predict) {
 		case "Targets": // Shows who the enemies are targeting next round and elemental resistances
 			adventure.room.moves.forEach(move => {
-				let team = move.team === "ally" ? adventure.delvers : adventure.room.enemies;
+				let team = move.userTeam === "ally" ? adventure.delvers : adventure.room.enemies;
 				let user = team[move.userIndex];
 				if (user.hp > 0) {
 					let targets = getTargetList(move.targets, adventure);
