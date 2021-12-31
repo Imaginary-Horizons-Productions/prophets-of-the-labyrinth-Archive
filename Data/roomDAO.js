@@ -38,7 +38,7 @@ exports.decrementForgeSupplies = function (interaction, roomMessageId, adventure
 				})]
 			})
 		} else {
-			return interaction.update({ embeds: [roomEmbed] });
+			return roomMessage.edit({ embeds: [roomEmbed] });
 		}
 	})
 }
