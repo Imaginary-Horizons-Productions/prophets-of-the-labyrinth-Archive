@@ -331,7 +331,7 @@ function addRoutingUI(embed, components, adventure) {
 	} else {
 		uiRows.push(new MessageActionRow().addComponents(
 			new MessageButton().setCustomId("continue")
-				.setLabel(`Continue to the ${roomType}`)
+				.setLabel(`Continue to the ${candidateKeys[0]}`)
 				.setStyle("SECONDARY")
 		));
 	}
