@@ -31,7 +31,7 @@ exports.loadPlayers = function () {
 exports.getPlayer = function (playerId, guildId) {
 	if (!playerDictionary.has(playerId)) {
 		exports.setPlayer(new Player(playerId));
-		var guildProfile = getGuild(guildId);
+		let guildProfile = getGuild(guildId);
 		guildProfile.userIds.push(playerId);
 		saveGuilds();
 	}

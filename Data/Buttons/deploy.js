@@ -8,7 +8,7 @@ module.exports = new Button("deploy");
 
 module.exports.execute = (interaction, args) => {
 	// Send the player a message with a select to pick an archetype
-	let adventure = getAdventure([interaction.channel.id]);
+	let adventure = getAdventure(interaction.channel.id);
 	let playerProfile = getPlayer(interaction.user.id, interaction.guild.id);
 	let user = adventure.delvers.find(delver => delver.id == interaction.user.id);
 	if (user) {
