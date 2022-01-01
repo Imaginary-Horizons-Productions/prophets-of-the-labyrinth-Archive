@@ -4,6 +4,7 @@ var enemyWhitelist = [
 	"hawk.js",
 	"mechabee.js",
 	"ooze.js",
+	"royalslime.js",
 	"slime.js"
 ];
 

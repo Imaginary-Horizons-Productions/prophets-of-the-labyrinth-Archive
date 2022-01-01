@@ -5,8 +5,8 @@ module.exports = new Weapon("Spell: Urgent Life Drain", 2, "*Strike a foe for @{
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setCost(350)
 	.setUses(10)
-	.setDamage(105)
-	.setHealing(35)
+	.setDamage(75)
+	.setHealing(25)
 	.setSpeedBonus(10);
 
 async function effect(target, user, isCrit, adventure) {

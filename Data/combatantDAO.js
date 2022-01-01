@@ -28,48 +28,53 @@ exports.calculateTotalSpeed = function (combatant) {
 
 exports.dealDamage = async function (target, user, damage, element, adventure) {
 	if (target.hp > 0) {
-		if (!Object.keys(target.modifiers).includes("evade") || element === "Poison") {
-			let pendingDamage = damage + (user?.modifiers["powerup"] || 0);
-			let isWeakness = DamageType.getWeaknesses(target.element).includes(element);
-			if (isWeakness) {
-				pendingDamage *= 2;
-			}
-			let isResistance = DamageType.getResistances(target.element).includes(element);
-			if (isResistance) {
-				pendingDamage = pendingDamage / 2;
-			}
-			pendingDamage = Math.ceil(pendingDamage);
-			let blockedDamage = 0;
-			if (element !== "Poison") {
-				if (pendingDamage >= target.block) {
-					pendingDamage -= target.block;
-					blockedDamage = target.block;
-					target.block = 0;
-				} else {
-					target.block -= pendingDamage;
-					blockedDamage = pendingDamage;
-					pendingDamage = 0;
+		let targetModifiers = Object.keys(target.modifiers);
+		if (!targetModifiers.includes(`${element} Absorb`)) {
+			if (!targetModifiers.includes("evade") || element === "Poison") {
+				let pendingDamage = damage + (user?.modifiers["powerup"] || 0);
+				let isWeakness = DamageType.getWeaknesses(target.element).includes(element);
+				if (isWeakness) {
+					pendingDamage *= 2;
 				}
-			}
-			target.hp -= pendingDamage;
-			let damageText = ` ${exports.getFullName(target, adventure.room.enemyTitles)} takes *${pendingDamage} damage*${blockedDamage > 0 ? ` (${blockedDamage} blocked)` : ""}${element === "Poison" ? " from Poison" : ""}${isWeakness ? "!!!" : isResistance ? "." : "!"}`;
-			if (target.hp <= 0) {
-				if (target.team === "ally") {
-					target.hp = target.maxHp;
-					adventure.lives -= 1;
-					damageText += ` *${exports.getFullName(target, adventure.room.enemyTitles)} has died* and been revived. ***${adventure.lives} lives remain.***`;
-				} else {
-					target.hp = 0;
-					damageText += ` *${exports.getFullName(target, adventure.room.enemyTitles)} has died*.`;
+				let isResistance = DamageType.getResistances(target.element).includes(element);
+				if (isResistance) {
+					pendingDamage = pendingDamage / 2;
 				}
+				pendingDamage = Math.ceil(pendingDamage);
+				let blockedDamage = 0;
+				if (element !== "Poison") {
+					if (pendingDamage >= target.block) {
+						pendingDamage -= target.block;
+						blockedDamage = target.block;
+						target.block = 0;
+					} else {
+						target.block -= pendingDamage;
+						blockedDamage = pendingDamage;
+						pendingDamage = 0;
+					}
+				}
+				target.hp -= pendingDamage;
+				let damageText = ` ${exports.getFullName(target, adventure.room.enemyTitles)} takes *${pendingDamage} damage*${blockedDamage > 0 ? ` (${blockedDamage} blocked)` : ""}${element === "Poison" ? " from Poison" : ""}${isWeakness ? "!!!" : isResistance ? "." : "!"}`;
+				if (target.hp <= 0) {
+					if (target.team === "ally") {
+						target.hp = target.maxHp;
+						adventure.lives -= 1;
+						damageText += ` *${exports.getFullName(target, adventure.room.enemyTitles)} has died* and been revived. ***${adventure.lives} lives remain.***`;
+					} else {
+						target.hp = 0;
+						damageText += ` *${exports.getFullName(target, adventure.room.enemyTitles)} has died*.`;
+					}
+				}
+				return damageText;
+			} else {
+				target.modifiers["evade"]--;
+				if (target.modifiers["evade"] <= 0) {
+					delete target.modifiers["evade"];
+				}
+				return ` ${exports.getFullName(target, adventure.room.enemyTitles)} evades the attack!`;
 			}
-			return damageText;
 		} else {
-			target.modifiers["evade"]--;
-			if (target.modifiers["evade"] <= 0) {
-				delete target.modifiers["evade"];
-			}
-			return ` ${exports.getFullName(target, adventure.room.enemyTitles)} evades the attack!`;
+			return ` ${exports.gainHealth(target, damage, adventure.room.enemyTitles)}`;
 		}
 	} else {
 		return ` ${exports.getFullName(target, adventure.room.enemyTitles)} was already dead!`;

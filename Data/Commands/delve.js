@@ -18,7 +18,7 @@ module.exports.execute = (interaction) => {
 
 	//TODO #77 roll bosses
 	adventure.finalBoss = "Hall of Mirrors";
-	adventure.relicGuardians = []; //TODO #138 roll relic guardians
+	adventure.artifactGuardians = ["A Slimy Throneroom"];
 
 	let elementIndex = generateRandomNumber(adventure, DamageType.elementsList().length, "General");
 	adventure.setName(`${DESCRIPTORS[generateRandomNumber(adventure, DESCRIPTORS.length, "General")]} ${LOCATIONS[generateRandomNumber(adventure, LOCATIONS.length, "General")]} of ${DamageType.elementsList()[elementIndex]}`)

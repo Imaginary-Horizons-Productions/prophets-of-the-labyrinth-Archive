@@ -35,15 +35,20 @@ exports.guildSetup = function (guild) {
 			type: "GUILD_TEXT",
 			parent: category
 		}).then(channel => {
-			let guildProfile = new GuildProfile(guild.id, category.id, channel.id);
-			exports.saveGuild(guildProfile);
+			let guildProfile = new GuildProfile(guild.id);
+			exports.setGuild(guildProfile);
 			return guildProfile;
 		})
 	})
 }
 
 exports.getGuild = function (guildId) {
-	return guildDictionary.get(guildId);
+	let guildProfile = guildDictionary.get(guildId);
+	if (!guildProfile) {
+		guildProfile = new GuildProfile(guildId);
+		exports.setGuild(guildProfile);
+	}
+	return guildProfile;
 }
 
 exports.setGuild = function (guildProfile) {

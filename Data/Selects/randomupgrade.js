@@ -21,7 +21,7 @@ module.exports.execute = (interaction, [roomMessageId]) => {
 		}
 		user.weapons.splice(weaponIndex, 1, { name: upgradeName, uses: Math.min(upgradeUses, user.weapons[weaponIndex].uses) });
 		decrementForgeSupplies(interaction, roomMessageId, adventure).then(() => {
-			interaction.reply(`Your *${weaponName}* has been upgraded to **${upgradeName}**!`);
+			interaction.reply(`${interaction.user}'s *${weaponName}* has been upgraded to **${upgradeName}**!`);
 			setAdventure(adventure);
 		});
 	} else {

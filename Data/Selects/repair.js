@@ -11,9 +11,9 @@ module.exports.execute = (interaction, [roomMessageId]) => {
 	if (adventure.room.loot.forgeSupplies > 0) {
 		let user = adventure.delvers.find(delver => delver.id === interaction.user.id);
 		let [weaponName, weaponIndex, value] = interaction.values[0].split("-");
-		user.weapons[weaponIndex].uses += value;
+		user.weapons[weaponIndex].uses += Number(value);
 		decrementForgeSupplies(interaction, roomMessageId, adventure).then(() => {
-			interaction.reply({ content: `Your ${weaponName} regained ${repairValue} uses.`, ephemeral: true });
+			interaction.reply({ content: `Your ${weaponName} regained ${value} uses.`, ephemeral: true });
 			setAdventure(adventure);
 		});
 	} else {

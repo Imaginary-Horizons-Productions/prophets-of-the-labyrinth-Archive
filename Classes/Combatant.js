@@ -10,6 +10,7 @@ module.exports = class Combatant {
 	speed = 100;
 	roundSpeed = 0;
 	actionSpeed = 0;
+	//TODO #150 store crit numerator and denominator to allow for variable crit chance (base in enemies, artifacts, or modifiers)
 	crit = false;
 	element = "water";
 	modifiers = {};
