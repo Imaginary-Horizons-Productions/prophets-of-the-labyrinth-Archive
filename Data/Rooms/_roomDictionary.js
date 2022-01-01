@@ -59,6 +59,14 @@ for (const file of roomWhitelist) {
 	})
 }
 
+exports.prerollBoss = function (type, adventure) {
+	if (type === "Relic Guardian") {
+		adventure.artifactGuardians.push(midbossRooms[generateRandomNumber(adventure, midbossRooms.length, "general")].title);
+	} else {
+		adventure.finalBoss = finalBossRooms[generateRandomNumber(adventure, finalBossRooms.length, "general")].title;
+	}
+}
+
 exports.getRoomTemplate = function (type, adventure) {
 	switch (type) {
 		case "Event":

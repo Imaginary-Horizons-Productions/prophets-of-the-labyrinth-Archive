@@ -5,6 +5,7 @@ const DamageType = require('../../Classes/DamageType.js');
 const Delver = require('../../Classes/Delver.js');
 const { generateRandomNumber } = require('../../helpers.js');
 const { setAdventure } = require("../adventureDAO.js");
+const { prerollBoss } = require('../Rooms/_roomDictionary.js');
 
 module.exports = new Command("delve", "Start a new adventure", false, false);
 module.exports.data.addStringOption(option => option.setName("seed").setDescription("The value to base the random events of the run on").setRequired(false));
@@ -17,9 +18,9 @@ module.exports.execute = (interaction) => {
 	if (interaction.channel.type === "GUILD_TEXT") {
 		let adventure = new Adventure(interaction.options.getString("seed")).generateRNTable();
 
-		//TODO #77 roll bosses
-		adventure.finalBoss = "Hall of Mirrors";
-		adventure.artifactGuardians = ["A Slimy Throneroom"];
+		// roll bosses
+		prerollBoss("Final Battle", adventure);
+		prerollBoss("Relic Guardian", adventure);
 
 		let elementIndex = generateRandomNumber(adventure, DamageType.elementsList().length, "General");
 		adventure.setName(`${DESCRIPTORS[generateRandomNumber(adventure, DESCRIPTORS.length, "General")]} ${LOCATIONS[generateRandomNumber(adventure, LOCATIONS.length, "General")]} of ${DamageType.elementsList()[elementIndex]}`)
