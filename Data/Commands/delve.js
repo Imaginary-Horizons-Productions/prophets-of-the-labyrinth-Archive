@@ -18,14 +18,14 @@ module.exports.execute = (interaction) => {
 
 	//TODO #77 roll bosses
 	adventure.finalBoss = "Hall of Mirrors";
-	adventure.relicGuardians = []; //TODO #138 roll relic guardians
+	adventure.artifactGuardians = ["A Slimy Throneroom"];
 
 	let elementIndex = generateRandomNumber(adventure, DamageType.elementsList().length, "General");
 	adventure.setName(`${DESCRIPTORS[generateRandomNumber(adventure, DESCRIPTORS.length, "General")]} ${LOCATIONS[generateRandomNumber(adventure, LOCATIONS.length, "General")]} of ${DamageType.elementsList()[elementIndex]}`)
 		.setElement(DamageType.elementsList()[elementIndex]);
 
 	let embed = new MessageEmbed().setColor(DamageType.getColor(adventure.element))
-		.setAuthor("Imaginary Horizons Productions", "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png", "https://github.com/Imaginary-Horizons-Productions/dungeon-tamers")
+		.setAuthor({ name: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png", url: "https://github.com/Imaginary-Horizons-Productions/dungeon-tamers" })
 		.setTitle(adventure.name)
 		.setThumbnail("https://cdn.discordapp.com/attachments/545684759276421120/734093574031016006/bountyboard.png")
 		.setDescription("A new adventure is starting!")

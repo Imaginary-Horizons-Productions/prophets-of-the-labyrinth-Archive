@@ -83,7 +83,7 @@ function roomHeaderString(adventure) {
 }
 
 exports.updateRoomHeader = function (adventure, message) {
-	message.edit({ embeds: [message.embeds[0].setAuthor(roomHeaderString(adventure), message.client.user.displayAvatarURL())] })
+	message.edit({ embeds: [message.embeds[0].setAuthor({ name: roomHeaderString(adventure), iconURL: message.client.user.displayAvatarURL() })] })
 }
 
 exports.nextRoom = async function (roomType, adventure, thread) {
@@ -92,7 +92,7 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 	adventure.room = {};
 
 	// Roll options for next room type
-	let roomTypes = ["Battle", "Event", "Forge", "Rest Site"]; //TODO #126 add weights to room types
+	let roomTypes = ["Battle", "Event", "Forge", "Rest Site", "Artifact Guardian"]; //TODO #126 add weights to room types
 	let finalBossDepths = [10];
 	let candidateType = "";
 	if (!finalBossDepths.includes(adventure.depth + 1)) {
@@ -111,7 +111,6 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 
 	// Generate current room
 	if (adventure.depth < 11) {
-		//TODO #138 if out of relic guardians, roll more
 		let roomTemplate = getRoomTemplate(roomType, adventure);
 		adventure.room = new Room(roomTemplate.title, roomTemplate.element);
 		if (adventure.room.element === "@{adventure}") {
@@ -121,10 +120,10 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 			adventure.room.element = weaknesses[generateRandomNumber(adventure, weaknesses.length, "general")];
 		}
 		let embed = new MessageEmbed().setColor(DamageType.getColor(adventure.room.element))
-			.setAuthor(roomHeaderString(adventure), thread.client.user.displayAvatarURL())
+			.setAuthor({ name: roomHeaderString(adventure), iconURL: thread.client.user.displayAvatarURL() })
 			.setTitle(roomTemplate.title)
 			.setDescription(roomTemplate.description.replace("@{roomElement}", adventure.room.element))
-			.setFooter(`Room #${adventure.depth}`);
+			.setFooter({ text: `Room #${adventure.depth}` });
 		for (let reward in roomTemplate.lootList) {
 			let rewardCount = parseCount(roomTemplate.lootList[reward], adventure.delvers.length);
 			if (reward === "forgeSupplies") {
@@ -132,10 +131,14 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 			}
 			adventure.room.loot[reward] = rewardCount;
 		}
-		if (["Battle", "Final Battle", "Relic Guardian"].includes(roomType)) {
+		if (["Battle", "Artifact Guardian", "Final Battle"].includes(roomType)) {
 			// Generate combat room
-			if (roomType === "Relic Guardian") {
-				adventure.scouting.relicGuardiansEncountered++;
+			if (roomType === "Artifact Guardian") {
+				adventure.scouting.artifactGuardiansEncountered++;
+				while (adventure.artifactGuardians.length <= adventure.scouting.artifactGuardiansEncountered) {
+					//TODO #77 roll bosses
+					adventure.artifactGuardians.push("A Slimy Throneroom");
+				}
 			}
 			adventure.room.initializeCombatProperties();
 			let isBossRoom = roomType !== "Battle";
@@ -189,8 +192,8 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 							.setLabel(`${adventure.scouting.finalBoss ? `Final Boss: ${adventure.finalBoss}` : `${bossScoutingCost}g: Scout the Final Boss`}`)
 							.setStyle("SECONDARY")
 							.setDisabled(adventure.scouting.finalBoss || adventure.gold < bossScoutingCost),
-						new MessageButton().setCustomId(`buyscouting-relicguardian-${guardScoutingCost}`)
-							.setLabel(`${guardScoutingCost}g: Scout a Relic Guardian (${adventure.scouting.relicGuardians} so far) (coming soon)`)
+						new MessageButton().setCustomId(`buyscouting-artifactguardian-${guardScoutingCost}`)
+							.setLabel(`${guardScoutingCost}g: Scout an Artifact Guardian (${adventure.scouting.artifactGuardians} so far) (coming soon)`)
 							.setStyle("SECONDARY")
 							.setDisabled(true)
 					));
@@ -273,7 +276,7 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 	}
 
 	embed.setColor(adventure.room.embedColor)
-		.setFooter(`Room #${adventure.depth} - Round ${adventure.room.round}`);
+		.setFooter({ text: `Room #${adventure.depth} - Round ${adventure.room.round}` });
 	if (!exports.checkNextRound(adventure)) {
 		embed.addField(`0/${adventure.delvers.length} Moves Readied`, "Ready party members will be listed here");
 		let battleMenu = [new MessageActionRow().addComponents(
@@ -331,7 +334,7 @@ function addRoutingUI(embed, components, adventure) {
 	} else {
 		uiRows.push(new MessageActionRow().addComponents(
 			new MessageButton().setCustomId("continue")
-				.setLabel(`Continue to the ${roomType}`)
+				.setLabel(`Continue to the ${candidateKeys[0]}`)
 				.setStyle("SECONDARY")
 		));
 	}
@@ -341,7 +344,7 @@ function addRoutingUI(embed, components, adventure) {
 
 exports.endRound = async function (adventure, thread) {
 	// Generate results embed
-	let embed = new MessageEmbed().setAuthor(roomHeaderString(adventure), thread.client.user.displayAvatarURL())
+	let embed = new MessageEmbed().setAuthor({ name: roomHeaderString(adventure), iconURL: thread.client.user.displayAvatarURL() })
 		.setTitle(adventure.room.title);
 
 	// Generate Reactive Moves by Enemies
@@ -418,9 +421,9 @@ exports.endRound = async function (adventure, thread) {
 						lootRow.push(new MessageButton().setCustomId(`takeweapon-${itemName}`)
 							.setLabel(`${label} remaining`)
 							.setStyle("PRIMARY"))
-					} else if (item.startsWith("relic-")) {
+					} else if (item.startsWith("artifact-")) {
 						itemName = item.split("-")[1];
-						//TODO #101 relic drops
+						//TODO #101 artifact drops
 					}
 				}
 			}

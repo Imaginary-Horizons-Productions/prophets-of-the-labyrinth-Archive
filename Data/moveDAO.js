@@ -56,13 +56,17 @@ exports.resolveMove = async function (move, adventure) {
 }
 
 exports.getTargetList = function (targets, adventure) {
-	return targets.map(targetIds => {
+	let targetList = [];
+	for (const targetData of targets) {
 		let targetTeam;
-		if (targetIds.team === "ally") {
+		if (targetData.team === "none") {
+			continue;
+		} else if (targetData.team === "ally") {
 			targetTeam = adventure.delvers;
 		} else {
 			targetTeam = adventure.room.enemies;
 		}
-		return getFullName(targetTeam[targetIds.index], adventure.room.enemyTitles);
-	})
+		targetList.push(getFullName(targetTeam[targetData.index], adventure.room.enemyTitles));
+	}
+	return targetList;
 }

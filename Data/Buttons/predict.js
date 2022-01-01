@@ -12,13 +12,13 @@ module.exports.execute = (interaction, args) => {
 	let adventure = getAdventure(interaction.channel.id);
 	let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 	let embed = new MessageEmbed().setColor(adventure.room.embedColor)
-		.setFooter(`Room #${adventure.depth} - Round ${adventure.room.round}`);
+		.setFooter({ text: `Room #${adventure.depth} - Round ${adventure.room.round}` });
 	let infoForNextRound = true;
 	let descriptionText = "";
 	switch (delver.predict) {
 		case "Targets": // Shows who the enemies are targeting next round and elemental resistances
 			adventure.room.moves.forEach(move => {
-				let team = move.team === "ally" ? adventure.delvers : adventure.room.enemies;
+				let team = move.userTeam === "ally" ? adventure.delvers : adventure.room.enemies;
 				let user = team[move.userIndex];
 				if (user.hp > 0) {
 					let targets = getTargetList(move.targets, adventure);
@@ -34,7 +34,7 @@ module.exports.execute = (interaction, args) => {
 		case "Health": // Shows current HP, max HP, block, and element of all combatants
 			infoForNextRound = false;
 			adventure.room.enemies.concat(adventure.delvers).filter(combatant => combatant.hp > 0).forEach(combatant => {
-				descriptionText += `\n__${combatant.name}__\n${combatant.hp}/${combatant.maxHp} HP${combatant.block ? `, ${combatant.block} Block` : ""}\nElement: ${combatant.element}\n`;
+				descriptionText += `\n__${getFullName(combatant, adventure.room.enemyTitles)}__\n${combatant.hp}/${combatant.maxHp} HP${combatant.block ? `, ${combatant.block} Block` : ""}\nElement: ${combatant.element}\n`;
 			})
 			break;
 		case "Move Order": // Shows roundly random speed bonuses and order of move resolution

@@ -5,8 +5,8 @@ module.exports = new Weapon("Spell: Life Drain", 1, "*Strike a foe for @{damage}
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setCost(200)
 	.setUses(10)
-	.setDamage(105)
-	.setHealing(35);
+	.setDamage(75)
+	.setHealing(25);
 
 async function effect(target, user, isCrit, adventure) {
 	let { damage, healing, element: weaponElement, critMultiplier } = module.exports;

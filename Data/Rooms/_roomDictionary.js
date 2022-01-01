@@ -3,6 +3,7 @@ const RoomTemplate = require("../../Classes/RoomTemplate");
 const { generateRandomNumber } = require("../../helpers");
 
 let roomWhitelist = [
+	"artifactguardian-royalslime.js",
 	"battle-hawks.js",
 	"battle-mechabees.js",
 	"battle-slimes.js",
@@ -45,7 +46,7 @@ for (const file of roomWhitelist) {
 			case "Final Battle":
 				finalBossRooms.push(room);
 				break;
-			case "Relic Guardian":
+			case "Artifact Guardian":
 				midbossRooms.push(room);
 				break;
 			case "Forge":
@@ -69,9 +70,9 @@ exports.getRoomTemplate = function (type, adventure) {
 		case "Rest Site":
 			return restRooms[generateRandomNumber(adventure, restRooms.length, "General")];
 		case "Final Battle":
-			return finalBossRooms[adventure.finalBoss];
-		case "Relic Guardian":
-			return midbossRooms[adventure.relicGuardians[adventure.scouting.relicGuardiansEncountered]]; //TODO #103 verify implementation after midbosses exist
+			return finalBossRooms.find(room => room.title === adventure.finalBoss);
+		case "Artifact Guardian":
+			return midbossRooms.find(room => room.title === adventure.artifactGuardians[adventure.scouting.artifactGuardiansEncountered]);
 		case "Forge":
 			return forgeRooms[generateRandomNumber(adventure, forgeRooms.length, "General")];
 		default:
