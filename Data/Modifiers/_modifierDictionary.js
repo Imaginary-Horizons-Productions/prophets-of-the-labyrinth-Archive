@@ -1,4 +1,10 @@
 var modifierWhitelist = [
+	"absorb-darkness.js",
+	"absorb-earth.js",
+	"absorb-fire.js",
+	"absorb-light.js",
+	"absorb-water.js",
+	"absorb-wind.js",
 	"evade.js",
 	"poison.js",
 	"powerdown.js",

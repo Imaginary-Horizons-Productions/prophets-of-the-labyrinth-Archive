@@ -92,7 +92,7 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 	adventure.room = {};
 
 	// Roll options for next room type
-	let roomTypes = ["Battle", "Event", "Forge", "Rest Site"]; //TODO #126 add weights to room types
+	let roomTypes = ["Battle", "Event", "Forge", "Rest Site", "Artifact Guardian"]; //TODO #126 add weights to room types
 	let finalBossDepths = [10];
 	let candidateType = "";
 	if (!finalBossDepths.includes(adventure.depth + 1)) {
@@ -111,7 +111,6 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 
 	// Generate current room
 	if (adventure.depth < 11) {
-		//TODO #138 if out of artifact guardians, roll more
 		let roomTemplate = getRoomTemplate(roomType, adventure);
 		adventure.room = new Room(roomTemplate.title, roomTemplate.element);
 		if (adventure.room.element === "@{adventure}") {
@@ -132,10 +131,14 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 			}
 			adventure.room.loot[reward] = rewardCount;
 		}
-		if (["Battle", "Final Battle", "Artifact Guardian"].includes(roomType)) {
+		if (["Battle", "Artifact Guardian", "Final Battle"].includes(roomType)) {
 			// Generate combat room
 			if (roomType === "Artifact Guardian") {
 				adventure.scouting.artifactGuardiansEncountered++;
+				while (adventure.artifactGuardians.length <= adventure.scouting.artifactGuardiansEncountered) {
+					//TODO #77 roll bosses
+					adventure.artifactGuardians.push("A Slimy Throneroom");
+				}
 			}
 			adventure.room.initializeCombatProperties();
 			let isBossRoom = roomType !== "Battle";

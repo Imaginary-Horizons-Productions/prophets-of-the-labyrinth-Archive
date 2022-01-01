@@ -10,7 +10,7 @@ module.exports = class Enemy extends Combatant {
 	actions = {};
 	nextAction = "";
 	bounty = 0;
-	//TODONOW startingModifiers property
+	//TODO #152 startingModifiers property
 
 	setHp = super.setHp;
 	setTitle = super.setTitle;
