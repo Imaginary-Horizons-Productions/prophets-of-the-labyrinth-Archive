@@ -8,7 +8,7 @@ module.exports = class Delver extends Combatant {
 		this.id = idInput;
 		this.adventureId = adventureIdInput;
 	}
-	predict;
+	predict = "not picked";
 	weapons = []; // {name, uses}
 
 	setTitle = super.setTitle;
