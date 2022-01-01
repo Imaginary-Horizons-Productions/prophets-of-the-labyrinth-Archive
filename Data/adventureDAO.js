@@ -3,7 +3,7 @@ const { ensuredPathSave, parseCount, generateRandomNumber, clearComponents } = r
 const { MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu } = require("discord.js");
 const Adventure = require("../Classes/Adventure.js");
 const { setPlayer, getPlayer } = require("./playerDAO.js");
-const { getRoomTemplate } = require("./Rooms/_roomDictionary.js");
+const { getRoomTemplate, prerollBoss } = require("./Rooms/_roomDictionary.js");
 const Move = require("../Classes/Move.js");
 const { resolveMove } = require("./moveDAO.js");
 const Enemy = require("../Classes/Enemy.js");
@@ -136,8 +136,7 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 			if (roomType === "Artifact Guardian") {
 				adventure.scouting.artifactGuardiansEncountered++;
 				while (adventure.artifactGuardians.length <= adventure.scouting.artifactGuardiansEncountered) {
-					//TODO #77 roll bosses
-					adventure.artifactGuardians.push("A Slimy Throneroom");
+					prerollBoss("Relic Guardian", adventure);
 				}
 			}
 			adventure.room.initializeCombatProperties();

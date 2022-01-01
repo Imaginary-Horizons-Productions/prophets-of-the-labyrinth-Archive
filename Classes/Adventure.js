@@ -12,7 +12,7 @@ module.exports = class Adventure {
 		artifactGuardians: 0,
 		artifactGuardiansEncountered: 0
 	}
-	finalBoss = "Hall of Mirrors";
+	finalBoss = "";
 	artifactGuardians = [];
 	rnIndex = 0;
 	rnIndexBattle = 0;

@@ -1,6 +1,7 @@
 const Button = require('../../Classes/Button.js');
 const { getAdventure, setAdventure, updateRoomHeader } = require('../adventureDAO.js');
 const { editButton } = require("../roomDAO.js");
+const { prerollBoss } = require('../Rooms/_roomDictionary.js');
 
 module.exports = new Button("buyscouting");
 
@@ -17,8 +18,7 @@ module.exports.execute = (interaction, [type, cost]) => {
 			interaction.reply(`The merchant reveals that the next artifact guardian for this adventure will be **${adventure.artifactGuardians[adventure.scouting.artifactGuardians]}** (you can review this in Party Stats).`);
 			adventure.scouting.artifactGuardians++;
 			while (adventure.artifactGuardians.length <= adventure.scouting.artifactGuardians) {
-				//TODO #77 roll bosses
-				adventure.artifactGuardians.push("A Slimy Throneroom");
+				prerollBoss("Relic Guardian", adventure);
 			}
 		}
 		adventure.gold -= cost;
