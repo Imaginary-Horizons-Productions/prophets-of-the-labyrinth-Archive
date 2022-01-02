@@ -3,6 +3,7 @@ const { MessageActionRow, MessageSelectMenu } = require('discord.js');
 const { getPlayer } = require('../playerDAO.js');
 const { getArchetype } = require('../Archetypes/_archetypeDictionary.js');
 const { getAdventure } = require('../adventureDAO.js');
+const { getEmoji } = require('../../Classes/DamageType.js');
 
 module.exports = new Button("deploy");
 
@@ -17,8 +18,8 @@ module.exports.execute = (interaction, args) => {
 			if (playerProfile.archetypes[className] > 0) {
 				let archetype = getArchetype(className);
 				classOptions.push({
-					label: `${className}`,
-					description: `Predicts: ${archetype.predict} ~-~-~ Element: ${archetype.element}`,
+					label: `${className} ${getEmoji(archetype.element)}`,
+					description: `Predicts: ${archetype.predict}`,
 					value: className
 				})
 			}

@@ -1,5 +1,5 @@
-const DamageType = require("../Classes/DamageType");
 const Enemy = require("../Classes/Enemy");
+const { getOpposite } = require("../Classes/DamageType");
 const { generateRandomNumber } = require("../helpers");
 
 module.exports.spawnEnemy = function (adventure, enemyTemplate, randomizeHp) {
@@ -15,7 +15,7 @@ module.exports.spawnEnemy = function (adventure, enemyTemplate, randomizeHp) {
 			enemy.name = enemy.name.replace("@{adventure}", adventure.element);
 			break;
 		case "adventureOpposite":
-			enemy.name = enemy.name.replace("@{adventureOpposite}", DamageType.getOpposite(adventure.element));
+			enemy.name = enemy.name.replace("@{adventureOpposite}", getOpposite(adventure.element));
 			break;
 		case "clone":
 			enemy.name = enemy.name.replace("@{clone}", `Mirror ${adventure.delvers[adventure.room.enemies.length].title}`);
@@ -27,7 +27,7 @@ module.exports.spawnEnemy = function (adventure, enemyTemplate, randomizeHp) {
 			enemy.setElement(enemy.element.replace("@{adventure}", adventure.element));
 			break;
 		case "adventureOpposite":
-			enemy.setElement(enemy.element.replace("@{adventureOpposite}", DamageType.getOpposite(adventure.element)));
+			enemy.setElement(enemy.element.replace("@{adventureOpposite}", getOpposite(adventure.element)));
 			break;
 		case "clone":
 			enemy.setElement(enemy.element.replace("@{clone}", adventure.delvers[adventure.room.enemies.length].element));
