@@ -35,7 +35,7 @@ function stingEffect(target, user, isCrit, adventure) {
 }
 
 function evadeEffect(target, user, isCrit, adventure) {
-	addModifier(user, "evade", 1);
+	addModifier(user, { name: "Evade", stacks: 1 });
 	return "";
 }
 

@@ -17,17 +17,17 @@ function biteEffect(target, user, isCrit, adventure) {
 	if (isCrit) {
 		damage *= 2;
 	}
-	addModifier(target, "Stagger", 1);
+	addModifier(target, { name: "Stagger", stacks: 1 });
 	return dealDamage(target, user, damage, user.element, adventure);
 }
 
 function crystallizeEffect(target, user, isCrit, adventure) {
 	addBlock(user, 150);
 	if (isCrit) {
-		addModifier(user, "powerup", 50);
-		removeModifier(user, "Stagger", 1);
+		addModifier(user, { name: "Power Up", stacks: 50 });
+		removeModifier(user, { name: "Stagger", stacks: 1 });
 	} else {
-		addModifier(user, "powerup", 25);
+		addModifier(user, { name: "Power Up", stacks: 25 });
 	}
 	return "";
 }

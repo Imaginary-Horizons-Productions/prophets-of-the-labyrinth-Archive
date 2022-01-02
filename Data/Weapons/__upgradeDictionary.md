@@ -184,7 +184,7 @@ Increased damage against enemies with 0 block
 - Sickle (10% max hp bonus damage)
 - Life Drain (attack a foe and gain hp)
 - Warhammer (bonus damage on stunned enemy)
-- Inspire (powerup to ally)
+- Inspire (power up to ally)
 
 ## Ideas
 - Empowering ___ - Adds stacks to buffs
