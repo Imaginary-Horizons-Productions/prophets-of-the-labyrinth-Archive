@@ -26,6 +26,30 @@ exports.calculateTotalSpeed = function (combatant) {
 	return Math.ceil(totalSpeed);
 }
 
+exports.miniPredict = function (predictType, combatant) {
+	switch (predictType) {
+		case "Targets":
+			return `Resistances: ${DamageType.getResistances(combatant.element).join(", ")}`;
+		case "Critical Hits":
+			return `Weaknesses: ${DamageType.getWeaknesses(combatant.element).join(", ")}`;
+		case "Health":
+			return `HP: ${combatant.hp}/${combatant.maxHp}`;
+		case "Move Order":
+			return `Speed Bonus: ${combatant.roundSpeed >= 0 ? "+" : ""}${combatant.roundSpeed + combatant.actionSpeed}`;
+		case "Modifiers":
+			let staggerCount = combatant.modifiers.Stagger || 0;
+			let bar = "";
+			for (let i = 0; i < combatant.staggerThreshold; i++) {
+				if (staggerCount > i) {
+					bar += "▰";
+				} else {
+					bar += "▱";
+				}
+			}
+			return `Stagger: ${bar}`;
+	}
+}
+
 exports.dealDamage = async function (target, user, damage, element, adventure) {
 	if (target.hp > 0) {
 		let targetModifiers = Object.keys(target.modifiers);

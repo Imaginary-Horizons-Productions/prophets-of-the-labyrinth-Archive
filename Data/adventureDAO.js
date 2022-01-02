@@ -192,7 +192,7 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 							.setStyle("SECONDARY")
 							.setDisabled(adventure.scouting.finalBoss || adventure.gold < bossScoutingCost),
 						new MessageButton().setCustomId(`buyscouting-artifactguardian-${guardScoutingCost}`)
-							.setLabel(`${guardScoutingCost}g: Scout an Artifact Guardian (${adventure.scouting.artifactGuardians} so far) (coming soon)`)
+							.setLabel(`${guardScoutingCost}g: Scout an Artifact Guardian (${adventure.scouting.artifactGuardians} so far) (coming soon)`) //TODO #163 ensure scouting artifact guardians works
 							.setStyle("SECONDARY")
 							.setDisabled(true)
 					));
@@ -200,7 +200,7 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 			}
 			const { embed: embedFinal, uiRows } = addRoutingUI(embed, uiComponents, adventure);
 			let roomMessage = await thread.send({ embeds: [embedFinal], components: uiRows });
-			adventure.setMessageId("room", roomMessage.id);
+			adventure.messageIds.room = roomMessage.id;
 		}
 		exports.setAdventure(adventure);
 	} else {
@@ -287,7 +287,7 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 		)];
 		thread.send({ embeds: [embed], components: battleMenu }).then(message => {
 			exports.updateRoomHeader(adventure, message);
-			adventure.setMessageId("battleRound", message.id);
+			adventure.messageIds.battleRound = message.id;
 			exports.setAdventure(adventure);
 		});
 	} else {
@@ -412,6 +412,7 @@ exports.endRound = async function (adventure, thread) {
 				embeds: [embedFinal.setTitle("Victory!").setDescription(lastRoundText)],
 				components: uiRows
 			}).then(message => {
+				adventure.messageIds.room = message.id;
 				adventure.room.moves = [];
 				adventure.delvers.forEach(delver => {
 					delver.modifiers = {};

@@ -46,7 +46,7 @@ module.exports.execute = (interaction, args) => {
 					}
 
 					interaction.channel.send({ content: "All players are ready, the adventure will start when the leader clicks the button below!", components: readyButton }).then(message => {
-						adventure.setMessageId("start", message.id);
+						adventure.messageIds.start = message.id;
 						setAdventure(adventure);
 					})
 				}

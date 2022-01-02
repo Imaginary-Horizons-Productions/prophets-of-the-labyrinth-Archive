@@ -67,7 +67,8 @@ module.exports.execute = async function (interaction, [weaponName]) {
 		}
 
 		// Send confirmation text
-		interaction.reply(`${interaction.user} ${overwritten ? "switches to ready" : "readies"} **${weaponName}**${target !== "none" && target !== "self" ? ` to use on **${targetText}**` : ""}.`).then(() => {
+		interaction.update({ components: [] });
+		interaction.channel.send(`${interaction.user} ${overwritten ? "switches to ready" : "readies"} **${weaponName}**${target !== "none" && target !== "self" ? ` to use on **${targetText}**` : ""}.`).then(() => {
 			setAdventure(adventure);
 			if (checkNextRound(adventure)) {
 				endRound(adventure, interaction.channel);

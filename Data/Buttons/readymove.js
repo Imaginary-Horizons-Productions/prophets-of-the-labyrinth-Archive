@@ -1,7 +1,7 @@
 const Button = require('../../Classes/Button.js');
 const { MessageEmbed, MessageActionRow, MessageSelectMenu, MessageButton } = require('discord.js');
 const { getAdventure } = require('../adventureDAO.js');
-const { getFullName, modifiersToString } = require("../combatantDAO.js");
+const { getFullName, modifiersToString, miniPredict } = require("../combatantDAO.js");
 const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
 const { weaponToEmbedField } = require('../weaponDAO.js');
 
@@ -28,13 +28,17 @@ module.exports.execute = (interaction, args) => {
 			for (let i = 0; i < adventure.room.enemies.length; i++) {
 				let enemy = adventure.room.enemies[i];
 				if (enemy.hp > 0) {
-					enemyOptions.push({ label: getFullName(enemy, adventure.room.enemyTitles), description: "", value: `enemy-${i}` })
+					enemyOptions.push({
+						label: getFullName(enemy, adventure.room.enemyTitles),
+						description: miniPredict(delver.predict, enemy),
+						value: `enemy-${i}`
+					})
 				}
 			}
 			let allyOptions = adventure.delvers.map((ally, i) => {
 				return {
 					label: ally.name,
-					description: "", //TODO #137 predict reminder in move target select
+					description: miniPredict(delver.predict, ally),
 					value: `ally-${i}`
 				}
 			})

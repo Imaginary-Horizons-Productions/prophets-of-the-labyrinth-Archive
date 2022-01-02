@@ -42,7 +42,8 @@ module.exports.execute = async function (interaction, [weaponName]) {
 		} else if (targetTeam === "enemy") {
 			target = adventure.room.enemies[targetIndex];
 		}
-		interaction.reply(`${interaction.user} ${overwritten ? "switches to ready" : "readies"} **${weaponName}** to use on **${getFullName(target, adventure.room.enemyTitles)}**.`).then(() => {
+		interaction.update({ components: [] });
+		interaction.channel.send(`${interaction.user} ${overwritten ? "switches to ready" : "readies"} **${weaponName}** to use on **${getFullName(target, adventure.room.enemyTitles)}**.`).then(() => {
 			setAdventure(adventure);
 			if (checkNextRound(adventure)) {
 				endRound(adventure, interaction.channel);
