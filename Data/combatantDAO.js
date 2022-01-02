@@ -30,8 +30,8 @@ exports.dealDamage = async function (target, user, damage, element, adventure) {
 	if (target.hp > 0) {
 		let targetModifiers = Object.keys(target.modifiers);
 		if (!targetModifiers.includes(`${element} Absorb`)) {
-			if (!targetModifiers.includes("evade") || element === "Poison") {
-				let pendingDamage = damage + (user?.modifiers["powerup"] || 0);
+			if (!targetModifiers.includes("Evade") || element === "Poison") {
+				let pendingDamage = damage + (user?.modifiers["Power Up"] || 0);
 				let isWeakness = DamageType.getWeaknesses(target.element).includes(element);
 				if (isWeakness) {
 					pendingDamage *= 2;
@@ -67,9 +67,9 @@ exports.dealDamage = async function (target, user, damage, element, adventure) {
 				}
 				return damageText;
 			} else {
-				target.modifiers["evade"]--;
-				if (target.modifiers["evade"] <= 0) {
-					delete target.modifiers["evade"];
+				target.modifiers["Evade"]--;
+				if (target.modifiers["Evade"] <= 0) {
+					delete target.modifiers["Evade"];
 				}
 				return ` ${exports.getFullName(target, adventure.room.enemyTitles)} evades the attack!`;
 			}
@@ -142,7 +142,7 @@ exports.removeModifier = function (combatant, { name: modifier, stacks }) {
 exports.modifiersToString = function (combatant) {
 	let modifiersText = "";
 	for (let modifier in combatant.modifiers) {
-		modifiersText += `*${modifier}${isNonStacking(modifier) ? "" : ` x ${combatant.modifiers[modifier]}`}* - ${getModifierDescription(modifier)}\n`;
+		modifiersText += `*${modifier}${isNonStacking(modifier) ? "" : ` x ${combatant.modifiers[modifier]}`}* - ${getModifierDescription(modifier, combatant)}\n`;
 	}
 	return modifiersText;
 }

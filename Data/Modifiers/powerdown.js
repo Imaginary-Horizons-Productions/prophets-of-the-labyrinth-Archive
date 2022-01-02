@@ -1,8 +1,8 @@
 const Modifier = require("../../Classes/Modifier");
 
-module.exports = new Modifier("powerdown", 0)
-	.setDescription("Decreases damage dealt my moves by stack count.")
+module.exports = new Modifier("Power Down", 0)
+	.setDescription("Decreases damage dealt by moves by @{stackCount}.")
 	.setIsBuff(false)
 	.setIsDebuff(true)
 	.setIsNonStacking(false)
-	.setInverse("powerup");
+	.setInverse("Power Up");
