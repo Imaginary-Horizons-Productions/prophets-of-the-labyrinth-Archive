@@ -49,7 +49,15 @@ module.exports.execute = (interaction, args) => {
 			adventure.room.enemies.concat(adventure.delvers).filter(combatant => combatant.hp > 0).forEach(combatant => {
 				let modifiersText = modifiersToString(combatant);
 				let staggerCount = combatant.modifiers.Stagger || 0;
-				descriptionText += `\n__${getFullName(combatant, adventure.room.enemyTitles)}__\n*${staggerCount} out of ${combatant.staggerThreshold} Stagger* for Stun\n${modifiersText ? `${modifiersText}` : "No modifiers"}\n`;
+				let bar = "";
+				for (let i = 0; i < combatant.staggerThreshold; i++) {
+					if (staggerCount > i) {
+						bar += "▰";
+					} else {
+						bar += "▱";
+					}
+				}
+				descriptionText += `\n__${getFullName(combatant, adventure.room.enemyTitles)}__ ${bar}\n${modifiersText ? `${modifiersText}` : "No modifiers"}`;
 			})
 			break;
 	}

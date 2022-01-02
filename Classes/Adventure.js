@@ -61,11 +61,6 @@ module.exports = class Adventure {
 		return this;
 	}
 
-	setMessageId(type, id) {
-		this.messageIds[type] = id;
-		return this;
-	}
-
 	setLeaderId(id) {
 		this.leaderId = id;
 		return this;

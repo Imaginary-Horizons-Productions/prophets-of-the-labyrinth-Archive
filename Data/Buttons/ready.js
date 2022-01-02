@@ -21,7 +21,7 @@ module.exports.execute = (interaction, args) => {
 
 		interaction.reply({ content: `The adventure has begun! You can use \`/delver-stats\`, or \`/party-stats\` to check adventure status. The leader can \`/give-up\`.`, fetchReply: true }).then(message => {
 			message.pin();
-			adventure.setMessageId("utility", message.id);
+			adventure.messageIds.utility = message.id;
 			nextRoom("Battle", adventure, interaction.channel);
 		});
 	} else {

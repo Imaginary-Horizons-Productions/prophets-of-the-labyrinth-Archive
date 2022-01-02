@@ -53,11 +53,11 @@ module.exports.execute = (interaction) => {
 						.setDisabled(true)
 				)
 				adventure.setId(thread.id)
-					.setLeaderId(interaction.user.id)
-					.setMessageId("leaderNotice", leaderMessage.id);
+					.setLeaderId(interaction.user.id);
+				adventure.messageIds.leaderNotice = leaderMessage.id;
 				return thread.send({ content: "The adventure will begin when everyone has picked an archetype and the leader clicks the \"Ready!\" button.", components: [ready] });
 			}).then(deployMessage => {
-				adventure.setMessageId("deploy", deployMessage.id);
+				adventure.messageIds.deploy = deployMessage.id;
 				setAdventure(adventure);
 			});
 		}).catch(console.error);
