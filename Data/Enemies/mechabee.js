@@ -25,11 +25,11 @@ function mechabeePattern(actionName) {
 }
 
 function stingEffect(target, user, isCrit, adventure) {
-	addModifier(target, "Stagger", 1);
+	addModifier(target, { name: "Stagger", stacks: 1 });
 	if (isCrit) {
-		addModifier(target, "Poison", 4);
+		addModifier(target, { name: "Poison", stacks: 4 });
 	} else {
-		addModifier(target, "Poison", 2);
+		addModifier(target, { name: "Poison", stacks: 2 });
 	}
 	return dealDamage(target, user, 10, user.element, adventure);
 }
@@ -49,7 +49,7 @@ function selfDestructEffect(target, user, isCrit, adventure) {
 	if (isCrit) {
 		damage *= 2;
 	}
-	addModifier(target, "Stagger", 1);
+	addModifier(target, { name: "Stagger", stacks: 1 });
 	user.hp = 0;
 	return dealDamage(target, user, damage, user.element, adventure);
 }

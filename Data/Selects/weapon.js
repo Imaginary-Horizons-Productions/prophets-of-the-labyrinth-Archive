@@ -1,6 +1,6 @@
 const Move = require('../../Classes/Move');
 const Select = require('../../Classes/Select.js');
-const { getAdventure, checkNextRound, updateRoundMessage, endRound, setAdventure } = require('../adventureDAO');
+const { getAdventure, checkNextRound, endRound, setAdventure } = require('../adventureDAO');
 const { getWeaponProperty } = require('../Weapons/_weaponDictionary');
 const { getFullName } = require("./../combatantDAO.js");
 
@@ -44,7 +44,6 @@ module.exports.execute = async function (interaction, [weaponName]) {
 		}
 		interaction.reply(`${interaction.user} ${overwritten ? "switches to ready" : "readies"} **${weaponName}** to use on **${getFullName(target, adventure.room.enemyTitles)}**.`).then(() => {
 			setAdventure(adventure);
-			updateRoundMessage(interaction.channel.messages, adventure);
 			if (checkNextRound(adventure)) {
 				endRound(adventure, interaction.channel);
 			}

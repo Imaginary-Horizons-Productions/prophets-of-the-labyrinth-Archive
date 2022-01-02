@@ -19,26 +19,9 @@ module.exports.execute = (interaction, [direction]) => {
 		}
 		adventure.roomCandidates[direction].push(interaction.user.id);
 
-		// Update votes tally
-		let allVotes = [].concat(...Object.values(adventure.roomCandidates));
-		let notVoted = delverIds.filter(id => !allVotes.includes(id));
-		let routingText = "Each delver can pick or change their pick for the next room. The party will move on when the decision is unanimous.";
-		if (notVoted.length) {
-			routingText += `\n\nUndecided:\n<@${notVoted.join(">, <@")}>`
-		}
-		for (const roomType in adventure.roomCandidates) {
-			if (adventure.roomCandidates[roomType].length) {
-				routingText += `\n\n${roomType}:\n<@${adventure.roomCandidates[roomType].join(">, <@")}>`;
-			}
-		}
-
-		let embed = interaction.message.embeds[0];
-		embed.spliceFields(embed.fields.findIndex(field => field.name === "Decide the next room"), 1, { name: "Decide the next room", value: routingText });
-		interaction.message.edit({ embeds: [embed] });
-		interaction.reply(`${interaction.user} ${changeVote ? "changed votes to" : "voted for"} ${direction}.`).then(() => {
+		interaction.reply(`${interaction.user} ${changeVote ? "changed their vote to" : "voted for"} ${direction}.`).then(() => {
 			// Decide by unanimous vote
 			if (adventure.roomCandidates[direction].length === adventure.delvers.length) {
-				embed.spliceFields(embed.fields.findIndex(field => field.title === "Decide the next room"), 1);
 				clearComponents(adventure.messageIds.battleRound, interaction.channel.messages);
 				let uiRows = [...interaction.message.components.map(row => {
 					return new MessageActionRow().addComponents(...row.components.map(component => {
@@ -53,7 +36,7 @@ module.exports.execute = (interaction, [direction]) => {
 						return editedComponent;
 					}));
 				})];
-				interaction.message.edit({ embeds: [embed], components: uiRows });
+				interaction.message.edit({ components: uiRows });
 				interaction.followUp(`The party moves on to ${direction}.`).then(message => {
 					nextRoom(direction, adventure, interaction.channel);
 				});
