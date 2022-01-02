@@ -3,6 +3,7 @@ const { MessageEmbed } = require('discord.js');
 const { getAdventure } = require('../adventureDAO.js');
 const { weaponToEmbedField } = require('../weaponDAO.js');
 const { getFullName } = require('../combatantDAO.js');
+const { getEmoji } = require('../../Classes/DamageType.js');
 
 module.exports = new Command("delver-stats", "Get your personal stats for the channel's adventure", false, false);
 
@@ -14,7 +15,7 @@ module.exports.execute = (interaction) => {
 		if (delver) {
 			let embed = new MessageEmbed()
 			.setTitle(getFullName(delver, adventure.room.enemyTitles))
-			.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nPredicts: ${delver.predict}\nElement: ${delver.element}`)
+			.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nPredicts: ${delver.predict}\nElement: ${delver.element} ${getEmoji(delver.element)}`)
 			.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
 			for (let weapon of delver.weapons) {
 				embed.addField(...weaponToEmbedField(weapon.name, weapon.uses));

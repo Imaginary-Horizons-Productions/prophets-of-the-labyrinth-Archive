@@ -1,7 +1,8 @@
+const { getEmoji } = require("../Classes/DamageType");
 const { getWeaponProperty } = require("./Weapons/_weaponDictionary");
 
 exports.weaponToEmbedField = function (weaponName, uses) {
-	let description = getWeaponProperty(weaponName, "description").replace("@{element}", getWeaponProperty(weaponName, "element"))
+	let description = getWeaponProperty(weaponName, "description").replace("@{element}", getEmoji(getWeaponProperty(weaponName, "element")))
 		.replace("@{critMultiplier}", getWeaponProperty(weaponName, "critMultiplier"))
 		.replace("@{damage}", getWeaponProperty(weaponName, "damage"))
 		.replace("@{bonusDamage}", getWeaponProperty(weaponName, "bonusDamage"))

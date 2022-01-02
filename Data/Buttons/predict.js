@@ -3,7 +3,7 @@ const Button = require('../../Classes/Button.js');
 const { getAdventure } = require('../adventureDAO.js');
 const { getTargetList } = require('../moveDAO.js');
 const { getFullName, calculateTotalSpeed, modifiersToString } = require("../combatantDAO.js");
-const DamageType = require('../../Classes/DamageType.js');
+const { getResistances, getWeaknesses } = require('../../Classes/DamageType.js');
 
 module.exports = new Button("predict");
 
@@ -22,13 +22,13 @@ module.exports.execute = (interaction, args) => {
 				let user = team[move.userIndex];
 				if (user.hp > 0) {
 					let targets = getTargetList(move.targets, adventure);
-					descriptionText += `\n__${getFullName(user, adventure.room.enemyTitles)}__\nTargeting: **${targets.length ? targets.join(", ") : "???"}**\nResistances: ${DamageType.getResistances(user.element).join(", ")}\n`;
+					descriptionText += `\n__${getFullName(user, adventure.room.enemyTitles)}__\nTargeting: **${targets.length ? targets.join(", ") : "???"}**\nResistances: ${getResistances(user.element).join(", ")}\n`;
 				}
 			})
 			break;
 		case "Critical Hits": // Shows which combatants are going to critically hit next round and elemental weakness
 			adventure.room.enemies.concat(adventure.delvers).filter(combatant => combatant.hp > 0).forEach(combatant => {
-				descriptionText += `\n__${getFullName(combatant, adventure.room.enemyTitles)}__\nCritical Hit: ${combatant.crit}\nWeaknesses: ${DamageType.getWeaknesses(combatant.element).join(", ")}\n`;
+				descriptionText += `\n__${getFullName(combatant, adventure.room.enemyTitles)}__\nCritical Hit: ${combatant.crit}\nWeaknesses: ${getWeaknesses(combatant.element).join(", ")}\n`;
 			});
 			break;
 		case "Health": // Shows current HP, max HP, block, and element of all combatants

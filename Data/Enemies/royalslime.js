@@ -1,4 +1,4 @@
-const DamageType = require("../../Classes/DamageType.js");
+const { elementsList } = require("../../Classes/DamageType.js");
 const Enemy = require("../../Classes/Enemy.js");
 const { generateRandomNumber } = require("../../helpers.js");
 const { addModifier, dealDamage, removeModifier } = require("../combatantDAO.js");
@@ -17,7 +17,7 @@ module.exports = new Enemy("Royal Slime")
 	.setBounty(100);
 
 function elementShift(target, user, isCrit, adventure) {
-	user.element = DamageType.elementsList()[generateRandomNumber(adventure, DamageType.elementsList().length, "battle")];
+	user.element = elementsList()[generateRandomNumber(adventure, elementsList().length, "battle")];
 	if (isCrit) {
 		addModifier(user, { name: `${user.element} Absorb`, stacks: 5 });
 		removeModifier(user, "Stagger", 1);

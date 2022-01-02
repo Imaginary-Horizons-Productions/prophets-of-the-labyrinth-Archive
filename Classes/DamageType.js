@@ -1,83 +1,81 @@
-module.exports = class DamageType { // Synonymous with element, renamed to damage type due to "Element" being a built-in js class
+module.exports = class DamageType { // Synonymous with element, using "DamageType" as alias due to "Element" being a built-in js class
 	constructor() { }
 
+
 	static elementsList() {
-		return ["Fire", "Earth", "Light", "Water", "Wind", "Darkness"];
+		return Object.keys(ELEMENTS);
 	}
 
 	static getColor(element) {
-		switch (element) {
-			case "Light":
-				return "YELLOW";
-			case "Darkness":
-				return "PURPLE";
-			case "Fire":
-				return "RED";
-			case "Water":
-				return "BLUE";
-			case "Earth":
-				return "ORANGE";
-			case "Wind":
-				return "GREEN";
-			default:
-				return "GREY";
-		}
+		return ELEMENTS[element].color;
+	}
+
+	static getEmoji(element) {
+		return ELEMENTS[element].emoji;
 	}
 
 	static getOpposite(element) {
-		switch (element) {
-			case "Light":
-				return "Darkness";
-			case "Darkness":
-				return "Light";
-			case "Fire":
-				return "Water";
-			case "Water":
-				return "Fire";
-			case "Earth":
-				return "Wind";
-			case "Wind":
-				return "Earth";
-			default:
-				return "none";
-		}
+		return ELEMENTS[element].opposite;
 	}
 
 	static getWeaknesses(element) {
-		switch (element) {
-			case "Light":
-				return ["Fire", "Earth"];
-			case "Darkness":
-				return ["Wind", "Water"];
-			case "Fire":
-				return ["Earth", "Darkness"];
-			case "Water":
-				return ["Wind", "Light"];
-			case "Earth":
-				return ["Water", "Darkness"];
-			case "Wind":
-				return ["Light", "Fire"];
-			default:
-				return ["none"];
+		if (this.elementsList().includes(element)) {
+			return ELEMENTS[element].weaknesses;
+		} else {
+			return ["none"];
 		}
 	}
 
 	static getResistances(element) {
-		switch (element) {
-			case "Light":
-				return ["Wind", "Water"];
-			case "Darkness":
-				return ["Earth", "Fire"];
-			case "Fire":
-				return ["Light", "Wind"];
-			case "Water":
-				return ["Darkness", "Earth"];
-			case "Earth":
-				return ["Fire", "Light"];
-			case "Wind":
-				return ["Water", "Darkness"];
-			default:
-				return ["none"];
+		if (this.elementsList().includes(element)) {
+			return ELEMENTS[element].resistances;
+		} else {
+			return ["none"];
 		}
+	}
+}
+
+const ELEMENTS = {
+	"Fire": {
+		color: "RED",
+		emoji: "🔥",
+		opposite: "Water",
+		weaknesses: ["Earth", "Darkness"],
+		resistances: ["Light", "Wind"]
+	},
+	"Earth": {
+		color: "ORANGE",
+		emoji: "🌿",
+		opposite: "Wind",
+		weaknesses: ["Water", "Darkness"],
+		resistances: ["Fire", "Light"]
+	},
+	"Light": {
+		color: "YELLOW",
+		emoji: "✨",
+		opposite: "Darkness",
+		weaknesses: ["Fire", "Earth"],
+		resistances: ["Wind", "Water"]
+	},
+	"Water": {
+		color: "BLUE",
+		emoji: "💦",
+		opposite: "Fire",
+		weaknesses: ["Wind", "Light"],
+		resistances: ["Darkness", "Earth"]
+	},
+	"Wind": {
+		color: "GREEN",
+		emoji: "💨",
+		opposite: "Earth",
+		weaknesses: ["Light", "Fire"],
+		resistances: ["Water", "Darkness"]
+	},
+	"Darkness": {
+		color: "PURPLE",
+		emoji: "♟️",
+		opposite: "Light",
+		weaknesses: ["Wind", "Water"],
+		resistances: ["Earth", "Fire"]
 	}
 }

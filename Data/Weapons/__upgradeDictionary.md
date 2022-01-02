@@ -193,3 +193,4 @@ Increased damage against enemies with 0 block
 - Tower Shield - blocks for target and user (non-starting weapon)
 - Bashing - bonus damage for block on user
 - Siphoning ___ - regain uses if killing blow
+- Stalwart ___ - removes a stagger from the user

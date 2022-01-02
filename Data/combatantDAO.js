@@ -1,7 +1,7 @@
 const Enemy = require("../Classes/Enemy.js");
 const Delver = require("../Classes/Delver.js");
 const { getInverse, isNonStacking, getModifierDescription } = require("./Modifiers/_modifierDictionary.js");
-const DamageType = require("../Classes/DamageType.js");
+const { getWeaknesses, getResistances } = require("../Classes/DamageType.js");
 
 exports.getFullName = function (combatant, titleObject) {
 	if (combatant instanceof Enemy) {
@@ -26,41 +26,17 @@ exports.calculateTotalSpeed = function (combatant) {
 	return Math.ceil(totalSpeed);
 }
 
-exports.miniPredict = function (predictType, combatant) {
-	switch (predictType) {
-		case "Targets":
-			return `Resistances: ${DamageType.getResistances(combatant.element).join(", ")}`;
-		case "Critical Hits":
-			return `Weaknesses: ${DamageType.getWeaknesses(combatant.element).join(", ")}`;
-		case "Health":
-			return `HP: ${combatant.hp}/${combatant.maxHp}`;
-		case "Move Order":
-			return `Speed Bonus: ${combatant.roundSpeed >= 0 ? "+" : ""}${combatant.roundSpeed + combatant.actionSpeed}`;
-		case "Modifiers":
-			let staggerCount = combatant.modifiers.Stagger || 0;
-			let bar = "";
-			for (let i = 0; i < combatant.staggerThreshold; i++) {
-				if (staggerCount > i) {
-					bar += "▰";
-				} else {
-					bar += "▱";
-				}
-			}
-			return `Stagger: ${bar}`;
-	}
-}
-
 exports.dealDamage = async function (target, user, damage, element, adventure) {
 	if (target.hp > 0) {
 		let targetModifiers = Object.keys(target.modifiers);
 		if (!targetModifiers.includes(`${element} Absorb`)) {
 			if (!targetModifiers.includes("Evade") || element === "Poison") {
 				let pendingDamage = damage + (user?.modifiers["Power Up"] || 0);
-				let isWeakness = DamageType.getWeaknesses(target.element).includes(element);
+				let isWeakness = getWeaknesses(target.element).includes(element);
 				if (isWeakness) {
 					pendingDamage *= 2;
 				}
-				let isResistance = DamageType.getResistances(target.element).includes(element);
+				let isResistance = getResistances(target.element).includes(element);
 				if (isResistance) {
 					pendingDamage = pendingDamage / 2;
 				}

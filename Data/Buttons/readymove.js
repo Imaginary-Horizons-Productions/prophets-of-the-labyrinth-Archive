@@ -1,9 +1,10 @@
 const Button = require('../../Classes/Button.js');
 const { MessageEmbed, MessageActionRow, MessageSelectMenu, MessageButton } = require('discord.js');
 const { getAdventure } = require('../adventureDAO.js');
-const { getFullName, modifiersToString, miniPredict } = require("../combatantDAO.js");
+const { getFullName, modifiersToString } = require("../combatantDAO.js");
 const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
 const { weaponToEmbedField } = require('../weaponDAO.js');
+const { getEmoji, getResistances, getWeaknesses } = require('../../Classes/DamageType.js');
 
 module.exports = new Button("readymove");
 
@@ -15,7 +16,7 @@ module.exports.execute = (interaction, args) => {
 		if (!delver.modifiers.Stun) { // Early out if stunned
 			let embed = new MessageEmbed().setColor(adventure.room.embedColor)
 				.setTitle(getFullName(delver, adventure.room.enemyTitles))
-				.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nElement: ${delver.element}`)
+				.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nElement: ${delver.element} ${getEmoji(delver.element)}`)
 				.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
 
 			let modifiersText = modifiersToString(delver);
@@ -45,6 +46,7 @@ module.exports.execute = (interaction, args) => {
 			let usableWeapons = delver.weapons.filter(weapon => weapon.uses > 0);
 			if (usableWeapons.length > 0) {
 				for (const weapon of usableWeapons) {
+					let elementEmoji = getEmoji(getWeaponProperty(weapon.name, "element"));
 					embed.addField(...weaponToEmbedField(weapon.name, weapon.uses));
 					let { target, team } = getWeaponProperty(weapon.name, "targetingTags");
 					if (target === "single") {
@@ -59,7 +61,7 @@ module.exports.execute = (interaction, args) => {
 						}
 						moveMenu.push(new MessageActionRow().addComponents(
 							new MessageSelectMenu().setCustomId(`weapon-${weapon.name}`)
-								.setPlaceholder(`Use ${weapon.name} on...`)
+								.setPlaceholder(`${elementEmoji} Use ${weapon.name} on...`)
 								.addOptions(targetOptions)
 						));
 					} else {
@@ -67,6 +69,7 @@ module.exports.execute = (interaction, args) => {
 						moveMenu.push(new MessageActionRow().addComponents(
 							new MessageButton().setCustomId(`nontargetweapon-${weapon.name}`)
 								.setLabel(`Use ${weapon.name}`)
+								.setEmoji(elementEmoji)
 								.setStyle("PRIMARY")
 						))
 					}
@@ -88,5 +91,29 @@ module.exports.execute = (interaction, args) => {
 		}
 	} else {
 		interaction.reply({ content: "Please participate in combat in adventures you've joined.", ephemeral: true });
+	}
+}
+
+function miniPredict(predictType, combatant) {
+	switch (predictType) {
+		case "Targets":
+			return `Resistances: ${getResistances(combatant.element).map(element => getEmoji(element)).join(" ")}`;
+		case "Critical Hits":
+			return `Weaknesses: ${getWeaknesses(combatant.element).map(element => getEmoji(element)).join(" ")}`;
+		case "Health":
+			return `HP: ${combatant.hp}/${combatant.maxHp}`;
+		case "Move Order":
+			return `Speed Bonus: ${combatant.roundSpeed >= 0 ? "+" : ""}${combatant.roundSpeed + combatant.actionSpeed}`;
+		case "Modifiers":
+			let staggerCount = combatant.modifiers.Stagger || 0;
+			let bar = "";
+			for (let i = 0; i < combatant.staggerThreshold; i++) {
+				if (staggerCount > i) {
+					bar += "▰";
+				} else {
+					bar += "▱";
+				}
+			}
+			return `Stagger: ${bar}`;
 	}
 }

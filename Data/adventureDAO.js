@@ -13,7 +13,7 @@ const { getTurnDecrement } = require("./Modifiers/_modifierDictionary.js");
 const { getEnemy } = require("./Enemies/_enemyDictionary");
 const Room = require("../Classes/Room.js");
 const { spawnEnemy } = require("./enemyDAO.js");
-const DamageType = require("../Classes/DamageType.js");
+const { getWeaknesses, getColor } = require("../Classes/DamageType.js");
 const { rollWeaponDrop, getWeaponProperty } = require("./Weapons/_weaponDictionary.js");
 
 var filePath = "./Saves/adventures.json";
@@ -116,10 +116,10 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 		if (adventure.room.element === "@{adventure}") {
 			adventure.room.element = adventure.element;
 		} else if (adventure.room.element === "@{adventureWeakness}") {
-			let weaknesses = DamageType.getWeaknesses(adventure.element);
+			let weaknesses = getWeaknesses(adventure.element);
 			adventure.room.element = weaknesses[generateRandomNumber(adventure, weaknesses.length, "general")];
 		}
-		let embed = new MessageEmbed().setColor(DamageType.getColor(adventure.room.element))
+		let embed = new MessageEmbed().setColor(getColor(adventure.room.element))
 			.setAuthor({ name: roomHeaderString(adventure), iconURL: thread.client.user.displayAvatarURL() })
 			.setTitle(roomTemplate.title)
 			.setDescription(roomTemplate.description.replace("@{roomElement}", adventure.room.element))

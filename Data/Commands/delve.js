@@ -1,7 +1,7 @@
 const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
 const Adventure = require('../../Classes/Adventure.js');
 const Command = require('../../Classes/Command.js');
-const DamageType = require('../../Classes/DamageType.js');
+const { elementsList, getColor } = require('../../Classes/DamageType.js');
 const Delver = require('../../Classes/Delver.js');
 const { generateRandomNumber } = require('../../helpers.js');
 const { setAdventure } = require("../adventureDAO.js");
@@ -22,11 +22,12 @@ module.exports.execute = (interaction) => {
 		prerollBoss("Final Battle", adventure);
 		prerollBoss("Relic Guardian", adventure);
 
-		let elementIndex = generateRandomNumber(adventure, DamageType.elementsList().length, "General");
-		adventure.setName(`${DESCRIPTORS[generateRandomNumber(adventure, DESCRIPTORS.length, "General")]} ${LOCATIONS[generateRandomNumber(adventure, LOCATIONS.length, "General")]} of ${DamageType.elementsList()[elementIndex]}`)
-			.setElement(DamageType.elementsList()[elementIndex]);
+		let elementIndex = generateRandomNumber(adventure, elementsList().length, "General");
+		let pickedElement = elementsList()[elementIndex];
+		adventure.setName(`${DESCRIPTORS[generateRandomNumber(adventure, DESCRIPTORS.length, "General")]} ${LOCATIONS[generateRandomNumber(adventure, LOCATIONS.length, "General")]} of ${pickedElement}`)
+			.setElement(pickedElement);
 
-		let embed = new MessageEmbed().setColor(DamageType.getColor(adventure.element))
+		let embed = new MessageEmbed().setColor(getColor(pickedElement))
 			.setAuthor({ name: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png", url: "https://github.com/Imaginary-Horizons-Productions/dungeon-tamers" })
 			.setTitle(adventure.name)
 			.setThumbnail("https://cdn.discordapp.com/attachments/545684759276421120/734093574031016006/bountyboard.png")
