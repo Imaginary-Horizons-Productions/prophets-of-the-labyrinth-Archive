@@ -104,20 +104,20 @@ exports.clearBlock = function (combatant) {
 	return combatant;
 }
 
-exports.addModifier = function (combatant, modifierName, value) {
-	let pendingStacks = value;
-	let inverse = getInverse(modifierName);
+exports.addModifier = function (combatant, { name: modifier, stacks }) {
+	let pendingStacks = stacks;
+	let inverse = getInverse(modifier);
 	let inverseStacks = combatant.modifiers[inverse];
 	if (inverseStacks) {
 		exports.removeModifier(combatant, inverse, pendingStacks);
 		if (inverseStacks < pendingStacks) {
-			combatant.modifiers[modifierName] = pendingStacks - inverseStacks;
+			combatant.modifiers[modifier] = pendingStacks - inverseStacks;
 		}
 	} else {
-		if (combatant.modifiers[modifierName]) {
-			combatant.modifiers[modifierName] += pendingStacks;
+		if (combatant.modifiers[modifier]) {
+			combatant.modifiers[modifier] += pendingStacks;
 		} else {
-			combatant.modifiers[modifierName] = pendingStacks;
+			combatant.modifiers[modifier] = pendingStacks;
 		}
 	}
 
@@ -129,12 +129,12 @@ exports.addModifier = function (combatant, modifierName, value) {
 	return combatant;
 }
 
-exports.removeModifier = function (combatant, modifierName, value) {
-	if (combatant.modifiers[modifierName]) {
-		combatant.modifiers[modifierName] -= value;
+exports.removeModifier = function (combatant, { name: modifier, stacks }) {
+	if (combatant.modifiers[modifier]) {
+		combatant.modifiers[modifier] -= stacks;
 	}
-	if (value < 0 || combatant.modifiers[modifierName] <= 0) {
-		delete combatant.modifiers[modifierName];
+	if (stacks < 0 || combatant.modifiers[modifier] <= 0) {
+		delete combatant.modifiers[modifier];
 	}
 	return combatant;
 }

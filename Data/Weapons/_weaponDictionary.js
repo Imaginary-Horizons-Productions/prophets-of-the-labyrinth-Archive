@@ -34,6 +34,7 @@ var weaponWhitelist = [
 	"firecracker-double.js",
 	"firecracker-mercurial.js",
 	"firecracker-toxic.js",
+	"inspire-base.js",
 	"lifedrain-base.js",
 	"lifedrain-reactive.js",
 	"lifedrain-urgent.js",

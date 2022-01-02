@@ -3,15 +3,16 @@ const { addModifier, dealDamage } = require("../combatantDAO.js");
 
 module.exports = new Weapon("Sharpened Dagger", 2, "*Strike a foe for @{damage} @{element} damage*\nCritical Hit: Damage x@{critMultiplier}", "Wind", effect, ["Sweeping Daggers", "Wicked Dagger"])
 	.setTargetingTags({ target: "single", team: "enemy" })
+	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(350)
 	.setUses(10)
 	.setCritMultiplier(3)
 	.setDamage(100);
 
 function effect(target, user, isCrit, adventure) {
-	let { element: weaponElement, damage, critMultiplier } = module.exports;
+	let { element: weaponElement, modifiers: [elementStagger], damage, critMultiplier } = module.exports;
 	if (user.element === weaponElement) {
-		addModifier(target, "Stagger", 1);
+		addModifier(target, elementStagger);
 	}
 	if (isCrit) {
 		damage *= critMultiplier;
