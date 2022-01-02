@@ -1,22 +1,23 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { addModifier } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Spell: Evasive Sun Flare", 2, "*Inflict 2 Stagger on a foe and gain 1 evade (+@{speedBonus} speed)*\nCritical Hit: Inflict 2 Slow as well\n", "Light", effect, ["Spell: Swift Sun Flare", "Spell: Tormenting Sun Flare"])
+module.exports = new Weapon("Spell: Evasive Sun Flare", 2, "*Inflict @{mod1Stacks} @{mod1} on a foe and gain @{mod2Stacks} @{mod2} (+@{speedBonus} speed)*\nCritical Hit: Inflict @{mod3Stacks} @{mod3} as well\n", "Light", effect, ["Spell: Swift Sun Flare", "Spell: Tormenting Sun Flare"])
 	.setTargetingTags({ target: "single", team: "enemy" })
+	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Stagger", stacks: 2 }, { name: "evade", stacks: 1 }, { name: "Slow", stacks: 2 }])
 	.setCost(350)
 	.setUses(10)
 	.setSpeedBonus(5)
 	.setBlock(50);
 
 function effect(target, user, isCrit, adventure) {
-	let { element: weaponElement, block } = module.exports;
+	let { element: weaponElement, modifiers: [elementStagger, stagger, evade, slow] } = module.exports;
 	if (user.element === weaponElement) {
-		addModifier(target, "Stagger", 1);
+		addModifier(target, elementStagger);
 	}
 	if (isCrit) {
-		addModifier(target, "Slow", 2);
+		addModifier(target, slow);
 	}
-	addModifier(target, "Stagger", 2);
-	addModifier(user, "evade", 1);
+	addModifier(target, stagger);
+	addModifier(user, evade);
 	return "";
 }

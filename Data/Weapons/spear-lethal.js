@@ -1,20 +1,21 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { dealDamage, addModifier } = require("../combatantDAO.js");
 
-module.exports = new Weapon("Lethal Spear", 2, "*Strike a foe for @{damage} @{element} damage*\nCritical Hit: Inflict 1 Stagger and damage x@{critMultiplier}", "Light", effect, ["Reactive Spear", "Sweeping Spear"])
+module.exports = new Weapon("Lethal Spear", 2, "*Strike a foe for @{damage} @{element} damage*\nCritical Hit: Inflict @{mod1Stacks} @{mod1} and damage x@{critMultiplier}", "Light", effect, ["Reactive Spear", "Sweeping Spear"])
 	.setTargetingTags({ target: "single", team: "enemy" })
+	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Stagger", stacks: 1 }])
 	.setCost(350)
 	.setUses(10)
 	.setDamage(100);
 
 function effect(target, user, isCrit, adventure) {
-	let { element: weaponElement, damage, critMultiplier } = module.exports;
+	let { element: weaponElement, modifiers: [elementStagger, critStagger], damage, critMultiplier } = module.exports;
 	if (user.element === weaponElement) {
-		addModifier(target, "Stagger", 1);
+		addModifier(target, elementStagger);
 	}
 	if (isCrit) {
 		damage *= critMultiplier;
-		addModifier(target, "Stagger", 1);
+		addModifier(target, critStagger);
 	}
 	return dealDamage(target, user, damage, weaponElement, adventure);
 }
