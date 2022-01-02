@@ -277,7 +277,6 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 	embed.setColor(adventure.room.embedColor)
 		.setFooter({ text: `Room #${adventure.depth} - Round ${adventure.room.round}` });
 	if (!exports.checkNextRound(adventure)) {
-		embed.addField(`0/${adventure.delvers.length} Moves Readied`, "Ready party members will be listed here");
 		let battleMenu = [new MessageActionRow().addComponents(
 			new MessageButton().setCustomId("predict")
 				.setLabel("Predict")
@@ -298,23 +297,6 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 	}
 }
 
-exports.updateRoundMessage = function (messageManager, adventure) {
-	messageManager.fetch(adventure.messageIds.battleRound).then(roundMessage => {
-		let embed = roundMessage.embeds[0];
-		let readyList = "";
-		for (var move of adventure.room.moves) {
-			if (move.userTeam === "ally") {
-				readyList += `\n<@${adventure.delvers[move.userIndex].id}>`;
-			}
-		}
-		if (readyList === "") {
-			readyList = "Ready party members will be listed here";
-		}
-		embed.spliceFields(0, 1, { name: `${adventure.room.moves.length - adventure.room.enemies.length}/${adventure.delvers.length} Moves Readied`, value: readyList });
-		roundMessage.edit({ embeds: [embed] });
-	})
-}
-
 function addRoutingUI(embed, components, adventure) {
 	let candidateKeys = Object.keys(adventure.roomCandidates);
 	let uiRows = [...components];
@@ -325,11 +307,7 @@ function addRoutingUI(embed, components, adventure) {
 					.setLabel(`Next room: ${roomType}`)
 					.setStyle("SECONDARY")
 			})));
-		let delverIds = adventure.delvers.map(delver => delver.id);
-		let allVotes = [].concat(...Object.values(adventure.roomCandidates));
-		let notVoted = delverIds.filter(id => !allVotes.includes(id));
-		embed.addField("Decide the next room",
-			`Each delver can pick or change their pick for the next room. The party will move on when the decision is unanimous.\n\nUndecided:\n<@${notVoted.join(">, <@")}>`);
+		embed.addField("Decide the next room", "Each delver can pick or change their pick for the next room. The party will move on when the decision is unanimous.");
 	} else {
 		uiRows.push(new MessageActionRow().addComponents(
 			new MessageButton().setCustomId("continue")
@@ -381,7 +359,6 @@ exports.endRound = async function (adventure, thread) {
 
 		// Check for Victory
 		if (adventure.room.enemies.every(enemy => enemy.hp === 0)) {
-			let spoilsText = "";
 			let lootRow = [];
 
 			// Generate gold
@@ -390,7 +367,6 @@ exports.endRound = async function (adventure, thread) {
 			totalBounty = Math.ceil(totalBounty);
 			adventure.room.loot.gold = totalBounty;
 			if (totalBounty > 0) {
-				spoilsText += `${totalBounty > 0 ? `Gold: ${totalBounty}` : ""}`;
 				lootRow.push(new MessageButton().setCustomId("takegold")
 					.setLabel(`Take ${totalBounty} gold`)
 					.setStyle("SUCCESS")
@@ -416,7 +392,6 @@ exports.endRound = async function (adventure, thread) {
 					if (item.startsWith("weapon-")) {
 						itemName = item.split("-")[1];
 						let label = `${itemName} x${adventure.room.loot[item]}`;
-						spoilsText += `\n${label}`;
 						lootRow.push(new MessageButton().setCustomId(`takeweapon-${itemName}`)
 							.setLabel(`${label} remaining`)
 							.setStyle("PRIMARY"))
@@ -430,7 +405,6 @@ exports.endRound = async function (adventure, thread) {
 			// Finalize UI
 			let roomUI = [];
 			if (lootRow.length > 0) {
-				embed.addField("Spoils of Combat", spoilsText);
 				roomUI.unshift(new MessageActionRow().addComponents(...lootRow));
 			}
 			const { embed: embedFinal, uiRows } = addRoutingUI(embed, roomUI, adventure);
