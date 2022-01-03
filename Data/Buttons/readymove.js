@@ -5,6 +5,7 @@ const { getFullName, modifiersToString } = require("../combatantDAO.js");
 const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
 const { weaponToEmbedField } = require('../weaponDAO.js');
 const { getEmoji, getResistances, getWeaknesses } = require('../../Classes/DamageType.js');
+const Delver = require('../../Classes/Delver.js');
 
 module.exports = new Button("readymove");
 
@@ -16,7 +17,7 @@ module.exports.execute = (interaction, args) => {
 		if (!delver.modifiers.Stun) { // Early out if stunned
 			let embed = new MessageEmbed().setColor(adventure.room.embedColor)
 				.setTitle(getFullName(delver, adventure.room.enemyTitles))
-				.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nElement: ${delver.element} ${getEmoji(delver.element)}`)
+				.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nWhen using ${delver.element} ${getEmoji(delver.element)} weapons, add 1 Stagger to enemies or remove 1 Stagger from allies`)
 				.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
 
 			let modifiersText = modifiersToString(delver);
@@ -115,5 +116,11 @@ function miniPredict(predictType, combatant) {
 				}
 			}
 			return `Stagger: ${bar}`;
+		case "Enemy Moves":
+			if (combatant instanceof Delver) {
+				return "Move in 2 rounds: Ask them";
+			} else {
+				return `Move in 2 rounds: ${combatant.nextAction}`;
+			}
 	}
 }

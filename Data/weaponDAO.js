@@ -15,7 +15,7 @@ exports.weaponToEmbedField = function (weaponName, uses) {
 			.replace(new RegExp(`@{mod${index}Stacks}`, "g"), modifier.stacks);
 	})
 	return [
-		`${weaponName} (${uses}/${getWeaponProperty(weaponName, "maxUses")})`,
+		`${weaponName} ${getEmoji(getWeaponProperty(weaponName, "element"))} (${uses}/${getWeaponProperty(weaponName, "maxUses")})`,
 		description
 	];
 }
