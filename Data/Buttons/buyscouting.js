@@ -10,12 +10,12 @@ module.exports.execute = (interaction, [type, cost]) => {
 	let adventure = getAdventure(interaction.channel.id);
 	let user = adventure.delvers.find(delver => delver.id == interaction.user.id);
 	if (user) {
-		if (type === "finalboss") {
+		if (type === "finalbattle") {
 			adventure.scouting.finalBoss = true;
-			interaction.update({ components: editButton(interaction.message, `buyscouting-finalboss-${cost}`, true, "✔️", `Final Boss: ${adventure.finalBoss}`) });
-			interaction.followUp(`The merchant reveals that final boss for this adventure will be **${adventure.finalBoss}** (you can review this in Party Stats).`);
+			interaction.update({ components: editButton(interaction.message, `buyscouting-finalbattle-${cost}`, true, "✔️", `Final Battle: ${adventure.finalBoss}`) });
+			interaction.followUp(`The merchant reveals that final battle for this adventure will be **${adventure.finalBoss}** (you can review this with \`/party-stats\`).`);
 		} else {
-			interaction.reply(`The merchant reveals that the next artifact guardian for this adventure will be **${adventure.artifactGuardians[adventure.scouting.artifactGuardians]}** (you can review this in Party Stats).`);
+			interaction.reply(`The merchant reveals that the next artifact guardian for this adventure will be **${adventure.artifactGuardians[adventure.scouting.artifactGuardians]}** (you can review this with \`/party-stats\`).`);
 			adventure.scouting.artifactGuardians++;
 			while (adventure.artifactGuardians.length <= adventure.scouting.artifactGuardians) {
 				prerollBoss("Relic Guardian", adventure);
