@@ -187,14 +187,13 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 					let bossScoutingCost = 150;
 					let guardScoutingCost = 100;
 					uiComponents.push(new MessageActionRow().addComponents(
-						new MessageButton().setCustomId(`buyscouting-finalboss-${bossScoutingCost}`)
-							.setLabel(`${adventure.scouting.finalBoss ? `Final Boss: ${adventure.finalBoss}` : `${bossScoutingCost}g: Scout the Final Boss`}`)
+						new MessageButton().setCustomId(`buyscouting-finalbattle-${bossScoutingCost}`)
+							.setLabel(`${adventure.scouting.finalBoss ? `Final Battle: ${adventure.finalBoss}` : `${bossScoutingCost}g: Scout the Final Battle`}`)
 							.setStyle("SECONDARY")
 							.setDisabled(adventure.scouting.finalBoss || adventure.gold < bossScoutingCost),
 						new MessageButton().setCustomId(`buyscouting-artifactguardian-${guardScoutingCost}`)
-							.setLabel(`${guardScoutingCost}g: Scout an Artifact Guardian (${adventure.scouting.artifactGuardians} so far) (coming soon)`) //TODO #163 ensure scouting artifact guardians works
+							.setLabel(`${guardScoutingCost}g: Scout an Artifact Guardian (${adventure.scouting.artifactGuardians} so far)`)
 							.setStyle("SECONDARY")
-							.setDisabled(true)
 					));
 				}
 			}
