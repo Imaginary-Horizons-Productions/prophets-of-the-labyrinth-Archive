@@ -8,6 +8,7 @@ var modifierWhitelist = [
 	"absorb-water.js",
 	"absorb-wind.js",
 	"evade.js",
+	"exposed.js",
 	"poison.js",
 	"powerdown.js",
 	"powerup.js",

@@ -185,6 +185,7 @@ Increased damage against enemies with 0 block
 - Life Drain (attack a foe and gain hp)
 - Warhammer (bonus damage on stunned enemy)
 - Inspire (power up to ally)
+- Disarm (power down to enemy)
 
 ## Ideas
 - Empowering ___ - Adds stacks to buffs

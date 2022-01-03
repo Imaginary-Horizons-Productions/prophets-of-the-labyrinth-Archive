@@ -19,7 +19,7 @@ module.exports = class DamageType { // Synonymous with element, using "DamageTyp
 	}
 
 	static getWeaknesses(element) {
-		if (this.elementsList().includes(element)) {
+		if (DamageType.elementsList().includes(element)) {
 			return ELEMENTS[element].weaknesses;
 		} else {
 			return ["none"];
@@ -27,7 +27,7 @@ module.exports = class DamageType { // Synonymous with element, using "DamageTyp
 	}
 
 	static getResistances(element) {
-		if (this.elementsList().includes(element)) {
+		if (DamageType.elementsList().includes(element)) {
 			return ELEMENTS[element].resistances;
 		} else {
 			return ["none"];

@@ -32,6 +32,9 @@ exports.dealDamage = async function (target, user, damage, element, adventure) {
 		if (!targetModifiers.includes(`${element} Absorb`)) {
 			if (!targetModifiers.includes("Evade") || element === "Poison") {
 				let pendingDamage = damage + (user?.modifiers["Power Up"] || 0);
+				if (targetModifiers.includes("Exposed")) {
+					pendingDamage *= 1.5;
+				}
 				let isWeakness = getWeaknesses(target.element).includes(element);
 				if (isWeakness) {
 					pendingDamage *= 2;

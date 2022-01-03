@@ -5,4 +5,4 @@ module.exports = new Modifier("Evade", 100)
 	.setIsBuff(true)
 	.setIsDebuff(false)
 	.setIsNonStacking(false)
-	.setInverse("");
+	.setInverse("Exposed");
