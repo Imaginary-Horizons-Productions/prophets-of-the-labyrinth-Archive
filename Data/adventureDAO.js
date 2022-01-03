@@ -459,7 +459,8 @@ exports.completeAdventure = function (adventure, thread, scoreEmbed) {
 	thread.fetchStarterMessage({ cache: false, force: true }).then(recruitMessage => {
 		let recruitEmbed = recruitMessage.embeds[0];
 		recruitEmbed.setTitle(recruitEmbed.title + ": COMPLETE!")
-			.setThumbnail("https://cdn.discordapp.com/attachments/545684759276421120/734092918369026108/completion.png");
+			.setThumbnail("https://cdn.discordapp.com/attachments/545684759276421120/734092918369026108/completion.png")
+			.addField("Seed", adventure.initialSeed);
 		recruitMessage.edit({ embeds: [recruitEmbed] });
 	})
 	clearComponents(adventure.messageIds.battleRound, thread.messages);
