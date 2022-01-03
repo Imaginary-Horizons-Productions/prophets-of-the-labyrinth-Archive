@@ -120,6 +120,7 @@ Hits all enemes/allies
 - Dagger (Wind)
 - Spear (Light)
 - Blood Aegis (Darkness)
+- Inspire (Light)
 
 ### Swift
 Grants the user the Quicken modifier

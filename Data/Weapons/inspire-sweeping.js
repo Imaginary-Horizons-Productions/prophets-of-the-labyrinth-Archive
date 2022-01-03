@@ -1,8 +1,8 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { addModifier, removeModifier } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Inspire", 1, "Apply @{mod1Stacks} @{mod1} to an ally*\nCritical Hit: Apply @{mod2Stacks} @{mod2} to an ally", "Light", effect, ["Sweeping Inspiration"])
-	.setTargetingTags({ target: "single", team: "ally" })
+module.exports = new Weapon("Sweeping Inspiration", 1, "Apply @{mod1Stacks} @{mod1} to all allies*\nCritical Hit: Apply @{mod2Stacks} @{mod2} to all allies", "Light", effect, [])
+	.setTargetingTags({ target: "all", team: "ally" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Power Up", stacks: 25 }, { name: "Power Up", stacks: 50 }])
 	.setCost(200)
 	.setUses(5);
