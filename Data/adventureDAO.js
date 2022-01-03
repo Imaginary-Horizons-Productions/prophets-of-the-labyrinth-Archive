@@ -15,6 +15,7 @@ const Room = require("../Classes/Room.js");
 const { spawnEnemy } = require("./enemyDAO.js");
 const { getWeaknesses, getColor } = require("../Classes/DamageType.js");
 const { rollWeaponDrop, getWeaponProperty } = require("./Weapons/_weaponDictionary.js");
+const { weaponToEmbedField } = require("./weaponDAO.js");
 
 var filePath = "./Saves/adventures.json";
 var requirePath = "./../Saves/adventures.json";
@@ -175,7 +176,7 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 						}
 						weaponOptions.push({
 							label: `${cost}g: ${weaponName}`,
-							description: `(description coming soon)`, //TODO #136 weapon descriptions in select option description
+							description: weaponToEmbedField(weaponName, 0)[1].split("\n")[0].replace(/\*/g, ""),
 							value: `${weaponName}-${i}-${cost}`
 						})
 					}
