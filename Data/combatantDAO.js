@@ -1,7 +1,7 @@
 const Enemy = require("../Classes/Enemy.js");
 const Delver = require("../Classes/Delver.js");
 const { getInverse, isNonStacking, getModifierDescription } = require("./Modifiers/_modifierDictionary.js");
-const { getWeaknesses, getResistances } = require("../Classes/DamageType.js");
+const { getWeaknesses, getResistances } = require("./elementHelpers.js");
 
 exports.getFullName = function (combatant, titleObject) {
 	if (combatant instanceof Enemy) {

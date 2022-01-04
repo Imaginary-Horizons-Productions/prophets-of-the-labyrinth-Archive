@@ -3,7 +3,7 @@ const { MessageEmbed } = require('discord.js');
 const { getAdventure } = require('../adventureDAO.js');
 const { weaponToEmbedField } = require('../weaponDAO.js');
 const { getFullName } = require('../combatantDAO.js');
-const { getEmoji } = require('../../Classes/DamageType.js');
+const { getEmoji } = require('../elementHelpers.js');
 
 module.exports = new Command("delver-stats", "Get your personal stats for the channel's adventure", false, false);
 

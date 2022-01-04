@@ -1,5 +1,5 @@
 const Command = require('../../Classes/Command.js');
-const { MessageEmbed } = require('discord.js');
+const { MessageEmbed, MessageActionRow, MessageSelectMenu } = require('discord.js');
 const { getAdventure } = require('../adventureDAO.js');
 
 module.exports = new Command("party-stats", "Get info about the current adventure", false, false);
@@ -22,7 +22,38 @@ module.exports.execute = (interaction) => {
 			}).join(", ")}...`)
 			//TODO list difficulty options
 			.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
-		interaction.reply({ embeds: [embed], ephemeral: true })
+		let artifactOptions = Object.keys(adventure.artifacts).map(artifact => {
+			return {
+				label: `${artifact} x ${adventure.artifacts[artifact]}`,
+				description: "",
+				value: `${artifact}-${adventure.artifacts[artifact]}`
+			}
+		})
+		let artifactSelect;
+		if (artifactOptions.length > 0) {
+			embed.addField("Artifacts", Object.entries(adventure.artifacts).map(entry => `${entry[0]} x ${entry[1]}`).join(", "))
+			artifactSelect = [
+				new MessageActionRow().addComponents(
+					new MessageSelectMenu().setCustomId(`artifact`)
+						.setPlaceholder("Get details about an artifact...")
+						.setOptions(artifactOptions)
+				)
+			]
+		} else {
+			artifactSelect = [
+				new MessageActionRow().addComponents(
+					new MessageSelectMenu().setCustomId(`artifact`)
+						.setPlaceholder("No artifacts to inspect...")
+						.setDisabled(true)
+						.setOptions([{
+							label: "placeholder",
+							description: "",
+							value: "placeholder"
+						}])
+				)
+			]
+		}
+		interaction.reply({ embeds: [embed], components: artifactSelect, ephemeral: true })
 			.catch(console.error);
 	} else {
 		interaction.reply({ content: "This channel doesn't appear to be an adventure's thread.", ephemeral: true });

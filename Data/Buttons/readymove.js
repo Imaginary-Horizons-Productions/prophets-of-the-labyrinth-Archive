@@ -4,7 +4,7 @@ const { getAdventure } = require('../adventureDAO.js');
 const { getFullName, modifiersToString } = require("../combatantDAO.js");
 const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
 const { weaponToEmbedField } = require('../weaponDAO.js');
-const { getEmoji, getResistances, getWeaknesses } = require('../../Classes/DamageType.js');
+const { getEmoji, getResistances, getWeaknesses } = require('../elementHelpers.js');
 const Delver = require('../../Classes/Delver.js');
 
 module.exports = new Button("readymove");

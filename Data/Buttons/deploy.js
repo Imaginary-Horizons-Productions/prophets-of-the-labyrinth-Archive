@@ -3,7 +3,7 @@ const { MessageActionRow, MessageSelectMenu } = require('discord.js');
 const { getPlayer } = require('../playerDAO.js');
 const { getArchetype } = require('../Archetypes/_archetypeDictionary.js');
 const { getAdventure } = require('../adventureDAO.js');
-const { getEmoji } = require('../../Classes/DamageType.js');
+const { getEmoji } = require('../elementHelpers');
 
 module.exports = new Button("deploy");
 

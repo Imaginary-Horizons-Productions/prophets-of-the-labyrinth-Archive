@@ -3,7 +3,7 @@ const Button = require('../../Classes/Button.js');
 const { getAdventure } = require('../adventureDAO.js');
 const { getTargetList } = require('../moveDAO.js');
 const { getFullName, calculateTotalSpeed, modifiersToString } = require("../combatantDAO.js");
-const { getResistances, getWeaknesses } = require('../../Classes/DamageType.js');
+const { getResistances, getWeaknesses } = require('../elementHelpers.js');
 
 module.exports = new Button("predict");
 

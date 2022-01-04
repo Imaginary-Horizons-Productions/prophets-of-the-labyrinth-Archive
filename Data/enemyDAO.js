@@ -1,6 +1,6 @@
-const Enemy = require("../Classes/Enemy");
-const { getOpposite } = require("../Classes/DamageType");
-const { generateRandomNumber } = require("../helpers");
+const Enemy = require("../Classes/Enemy.js");
+const { getOpposite } = require("./elementHelpers.js");
+const { generateRandomNumber } = require("../helpers.js");
 
 module.exports.spawnEnemy = function (adventure, enemyTemplate, randomizeHp) {
 	let enemy = Object.assign(new Enemy(), enemyTemplate);

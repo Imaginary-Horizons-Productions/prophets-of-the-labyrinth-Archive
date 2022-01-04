@@ -1,4 +1,4 @@
-const { getEmoji } = require("../Classes/DamageType");
+const { getEmoji } = require("./elementHelpers.js");
 const { getWeaponProperty } = require("./Weapons/_weaponDictionary");
 
 exports.weaponToEmbedField = function (weaponName, uses) {

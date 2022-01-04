@@ -1,5 +1,5 @@
-const { elementsList } = require("../../Classes/DamageType.js");
 const Enemy = require("../../Classes/Enemy.js");
+const { elementsList } = require("../elementHelpers.js");
 const { generateRandomNumber } = require("../../helpers.js");
 const { addModifier, dealDamage, removeModifier } = require("../combatantDAO.js");
 const { nextRandom, selectSelf, selectAllFoes, selectRandomFoe } = require("../enemyDAO.js");

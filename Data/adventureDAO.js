@@ -13,7 +13,7 @@ const { getTurnDecrement } = require("./Modifiers/_modifierDictionary.js");
 const { getEnemy } = require("./Enemies/_enemyDictionary");
 const Room = require("../Classes/Room.js");
 const { spawnEnemy } = require("./enemyDAO.js");
-const { getWeaknesses, getColor } = require("../Classes/DamageType.js");
+const { getWeaknesses, getColor } = require("./elementHelpers.js");
 const { rollWeaponDrop, getWeaponProperty } = require("./Weapons/_weaponDictionary.js");
 const { weaponToEmbedField } = require("./weaponDAO.js");
 
@@ -98,11 +98,16 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 	let candidateType = "";
 	if (!finalBossDepths.includes(adventure.depth + 1)) {
 		adventure.roomCandidates = {};
-		let numCandidates = 2; // Should not execed 5, as only 5 buttons can be in a MessageActionRow
+		let numCandidates = 2 + adventure.artifacts["Enchanted Map"] || 0;
 		for (let i = 0; i < numCandidates; i++) {
 			candidateType = roomTypes[generateRandomNumber(adventure, roomTypes.length, "General")];
-			adventure.roomCandidates[candidateType] = [];
-			roomTypes = roomTypes.filter(type => type != candidateType);
+			if (!adventure.roomCandidates[candidateType]) {
+				adventure.roomCandidates[candidateType] = [];
+				if (Object.keys(adventure.roomCandidates).length === 5) {
+					// Should not execed 5, as only 5 buttons can be in a MessageActionRow
+					break;
+				}
+			}
 		}
 	} else {
 		adventure.roomCandidates = {

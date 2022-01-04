@@ -1,7 +1,7 @@
 const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
 const Adventure = require('../../Classes/Adventure.js');
 const Command = require('../../Classes/Command.js');
-const { elementsList, getColor } = require('../../Classes/DamageType.js');
+const { elementsList, getColor } = require('../elementHelpers.js');
 const Delver = require('../../Classes/Delver.js');
 const { generateRandomNumber } = require('../../helpers.js');
 const { setAdventure } = require("../adventureDAO.js");

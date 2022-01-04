@@ -7,15 +7,6 @@ module.exports = class Adventure {
 	id; // the id of the thread created for the adventure
 	name;
 	element;
-	scouting = {
-		finalBoss: false,
-		artifactGuardians: 0,
-		artifactGuardiansEncountered: 0
-	}
-	finalBoss = "";
-	artifactGuardians = [];
-	rnIndex = 0;
-	rnIndexBattle = 0;
 	messageIds = {
 		start: "",
 		leaderNotice: "",
@@ -27,6 +18,13 @@ module.exports = class Adventure {
 	leaderId = "";
 	delvers = [];
 	difficultyOptions = [];
+	scouting = {
+		finalBoss: false,
+		artifactGuardians: 0,
+		artifactGuardiansEncountered: 0
+	}
+	finalBoss = "";
+	artifactGuardians = [];
 	accumulatedScore = 0;
 	depth = 0;
 	room = {};
@@ -34,6 +32,9 @@ module.exports = class Adventure {
 	lives = 2;
 	gold = 100;
 	peakGold = 100;
+	artifacts = {};
+	rnIndex = 0;
+	rnIndexBattle = 0;
 	rnTable = "";
 
 	generateRNTable() {

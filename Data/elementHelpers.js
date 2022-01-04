@@ -1,40 +1,3 @@
-module.exports = class DamageType { // Synonymous with element, using "DamageType" as alias due to "Element" being a built-in js class
-	constructor() { }
-
-
-	static elementsList() {
-		return Object.keys(ELEMENTS);
-	}
-
-	static getColor(element) {
-		return ELEMENTS[element].color;
-	}
-
-	static getEmoji(element) {
-		return ELEMENTS[element].emoji;
-	}
-
-	static getOpposite(element) {
-		return ELEMENTS[element].opposite;
-	}
-
-	static getWeaknesses(element) {
-		if (DamageType.elementsList().includes(element)) {
-			return ELEMENTS[element].weaknesses;
-		} else {
-			return ["none"];
-		}
-	}
-
-	static getResistances(element) {
-		if (DamageType.elementsList().includes(element)) {
-			return ELEMENTS[element].resistances;
-		} else {
-			return ["none"];
-		}
-	}
-}
-
 const ELEMENTS = {
 	"Fire": {
 		color: "RED",
@@ -78,4 +41,35 @@ const ELEMENTS = {
 		weaknesses: ["Wind", "Water"],
 		resistances: ["Earth", "Fire"]
 	}
+}
+exports.getResistances = function (element) {
+	if (exports.elementsList().includes(element)) {
+		return ELEMENTS[element].resistances;
+	} else {
+		return ["none"];
+	}
+}
+
+exports.getWeaknesses = function (element) {
+	if (exports.elementsList().includes(element)) {
+		return ELEMENTS[element].weaknesses;
+	} else {
+		return ["none"];
+	}
+}
+
+exports.elementsList = function () {
+	return Object.keys(ELEMENTS);
+}
+
+exports.getColor = function (element) {
+	return ELEMENTS[element].color;
+}
+
+exports.getEmoji = function (element) {
+	return ELEMENTS[element].emoji;
+}
+
+exports.getOpposite = function (element) {
+	return ELEMENTS[element].opposite;
 }
