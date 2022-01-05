@@ -16,6 +16,7 @@ const { spawnEnemy } = require("./enemyDAO.js");
 const { getWeaknesses, getColor } = require("./elementHelpers.js");
 const { rollWeaponDrop, getWeaponProperty } = require("./Weapons/_weaponDictionary.js");
 const { weaponToEmbedField } = require("./weaponDAO.js");
+const { rollArtifact } = require("./Artifacts/_artifactDictionary.js");
 
 var filePath = "./Saves/adventures.json";
 var requirePath = "./../Saves/adventures.json";
@@ -98,9 +99,9 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 	let candidateType = "";
 	if (!finalBossDepths.includes(adventure.depth + 1)) {
 		adventure.roomCandidates = {};
-		let numCandidates = 2 + adventure.artifacts["Enchanted Map"] || 0;
+		let numCandidates = 2 + (adventure.artifacts["Enchanted Map"] || 0);
 		for (let i = 0; i < numCandidates; i++) {
-			candidateType = roomTypes[generateRandomNumber(adventure, roomTypes.length, "General")];
+			candidateType = roomTypes[generateRandomNumber(adventure, roomTypes.length, "general")];
 			if (!adventure.roomCandidates[candidateType]) {
 				adventure.roomCandidates[candidateType] = [];
 				if (Object.keys(adventure.roomCandidates).length === 5) {
@@ -142,8 +143,9 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 			if (roomType === "Artifact Guardian") {
 				adventure.scouting.artifactGuardiansEncountered++;
 				while (adventure.artifactGuardians.length <= adventure.scouting.artifactGuardiansEncountered) {
-					prerollBoss("Relic Guardian", adventure);
+					prerollBoss("Artifact Guardian", adventure);
 				}
+				adventure.room.loot[`artifact-${rollArtifact(adventure)}`] = 1;
 			}
 			adventure.room.initializeCombatProperties();
 			let isBossRoom = roomType !== "Battle";
@@ -172,7 +174,7 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 								parsedTier = 1;
 							}
 						}
-						let weaponName = rollWeaponDrop(adventure.delvers.map(delver => delver.element), parsedTier, adventure);
+						let weaponName = rollWeaponDrop(parsedTier, adventure);
 						let cost = getWeaponProperty(weaponName, "cost");
 						if (adventure.room.loot[weaponName]) {
 							adventure.room.loot[weaponName]++;
@@ -368,13 +370,13 @@ exports.endRound = async function (adventure, thread) {
 
 			// Generate gold
 			let totalBounty = adventure.room.enemies.reduce((total, enemy) => total + enemy.bounty, adventure.room.loot.gold);
-			totalBounty *= (90 + generateRandomNumber(adventure, 21, "General")) / 100;
+			totalBounty *= (90 + generateRandomNumber(adventure, 21, "general")) / 100;
 			totalBounty = Math.ceil(totalBounty);
 			adventure.room.loot.gold = totalBounty;
 			if (totalBounty > 0) {
 				lootRow.push(new MessageButton().setCustomId("takegold")
 					.setLabel(`Take ${totalBounty} gold`)
-					.setStyle("SUCCESS")
+					.setStyle("SECONDARY")
 				)
 			}
 
@@ -388,7 +390,7 @@ exports.endRound = async function (adventure, thread) {
 				if (generateRandomNumber(adventure, upgradeMax, "general") < upgradeThreshold) {
 					tier = 2;
 				}
-				let droppedWeapon = rollWeaponDrop(adventure.delvers.map(delver => delver.element), tier, adventure);
+				let droppedWeapon = rollWeaponDrop(tier, adventure);
 				adventure.room.loot[`weapon-${droppedWeapon}`] = 1;
 			}
 			if (Object.keys(adventure.room.loot).length - 1 > 0) {
@@ -399,10 +401,12 @@ exports.endRound = async function (adventure, thread) {
 						let label = `${itemName} x${adventure.room.loot[item]}`;
 						lootRow.push(new MessageButton().setCustomId(`takeweapon-${itemName}`)
 							.setLabel(`${label} remaining`)
-							.setStyle("PRIMARY"))
+							.setStyle("SECONDARY"))
 					} else if (item.startsWith("artifact-")) {
 						itemName = item.split("-")[1];
-						//TODO #101 artifact drops
+						lootRow.push(new MessageButton().setCustomId(`takeartifact-${itemName}`)
+							.setLabel(`Take ${itemName}`)
+							.setStyle("PRIMARY"))
 					}
 				}
 			}
@@ -410,6 +414,7 @@ exports.endRound = async function (adventure, thread) {
 			// Finalize UI
 			let roomUI = [];
 			if (lootRow.length > 0) {
+				lootRow = lootRow.slice(0, 5);
 				roomUI.unshift(new MessageActionRow().addComponents(...lootRow));
 			}
 			const { embed: embedFinal, uiRows } = addRoutingUI(embed, roomUI, adventure);

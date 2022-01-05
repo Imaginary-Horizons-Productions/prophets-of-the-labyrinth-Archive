@@ -27,7 +27,7 @@ module.exports.execute = (interaction, args) => {
 				.setPredict(archetypeTemplate.predict);
 
 			// Send confirmation text
-			interaction.reply({content: archetypeTemplate.description, ephemeral: true});
+			interaction.update({ content: archetypeTemplate.description, components: [] });
 			interaction.channel.send(`${interaction.user} ${isSwitching ? "has switched to" : "will be playing as"} ${archetype}.`).then(() => {
 				// Check if all ready
 				if (adventure.delvers.every(delver => delver.title)) {

@@ -120,7 +120,8 @@ exports.getWeaponProperty = function (weaponName, propertyName) {
 	}
 }
 
-exports.rollWeaponDrop = function (elements, tier, adventure) {
+exports.rollWeaponDrop = function (tier, adventure) {
+	let elements = adventure.delvers.map(delver => delver.element);
 	let pool = elements.reduce((pool, element) => pool.concat(weaponDrops[element][tier]), []);
 	return pool[generateRandomNumber(adventure, pool.length, "general")];
 }

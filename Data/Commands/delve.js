@@ -22,9 +22,9 @@ module.exports.execute = (interaction) => {
 		prerollBoss("Final Battle", adventure);
 		prerollBoss("Relic Guardian", adventure);
 
-		let elementIndex = generateRandomNumber(adventure, elementsList().length, "General");
+		let elementIndex = generateRandomNumber(adventure, elementsList().length, "general");
 		let pickedElement = elementsList()[elementIndex];
-		adventure.setName(`${DESCRIPTORS[generateRandomNumber(adventure, DESCRIPTORS.length, "General")]} ${LOCATIONS[generateRandomNumber(adventure, LOCATIONS.length, "General")]} of ${pickedElement}`)
+		adventure.setName(`${DESCRIPTORS[generateRandomNumber(adventure, DESCRIPTORS.length, "general")]} ${LOCATIONS[generateRandomNumber(adventure, LOCATIONS.length, "general")]} of ${pickedElement}`)
 			.setElement(pickedElement);
 
 		let embed = new MessageEmbed().setColor(getColor(pickedElement))

@@ -23,8 +23,8 @@ const eventRooms = [];
 const battleRooms = [];
 const merchantRooms = [];
 const restRooms = [];
-const finalBossRooms = [];
-const midbossRooms = [];
+const finalBattleRooms = [];
+const artifactGuardianRooms = [];
 const forgeRooms = [];
 
 for (const file of roomWhitelist) {
@@ -44,10 +44,10 @@ for (const file of roomWhitelist) {
 				restRooms.push(room);
 				break;
 			case "Final Battle":
-				finalBossRooms.push(room);
+				finalBattleRooms.push(room);
 				break;
 			case "Artifact Guardian":
-				midbossRooms.push(room);
+				artifactGuardianRooms.push(room);
 				break;
 			case "Forge":
 				forgeRooms.push(room);
@@ -60,10 +60,10 @@ for (const file of roomWhitelist) {
 }
 
 exports.prerollBoss = function (type, adventure) {
-	if (type === "Relic Guardian") {
-		adventure.artifactGuardians.push(midbossRooms[generateRandomNumber(adventure, midbossRooms.length, "general")].title);
+	if (type === "Artifact Guardian") {
+		adventure.artifactGuardians.push(artifactGuardianRooms[generateRandomNumber(adventure, artifactGuardianRooms.length, "general")].title);
 	} else {
-		adventure.finalBoss = finalBossRooms[generateRandomNumber(adventure, finalBossRooms.length, "general")].title;
+		adventure.finalBoss = finalBattleRooms[generateRandomNumber(adventure, finalBattleRooms.length, "general")].title;
 	}
 }
 
@@ -77,12 +77,12 @@ exports.getRoomTemplate = function (type, adventure) {
 			return merchantRooms[generateRandomNumber(adventure, merchantRooms.length, "General")];
 		case "Rest Site":
 			return restRooms[generateRandomNumber(adventure, restRooms.length, "General")];
-		case "Final Battle":
-			return finalBossRooms.find(room => room.title === adventure.finalBoss);
-		case "Artifact Guardian":
-			return midbossRooms.find(room => room.title === adventure.artifactGuardians[adventure.scouting.artifactGuardiansEncountered]);
 		case "Forge":
 			return forgeRooms[generateRandomNumber(adventure, forgeRooms.length, "General")];
+		case "Artifact Guardian":
+			return artifactGuardianRooms.find(room => room.title === adventure.artifactGuardians[adventure.scouting.artifactGuardiansEncountered]);
+		case "Final Battle":
+			return finalBattleRooms.find(room => room.title === adventure.finalBoss);
 		default:
 			console.error("Attempt to create room of unidentified type: " + type);
 			let empty = new RoomTemplate().setTitle("Empty Room")

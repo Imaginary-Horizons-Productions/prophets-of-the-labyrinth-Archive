@@ -72,5 +72,5 @@ module.exports.execute = (interaction, args) => {
 	embed.setTitle(`${delver.predict} ${infoForNextRound ? "Predictions for" : "State of"} Round ${infoForNextRound ? adventure.room.round + 1 : adventure.room.round}`)
 		.setDescription(descriptionText);
 	interaction.reply({ embeds: [embed], ephemeral: true })
-		.catch(console.log)
+		.catch(console.error);
 }
