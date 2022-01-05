@@ -1,5 +1,5 @@
 const Button = require('../../Classes/Button.js');
-const { MessageActionRow, MessageSelectMenu } = require('discord.js');
+const { MessageActionRow, MessageSelectMenu, MessageButton } = require('discord.js');
 const { getPlayer } = require('../playerDAO.js');
 const { getArchetype } = require('../Archetypes/_archetypeDictionary.js');
 const { getAdventure } = require('../adventureDAO.js');

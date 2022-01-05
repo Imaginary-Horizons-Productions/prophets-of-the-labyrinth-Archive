@@ -35,7 +35,7 @@ module.exports.execute = (interaction, args) => {
 						new MessageActionRow().addComponents(
 							new MessageButton().setCustomId("ready")
 								.setLabel("Ready!")
-								.setStyle("SUCCESS")
+								.setStyle("PRIMARY")
 						)
 					];
 

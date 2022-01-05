@@ -10,7 +10,7 @@ module.exports = new RoomTemplate()
 module.exports.uiRows.push(new MessageActionRow().addComponents(
 	new MessageButton().setCustomId("rest")
 		.setLabel("Rest [15% hp]")
-		.setStyle("SUCCESS"),
+		.setStyle("PRIMARY"),
 	new MessageButton().setCustomId("challenge")
 		.setLabel("Take a challenge (coming soon)")
 		.setStyle("DANGER")

@@ -1,6 +1,6 @@
 const Enemy = require("../Classes/Enemy.js");
 const Delver = require("../Classes/Delver.js");
-const { getInverse, isNonStacking, getModifierDescription } = require("./Modifiers/_modifierDictionary.js");
+const { getInverse } = require("./Modifiers/_modifierDictionary.js");
 const { getWeaknesses, getResistances } = require("./elementHelpers.js");
 
 exports.getFullName = function (combatant, titleObject) {
@@ -140,12 +140,4 @@ exports.removeModifier = function (combatant, { name: modifier, stacks }) {
 		delete combatant.modifiers[modifier];
 	}
 	return combatant;
-}
-
-exports.modifiersToString = function (combatant) {
-	let modifiersText = "";
-	for (let modifier in combatant.modifiers) {
-		modifiersText += `*${modifier}${isNonStacking(modifier) ? "" : ` x ${combatant.modifiers[modifier]}`}* - ${getModifierDescription(modifier, combatant)}\n`;
-	}
-	return modifiersText;
 }

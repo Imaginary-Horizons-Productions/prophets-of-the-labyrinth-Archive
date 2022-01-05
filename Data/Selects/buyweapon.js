@@ -42,7 +42,7 @@ module.exports.execute = (interaction, [tier]) => {
 						...delver.weapons.map((weapon, index) => {
 							return new MessageButton().setCustomId(`replaceweapon-${weaponName}-${index}-${interaction.message.id}-${cost}`)
 								.setLabel(`Discard ${weapon.name}`)
-								.setStyle("PRIMARY")
+								.setStyle("SECONDARY")
 						})
 					)];
 					interaction.reply({ content: "You can only carry 4 weapons at a time. Pick one to replace:", components: replaceUI, ephemeral: true });

@@ -376,8 +376,7 @@ exports.endRound = async function (adventure, thread) {
 			if (totalBounty > 0) {
 				lootRow.push(new MessageButton().setCustomId("takegold")
 					.setLabel(`Take ${totalBounty} gold`)
-					.setStyle("SECONDARY")
-				)
+					.setStyle("SUCCESS"))
 			}
 
 			// Weapon drops
@@ -401,12 +400,12 @@ exports.endRound = async function (adventure, thread) {
 						let label = `${itemName} x${adventure.room.loot[item]}`;
 						lootRow.push(new MessageButton().setCustomId(`takeweapon-${itemName}`)
 							.setLabel(`${label} remaining`)
-							.setStyle("SECONDARY"))
+							.setStyle("SUCCESS"))
 					} else if (item.startsWith("artifact-")) {
 						itemName = item.split("-")[1];
 						lootRow.push(new MessageButton().setCustomId(`takeartifact-${itemName}`)
 							.setLabel(`Take ${itemName}`)
-							.setStyle("PRIMARY"))
+							.setStyle("SUCCESS"))
 					}
 				}
 			}

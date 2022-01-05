@@ -1,11 +1,12 @@
 const Button = require('../../Classes/Button.js');
 const { MessageEmbed, MessageActionRow, MessageSelectMenu, MessageButton } = require('discord.js');
 const { getAdventure } = require('../adventureDAO.js');
-const { getFullName, modifiersToString } = require("../combatantDAO.js");
+const { getFullName } = require("../combatantDAO.js");
 const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
 const { weaponToEmbedField } = require('../weaponDAO.js');
 const { getEmoji, getResistances, getWeaknesses } = require('../elementHelpers.js');
 const Delver = require('../../Classes/Delver.js');
+const { isNonStacking, isBuff, isDebuff } = require("../Modifiers/_modifierDictionary.js");
 
 module.exports = new Button("readymove");
 
@@ -20,12 +21,10 @@ module.exports.execute = (interaction, args) => {
 				.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nWhen using ${delver.element} ${getEmoji(delver.element)} weapons, add 1 Stagger to enemies or remove 1 Stagger from allies`)
 				.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
 
-			let modifiersText = modifiersToString(delver);
-			if (modifiersText !== "") {
-				embed.addField("Modifiers", modifiersText);
-			}
-
 			let moveMenu = [];
+			if (Object.keys(delver.modifiers).length) {
+				moveMenu.push(new MessageActionRow().addComponents(...modifiersToActionRow(delver)));
+			}
 			let enemyOptions = [];
 			for (let i = 0; i < adventure.room.enemies.length; i++) {
 				let enemy = adventure.room.enemies[i];
@@ -71,7 +70,7 @@ module.exports.execute = (interaction, args) => {
 							new MessageButton().setCustomId(`nontargetweapon-${weapon.name}`)
 								.setLabel(`Use ${weapon.name}`)
 								.setEmoji(elementEmoji)
-								.setStyle("PRIMARY")
+								.setStyle("SECONDARY")
 						))
 					}
 				}
@@ -123,4 +122,31 @@ function miniPredict(predictType, combatant) {
 				return `Move in 2 rounds: ${combatant.nextAction}`;
 			}
 	}
+}
+
+function modifiersToActionRow(combatant) {
+	let actionRow = [];
+	let modifiers = Object.keys(combatant.modifiers);
+	let buttonCount = Math.min(modifiers.length, 4); // 5 buttons per row, save 1 spot for "and X more..." button
+	for (let i = 0; i < buttonCount; i++) {
+		let modifierName = modifiers[i];
+		let style;
+		if (isBuff(modifierName)) {
+			style = "PRIMARY";
+		} else if (isDebuff(modifierName)) {
+			style = "DANGER";
+		} else {
+			style = "SECONDARY";
+		}
+		actionRow.push(new MessageButton().setCustomId(`modifier-${modifierName}`)
+			.setLabel(`${modifierName}${isNonStacking(modifierName) ? "" : ` x ${combatant.modifiers[modifierName]}`}`)
+			.setStyle(style))
+	}
+	if (modifiers.length > 4) {
+		actionRow.push(new MessageButton().setCustomId(`modifier-MORE`)
+			.setLabel(`${modifiers.length - 4} more...`)
+			.setStyle("SECONDARY")
+			.setDisabled(combatant.predict !== "Modifiers"))
+	}
+	return actionRow;
 }
