@@ -1,4 +1,5 @@
 const { generateRandomNumber } = require("../../helpers");
+const { getEmoji } = require("../elementHelpers");
 
 var weaponWhitelist = [
 	"-punch.js",
@@ -117,6 +118,29 @@ exports.getWeaponProperty = function (weaponName, propertyName) {
 		console.error("Fetching property from illegal weapon: " + weaponName);
 	} else {
 		return allWeapons[weaponName][propertyName];
+	}
+}
+
+exports.buildWeaponDescription = function (weaponName, buildFullDescription) {
+	let description = exports.getWeaponProperty(weaponName, "description").replace("@{element}", getEmoji(exports.getWeaponProperty(weaponName, "element")))
+		.replace("@{critMultiplier}", exports.getWeaponProperty(weaponName, "critMultiplier"))
+		.replace("@{damage}", exports.getWeaponProperty(weaponName, "damage"))
+		.replace("@{bonusDamage}", exports.getWeaponProperty(weaponName, "bonusDamage"))
+		.replace("@{block}", exports.getWeaponProperty(weaponName, "block"))
+		.replace("@{hpCost}", exports.getWeaponProperty(weaponName, "hpCost"))
+		.replace("@{healing}", exports.getWeaponProperty(weaponName, "healing"))
+		.replace("@{speedBonus}", exports.getWeaponProperty(weaponName, "speedBonus"));
+	exports.getWeaponProperty(weaponName, "modifiers").forEach((modifier, index) => {
+		description = description.replace(new RegExp(`@{mod${index}}`, "g"), modifier.name)
+			.replace(new RegExp(`@{mod${index}Stacks}`, "g"), modifier.stacks);
+	})
+
+	if (buildFullDescription) {
+		// return the base and crit effects of the weapon with the base italicized
+		return description;
+	} else {
+		// return the base effect of the weapon unitalicized
+		return description.split("\n")[0].replace(/\*/g, "");
 	}
 }
 

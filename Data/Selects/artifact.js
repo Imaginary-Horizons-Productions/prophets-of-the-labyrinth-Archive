@@ -1,6 +1,5 @@
 const { MessageEmbed } = require('discord.js');
 const Select = require('../../Classes/Select.js');
-const { parseCount } = require('../../helpers.js');
 const { getArtifact } = require('../Artifacts/_artifactDictionary.js');
 
 module.exports = new Select("artifact");

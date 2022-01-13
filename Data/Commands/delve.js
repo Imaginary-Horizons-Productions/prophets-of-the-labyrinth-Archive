@@ -36,7 +36,7 @@ module.exports.execute = (interaction) => {
 		let join = new MessageActionRow().addComponents(
 			new MessageButton().setCustomId(`join`)
 				.setLabel("Join")
-				.setStyle("PRIMARY")
+				.setStyle("SUCCESS")
 		)
 		interaction.reply({ embeds: [embed], components: [join], fetchReply: true }).then(recruitMessage => {
 			return recruitMessage.startThread({ name: adventure.name });

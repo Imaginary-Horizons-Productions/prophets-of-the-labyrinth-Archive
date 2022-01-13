@@ -14,9 +14,8 @@ const { getEnemy } = require("./Enemies/_enemyDictionary");
 const Room = require("../Classes/Room.js");
 const { spawnEnemy } = require("./enemyDAO.js");
 const { getWeaknesses, getColor } = require("./elementHelpers.js");
-const { rollWeaponDrop, getWeaponProperty } = require("./Weapons/_weaponDictionary.js");
-const { weaponToEmbedField } = require("./weaponDAO.js");
-const { rollArtifact } = require("./Artifacts/_artifactDictionary.js");
+const { rollWeaponDrop, getWeaponProperty, buildWeaponDescription } = require("./Weapons/_weaponDictionary.js");
+const { rollArtifact, getArtifact } = require("./Artifacts/_artifactDictionary.js");
 
 var filePath = "./Saves/adventures.json";
 var requirePath = "./../Saves/adventures.json";
@@ -176,15 +175,15 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 						}
 						let weaponName = rollWeaponDrop(parsedTier, adventure);
 						let cost = getWeaponProperty(weaponName, "cost");
-						if (adventure.room.loot[weaponName]) {
-							adventure.room.loot[weaponName]++;
+						if (adventure.room.loot[`weapon-${weaponName}`]) {
+							adventure.room.loot[`weapon-${weaponName}`]++;
 						} else {
-							adventure.room.loot[weaponName] = 1;
+							adventure.room.loot[`weapon-${weaponName}`] = 1;
 						}
 						weaponOptions.push({
 							label: `${cost}g: ${weaponName}`,
-							description: weaponToEmbedField(weaponName, 0)[1].split("\n")[0].replace(/\*/g, ""),
-							value: `${weaponName}-${i}-${cost}`
+							description: buildWeaponDescription(weaponName, false),
+							value: `${weaponName}-${cost}-${i}`
 						})
 					}
 					uiComponents.push(new MessageActionRow().addComponents(
@@ -366,18 +365,11 @@ exports.endRound = async function (adventure, thread) {
 
 		// Check for Victory
 		if (adventure.room.enemies.every(enemy => enemy.hp === 0)) {
-			let lootRow = [];
-
 			// Generate gold
 			let totalBounty = adventure.room.enemies.reduce((total, enemy) => total + enemy.bounty, adventure.room.loot.gold);
 			totalBounty *= (90 + generateRandomNumber(adventure, 21, "general")) / 100;
 			totalBounty = Math.ceil(totalBounty);
 			adventure.room.loot.gold = totalBounty;
-			if (totalBounty > 0) {
-				lootRow.push(new MessageButton().setCustomId("takegold")
-					.setLabel(`Take ${totalBounty} gold`)
-					.setStyle("SUCCESS"))
-			}
 
 			// Weapon drops
 			let dropThreshold = 1;
@@ -390,31 +382,53 @@ exports.endRound = async function (adventure, thread) {
 					tier = 2;
 				}
 				let droppedWeapon = rollWeaponDrop(tier, adventure);
-				adventure.room.loot[`weapon-${droppedWeapon}`] = 1;
-			}
-			if (Object.keys(adventure.room.loot).length - 1 > 0) {
-				for (let item in adventure.room.loot) {
-					let itemName = "";
-					if (item.startsWith("weapon-")) {
-						itemName = item.split("-")[1];
-						let label = `${itemName} x${adventure.room.loot[item]}`;
-						lootRow.push(new MessageButton().setCustomId(`takeweapon-${itemName}`)
-							.setLabel(`${label} remaining`)
-							.setStyle("SUCCESS"))
-					} else if (item.startsWith("artifact-")) {
-						itemName = item.split("-")[1];
-						lootRow.push(new MessageButton().setCustomId(`takeartifact-${itemName}`)
-							.setLabel(`Take ${itemName}`)
-							.setStyle("SUCCESS"))
-					}
+				if (adventure.room.loot[`weapon-${droppedWeapon}`]) {
+					adventure.room.loot[`weapon-${droppedWeapon}`]++;
+				} else {
+					adventure.room.loot[`weapon-${droppedWeapon}`] = 1;
 				}
+			}
+			let lootOptions = [];
+			for (const item in adventure.room.loot) {
+				const [type, name] = item.split("-");
+				let option = { value: `${type}-${name}-${lootOptions.length}` };
+
+				if (name) {
+					option.label = `${name} x ${adventure.room.loot[item]}`;
+				} else {
+					option.label = `${adventure.room.loot.gold} Gold`;
+				}
+
+				if (type === "weapon") {
+					option.description = buildWeaponDescription(name, false);
+				} else if (type === "artifact") {
+					option.description = getArtifact(name).description.replace(/@{copies}/g, adventure.room.loot[item]); //TODO #174 functionalize artifact description interpolation
+				} else {
+					option.description = "";
+				}
+				lootOptions.push(option)
 			}
 
 			// Finalize UI
-			let roomUI = [];
-			if (lootRow.length > 0) {
-				lootRow = lootRow.slice(0, 5);
-				roomUI.unshift(new MessageActionRow().addComponents(...lootRow));
+			let roomUI;
+			if (lootOptions.length > 0) {
+				roomUI = [
+					new MessageActionRow().addComponents(
+						new MessageSelectMenu().setCustomId("loot")
+							.setPlaceholder("Take some of the spoils of combat...")
+							.setMinValues(1)
+							.setMaxValues(lootOptions.length)
+							.setOptions(lootOptions))
+				];
+			} else {
+				roomUI = [
+					new MessageActionRow.addComponents(
+						new MessageSelectMenu().setCustomId("loot")
+							.setPlaceholder("No loot to take")
+							.setOptions([{ label: "placeholder", description: "", value: "placeholder" }])
+							.setDisabled(true)
+					)
+				];
 			}
 			const { embed: embedFinal, uiRows } = addRoutingUI(embed, roomUI, adventure);
 			return thread.send({

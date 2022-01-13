@@ -37,7 +37,7 @@ module.exports.execute = (interaction, args) => {
 		let join = new MessageActionRow().addComponents(
 			new MessageButton().setCustomId(`join-${interaction.channel.id}`)
 				.setLabel("Join")
-				.setStyle("PRIMARY"));
+				.setStyle("SUCCESS"));
 		interaction.reply({ content: `You don't appear to be signed up for this adventure. You can join with the button below:`, components: [join], ephemeral: true });
 	}
 }

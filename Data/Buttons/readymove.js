@@ -45,7 +45,8 @@ module.exports.execute = (interaction, args) => {
 			})
 			let usableWeapons = delver.weapons.filter(weapon => weapon.uses > 0);
 			if (usableWeapons.length > 0) {
-				for (const weapon of usableWeapons) {
+				for (let i = 0; i < usableWeapons.length; i++) {
+					const weapon = usableWeapons[i];
 					let elementEmoji = getEmoji(getWeaponProperty(weapon.name, "element"));
 					embed.addField(...weaponToEmbedField(weapon.name, weapon.uses));
 					let { target, team } = getWeaponProperty(weapon.name, "targetingTags");
@@ -60,14 +61,14 @@ module.exports.execute = (interaction, args) => {
 							targetOptions = targetOptions.concat(allyOptions);
 						}
 						moveMenu.push(new MessageActionRow().addComponents(
-							new MessageSelectMenu().setCustomId(`weapon-${weapon.name}`)
+							new MessageSelectMenu().setCustomId(`weapon-${weapon.name}-${i}`)
 								.setPlaceholder(`${elementEmoji} Use ${weapon.name} on...`)
 								.addOptions(targetOptions)
 						));
 					} else {
 						// Button
 						moveMenu.push(new MessageActionRow().addComponents(
-							new MessageButton().setCustomId(`nontargetweapon-${weapon.name}`)
+							new MessageButton().setCustomId(`nontargetweapon-${weapon.name}-${i}`)
 								.setLabel(`Use ${weapon.name}`)
 								.setEmoji(elementEmoji)
 								.setStyle("SECONDARY")
@@ -138,7 +139,7 @@ function modifiersToActionRow(combatant) {
 		} else {
 			style = "SECONDARY";
 		}
-		actionRow.push(new MessageButton().setCustomId(`modifier-${modifierName}`)
+		actionRow.push(new MessageButton().setCustomId(`modifier-${modifierName}-${i}`)
 			.setLabel(`${modifierName}${isNonStacking(modifierName) ? "" : ` x ${combatant.modifiers[modifierName]}`}`)
 			.setStyle(style))
 	}

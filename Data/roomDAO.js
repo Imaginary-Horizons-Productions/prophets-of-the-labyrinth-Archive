@@ -17,6 +17,31 @@ exports.editButton = function (message, customId, preventUse, emoji, label) {
 	})
 }
 
+exports.editSelectOption = function (message, customId, optionLabel, replacementOption, disabledPlaceholder) {
+	return message.components.map(row => {
+		return new MessageActionRow().addComponents(...row.components.map(component => {
+			if (component.customId === customId) {
+				let remainingOptions = [];
+				for (const option of component.options) {
+					if (option.label !== optionLabel) {
+						remainingOptions.push(option);
+					} else if (replacementOption) {
+						remainingOptions.push(replacementOption);
+					}
+				}
+				if (remainingOptions.length < 1) { //TODO #177 don't assume select sets maxValues to options.length
+					component.setMaxValues(1).setOptions([{ label: "placeholder", value: "placeholder" }]).setPlaceholder(disabledPlaceholder).setDisabled(true);
+				} else {
+					component.setMaxValues(remainingOptions.length).setOptions(...remainingOptions);
+				}
+				return component;
+			} else {
+				return component;
+			}
+		}));
+	});
+}
+
 exports.decrementForgeSupplies = function (interaction, roomMessageId, adventure) {
 	adventure.room.loot.forgeSupplies--;
 	return interaction.channel.messages.fetch(roomMessageId).then(roomMessage => {

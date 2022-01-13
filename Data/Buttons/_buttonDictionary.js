@@ -17,9 +17,6 @@ var buttonWhitelist = [
 	"replaceweapon.js",
 	"rest.js",
 	"routevote.js",
-	"takeartifact.js",
-	"takegold.js",
-	"takeweapon.js",
 	"upgrade.js"
 ];
 
