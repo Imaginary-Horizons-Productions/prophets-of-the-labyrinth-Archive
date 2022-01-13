@@ -4,7 +4,7 @@ const { generateRandomNumber } = require("../helpers.js");
 
 module.exports.spawnEnemy = function (adventure, enemyTemplate, randomizeHp) {
 	let enemy = Object.assign(new Enemy(), enemyTemplate);
-	enemy.modifiers = {}; // breaks shared reference to modifiers object by enemies of same name
+	enemy.modifiers = { ...enemyTemplate.startingModifiers }; // breaks shared reference to modifiers object by enemies of same name
 	if (randomizeHp) {
 		let hpPercent = (10 * generateRandomNumber(adventure, 4, "Battle") + 80) / 100;
 		enemy.setHp(Math.ceil(enemy.maxHp * hpPercent));
