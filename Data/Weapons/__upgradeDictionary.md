@@ -20,11 +20,18 @@ Affects Earth element combatants
 - Potion (Water)
 
 ### Evasive
-User gains evade
+User gains Evade
 
 #### Available on
 - Sun Flare (Light)
 - Bow (Wind)
+
+### Flanking
+Applies Exposed to target
+
+#### Avaialble on
+- Life Drain (Darkness)
+- Disarm (Light)
 
 ### Guarding
 Adds block on the user

@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { addModifier, dealDamage, gainHealth, calculateTotalSpeed } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Spell: Reactive Life Drain", 2, "*Strike a foe for @{damage} (+@{bonusDamage} if foe went first) @{element} damage, then gain @{healing} hp*\nCritical Hit: Healing x@{critMultiplier}", "Darkness", effect, ["Spell: Urgent Life Drain"])
+module.exports = new Weapon("Spell: Reactive Life Drain", 2, "*Strike a foe for @{damage} (+@{bonusDamage} if foe went first) @{element} damage, then gain @{healing} hp*\nCritical Hit: Healing x@{critMultiplier}", "Darkness", effect, ["Spell: Flanking Life Drain", "Spell: Urgent Life Drain"])
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(350)
