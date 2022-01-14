@@ -15,12 +15,12 @@ module.exports.execute = (interaction, args) => {
 					if (component.customId !== "continue") {
 						let editedComponent = component.setDisabled(true);
 						if (component instanceof MessageButton && !component.emoji) {
-							editedComponent.setEmoji(emoji);
+							editedComponent.setEmoji("✖️");
 						}
 						return editedComponent;
 					} else {
 						let continueButton = component.setDisabled(true)
-							.setEmoji(emoji);
+							.setEmoji("✔️");
 						return continueButton;
 					}
 				}));
