@@ -187,6 +187,7 @@ Increased damage against enemies with 0 block
 - Warhammer (bonus damage on stunned enemy)
 - Inspire (power up to ally)
 - Disarm (power down to enemy)
+- Midas Staff (apply Curse of Midas)
 
 ## Ideas
 - Empowering ___ - Adds stacks to buffs

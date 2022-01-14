@@ -1,5 +1,5 @@
 const Enemy = require("../../Classes/Enemy.js");
-const { dealDamage, addModifier } = require("../combatantDAO.js");
+const { dealDamage, addModifier, removeModifier } = require("../combatantDAO.js");
 const { selectRandomFoe, selectSelf, selectNone, selectAllFoes, spawnEnemy } = require("../enemyDAO.js");
 
 module.exports = new Enemy("Mechabee")
@@ -35,7 +35,12 @@ function stingEffect(target, user, isCrit, adventure) {
 }
 
 function evadeEffect(target, user, isCrit, adventure) {
-	addModifier(user, { name: "Evade", stacks: 1 });
+	let stacks = 1;
+	if (isCrit) {
+		stacks *= 2;
+	}
+	addModifier(user, { name: "Evade", stacks });
+	removeModifier(user, { name: "Stagger", stacks: 1 });
 	return "";
 }
 

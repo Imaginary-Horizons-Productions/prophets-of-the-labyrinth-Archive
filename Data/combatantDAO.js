@@ -58,6 +58,12 @@ exports.dealDamage = async function (target, user, damage, element, adventure) {
 				}
 				target.hp -= pendingDamage;
 				let damageText = ` ${exports.getFullName(target, adventure.room.enemyTitles)} takes *${pendingDamage} damage*${blockedDamage > 0 ? ` (${blockedDamage} blocked)` : ""}${element === "Poison" ? " from Poison" : ""}${isWeakness ? "!!!" : isResistance ? "." : "!"}`;
+				let midasGold;
+				if (target.modifiers["Curse of Midas"]) {
+					midasGold = Math.floor(pendingDamage / 10);
+					adventure.room.loot.gold += midasGold;
+					damageText += ` ${midasGold} gold scatters about the room.`;
+				}
 				if (target.hp <= 0) {
 					if (target.team === "ally") {
 						target.hp = target.maxHp;

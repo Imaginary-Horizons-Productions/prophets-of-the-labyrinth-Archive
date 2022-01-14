@@ -20,7 +20,7 @@ module.exports.execute = (interaction) => {
 
 		// roll bosses
 		prerollBoss("Final Battle", adventure);
-		prerollBoss("Relic Guardian", adventure);
+		prerollBoss("Artifact Guardian", adventure);
 
 		let elementIndex = generateRandomNumber(adventure, elementsList().length, "general");
 		let pickedElement = elementsList()[elementIndex];
