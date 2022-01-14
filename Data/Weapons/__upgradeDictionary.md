@@ -120,6 +120,12 @@ Increased base damage
 - Dagger (Wind)
 - Sickle (Water)
 
+### Soothing
+Applies Regen
+
+#### Avaialble on
+- Midas Staff (Water)
+
 ### Sweeping
 Hits all enemes/allies
 

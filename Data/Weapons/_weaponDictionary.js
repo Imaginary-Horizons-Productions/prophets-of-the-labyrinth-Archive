@@ -43,6 +43,8 @@ var weaponWhitelist = [
 	"lifedrain-flanking.js",
 	"lifedrain-reactive.js",
 	"lifedrain-urgent.js",
+	"midasstaff-base.js",
+	"midasstaff-soothing.js",
 	"potion-base.js",
 	"potion-earthen.js",
 	"potion-inky.js",
