@@ -5,7 +5,8 @@ var enemyWhitelist = [
 	"mechabee.js",
 	"ooze.js",
 	"royalslime.js",
-	"slime.js"
+	"slime.js",
+	"treasureelemental.js"
 ];
 
 const enemyDictionary = {};

@@ -25,7 +25,7 @@ module.exports.execute = (interaction, args) => {
 					});
 					break;
 				case "artifact":
-					let lootIndex = `artifact-${name}`; //TODONOW test to ensure select editing works
+					let lootIndex = `artifact-${name}`;
 					adventure.artifacts[name] = adventure.room.loot[lootIndex]; //TODO #175 create adventure.gainArtifact() to catch artifact acquisition timings
 					interaction.message.edit({ components: editSelectOption(interaction.message, interaction.customId, `${name} x ${adventure.room.loot[lootIndex]}`, null, "All looted") }).then(() => {
 						interaction.channel.send(`The party acquires ${name} x ${adventure.room.loot[lootIndex]}.`);

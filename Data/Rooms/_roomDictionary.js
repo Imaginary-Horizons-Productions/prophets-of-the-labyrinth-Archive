@@ -3,7 +3,8 @@ const RoomTemplate = require("../../Classes/RoomTemplate");
 const { generateRandomNumber } = require("../../helpers");
 
 let roomWhitelist = [
-	"artifactguardian-royalslime.js",
+	// "artifactguardian-royalslime.js",
+	"artifactguardian-treasureelemental.js",
 	"battle-hawks.js",
 	"battle-mechabees.js",
 	"battle-slimes.js",
