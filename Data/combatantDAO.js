@@ -27,6 +27,7 @@ exports.calculateTotalSpeed = function (combatant) {
 }
 
 exports.dealDamage = async function (target, user, damage, element, adventure) {
+	let targetName = exports.getFullName(target, adventure.room.enemyTitles);
 	if (target.hp > 0) {
 		let targetModifiers = Object.keys(target.modifiers);
 		if (!targetModifiers.includes(`${element} Absorb`)) {
@@ -57,10 +58,9 @@ exports.dealDamage = async function (target, user, damage, element, adventure) {
 					}
 				}
 				target.hp -= pendingDamage;
-				let damageText = ` ${exports.getFullName(target, adventure.room.enemyTitles)} takes *${pendingDamage} damage*${blockedDamage > 0 ? ` (${blockedDamage} blocked)` : ""}${element === "Poison" ? " from Poison" : ""}${isWeakness ? "!!!" : isResistance ? "." : "!"}`;
-				let midasGold;
-				if (target.modifiers["Curse of Midas"]) {
-					midasGold = Math.floor(pendingDamage / 10);
+				let damageText = ` ${targetName} takes *${pendingDamage} damage*${blockedDamage > 0 ? ` (${blockedDamage} blocked)` : ""}${element === "Poison" ? " from Poison" : ""}${isWeakness ? "!!!" : isResistance ? "." : "!"}`;
+				if (targetModifiers.includes("Curse of Midas")) {
+					let midasGold = Math.floor(pendingDamage / 10);
 					adventure.room.loot.gold += midasGold;
 					damageText += ` ${midasGold} gold scatters about the room.`;
 				}
@@ -68,10 +68,10 @@ exports.dealDamage = async function (target, user, damage, element, adventure) {
 					if (target.team === "ally") {
 						target.hp = target.maxHp;
 						adventure.lives -= 1;
-						damageText += ` *${exports.getFullName(target, adventure.room.enemyTitles)} has died* and been revived. ***${adventure.lives} lives remain.***`;
+						damageText += ` *${targetName} has died* and been revived. ***${adventure.lives} lives remain.***`;
 					} else {
 						target.hp = 0;
-						damageText += ` *${exports.getFullName(target, adventure.room.enemyTitles)} has died*.`;
+						damageText += ` *${targetName} has died*.`;
 					}
 				}
 				return damageText;
@@ -80,13 +80,13 @@ exports.dealDamage = async function (target, user, damage, element, adventure) {
 				if (target.modifiers["Evade"] <= 0) {
 					delete target.modifiers["Evade"];
 				}
-				return ` ${exports.getFullName(target, adventure.room.enemyTitles)} evades the attack!`;
+				return ` ${targetName} evades the attack!`;
 			}
 		} else {
 			return ` ${exports.gainHealth(target, damage, adventure.room.enemyTitles)}`;
 		}
 	} else {
-		return ` ${exports.getFullName(target, adventure.room.enemyTitles)} was already dead!`;
+		return ` ${targetName} was already dead!`;
 	}
 }
 
