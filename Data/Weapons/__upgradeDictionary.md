@@ -125,6 +125,7 @@ Applies Regen
 
 #### Avaialble on
 - Midas Staff (Water)
+- Inspiration (Light)
 
 ### Sweeping
 Hits all enemes/allies
@@ -133,7 +134,7 @@ Hits all enemes/allies
 - Dagger (Wind)
 - Spear (Light)
 - Blood Aegis (Darkness)
-- Inspire (Light)
+- Inspiration (Light)
 
 ### Swift
 Grants the user the Quicken modifier
@@ -201,6 +202,7 @@ Increased damage against enemies with 0 block
 - Inspire (power up to ally)
 - Disarm (power down to enemy)
 - Midas Staff (apply Curse of Midas)
+- Pact of Healing (pay hp to apply regen)
 
 ## Ideas
 - Empowering ___ - Adds stacks to buffs

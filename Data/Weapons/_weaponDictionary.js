@@ -38,6 +38,7 @@ var weaponWhitelist = [
 	"firecracker-double.js",
 	"firecracker-mercurial.js",
 	"firecracker-toxic.js",
+	"healingpact-base.js",
 	"inspiration-base.js",
 	"inspiration-soothing.js",
 	"inspiration-sweeping.js",
