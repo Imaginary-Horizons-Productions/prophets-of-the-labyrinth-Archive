@@ -51,7 +51,7 @@ module.exports.execute = async function (interaction, [weaponName]) {
 		}).catch(console.error);
 	} else {
 		// Needed to prevent crashes in case users keep weapon menus around and uses one with a broken weapon
-		interaction.reply({ content: `You don't have a ${weaponName} with uses remaining.`, ephemeral: true })
+		interaction.update({ content: `You don't have a ${weaponName} with uses remaining.`, components: [], ephemeral: true })
 			.catch(console.error);
 	}
 }
