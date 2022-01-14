@@ -26,9 +26,10 @@ module.exports.execute = (interaction, args) => {
 					break;
 				case "artifact":
 					let lootIndex = `artifact-${name}`;
-					adventure.artifacts[name] = adventure.room.loot[lootIndex]; //TODO #175 create adventure.gainArtifact() to catch artifact acquisition timings
-					interaction.message.edit({ components: editSelectOption(interaction.message, interaction.customId, `${name} x ${adventure.room.loot[lootIndex]}`, null, "All looted") }).then(() => {
-						interaction.channel.send(`The party acquires ${name} x ${adventure.room.loot[lootIndex]}.`);
+					let artifactCount = adventure.room.loot[lootIndex];
+					adventure.gainArtifact(name, artifactCount);
+					interaction.message.edit({ components: editSelectOption(interaction.message, interaction.customId, `${name} x ${artifactCount}`, null, "All looted") }).then(() => {
+						interaction.channel.send(`The party acquires ${name} x ${artifactCount}.`);
 						updateRoomHeader(adventure, interaction.message);
 						delete adventure.room.loot[lootIndex];
 						setAdventure(adventure);
@@ -37,7 +38,7 @@ module.exports.execute = (interaction, args) => {
 				case "weapon":
 					if (delver.weapons.length < 4) { //TODO #176 create adventure.weaponCapacity() to create Holster artifact and "Can't Carry All This Value" difficulty option
 						delver.weapons.push({ name, uses: getWeaponProperty(name, "maxUses") });
-						let lootIndex = `weapon-${name}`
+						let lootIndex = `weapon-${name}`;
 						let optionLabel = `${name} x ${adventure.room.loot[lootIndex]}`;  // generate label to look for before decrementing
 						let remaining = --adventure.room.loot[lootIndex];
 						let replacementOption;

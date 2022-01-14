@@ -74,4 +74,15 @@ module.exports = class Adventure {
 		}
 		return this.gold;
 	}
+
+	gainArtifact(artifact, count) {
+		if (artifact === "Oil Painting") {
+			this.gold += 500 * count;
+		}
+		if (this.artifacts[artifact]) {
+			this.artifacts[artifact] += count;
+		} else {
+			this.artifacts[artifact] = count;
+		}
+	}
 }
