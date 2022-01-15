@@ -36,7 +36,7 @@ module.exports.execute = (interaction, args) => {
 					});
 					break;
 				case "weapon":
-					if (delver.weapons.length < 4) { //TODO #176 create adventure.weaponCapacity() to create Holster artifact and "Can't Carry All This Value" difficulty option
+					if (delver.weapons.length < adventure.getWeaponCapacity()) {
 						delver.weapons.push({ name, uses: getWeaponProperty(name, "maxUses") });
 						let lootIndex = `weapon-${name}`;
 						let optionLabel = `${name} x ${adventure.room.loot[lootIndex]}`;  // generate label to look for before decrementing
@@ -56,7 +56,7 @@ module.exports.execute = (interaction, args) => {
 						setAdventure(adventure);
 					} else {
 						result = {
-							content: `You can only carry 4 weapons at a time. Pick one to replace with the ${name}:`,
+							content: `You can only carry ${adventure.getWeaponCapacity()} weapons at a time. Pick one to replace with the ${name}:`,
 							components: [new MessageActionRow().addComponents(...delver.weapons.map((weapon, weaponIndex) => {
 								return new MessageButton().setCustomId(`replaceweapon-${name}-${weaponIndex}-0-`)
 									.setLabel(`Discard ${weapon.name}`)

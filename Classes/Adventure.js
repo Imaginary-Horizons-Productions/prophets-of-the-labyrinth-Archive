@@ -67,6 +67,13 @@ module.exports = class Adventure {
 		return this;
 	}
 
+	getWeaponCapacity() {
+		let count = 4 + this.artifacts["Hammerspace Holster"];
+		count = Math.min(5, count);
+		count = Math.max(1, count);
+		return count;
+	}
+
 	gainGold(integer) {
 		this.gold += integer;
 		if (this.gold > this.peakGold) {
