@@ -406,7 +406,7 @@ exports.endRound = async function (adventure, thread) {
 				if (type === "weapon") {
 					option.description = buildWeaponDescription(name, false);
 				} else if (type === "artifact") {
-					console.log(name); //TODO #182 failure to get populate artifacts sometimes
+					console.log({ ...adventure.room.loot, item }); //TODO #182 failure to get populate artifacts sometimes
 					option.description = getArtifactDescription(name, adventure.room.loot[item]);
 				} else {
 					option.description = "";
@@ -430,7 +430,7 @@ exports.endRound = async function (adventure, thread) {
 					new MessageActionRow.addComponents(
 						new MessageSelectMenu().setCustomId("loot")
 							.setPlaceholder("No loot to take")
-							.setOptions([{ label: "placeholder", description: "", value: "placeholder" }])
+							.setOptions([{ label: "placeholder", value: "placeholder" }])
 							.setDisabled(true)
 					)
 				];

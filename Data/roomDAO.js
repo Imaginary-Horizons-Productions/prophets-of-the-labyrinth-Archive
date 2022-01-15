@@ -22,7 +22,7 @@ exports.editSelectOption = function (message, customId, optionLabel, replacement
 		return new MessageActionRow().addComponents(...row.components.map(component => {
 			if (component.customId === customId) {
 				let remainingOptions = [];
-				console.log(component.options, optionLabel); //TODO #181 failure to remove artifact from loot sometimes
+				console.log(component.options, optionLabel, replacementOption); //TODO #181 failure to remove artifact from loot sometimes
 				for (const option of component.options) {
 					if (option.label !== optionLabel) {
 						remainingOptions.push(option);
