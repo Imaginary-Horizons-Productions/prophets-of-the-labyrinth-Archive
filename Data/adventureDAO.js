@@ -15,7 +15,7 @@ const Room = require("../Classes/Room.js");
 const { spawnEnemy } = require("./enemyDAO.js");
 const { getWeaknesses, getColor } = require("./elementHelpers.js");
 const { rollWeaponDrop, getWeaponProperty, buildWeaponDescription } = require("./Weapons/_weaponDictionary.js");
-const { rollArtifact, getArtifact } = require("./Artifacts/_artifactDictionary.js");
+const { rollArtifact, getArtifactDescription } = require("./Artifacts/_artifactDictionary.js");
 
 var filePath = "./Saves/adventures.json";
 var requirePath = "./../Saves/adventures.json";
@@ -403,7 +403,7 @@ exports.endRound = async function (adventure, thread) {
 					option.description = buildWeaponDescription(name, false);
 				} else if (type === "artifact") {
 					console.log(name); //TODO #182 failure to get populate artifacts sometimes
-					option.description = getArtifact(name).description.replace(/@{copies}/g, adventure.room.loot[item]); //TODO #174 functionalize artifact description interpolation
+					option.description = getArtifactDescription(name, adventure.room.loot[item]);
 				} else {
 					option.description = "";
 				}
