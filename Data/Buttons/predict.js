@@ -4,6 +4,7 @@ const { getAdventure } = require('../adventureDAO.js');
 const { getTargetList } = require('../moveDAO.js');
 const { getFullName, calculateTotalSpeed, modifiersToString } = require("../combatantDAO.js");
 const { getResistances, getWeaknesses } = require('../elementHelpers.js');
+const { ordinalSuffixEN } = require('../../helpers.js');
 
 module.exports = new Button("predict");
 
@@ -38,11 +39,24 @@ module.exports.execute = (interaction, args) => {
 			})
 			break;
 		case "Move Order": // Shows roundly random speed bonuses and order of move resolution
-			adventure.room.enemies.concat(adventure.delvers).sort((first, second) => {
-				return calculateTotalSpeed(second) - calculateTotalSpeed(first);
-			}).filter(combatant => combatant.hp > 0).forEach((combatant, i) => {
-				descriptionText += `\n${i + 1}: ${getFullName(combatant, adventure.room.enemyTitles)} (${combatant.roundSpeed >= 0 ? "+" : ""}${combatant.roundSpeed + combatant.actionSpeed} bonus speed this round)`;
-			});
+			let combatants = adventure.room.enemies.concat(adventure.delvers)
+				.filter(combatant => combatant.hp > 0)
+				.sort((first, second) => {
+					return calculateTotalSpeed(second) - calculateTotalSpeed(first);
+				});
+			let numeral = 0;
+			let tempSpeed;
+			for (const combatant of combatants) {
+				let speed = calculateTotalSpeed(combatant);
+				if (speed !== tempSpeed) {
+					tempSpeed = speed;
+					numeral++;
+					descriptionText += `\n__**${ordinalSuffixEN(numeral)}** - ${speed} speed__ ${getFullName(combatant, adventure.room.enemyTitles)}`;
+				} else {
+					descriptionText += `, ${getFullName(combatant, adventure.room.enemyTitles)}`;
+				}
+			}
+			descriptionText += "\n\nCombatants tied in speed may act in any order.";
 			break;
 		case "Modifiers": // Shows modifiers and stagger thresholds for all combatants
 			infoForNextRound = false;

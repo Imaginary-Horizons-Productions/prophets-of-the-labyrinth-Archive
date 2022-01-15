@@ -54,3 +54,24 @@ exports.ensuredPathSave = function (path, fileName, data) {
 		}
 	})
 }
+
+exports.ordinalSuffixEN = function (integer) {
+	let lastDigit = integer % 10;
+	let tensDigit = integer % 100 / 10;
+	switch (lastDigit) {
+		case 1:
+			if (tensDigit !== 1) {
+				return `${integer}st`;
+			}
+		case 2:
+			if (tensDigit !== 1) {
+				return `${integer}nd`;
+			}
+		case 3:
+			if (tensDigit !== 1) {
+				return `${integer}rd`;
+			}
+		default:
+			return `${integer}th`;
+	}
+}

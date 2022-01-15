@@ -245,7 +245,7 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 				.setUser(teamName, i)
 			if (combatant.modifiers.Stun > 0) {
 				// Dummy move for Stunned combatants
-				move.setMoveName("Stun")
+				move.setMoveName("Stun");
 			} else {
 				if (teamName === "enemy") {
 					if (combatant.lookupName !== "@{clone}") {
@@ -351,7 +351,11 @@ exports.endRound = async function (adventure, thread) {
 	})
 
 	// Resolve moves
-	adventure.room.moves.sort((first, second) => { //TODO #106 randomize speed ties
+	adventure.room.moves.forEach(move => {
+		// Randomize speed ties
+		move.speed += generateRandomNumber(adventure, 10, "battle") / 10;
+	})
+	adventure.room.moves.sort((first, second) => {
 		return second.speed - first.speed;
 	})
 	let lastRoundText = "";
