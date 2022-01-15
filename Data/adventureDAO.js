@@ -1,5 +1,5 @@
 const fs = require("fs");
-const { ensuredPathSave, parseCount, generateRandomNumber, clearComponents } = require("../helpers.js");
+const { ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordinalSuffixEN } = require("../helpers.js");
 const { MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu } = require("discord.js");
 const Adventure = require("../Classes/Adventure.js");
 const { setPlayer, getPlayer } = require("./playerDAO.js");
@@ -199,7 +199,7 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 							.setStyle("SECONDARY")
 							.setDisabled(adventure.scouting.finalBoss || adventure.gold < bossScoutingCost),
 						new MessageButton().setCustomId(`buyscouting-artifactguardian-${guardScoutingCost}`)
-							.setLabel(`${guardScoutingCost}g: Scout an Artifact Guardian (${adventure.scouting.artifactGuardians} so far)`)
+							.setLabel(`${guardScoutingCost}g: Scout the ${ordinalSuffixEN(adventure.scouting.artifactGuardians + 1)} Artifact Guardian`)
 							.setStyle("SECONDARY")
 					));
 				}

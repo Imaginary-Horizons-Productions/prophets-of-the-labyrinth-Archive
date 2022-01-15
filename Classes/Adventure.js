@@ -68,7 +68,7 @@ module.exports = class Adventure {
 	}
 
 	getWeaponCapacity() {
-		let count = 4 + this.artifacts["Hammerspace Holster"];
+		let count = 4 + (this.artifacts["Hammerspace Holster"] || 0);
 		count = Math.min(5, count);
 		count = Math.max(1, count);
 		return count;
