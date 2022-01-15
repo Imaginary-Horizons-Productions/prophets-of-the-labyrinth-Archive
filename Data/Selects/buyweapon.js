@@ -17,7 +17,7 @@ module.exports.execute = (interaction, [tier]) => {
 				adventure.gold -= cost;
 				adventure.room.loot[weaponName]--;
 				let uses = getWeaponProperty(weaponName, "maxUses");
-				if (delver.weapons.length < 4) {
+				if (delver.weapons.length < adventure.getWeaponCapacity()) {
 					delver.weapons.push({ name: weaponName, uses });
 					let updatedUI = editSelectOption(interaction.message, interaction.customId, `${cost}g: ${weaponName}`, null, "SOLD OUT");
 					interaction.message.edit({ components: updatedUI });
@@ -31,7 +31,7 @@ module.exports.execute = (interaction, [tier]) => {
 								.setStyle("SECONDARY")
 						})
 					)];
-					interaction.reply({ content: "You can only carry 4 weapons at a time. Pick one to replace:", components: replaceUI, ephemeral: true });
+					interaction.reply({ content: `You can only carry ${adventure.getWeaponCapacity()} weapons at a time. Pick one to replace:`, components: replaceUI, ephemeral: true });
 				}
 			} else {
 				interaction.reply({ content: "You don't have enough money to buy that.", ephemeral: true });
