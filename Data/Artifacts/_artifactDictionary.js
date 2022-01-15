@@ -28,6 +28,10 @@ exports.getArtifact = function (artifactName) {
 	return ARTIFACTS[artifactName];
 }
 
+exports.getArtifactDescription = function (artifactName, copies) {
+	return exports.getArtifact(artifactName).description.replace(/@{copies}/g, copies);
+}
+
 exports.rollArtifact = function (adventure) {
 	let elementPool = [...adventure.delvers.map(delver => delver.element), "Untyped"];
 	let element = elementPool[generateRandomNumber(adventure, elementPool.length, "general")];
