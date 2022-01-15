@@ -191,8 +191,8 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 							.setPlaceholder(`Check a ${tier === "2" ? "rare " : ""}weapon...`)
 							.setOptions(weaponOptions)));
 				} else if (category === "scouting") {
-					let bossScoutingCost = 150;
-					let guardScoutingCost = 100;
+					let bossScoutingCost = 150 - ((adventure.artifacts["Amethyst Spyglass"] || 0) * 5);
+					let guardScoutingCost = 100 - ((adventure.artifacts["Amethyst Spyglass"] || 0) * 5);
 					uiComponents.push(new MessageActionRow().addComponents(
 						new MessageButton().setCustomId(`buyscouting-finalbattle-${bossScoutingCost}`)
 							.setLabel(`${adventure.scouting.finalBoss ? `Final Battle: ${adventure.finalBoss}` : `${bossScoutingCost}g: Scout the Final Battle`}`)

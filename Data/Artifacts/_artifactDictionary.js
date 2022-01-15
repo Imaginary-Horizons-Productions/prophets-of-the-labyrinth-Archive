@@ -1,6 +1,7 @@
 const { generateRandomNumber } = require("../../helpers");
 
 let artifactWhitelist = [
+	"amethystspyglass.js",
 	"enchantedmap.js",
 	"hammerspaceholster.js",
 	"oilpainting.js",
