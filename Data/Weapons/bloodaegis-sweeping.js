@@ -1,4 +1,5 @@
 const Weapon = require('../../Classes/Weapon.js');
+const { removeModifier, addBlock, dealDamage } = require('../combatantDAO.js');
 
 module.exports = new Weapon("Spell: Sweeping Blood Aegis", 2, "*Pay @{hpCost} hp to grant all allies @{block} block*\nCritical Hit: Block x@{critMultiplier}", "Darkness", effect, ["Spell: Charging Blood Aegis", "Spell: Heavy Blood Aegis"])
 	.setTargetingTags({ target: "all", team: "ally" })
