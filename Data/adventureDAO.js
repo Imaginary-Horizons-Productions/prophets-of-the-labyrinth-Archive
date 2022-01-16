@@ -95,10 +95,10 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 	// Roll options for next room type
 	let roomTypes = ["Battle", "Event", "Forge", "Rest Site", "Artifact Guardian"]; //TODO #126 add weights to room types
 	let finalBossDepths = [10];
-	let candidateType = "";
 	if (!finalBossDepths.includes(adventure.depth + 1)) {
 		adventure.roomCandidates = {};
 		let numCandidates = 2 + (adventure.artifacts["Enchanted Map"] || 0);
+		let candidateType = "";
 		for (let i = 0; i < numCandidates; i++) {
 			candidateType = roomTypes[generateRandomNumber(adventure, roomTypes.length, "general")];
 			if (!adventure.roomCandidates[candidateType]) {
@@ -147,10 +147,10 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 				adventure.room.loot[`artifact-${rollArtifact(adventure)}`] = 1;
 			}
 			adventure.room.initializeCombatProperties();
-			let isBossRoom = roomType !== "Battle";
+			let randomizeHp = roomType === "Battle";
 			for (let enemyName in roomTemplate.enemyList) {
 				for (let i = 0; i < parseCount(roomTemplate.enemyList[enemyName], adventure.delvers.length); i++) {
-					spawnEnemy(adventure, getEnemy(enemyName), !isBossRoom);
+					spawnEnemy(adventure, getEnemy(enemyName), randomizeHp);
 				}
 			}
 			exports.newRound(adventure, thread, embed);
@@ -159,7 +159,7 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 			let uiComponents = [...roomTemplate.uiRows];
 			for (let category in roomTemplate.saleList) {
 				if (category.startsWith("weapon")) {
-					let tier = category.split("-")[1];
+					let [type, tier] = category.split("-");
 					let parsedTier = tier;
 					let count = Math.min(25, parseCount(roomTemplate.saleList[category], adventure.delvers.length));
 					let weaponOptions = [];
@@ -174,12 +174,13 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 							}
 						}
 						let weaponName = rollWeaponDrop(parsedTier, adventure);
-						let cost = getWeaponProperty(weaponName, "cost");
-						if (adventure.room.loot[`weapon-${weaponName}`]) {
-							adventure.room.loot[`weapon-${weaponName}`]++;
+						let lootIndex = `weapon-${weaponName}`;
+						if (adventure.room.loot[lootIndex]) {
+							adventure.room.loot[lootIndex]++;
 						} else {
-							adventure.room.loot[`weapon-${weaponName}`] = 1;
+							adventure.room.loot[lootIndex] = 1;
 						}
+						let cost = getWeaponProperty(weaponName, "cost");
 						weaponOptions.push({
 							label: `${cost}g: ${weaponName}`,
 							description: buildWeaponDescription(weaponName, false),
@@ -372,8 +373,7 @@ exports.endRound = async function (adventure, thread) {
 			// Generate gold
 			let totalBounty = adventure.room.enemies.reduce((total, enemy) => total + enemy.bounty, adventure.room.loot.gold);
 			totalBounty *= (90 + generateRandomNumber(adventure, 21, "general")) / 100;
-			totalBounty = Math.ceil(totalBounty);
-			adventure.room.loot.gold = totalBounty;
+			adventure.room.loot.gold = Math.ceil(totalBounty);
 
 			// Weapon drops
 			let dropThreshold = 1;
@@ -460,32 +460,29 @@ exports.checkNextRound = function (adventure) {
 }
 
 exports.completeAdventure = function (adventure, thread, scoreEmbed) {
-	let isSuccess = scoreEmbed.title === "Success";
-	let score = adventure.depth;
 	let livesScore = adventure.lives * 10;
-	let goldScore = Math.log10(adventure.peakGold) * 5;
-	score += livesScore;
-	score += goldScore;
-	score += adventure.accumulatedScore;
+	let goldScore = Math.floor(Math.log10(adventure.peakGold)) * 5;
+	let score = adventure.accumulatedScore + livesScore + goldScore + adventure.depth;
+	let isSuccess = scoreEmbed.title === "Success";
 	if (!isSuccess) {
 		score = Math.floor(score / 2);
 	}
 	score = Math.max(1, score);
 	scoreEmbed.addField("Score Breakdown", `Depth: ${adventure.depth}\nLives: ${livesScore}\nGold: ${goldScore}\nBonus: ${adventure.accumulatedScore}\n\n__Total__: ${!isSuccess && score > 0 ? `score ÷ 2  = ${score} (Defeat)` : score}`);
 
+	let guildId = thread.guildId;
 	adventure.delvers.forEach(delver => {
-		let player = getPlayer(delver.id, thread.guildId);
-		let previousScore = player.scores[thread.guildId];
-		if (previousScore) {
-			player.scores[thread.guildId] += score;
+		let player = getPlayer(delver.id, guildId);
+		if (player.scores[guildId]) {
+			player.scores[guildId] += score;
 		} else {
-			player.scores[thread.guildId] = score;
+			player.scores[guildId] = score;
 		}
 		setPlayer(player);
 	})
 
 	thread.fetchStarterMessage({ cache: false, force: true }).then(recruitMessage => {
-		let recruitEmbed = recruitMessage.embeds[0];
+		let [recruitEmbed] = recruitMessage.embeds;
 		recruitEmbed.setTitle(recruitEmbed.title + ": COMPLETE!")
 			.setThumbnail("https://cdn.discordapp.com/attachments/545684759276421120/734092918369026108/completion.png")
 			.addField("Seed", adventure.initialSeed);
@@ -495,11 +492,9 @@ exports.completeAdventure = function (adventure, thread, scoreEmbed) {
 	clearComponents(adventure.messageIds.room, thread.messages);
 	if (adventure.messageIds.utility) {
 		thread.messages.delete(adventure.messageIds.utility);
-		delete adventure.messageIds.utility;
 	}
 	if (adventure.messageIds.leaderNotice) {
 		thread.messages.delete(adventure.messageIds.leaderNotice);
-		delete adventure.messageIds.leaderNotice;
 	}
 
 	adventureDictionary.delete(thread.id);
