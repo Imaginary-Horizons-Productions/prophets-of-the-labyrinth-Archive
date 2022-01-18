@@ -10,7 +10,7 @@ module.exports.spawnEnemy = function (adventure, enemyTemplate, randomizeHp) {
 		enemy.setHp(Math.ceil(enemy.maxHp * hpPercent));
 	}
 	let tagRegex = /@{([a-zA-Z]+)}/;
-	switch (enemy.name.match(tagRegex)?.[1]) { // this prevents all replaces from running; which is problematic because clone replace makes assumes player and enemy counts match
+	switch (enemy.name.match(tagRegex)?.[1]) { // this prevents all replaces from running; which is problematic because @{clone} assumes player and enemy counts match
 		case "adventure":
 			enemy.name = enemy.name.replace("@{adventure}", adventure.element);
 			break;
@@ -22,7 +22,7 @@ module.exports.spawnEnemy = function (adventure, enemyTemplate, randomizeHp) {
 			break;
 	}
 
-	switch (enemy.element.match(tagRegex)?.[1]) { // this prevents all replaces from running; which is problematic because clone replace makes assumes player and enemy counts match
+	switch (enemy.element.match(tagRegex)?.[1]) { // this prevents all replaces from running; which is problematic because @{clone} assumes player and enemy counts match
 		case "adventure":
 			enemy.setElement(enemy.element.replace("@{adventure}", adventure.element));
 			break;

@@ -28,65 +28,61 @@ exports.calculateTotalSpeed = function (combatant) {
 
 exports.dealDamage = async function (target, user, damage, element, adventure) {
 	let targetName = exports.getFullName(target, adventure.room.enemyTitles);
-	if (target.hp > 0) {
-		let targetModifiers = Object.keys(target.modifiers);
-		if (!targetModifiers.includes(`${element} Absorb`)) {
-			if (!targetModifiers.includes("Evade") || element === "Poison") {
-				let pendingDamage = damage + (user?.modifiers["Power Up"] || 0);
-				if (targetModifiers.includes("Exposed")) {
-					pendingDamage *= 1.5;
-				}
-				let isWeakness = getWeaknesses(target.element).includes(element);
-				if (isWeakness) {
-					pendingDamage *= 2;
-				}
-				let isResistance = getResistances(target.element).includes(element);
-				if (isResistance) {
-					pendingDamage = pendingDamage / 2;
-				}
-				pendingDamage = Math.ceil(pendingDamage);
-				let blockedDamage = 0;
-				if (element !== "Poison") {
-					if (pendingDamage >= target.block) {
-						pendingDamage -= target.block;
-						blockedDamage = target.block;
-						target.block = 0;
-					} else {
-						target.block -= pendingDamage;
-						blockedDamage = pendingDamage;
-						pendingDamage = 0;
-					}
-				}
-				target.hp -= pendingDamage;
-				let damageText = ` ${targetName} takes *${pendingDamage} damage*${blockedDamage > 0 ? ` (${blockedDamage} blocked)` : ""}${element === "Poison" ? " from Poison" : ""}${isWeakness ? "!!!" : isResistance ? "." : "!"}`;
-				if (targetModifiers.includes("Curse of Midas")) {
-					let midasGold = Math.floor(pendingDamage / 10);
-					adventure.room.loot.gold += midasGold;
-					damageText += ` ${midasGold} gold scatters about the room.`;
-				}
-				if (target.hp <= 0) {
-					if (target.team === "ally") {
-						target.hp = target.maxHp;
-						adventure.lives -= 1;
-						damageText += ` *${targetName} has died* and been revived. ***${adventure.lives} lives remain.***`;
-					} else {
-						target.hp = 0;
-						damageText += ` *${targetName} has died*.`;
-					}
-				}
-				return damageText;
-			} else {
-				target.modifiers["Evade"]--;
-				if (target.modifiers["Evade"] <= 0) {
-					delete target.modifiers["Evade"];
-				}
-				return ` ${targetName} evades the attack!`;
+	let targetModifiers = Object.keys(target.modifiers);
+	if (!targetModifiers.includes(`${element} Absorb`)) {
+		if (!targetModifiers.includes("Evade") || element === "Poison") {
+			let pendingDamage = damage + (user?.modifiers["Power Up"] || 0);
+			if (targetModifiers.includes("Exposed")) {
+				pendingDamage *= 1.5;
 			}
+			let isWeakness = getWeaknesses(target.element).includes(element);
+			if (isWeakness) {
+				pendingDamage *= 2;
+			}
+			let isResistance = getResistances(target.element).includes(element);
+			if (isResistance) {
+				pendingDamage = pendingDamage / 2;
+			}
+			pendingDamage = Math.ceil(pendingDamage);
+			let blockedDamage = 0;
+			if (element !== "Poison") {
+				if (pendingDamage >= target.block) {
+					pendingDamage -= target.block;
+					blockedDamage = target.block;
+					target.block = 0;
+				} else {
+					target.block -= pendingDamage;
+					blockedDamage = pendingDamage;
+					pendingDamage = 0;
+				}
+			}
+			target.hp -= pendingDamage;
+			let damageText = ` ${targetName} takes *${pendingDamage} damage*${blockedDamage > 0 ? ` (${blockedDamage} blocked)` : ""}${element === "Poison" ? " from Poison" : ""}${isWeakness ? "!!!" : isResistance ? "." : "!"}`;
+			if (targetModifiers.includes("Curse of Midas")) {
+				let midasGold = Math.floor(pendingDamage / 10);
+				adventure.room.loot.gold += midasGold;
+				damageText += ` ${midasGold} gold scatters about the room.`;
+			}
+			if (target.hp <= 0) {
+				if (target.team === "ally") {
+					target.hp = target.maxHp;
+					adventure.lives -= 1;
+					damageText += ` *${targetName} has died* and been revived. ***${adventure.lives} lives remain.***`;
+				} else {
+					target.hp = 0;
+					damageText += ` *${targetName} has died*.`;
+				}
+			}
+			return damageText;
 		} else {
-			return ` ${exports.gainHealth(target, damage, adventure.room.enemyTitles)}`;
+			target.modifiers["Evade"]--;
+			if (target.modifiers["Evade"] <= 0) {
+				delete target.modifiers["Evade"];
+			}
+			return ` ${targetName} evades the attack!`;
 		}
 	} else {
-		return ` ${targetName} was already dead!`;
+		return ` ${exports.gainHealth(target, damage, adventure.room.enemyTitles)}`;
 	}
 }
 
