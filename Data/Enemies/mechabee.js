@@ -31,7 +31,7 @@ function stingEffect(target, user, isCrit, adventure) {
 	} else {
 		addModifier(target, { name: "Poison", stacks: 2 });
 	}
-	return dealDamage(target, user, 10, user.element, adventure);
+	return dealDamage(target, user, 10, false, user.element, adventure);
 }
 
 function evadeEffect(target, user, isCrit, adventure) {
@@ -56,5 +56,5 @@ function selfDestructEffect(target, user, isCrit, adventure) {
 	}
 	addModifier(target, { name: "Stagger", stacks: 1 });
 	user.hp = 0;
-	return dealDamage(target, user, damage, user.element, adventure);
+	return dealDamage(target, user, damage, false, user.element, adventure);
 }

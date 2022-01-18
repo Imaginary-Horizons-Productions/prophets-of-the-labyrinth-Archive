@@ -38,7 +38,7 @@ var weaponWhitelist = [
 	"firecracker-double.js",
 	"firecracker-mercurial.js",
 	"firecracker-toxic.js",
-	"healingpact-base.js",
+	"infiniteregeneration-base.js",
 	"inspiration-base.js",
 	"inspiration-soothing.js",
 	"inspiration-sweeping.js",
@@ -71,7 +71,8 @@ var weaponWhitelist = [
 	"sword-guarding.js",
 	"sword-reckless.js",
 	"sword-swift.js",
-	"warhammer-base.js"
+	"warhammer-base.js",
+	"warhammer-piercing.js"
 ];
 
 const allWeapons = {};

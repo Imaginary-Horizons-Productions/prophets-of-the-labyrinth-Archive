@@ -18,5 +18,5 @@ function effect(target, user, isCrit, adventure) {
 		block *= critMultiplier;
 	}
 	addBlock(target, block);
-	return dealDamage(user, null, hpCost, "untyped", adventure); // user pays health
+	return dealDamage(user, null, hpCost, true, "untyped", adventure); // user pays health
 }

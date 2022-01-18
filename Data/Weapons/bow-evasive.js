@@ -18,5 +18,5 @@ function effect(target, user, isCrit, adventure) {
 		damage *= critMultiplier;
 	}
 	addModifier(user, evade);
-	return dealDamage(target, user, damage, weaponElement, adventure);
+	return dealDamage(target, user, damage, false, weaponElement, adventure);
 }

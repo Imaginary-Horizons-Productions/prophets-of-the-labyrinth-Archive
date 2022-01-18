@@ -1,17 +1,17 @@
 const Weapon = require('../../Classes/Weapon.js');
-const { addModifier, dealDamage } = require('../combatantDAO.js');
+const { dealDamage, addModifier } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Prideful Battleaxe", 2, "Strike a foe for @{damage} (+@{bonusDamage} if you have 0 block) @{element} damage*\nCritical Hit: Damage x@{critMultiplier}", "untyped", effect, ["Thick Battleaxe", "Thirsting Battleaxe"])
+module.exports = new Weapon("Piercing Warhammer", 1, "*Strike a foe for @{damage} (+@{bonusDamage} if foe is already stunned) unblockable @{element} damage*\nCritical Hit: Damage x@{critMultiplier}", "Earth", effect, [])
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(350)
 	.setUses(10)
 	.setDamage(100)
-	.setBonusDamage(100);
+	.setBonusDamage(75);
 
 function effect(target, user, isCrit, adventure) {
 	let { element: weaponElement, modifiers: [elementStagger], damage, bonusDamage, critMultiplier } = module.exports;
-	if (user.block === 0) {
+	if (target.modifiers.Stun) {
 		damage += bonusDamage;
 	}
 	if (user.element === weaponElement) {
@@ -20,5 +20,5 @@ function effect(target, user, isCrit, adventure) {
 	if (isCrit) {
 		damage *= critMultiplier;
 	}
-	return dealDamage(target, user, damage, false, weaponElement, adventure);
+	return dealDamage(target, user, damage, true, weaponElement, adventure);
 }

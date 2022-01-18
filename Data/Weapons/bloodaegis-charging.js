@@ -19,5 +19,5 @@ function effect(target, user, isCrit, adventure) {
 	}
 	addBlock(target, block);
 	addModifier(user, powerUp);
-	return dealDamage(user, null, hpCost, "untyped", adventure); // user pays health
+	return dealDamage(user, null, hpCost, true, "untyped", adventure); // user pays health
 }

@@ -19,7 +19,7 @@ function effect(target, user, isCrit, adventure) {
 	}
 	addModifier(target, poison);
 	if (target.hp > hpThreshold) {
-		return dealDamage(target, user, damage, weaponElement, adventure);
+		return dealDamage(target, user, damage, false, weaponElement, adventure);
 	} else {
 		target.hp = 0;
 		return `${getFullName(target, adventure.room.enemyTitles)} meets the reaper.`;

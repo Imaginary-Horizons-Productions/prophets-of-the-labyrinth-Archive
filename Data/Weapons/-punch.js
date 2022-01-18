@@ -14,5 +14,5 @@ function effect(target, user, isCrit, element, adventure) {
 	if (isCrit) {
 		damage *= critMultiplier;
 	}
-	return dealDamage(target, user, damage, element, adventure);
+	return dealDamage(target, user, damage, false, element, adventure);
 }

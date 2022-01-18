@@ -21,5 +21,5 @@ function effect(target, user, isCrit, adventure) {
 		damage += bonusDamage;
 	}
 	addModifier(user, powerUp);
-	return dealDamage(target, user, damage, weaponElement, adventure);
+	return dealDamage(target, user, damage, false, weaponElement, adventure);
 }

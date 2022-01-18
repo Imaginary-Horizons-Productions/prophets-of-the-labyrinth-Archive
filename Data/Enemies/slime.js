@@ -18,7 +18,7 @@ function tackleEffect(target, user, isCrit, adventure) {
 		damage *= 2;
 	}
 	addModifier(target, { name: "Stagger", stacks: 1 });
-	return dealDamage(target, user, damage, adventure.element, adventure);
+	return dealDamage(target, user, damage, false, adventure.element, adventure);
 }
 
 function goopSprayEffect(target, user, isCrit, adventure) {

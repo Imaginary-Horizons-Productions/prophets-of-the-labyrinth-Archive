@@ -18,7 +18,7 @@ function effect(target, user, isCrit, adventure) {
 	if (isCrit) {
 		damage *= critMultiplier;
 	}
-	return dealDamage(target, user, damage, weaponElement, adventure).then(damageText => {
+	return dealDamage(target, user, damage, false, weaponElement, adventure).then(damageText => {
 		if (target.hp < 1) {
 			adventure.gainGold(bonusBounty);
 			damageText += ` ${getFullName(user, adventure.room.enemyTitles)} harvests ${bonusBounty}g of alchemical reagents.`;

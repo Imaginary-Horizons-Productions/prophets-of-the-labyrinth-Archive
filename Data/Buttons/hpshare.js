@@ -13,7 +13,7 @@ module.exports.execute = (interaction, args) => {
 	if (delver) {
 		if (adventure.gold >= 50) {
 			adventure.gold -= 50;
-			dealDamage(delver, null, 50, "untyped", adventure).then(damageText => {
+			dealDamage(delver, null, 50, true, "untyped", adventure).then(damageText => {
 				updateRoomHeader(adventure, interaction.message);
 				adventure.delvers.forEach(delver => {
 					if (delver.id !== interaction.user.id) {
