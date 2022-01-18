@@ -21,5 +21,5 @@ async function effect(target, user, isCrit, adventure) {
 	if (isCrit) {
 		healing *= critMultiplier;
 	}
-	return `${await dealDamage(target, user, damage, weaponElement, adventure)} ${gainHealth(user, healing, adventure.room.enemyTitles)}`;
+	return `${await dealDamage(target, user, damage, false, weaponElement, adventure)} ${gainHealth(user, healing, adventure.room.enemyTitles)}`;
 }

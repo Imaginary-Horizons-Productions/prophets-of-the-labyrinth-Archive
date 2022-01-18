@@ -18,5 +18,5 @@ function effect(target, user, isCrit, adventure) {
 	}
 	addModifier(user, quicken);
 	addModifier(user, powerUp);
-	return dealDamage(target, user, damage, weaponElement, adventure);
+	return dealDamage(target, user, damage, false, weaponElement, adventure);
 }

@@ -26,11 +26,11 @@ exports.calculateTotalSpeed = function (combatant) {
 	return Math.ceil(totalSpeed);
 }
 
-exports.dealDamage = async function (target, user, damage, element, adventure) {
+exports.dealDamage = async function (target, user, damage, isUnblockable, element, adventure) {
 	let targetName = exports.getFullName(target, adventure.room.enemyTitles);
 	let targetModifiers = Object.keys(target.modifiers);
 	if (!targetModifiers.includes(`${element} Absorb`)) {
-		if (!targetModifiers.includes("Evade") || element === "Poison") {
+		if (!targetModifiers.includes("Evade") || isUnblockable) {
 			let pendingDamage = damage + (user?.modifiers["Power Up"] || 0);
 			if (targetModifiers.includes("Exposed")) {
 				pendingDamage *= 1.5;
@@ -45,7 +45,7 @@ exports.dealDamage = async function (target, user, damage, element, adventure) {
 			}
 			pendingDamage = Math.ceil(pendingDamage);
 			let blockedDamage = 0;
-			if (element !== "Poison") {
+			if (!isUnblockable) {
 				if (pendingDamage >= target.block) {
 					pendingDamage -= target.block;
 					blockedDamage = target.block;

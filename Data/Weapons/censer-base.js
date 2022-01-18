@@ -20,5 +20,5 @@ function effect(target, user, isCrit, adventure) {
 	if (isCrit) {
 		addModifier(target, slow);
 	}
-	return dealDamage(target, user, damage, weaponElement, adventure); // result text
+	return dealDamage(target, user, damage, false, weaponElement, adventure); // result text
 }

@@ -33,7 +33,7 @@ function rollingTackleEffect(target, user, isCrit, adventure) {
 		damage *= 2;
 	}
 	addModifier(target, { name: "Stagger", stacks: 1 });
-	return dealDamage(target, user, damage, user.element, adventure);
+	return dealDamage(target, user, damage, false, user.element, adventure);
 }
 
 function goopDelugeEffect(target, user, isCrit, adventure) {
@@ -53,5 +53,5 @@ function toxicSpikeShotEffect(target, user, isCrit, adventure) {
 	}
 	addModifier(target, { name: "Stagger", stacks: 1 });
 	addModifier(target, { name: "Poison", stacks: 2 });
-	return dealDamage(target, user, damage, user.element, adventure);
+	return dealDamage(target, user, damage, false, user.element, adventure);
 }

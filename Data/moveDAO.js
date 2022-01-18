@@ -69,7 +69,7 @@ exports.resolveMove = async function (move, adventure) {
 
 		// Poison/Regen
 		if (user.modifiers.Poison) {
-			moveText += ` ${await dealDamage(user, null, user.modifiers.Poison * 10, "Poison", adventure)}`;
+			moveText += ` ${await dealDamage(user, null, user.modifiers.Poison * 10, true, "Poison", adventure)}`;
 		} else if (user.modifiers.Regen) {
 			moveText += ` ${gainHealth(user, user.modifiers.Regen * 10, adventure.room.enemyTitles)}`;
 		}

@@ -81,6 +81,12 @@ Damage type matches user
 - Fire Cracker (Fire)
 - Bow (Wind)
 
+### Piercing
+Deals unblockable damage
+
+#### Available on
+- Warhammer (Earth)
+
 ### Prideful
 High value non-elemental damage
 
