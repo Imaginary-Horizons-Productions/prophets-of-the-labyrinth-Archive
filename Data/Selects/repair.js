@@ -1,7 +1,6 @@
 const Select = require('../../Classes/Select.js');
 const { getAdventure, setAdventure } = require('../adventureDAO.js');
 const { decrementForgeSupplies } = require('../roomDAO.js');
-const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
 
 module.exports = new Select("repair");
 

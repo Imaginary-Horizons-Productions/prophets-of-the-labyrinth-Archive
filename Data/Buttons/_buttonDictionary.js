@@ -6,11 +6,10 @@ var buttonWhitelist = [
 	"deploy.js",
 	"elementswap.js",
 	"getgoldonfire.js",
-	"giveup.js",
 	"hpshare.js",
 	"join.js",
+	"modifier.js",
 	"nontargetweapon.js",
-	"partystats.js",
 	"predict.js",
 	"ready.js",
 	"readymove.js",
@@ -18,9 +17,6 @@ var buttonWhitelist = [
 	"replaceweapon.js",
 	"rest.js",
 	"routevote.js",
-	"self.js",
-	"takegold.js",
-	"takeweapon.js",
 	"upgrade.js"
 ];
 

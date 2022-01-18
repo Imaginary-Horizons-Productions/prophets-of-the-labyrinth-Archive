@@ -1,3 +1,5 @@
+const { parseCount } = require("../../helpers");
+
 var modifierWhitelist = [
 	"absorb-darkness.js",
 	"absorb-earth.js",
@@ -5,10 +7,12 @@ var modifierWhitelist = [
 	"absorb-light.js",
 	"absorb-water.js",
 	"absorb-wind.js",
+	"curse-of-midas.js",
 	"evade.js",
+	"exposed.js",
 	"poison.js",
-	"powerdown.js",
-	"powerup.js",
+	"power-down.js",
+	"power-up.js",
 	"quicken.js",
 	"regen.js",
 	"slow.js",
@@ -23,8 +27,14 @@ for (const file of modifierWhitelist) {
 	modifierDictionary[modifier.name] = modifier;
 }
 
-exports.getModifierDescription = (modifierName) => {
-	return modifierDictionary[modifierName].description;
+exports.getModifierDescription = function (modifierName, bearer) {
+	let description = modifierDictionary[modifierName].description;
+	let stackCountExpression = description.match(/@{(stackCount[\*\d]*)}/)?.[1].replace(/stackCount/g, "n");
+	if (stackCountExpression) {
+		description = description.replace(/@{(stackCount.*)}/g, parseCount(stackCountExpression, bearer.modifiers[modifierName]));
+	}
+	return description.replace(/@{poise}/g, bearer.staggerThreshold)
+		.replace(/@{roundDecrement}/g, exports.getTurnDecrement(modifierName));
 }
 
 exports.getTurnDecrement = (modifierName) => {

@@ -1,33 +1,33 @@
-const DamageType = require("../Classes/DamageType");
-const Enemy = require("../Classes/Enemy");
-const { generateRandomNumber } = require("../helpers");
+const Enemy = require("../Classes/Enemy.js");
+const { getOpposite } = require("./elementHelpers.js");
+const { generateRandomNumber } = require("../helpers.js");
 
 module.exports.spawnEnemy = function (adventure, enemyTemplate, randomizeHp) {
 	let enemy = Object.assign(new Enemy(), enemyTemplate);
-	enemy.modifiers = {}; // breaks shared reference to modifiers object by enemies of same name
+	enemy.modifiers = { ...enemyTemplate.startingModifiers }; // breaks shared reference to modifiers object by enemies of same name
 	if (randomizeHp) {
 		let hpPercent = (10 * generateRandomNumber(adventure, 4, "Battle") + 80) / 100;
 		enemy.setHp(Math.ceil(enemy.maxHp * hpPercent));
 	}
 	let tagRegex = /@{([a-zA-Z]+)}/;
-	switch (enemy.name.match(tagRegex)?.[1]) { // this prevents all replaces from running; which is problematic because clone replace makes assumes player and enemy counts match
+	switch (enemy.name.match(tagRegex)?.[1]) { // this prevents all replaces from running; which is problematic because @{clone} assumes player and enemy counts match
 		case "adventure":
 			enemy.name = enemy.name.replace("@{adventure}", adventure.element);
 			break;
 		case "adventureOpposite":
-			enemy.name = enemy.name.replace("@{adventureOpposite}", DamageType.getOpposite(adventure.element));
+			enemy.name = enemy.name.replace("@{adventureOpposite}", getOpposite(adventure.element));
 			break;
 		case "clone":
 			enemy.name = enemy.name.replace("@{clone}", `Mirror ${adventure.delvers[adventure.room.enemies.length].title}`);
 			break;
 	}
 
-	switch (enemy.element.match(tagRegex)?.[1]) { // this prevents all replaces from running; which is problematic because clone replace makes assumes player and enemy counts match
+	switch (enemy.element.match(tagRegex)?.[1]) { // this prevents all replaces from running; which is problematic because @{clone} assumes player and enemy counts match
 		case "adventure":
 			enemy.setElement(enemy.element.replace("@{adventure}", adventure.element));
 			break;
 		case "adventureOpposite":
-			enemy.setElement(enemy.element.replace("@{adventureOpposite}", DamageType.getOpposite(adventure.element)));
+			enemy.setElement(enemy.element.replace("@{adventureOpposite}", getOpposite(adventure.element)));
 			break;
 		case "clone":
 			enemy.setElement(enemy.element.replace("@{clone}", adventure.delvers[adventure.room.enemies.length].element));
@@ -38,7 +38,7 @@ module.exports.spawnEnemy = function (adventure, enemyTemplate, randomizeHp) {
 }
 
 module.exports.selectRandomFoe = function (adventure, self) {
-	let team = "ally";
+	let team = "delver";
 	let index = generateRandomNumber(adventure, adventure.delvers.length, "Battle");
 	return [{ team, index }];
 }
@@ -46,7 +46,7 @@ module.exports.selectRandomFoe = function (adventure, self) {
 module.exports.selectAllFoes = function (adventure, self) {
 	return adventure.delvers.map((delver, index) => {
 		return {
-			team: "ally",
+			team: "delver",
 			index
 		}
 	})

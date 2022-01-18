@@ -1,9 +1,12 @@
 const Button = require('../../Classes/Button.js');
 const { MessageEmbed, MessageActionRow, MessageSelectMenu, MessageButton } = require('discord.js');
 const { getAdventure } = require('../adventureDAO.js');
-const { getFullName, modifiersToString } = require("../combatantDAO.js");
+const { getFullName } = require("../combatantDAO.js");
 const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
 const { weaponToEmbedField } = require('../weaponDAO.js');
+const { getEmoji, getResistances, getWeaknesses } = require('../elementHelpers.js');
+const Delver = require('../../Classes/Delver.js');
+const { isNonStacking, isBuff, isDebuff } = require("../Modifiers/_modifierDictionary.js");
 
 module.exports = new Button("readymove");
 
@@ -15,32 +18,36 @@ module.exports.execute = (interaction, args) => {
 		if (!delver.modifiers.Stun) { // Early out if stunned
 			let embed = new MessageEmbed().setColor(adventure.room.embedColor)
 				.setTitle(getFullName(delver, adventure.room.enemyTitles))
-				.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nElement: ${delver.element}`)
+				.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nWhen using ${delver.element} ${getEmoji(delver.element)} weapons, add 1 Stagger to enemies or remove 1 Stagger from allies`)
 				.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
 
-			let modifiersText = modifiersToString(delver);
-			if (modifiersText !== "") {
-				embed.addField("Modifiers", modifiersText);
-			}
-
 			let moveMenu = [];
+			if (Object.keys(delver.modifiers).length) {
+				moveMenu.push(new MessageActionRow().addComponents(...modifiersToActionRow(delver)));
+			}
 			let enemyOptions = [];
 			for (let i = 0; i < adventure.room.enemies.length; i++) {
 				let enemy = adventure.room.enemies[i];
 				if (enemy.hp > 0) {
-					enemyOptions.push({ label: getFullName(enemy, adventure.room.enemyTitles), description: "", value: `enemy-${i}` })
+					enemyOptions.push({
+						label: getFullName(enemy, adventure.room.enemyTitles),
+						description: miniPredict(delver.predict, enemy),
+						value: `enemy-${i}`
+					})
 				}
 			}
-			let allyOptions = adventure.delvers.map((ally, i) => {
+			let delverOptions = adventure.delvers.map((delver, i) => {
 				return {
-					label: ally.name,
-					description: "", //TODO #137 predict reminder in move target select
-					value: `ally-${i}`
+					label: delver.name,
+					description: miniPredict(delver.predict, delver),
+					value: `delver-${i}`
 				}
 			})
 			let usableWeapons = delver.weapons.filter(weapon => weapon.uses > 0);
 			if (usableWeapons.length > 0) {
-				for (const weapon of usableWeapons) {
+				for (let i = 0; i < usableWeapons.length; i++) {
+					const weapon = usableWeapons[i];
+					let elementEmoji = getEmoji(getWeaponProperty(weapon.name, "element"));
 					embed.addField(...weaponToEmbedField(weapon.name, weapon.uses));
 					let { target, team } = getWeaponProperty(weapon.name, "targetingTags");
 					if (target === "single") {
@@ -50,20 +57,21 @@ module.exports.execute = (interaction, args) => {
 							targetOptions = targetOptions.concat(enemyOptions);
 						}
 
-						if (team === "ally" || team === "any") {
-							targetOptions = targetOptions.concat(allyOptions);
+						if (team === "delver" || team === "any") {
+							targetOptions = targetOptions.concat(delverOptions);
 						}
 						moveMenu.push(new MessageActionRow().addComponents(
-							new MessageSelectMenu().setCustomId(`weapon-${weapon.name}`)
-								.setPlaceholder(`Use ${weapon.name} on...`)
+							new MessageSelectMenu().setCustomId(`weapon-${weapon.name}-${i}`)
+								.setPlaceholder(`${elementEmoji} Use ${weapon.name} on...`)
 								.addOptions(targetOptions)
 						));
 					} else {
 						// Button
 						moveMenu.push(new MessageActionRow().addComponents(
-							new MessageButton().setCustomId(`nontargetweapon-${weapon.name}`)
+							new MessageButton().setCustomId(`nontargetweapon-${weapon.name}-${i}`)
 								.setLabel(`Use ${weapon.name}`)
-								.setStyle("PRIMARY")
+								.setEmoji(elementEmoji)
+								.setStyle("SECONDARY")
 						))
 					}
 				}
@@ -85,4 +93,61 @@ module.exports.execute = (interaction, args) => {
 	} else {
 		interaction.reply({ content: "Please participate in combat in adventures you've joined.", ephemeral: true });
 	}
+}
+
+function miniPredict(predictType, combatant) {
+	switch (predictType) {
+		case "Targets":
+			return `Resistances: ${getResistances(combatant.element).map(element => getEmoji(element)).join(" ")}`;
+		case "Critical Hits":
+			return `Weaknesses: ${getWeaknesses(combatant.element).map(element => getEmoji(element)).join(" ")}`;
+		case "Health":
+			return `HP: ${combatant.hp}/${combatant.maxHp}`;
+		case "Move Order":
+			return `Speed Bonus: ${combatant.roundSpeed >= 0 ? "+" : ""}${combatant.roundSpeed + combatant.actionSpeed}`;
+		case "Modifiers":
+			let staggerCount = combatant.modifiers.Stagger || 0;
+			let bar = "";
+			for (let i = 0; i < combatant.staggerThreshold; i++) {
+				if (staggerCount > i) {
+					bar += "▰";
+				} else {
+					bar += "▱";
+				}
+			}
+			return `Stagger: ${bar}`;
+		case "Enemy Moves":
+			if (combatant instanceof Delver) {
+				return "Move in 2 rounds: Ask them";
+			} else {
+				return `Move in 2 rounds: ${combatant.nextAction}`;
+			}
+	}
+}
+
+function modifiersToActionRow(combatant) {
+	let actionRow = [];
+	let modifiers = Object.keys(combatant.modifiers);
+	let buttonCount = Math.min(modifiers.length, 4); // 5 buttons per row, save 1 spot for "and X more..." button
+	for (let i = 0; i < buttonCount; i++) {
+		let modifierName = modifiers[i];
+		let style;
+		if (isBuff(modifierName)) {
+			style = "PRIMARY";
+		} else if (isDebuff(modifierName)) {
+			style = "DANGER";
+		} else {
+			style = "SECONDARY";
+		}
+		actionRow.push(new MessageButton().setCustomId(`modifier-${modifierName}-${i}`)
+			.setLabel(`${modifierName}${isNonStacking(modifierName) ? "" : ` x ${combatant.modifiers[modifierName]}`}`)
+			.setStyle(style))
+	}
+	if (modifiers.length > 4) {
+		actionRow.push(new MessageButton().setCustomId(`modifier-MORE`)
+			.setLabel(`${modifiers.length - 4} more...`)
+			.setStyle("SECONDARY")
+			.setDisabled(combatant.predict !== "Modifiers"))
+	}
+	return actionRow;
 }

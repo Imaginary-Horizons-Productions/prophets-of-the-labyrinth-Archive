@@ -1,6 +1,6 @@
 const Move = require('../../Classes/Move');
 const Select = require('../../Classes/Select.js');
-const { getAdventure, checkNextRound, updateRoundMessage, endRound, setAdventure } = require('../adventureDAO');
+const { getAdventure, checkNextRound, endRound, setAdventure } = require('../adventureDAO');
 const { getWeaponProperty } = require('../Weapons/_weaponDictionary');
 const { getFullName } = require("./../combatantDAO.js");
 
@@ -37,21 +37,21 @@ module.exports.execute = async function (interaction, [weaponName]) {
 
 		// Send confirmation text
 		let target;
-		if (targetTeam === "ally") {
+		if (targetTeam === "delver") {
 			target = adventure.delvers[targetIndex];
 		} else if (targetTeam === "enemy") {
 			target = adventure.room.enemies[targetIndex];
 		}
-		interaction.reply(`${interaction.user} ${overwritten ? "switches to ready" : "readies"} **${weaponName}** to use on **${getFullName(target, adventure.room.enemyTitles)}**.`).then(() => {
+		interaction.update({ components: [] });
+		interaction.channel.send(`${interaction.user} ${overwritten ? "switches to ready" : "readies"} **${weaponName}** to use on **${getFullName(target, adventure.room.enemyTitles)}**.`).then(() => {
 			setAdventure(adventure);
-			updateRoundMessage(interaction.channel.messages, adventure);
 			if (checkNextRound(adventure)) {
 				endRound(adventure, interaction.channel);
 			}
 		}).catch(console.error);
 	} else {
 		// Needed to prevent crashes in case users keep weapon menus around and uses one with a broken weapon
-		interaction.reply({ content: `You don't have a ${weaponName} with uses remaining.`, ephemeral: true })
+		interaction.update({ content: `You don't have a ${weaponName} with uses remaining.`, components: [], ephemeral: true })
 			.catch(console.error);
 	}
 }

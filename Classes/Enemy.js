@@ -10,7 +10,7 @@ module.exports = class Enemy extends Combatant {
 	actions = {};
 	nextAction = "";
 	bounty = 0;
-	//TODO #152 startingModifiers property
+	startingModifiers = {}; // {modifier: stacks}
 
 	setHp = super.setHp;
 	setTitle = super.setTitle;
@@ -23,6 +23,11 @@ module.exports = class Enemy extends Combatant {
 
 	setFirstAction(actionName) {
 		this.nextAction = actionName;
+		return this;
+	}
+
+	addStartingModifier(modifier, stacks) {
+		this.startingModifiers[modifier] = stacks;
 		return this;
 	}
 

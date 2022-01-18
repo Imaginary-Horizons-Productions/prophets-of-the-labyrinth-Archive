@@ -7,15 +7,6 @@ module.exports = class Adventure {
 	id; // the id of the thread created for the adventure
 	name;
 	element;
-	scouting = {
-		finalBoss: false,
-		artifactGuardians: 0,
-		artifactGuardiansEncountered: 0
-	}
-	finalBoss = "Hall of Mirrors";
-	artifactGuardians = [];
-	rnIndex = 0;
-	rnIndexBattle = 0;
 	messageIds = {
 		start: "",
 		leaderNotice: "",
@@ -27,6 +18,13 @@ module.exports = class Adventure {
 	leaderId = "";
 	delvers = [];
 	difficultyOptions = [];
+	scouting = {
+		finalBoss: false,
+		artifactGuardians: 0,
+		artifactGuardiansEncountered: 0
+	}
+	finalBoss = "";
+	artifactGuardians = [];
 	accumulatedScore = 0;
 	depth = 0;
 	room = {};
@@ -34,6 +32,9 @@ module.exports = class Adventure {
 	lives = 2;
 	gold = 100;
 	peakGold = 100;
+	artifacts = {};
+	rnIndex = 0;
+	rnIndexBattle = 0;
 	rnTable = "";
 
 	generateRNTable() {
@@ -61,14 +62,16 @@ module.exports = class Adventure {
 		return this;
 	}
 
-	setMessageId(type, id) {
-		this.messageIds[type] = id;
-		return this;
-	}
-
 	setLeaderId(id) {
 		this.leaderId = id;
 		return this;
+	}
+
+	getWeaponCapacity() {
+		let count = 4 + (this.artifacts["Hammerspace Holster"] || 0);
+		count = Math.min(5, count);
+		count = Math.max(1, count);
+		return count;
 	}
 
 	gainGold(integer) {
@@ -77,5 +80,18 @@ module.exports = class Adventure {
 			this.peakGold = this.gold;
 		}
 		return this.gold;
+	}
+
+	gainArtifact(artifact, count) {
+		if (artifact === "Oil Painting") {
+			this.gold += 500 * count;
+		} else if (artifact === "Phoenix Fruit Blossom") {
+			this.lives++;
+		}
+		if (this.artifacts[artifact]) {
+			this.artifacts[artifact] += count;
+		} else {
+			this.artifacts[artifact] = count;
+		}
 	}
 }

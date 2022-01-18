@@ -10,7 +10,7 @@ module.exports.execute = (interaction, args) => {
 	var adventure = getAdventure(thread.id);
 	if (!adventure.delvers.some(delver => delver.id == interaction.user.id)) {
 		// Update game logic
-		adventure.delvers.push(new Delver(interaction.user.id, interaction.member.displayName, channelId));
+		adventure.delvers.push(new Delver(interaction.user.id, interaction.member.displayName, adventure.id));
 		adventure.lives++;
 		adventure.gainGold(50);
 		setAdventure(adventure);

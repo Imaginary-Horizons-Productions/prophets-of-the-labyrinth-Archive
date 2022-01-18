@@ -1,7 +1,7 @@
 const Enemy = require("../Classes/Enemy.js");
 const Delver = require("../Classes/Delver.js");
 const { getInverse, isNonStacking, getModifierDescription } = require("./Modifiers/_modifierDictionary.js");
-const DamageType = require("../Classes/DamageType.js");
+const { getWeaknesses, getResistances } = require("./elementHelpers.js");
 
 exports.getFullName = function (combatant, titleObject) {
 	if (combatant instanceof Enemy) {
@@ -26,58 +26,63 @@ exports.calculateTotalSpeed = function (combatant) {
 	return Math.ceil(totalSpeed);
 }
 
-exports.dealDamage = async function (target, user, damage, element, adventure) {
-	if (target.hp > 0) {
-		let targetModifiers = Object.keys(target.modifiers);
-		if (!targetModifiers.includes(`${element} Absorb`)) {
-			if (!targetModifiers.includes("evade") || element === "Poison") {
-				let pendingDamage = damage + (user?.modifiers["powerup"] || 0);
-				let isWeakness = DamageType.getWeaknesses(target.element).includes(element);
-				if (isWeakness) {
-					pendingDamage *= 2;
-				}
-				let isResistance = DamageType.getResistances(target.element).includes(element);
-				if (isResistance) {
-					pendingDamage = pendingDamage / 2;
-				}
-				pendingDamage = Math.ceil(pendingDamage);
-				let blockedDamage = 0;
-				if (element !== "Poison") {
-					if (pendingDamage >= target.block) {
-						pendingDamage -= target.block;
-						blockedDamage = target.block;
-						target.block = 0;
-					} else {
-						target.block -= pendingDamage;
-						blockedDamage = pendingDamage;
-						pendingDamage = 0;
-					}
-				}
-				target.hp -= pendingDamage;
-				let damageText = ` ${exports.getFullName(target, adventure.room.enemyTitles)} takes *${pendingDamage} damage*${blockedDamage > 0 ? ` (${blockedDamage} blocked)` : ""}${element === "Poison" ? " from Poison" : ""}${isWeakness ? "!!!" : isResistance ? "." : "!"}`;
-				if (target.hp <= 0) {
-					if (target.team === "ally") {
-						target.hp = target.maxHp;
-						adventure.lives -= 1;
-						damageText += ` *${exports.getFullName(target, adventure.room.enemyTitles)} has died* and been revived. ***${adventure.lives} lives remain.***`;
-					} else {
-						target.hp = 0;
-						damageText += ` *${exports.getFullName(target, adventure.room.enemyTitles)} has died*.`;
-					}
-				}
-				return damageText;
-			} else {
-				target.modifiers["evade"]--;
-				if (target.modifiers["evade"] <= 0) {
-					delete target.modifiers["evade"];
-				}
-				return ` ${exports.getFullName(target, adventure.room.enemyTitles)} evades the attack!`;
+exports.dealDamage = async function (target, user, damage, isUnblockable, element, adventure) {
+	let targetName = exports.getFullName(target, adventure.room.enemyTitles);
+	let targetModifiers = Object.keys(target.modifiers);
+	if (!targetModifiers.includes(`${element} Absorb`)) {
+		if (!targetModifiers.includes("Evade") || isUnblockable) {
+			let pendingDamage = damage + (user?.modifiers["Power Up"] || 0);
+			if (targetModifiers.includes("Exposed")) {
+				pendingDamage *= 1.5;
 			}
+			let isWeakness = getWeaknesses(target.element).includes(element);
+			if (isWeakness) {
+				pendingDamage *= 2;
+			}
+			let isResistance = getResistances(target.element).includes(element);
+			if (isResistance) {
+				pendingDamage = pendingDamage / 2;
+			}
+			pendingDamage = Math.ceil(pendingDamage);
+			let blockedDamage = 0;
+			if (!isUnblockable) {
+				if (pendingDamage >= target.block) {
+					pendingDamage -= target.block;
+					blockedDamage = target.block;
+					target.block = 0;
+				} else {
+					target.block -= pendingDamage;
+					blockedDamage = pendingDamage;
+					pendingDamage = 0;
+				}
+			}
+			target.hp -= pendingDamage;
+			let damageText = ` ${targetName} takes *${pendingDamage} damage*${blockedDamage > 0 ? ` (${blockedDamage} blocked)` : ""}${element === "Poison" ? " from Poison" : ""}${isWeakness ? "!!!" : isResistance ? "." : "!"}`;
+			if (targetModifiers.includes("Curse of Midas")) {
+				let midasGold = Math.floor(pendingDamage / 10);
+				adventure.room.loot.gold += midasGold;
+				damageText += ` ${midasGold} gold scatters about the room.`;
+			}
+			if (target.hp <= 0) {
+				if (target.team === "delver") {
+					target.hp = target.maxHp;
+					adventure.lives -= 1;
+					damageText += ` *${targetName} has died* and been revived. ***${adventure.lives} lives remain.***`;
+				} else {
+					target.hp = 0;
+					damageText += ` *${targetName} has died*.`;
+				}
+			}
+			return damageText;
 		} else {
-			return ` ${exports.gainHealth(target, damage, adventure.room.enemyTitles)}`;
+			target.modifiers["Evade"]--;
+			if (target.modifiers["Evade"] <= 0) {
+				delete target.modifiers["Evade"];
+			}
+			return ` ${targetName} evades the attack!`;
 		}
 	} else {
-		return ` ${exports.getFullName(target, adventure.room.enemyTitles)} was already dead!`;
+		return ` ${exports.gainHealth(target, damage, adventure.room.enemyTitles)}`;
 	}
 }
 
@@ -104,20 +109,20 @@ exports.clearBlock = function (combatant) {
 	return combatant;
 }
 
-exports.addModifier = function (combatant, modifierName, value) {
-	let pendingStacks = value;
-	let inverse = getInverse(modifierName);
+exports.addModifier = function (combatant, { name: modifier, stacks }) {
+	let pendingStacks = stacks;
+	let inverse = getInverse(modifier);
 	let inverseStacks = combatant.modifiers[inverse];
 	if (inverseStacks) {
 		exports.removeModifier(combatant, inverse, pendingStacks);
 		if (inverseStacks < pendingStacks) {
-			combatant.modifiers[modifierName] = pendingStacks - inverseStacks;
+			combatant.modifiers[modifier] = pendingStacks - inverseStacks;
 		}
 	} else {
-		if (combatant.modifiers[modifierName]) {
-			combatant.modifiers[modifierName] += pendingStacks;
+		if (combatant.modifiers[modifier]) {
+			combatant.modifiers[modifier] += pendingStacks;
 		} else {
-			combatant.modifiers[modifierName] = pendingStacks;
+			combatant.modifiers[modifier] = pendingStacks;
 		}
 	}
 
@@ -129,12 +134,12 @@ exports.addModifier = function (combatant, modifierName, value) {
 	return combatant;
 }
 
-exports.removeModifier = function (combatant, modifierName, value) {
-	if (combatant.modifiers[modifierName]) {
-		combatant.modifiers[modifierName] -= value;
+exports.removeModifier = function (combatant, { name: modifier, stacks }) {
+	if (combatant.modifiers[modifier]) {
+		combatant.modifiers[modifier] -= stacks;
 	}
-	if (value < 0 || combatant.modifiers[modifierName] <= 0) {
-		delete combatant.modifiers[modifierName];
+	if (stacks < 0 || combatant.modifiers[modifier] <= 0) {
+		delete combatant.modifiers[modifier];
 	}
 	return combatant;
 }
@@ -142,7 +147,7 @@ exports.removeModifier = function (combatant, modifierName, value) {
 exports.modifiersToString = function (combatant) {
 	let modifiersText = "";
 	for (let modifier in combatant.modifiers) {
-		modifiersText += `*${modifier}${isNonStacking(modifier) ? "" : ` x ${combatant.modifiers[modifier]}`}* - ${getModifierDescription(modifier)}\n`;
+		modifiersText += `*${modifier}${isNonStacking(modifier) ? "" : ` x ${combatant.modifiers[modifier]}`}* - ${getModifierDescription(modifier, combatant)}\n`;
 	}
 	return modifiersText;
 }

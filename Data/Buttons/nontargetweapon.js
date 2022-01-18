@@ -1,7 +1,7 @@
 const Button = require('../../Classes/Button.js');
 const Move = require('../../Classes/Move');
 const { generateRandomNumber } = require('../../helpers.js');
-const { getAdventure, checkNextRound, updateRoundMessage, endRound, setAdventure } = require('../adventureDAO');
+const { getAdventure, checkNextRound, endRound, setAdventure } = require('../adventureDAO');
 const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
 
 module.exports = new Button("nontargetweapon");
@@ -24,7 +24,7 @@ module.exports.execute = async function (interaction, [weaponName]) {
 		let { target, team } = getWeaponProperty(weaponName, "targetingTags");
 		if (target === "all") {
 			let targetCount = 0;
-			if (team === "ally") {
+			if (team === "delver") {
 				targetCount = adventure.delvers.length;
 				targetText = "all allies";
 			} else if (team === "enemy") {
@@ -37,7 +37,7 @@ module.exports.execute = async function (interaction, [weaponName]) {
 		} else if (target.startsWith("random")) {
 			let targetCount = Number(target.split("-")[1]);
 			let poolSize = 0;
-			if (team === "ally") {
+			if (team === "delver") {
 				poolSize = adventure.delvers.length;
 				targetText = `${targetCount} random all${targetCount === 1 ? "y" : "ies"}`;
 			} else if (team === "enemy") {
@@ -67,9 +67,9 @@ module.exports.execute = async function (interaction, [weaponName]) {
 		}
 
 		// Send confirmation text
-		interaction.reply(`${interaction.user} ${overwritten ? "switches to ready" : "readies"} **${weaponName}**${target !== "none" && target !== "self" ? ` to use on **${targetText}**` : ""}.`).then(() => {
+		interaction.update({ components: [] });
+		interaction.channel.send(`${interaction.user} ${overwritten ? "switches to ready" : "readies"} **${weaponName}**${target !== "none" && target !== "self" ? ` to use on **${targetText}**` : ""}.`).then(() => {
 			setAdventure(adventure);
-			updateRoundMessage(interaction.channel.messages, adventure);
 			if (checkNextRound(adventure)) {
 				endRound(adventure, interaction.channel);
 			};

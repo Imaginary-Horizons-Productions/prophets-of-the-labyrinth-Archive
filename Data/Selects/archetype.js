@@ -27,7 +27,7 @@ module.exports.execute = (interaction, args) => {
 				.setPredict(archetypeTemplate.predict);
 
 			// Send confirmation text
-			interaction.reply({content: archetypeTemplate.description, ephemeral: true});
+			interaction.update({ content: archetypeTemplate.description, components: [] });
 			interaction.channel.send(`${interaction.user} ${isSwitching ? "has switched to" : "will be playing as"} ${archetype}.`).then(() => {
 				// Check if all ready
 				if (adventure.delvers.every(delver => delver.title)) {
@@ -46,7 +46,7 @@ module.exports.execute = (interaction, args) => {
 					}
 
 					interaction.channel.send({ content: "All players are ready, the adventure will start when the leader clicks the button below!", components: readyButton }).then(message => {
-						adventure.setMessageId("start", message.id);
+						adventure.messageIds.start = message.id;
 						setAdventure(adventure);
 					})
 				}
@@ -56,7 +56,7 @@ module.exports.execute = (interaction, args) => {
 			let join = new MessageActionRow().addComponents(
 				new MessageButton().setCustomId(`join-${interaction.channel.id}`)
 					.setLabel("Join")
-					.setStyle("PRIMARY"));
+					.setStyle("SUCCESS"));
 			interaction.reply({ content: `You don't appear to be signed up for this adventure. You can join with the button below:`, components: [join], ephemeral: true });
 		}
 	} else {

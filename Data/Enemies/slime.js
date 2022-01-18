@@ -17,16 +17,16 @@ function tackleEffect(target, user, isCrit, adventure) {
 	if (isCrit) {
 		damage *= 2;
 	}
-	addModifier(target, "Stagger", 1);
-	return dealDamage(target, user, damage, adventure.element, adventure);
+	addModifier(target, { name: "Stagger", stacks: 1 });
+	return dealDamage(target, user, damage, false, adventure.element, adventure);
 }
 
 function goopSprayEffect(target, user, isCrit, adventure) {
 	if (isCrit) {
-		addModifier(target, "Slow", 3);
-		addModifier(target, "Stagger", 1);
+		addModifier(target, { name: "Slow", stacks: 3 });
+		addModifier(target, { name: "Stagger", stacks: 1 });
 	} else {
-		addModifier(target, "Slow", 2);
+		addModifier(target, { name: "Slow", stacks: 2 });
 	}
 	return `${getFullName(target, adventure.room.enemyTitles)} is Slowed by the sticky ooze.`;
 }

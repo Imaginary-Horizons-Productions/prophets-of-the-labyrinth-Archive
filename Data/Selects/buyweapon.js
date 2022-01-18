@@ -1,6 +1,7 @@
 const { MessageActionRow, MessageButton } = require('discord.js');
 const Select = require('../../Classes/Select.js');
 const { getAdventure, setAdventure } = require('../adventureDAO.js');
+const { editSelectOption } = require('../roomDAO.js');
 const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
 
 module.exports = new Select("buyweapon");
@@ -10,42 +11,27 @@ module.exports.execute = (interaction, [tier]) => {
 	let adventure = getAdventure(interaction.channel.id);
 	let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 	if (delver) {
-		let [weaponName, menuIndex, cost] = interaction.values[0].split("-");
-		if (adventure.room.loot[weaponName] > 0) {
+		let [weaponName, cost, menuIndex] = interaction.values[0].split("-");
+		if (adventure.room.loot[`weapon-${weaponName}`] > 0) {
 			if (adventure.gold >= cost) {
 				adventure.gold -= cost;
 				adventure.room.loot[weaponName]--;
 				let uses = getWeaponProperty(weaponName, "maxUses");
-				if (delver.weapons.length < 4) {
+				if (delver.weapons.length < adventure.getWeaponCapacity()) {
 					delver.weapons.push({ name: weaponName, uses });
-					let updatedUI = interaction.message.components.map(row => {
-						return new MessageActionRow().addComponents(...row.components.map(component => {
-							if (component.customId === `buyweapon-${tier}`) {
-								let remainingOptions = component.options;
-								if (remainingOptions.length > 1) {
-								remainingOptions.splice(menuIndex, 1);
-								console.log(remainingOptions);
-									return component.setOptions(...remainingOptions);
-								} else {
-									return component.setPlaceholder("SOLD OUT").setDisabled(true);
-								}
-							} else {
-								return component;
-							}
-						}));
-					});
+					let updatedUI = editSelectOption(interaction.message, interaction.customId, `${cost}g: ${weaponName}`, null, "SOLD OUT");
 					interaction.message.edit({ components: updatedUI });
 					interaction.reply({ content: `${interaction.member.displayName} takes a ${weaponName}.` });
 					setAdventure(adventure);
 				} else {
 					let replaceUI = [new MessageActionRow().addComponents(
 						...delver.weapons.map((weapon, index) => {
-							return new MessageButton().setCustomId(`replaceweapon-${weaponName}-${index}-${interaction.message.id}-${cost}`)
+							return new MessageButton().setCustomId(`replaceweapon-${weaponName}-${index}-${cost}-${tier}`)
 								.setLabel(`Discard ${weapon.name}`)
-								.setStyle("PRIMARY")
+								.setStyle("SECONDARY")
 						})
 					)];
-					interaction.reply({ content: "You can only carry 4 weapons at a time. Pick one to replace:", components: replaceUI, ephemeral: true });
+					interaction.reply({ content: `You can only carry ${adventure.getWeaponCapacity()} weapons at a time. Pick one to replace:`, components: replaceUI, ephemeral: true });
 				}
 			} else {
 				interaction.reply({ content: "You don't have enough money to buy that.", ephemeral: true });

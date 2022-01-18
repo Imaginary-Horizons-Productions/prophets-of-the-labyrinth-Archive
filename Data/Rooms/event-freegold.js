@@ -10,7 +10,7 @@ module.exports = new RoomTemplate()
 module.exports.uiRows.push(new MessageActionRow().addComponents(
 	new MessageButton().setCustomId("takegold")
 		.setLabel("Would be a waste to leave it there [+30 gold]")
-		.setStyle("SUCCESS")
+		.setStyle("DANGER")
 ))
 
 module.exports.lootList = { "gold": "30" };

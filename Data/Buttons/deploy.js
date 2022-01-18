@@ -1,8 +1,9 @@
 const Button = require('../../Classes/Button.js');
-const { MessageActionRow, MessageSelectMenu } = require('discord.js');
+const { MessageActionRow, MessageSelectMenu, MessageButton } = require('discord.js');
 const { getPlayer } = require('../playerDAO.js');
 const { getArchetype } = require('../Archetypes/_archetypeDictionary.js');
 const { getAdventure } = require('../adventureDAO.js');
+const { getEmoji } = require('../elementHelpers');
 
 module.exports = new Button("deploy");
 
@@ -17,8 +18,8 @@ module.exports.execute = (interaction, args) => {
 			if (playerProfile.archetypes[className] > 0) {
 				let archetype = getArchetype(className);
 				classOptions.push({
-					label: `${className}`,
-					description: `Predicts: ${archetype.predict} ~-~-~ Element: ${archetype.element}`,
+					label: `${className} ${getEmoji(archetype.element)}`,
+					description: `Predicts: ${archetype.predict}`,
 					value: className
 				})
 			}
@@ -36,7 +37,7 @@ module.exports.execute = (interaction, args) => {
 		let join = new MessageActionRow().addComponents(
 			new MessageButton().setCustomId(`join-${interaction.channel.id}`)
 				.setLabel("Join")
-				.setStyle("PRIMARY"));
+				.setStyle("SUCCESS"));
 		interaction.reply({ content: `You don't appear to be signed up for this adventure. You can join with the button below:`, components: [join], ephemeral: true });
 	}
 }

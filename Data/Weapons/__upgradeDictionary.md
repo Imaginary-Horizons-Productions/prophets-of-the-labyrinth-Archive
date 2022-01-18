@@ -20,11 +20,18 @@ Affects Earth element combatants
 - Potion (Water)
 
 ### Evasive
-User gains evade
+User gains Evade
 
 #### Available on
 - Sun Flare (Light)
 - Bow (Wind)
+
+### Flanking
+Applies Exposed to target
+
+#### Avaialble on
+- Life Drain (Darkness)
+- Disarm (Light)
 
 ### Guarding
 Adds block on the user
@@ -74,6 +81,12 @@ Damage type matches user
 - Fire Cracker (Fire)
 - Bow (Wind)
 
+### Piercing
+Deals unblockable damage
+
+#### Available on
+- Warhammer (Earth)
+
 ### Prideful
 High value non-elemental damage
 
@@ -113,6 +126,13 @@ Increased base damage
 - Dagger (Wind)
 - Sickle (Water)
 
+### Soothing
+Applies Regen
+
+#### Avaialble on
+- Midas Staff (Water)
+- Inspiration (Light)
+
 ### Sweeping
 Hits all enemes/allies
 
@@ -120,6 +140,7 @@ Hits all enemes/allies
 - Dagger (Wind)
 - Spear (Light)
 - Blood Aegis (Darkness)
+- Inspiration (Light)
 
 ### Swift
 Grants the user the Quicken modifier
@@ -184,6 +205,10 @@ Increased damage against enemies with 0 block
 - Sickle (10% max hp bonus damage)
 - Life Drain (attack a foe and gain hp)
 - Warhammer (bonus damage on stunned enemy)
+- Inspire (power up to ally)
+- Disarm (power down to enemy)
+- Midas Staff (apply Curse of Midas)
+- Pact of Healing (pay hp to apply regen)
 
 ## Ideas
 - Empowering ___ - Adds stacks to buffs
@@ -192,3 +217,4 @@ Increased damage against enemies with 0 block
 - Tower Shield - blocks for target and user (non-starting weapon)
 - Bashing - bonus damage for block on user
 - Siphoning ___ - regain uses if killing blow
+- Stalwart ___ - removes a stagger from the user
