@@ -37,7 +37,7 @@ module.exports.execute = async function (interaction, [weaponName]) {
 
 		// Send confirmation text
 		let target;
-		if (targetTeam === "ally") {
+		if (targetTeam === "delver") {
 			target = adventure.delvers[targetIndex];
 		} else if (targetTeam === "enemy") {
 			target = adventure.room.enemies[targetIndex];

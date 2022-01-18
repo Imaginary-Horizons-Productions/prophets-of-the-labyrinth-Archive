@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 
 module.exports = new Weapon("name", 1, "description", "element", effect, [])
-	.setTargetingTags({ target: "", team: "" }) // tagObject {target: ["single", "all", "random", "self", "none"], team: ["ally", "enemy", "any", "self", "none"]}
+	.setTargetingTags({ target: "", team: "" }) // tagObject {target: ["single", "all", "random", "self", "none"], team: ["delver", "enemy", "any", "self", "none"]}
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost()
 	.setUses();

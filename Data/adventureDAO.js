@@ -224,7 +224,7 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 	// Logistics for Next Round
 	let teams = {
 		"enemy": adventure.room.enemies,
-		"ally": adventure.delvers
+		"delver": adventure.delvers
 	}
 	for (let teamName in teams) {
 		teams[teamName].forEach((combatant, i) => {
@@ -337,12 +337,12 @@ exports.endRound = async function (adventure, thread) {
 			let move = new Move()
 				.setSpeed(enemy)
 				.setIsCrit(enemy.crit)
-			let counterpartMove = adventure.room.moves.find(move => move.userTeam === "ally" && move.userIndex == index);
+			let counterpartMove = adventure.room.moves.find(move => move.userTeam === "delver" && move.userIndex == index);
 			move.setUser("clone", index)
 				.setMoveName(counterpartMove.name);
 			counterpartMove.targets.forEach(target => {
 				if (target.team === "enemy") {
-					move.addTarget("ally", target.index);
+					move.addTarget("delver", target.index);
 				} else {
 					move.addTarget("enemy", target.index);
 				}

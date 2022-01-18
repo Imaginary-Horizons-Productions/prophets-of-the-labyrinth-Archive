@@ -38,7 +38,7 @@ module.exports.spawnEnemy = function (adventure, enemyTemplate, randomizeHp) {
 }
 
 module.exports.selectRandomFoe = function (adventure, self) {
-	let team = "ally";
+	let team = "delver";
 	let index = generateRandomNumber(adventure, adventure.delvers.length, "Battle");
 	return [{ team, index }];
 }
@@ -46,7 +46,7 @@ module.exports.selectRandomFoe = function (adventure, self) {
 module.exports.selectAllFoes = function (adventure, self) {
 	return adventure.delvers.map((delver, index) => {
 		return {
-			team: "ally",
+			team: "delver",
 			index
 		}
 	})

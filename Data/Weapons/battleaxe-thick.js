@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { addModifier, dealDamage } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Thick Battleaxe", 2, "Strike a foe for @{damage} (+@{bonusDamage} if you have 0 block) @{element} damage*\nCritical Hit: Damage x@{critMultiplier}", "Fire", effect, ["Prideful Battleaxe", "Thirsting Battleaxe"])
+module.exports = new Weapon("Thick Battleaxe", 2, "Strike a foe for @{damage} (+@{bonusDamage} if you have 0 block) @{element} damage*\nCritical Hit: Damage x@{critBonus}", "Fire", effect, ["Prideful Battleaxe", "Thirsting Battleaxe"])
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(350)
@@ -10,7 +10,7 @@ module.exports = new Weapon("Thick Battleaxe", 2, "Strike a foe for @{damage} (+
 	.setBonusDamage(75);
 
 function effect(target, user, isCrit, adventure) {
-	let { element: weaponElement, modifiers: [elementStagger], damage, bonusDamage, critMultiplier } = module.exports;
+	let { element: weaponElement, modifiers: [elementStagger], damage, bonusDamage, critBonus } = module.exports;
 	if (user.block === 0) {
 		damage += bonusDamage;
 	}
@@ -18,7 +18,7 @@ function effect(target, user, isCrit, adventure) {
 		addModifier(target, elementStagger);
 	}
 	if (isCrit) {
-		damage *= critMultiplier;
+		damage *= critBonus;
 	}
 	return dealDamage(target, user, damage, false, weaponElement, adventure);
 }

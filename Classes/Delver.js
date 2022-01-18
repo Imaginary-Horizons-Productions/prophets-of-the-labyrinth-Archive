@@ -4,7 +4,7 @@ const Combatant = require("./Combatant");
 module.exports = class Delver extends Combatant {
 	// Inherited from Combatant: hp, maxHp, speed, roundSpeed, element
 	constructor(idInput, nameInput, adventureIdInput) {
-		super(nameInput, "ally");
+		super(nameInput, "delver");
 		this.id = idInput;
 		this.adventureId = adventureIdInput;
 	}

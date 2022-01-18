@@ -131,7 +131,7 @@ exports.getWeaponProperty = function (weaponName, propertyName) {
 
 exports.buildWeaponDescription = function (weaponName, buildFullDescription) {
 	let description = exports.getWeaponProperty(weaponName, "description").replace("@{element}", getEmoji(exports.getWeaponProperty(weaponName, "element")))
-		.replace("@{critMultiplier}", exports.getWeaponProperty(weaponName, "critMultiplier"))
+		.replace("@{critBonus}", exports.getWeaponProperty(weaponName, "critBonus"))
 		.replace("@{damage}", exports.getWeaponProperty(weaponName, "damage"))
 		.replace("@{bonusDamage}", exports.getWeaponProperty(weaponName, "bonusDamage"))
 		.replace("@{block}", exports.getWeaponProperty(weaponName, "block"))

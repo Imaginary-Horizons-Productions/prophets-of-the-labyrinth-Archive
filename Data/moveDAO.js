@@ -4,7 +4,7 @@ const { selectAllFoes } = require("./enemyDAO.js");
 const { getWeaponProperty } = require("./Weapons/_weaponDictionary.js");
 
 exports.resolveMove = async function (move, adventure) {
-	let userTeam = move.userTeam === "ally" ? adventure.delvers : adventure.room.enemies;
+	let userTeam = move.userTeam === "delver" ? adventure.delvers : adventure.room.enemies;
 	let user = userTeam[move.userIndex];
 	if (user.hp > 0) {
 		let moveText = `• ${getFullName(user, adventure.room.enemyTitles)} `;
@@ -12,7 +12,7 @@ exports.resolveMove = async function (move, adventure) {
 			let effect;
 			let targetAll = false;
 			let breakText = "";
-			if (move.userTeam === "ally" || move.userTeam === "clone") {
+			if (move.userTeam === "delver" || move.userTeam === "clone") {
 				effect = getWeaponProperty(move.name, "effect");
 				if (move.userTeam !== "clone") {
 					targetAll = getWeaponProperty(move.name, "targetingTags").target === "all";
@@ -31,7 +31,7 @@ exports.resolveMove = async function (move, adventure) {
 			// An arry containing move result texts
 			let resultTexts = await Promise.all(move.targets.map(async ({ team, index: targetIndex }) => {
 				let currentTarget = null;
-				if (team === "ally") {
+				if (team === "delver") {
 					currentTarget = adventure.delvers[targetIndex];
 				} else if (team === "enemy") {
 					currentTarget = adventure.room.enemies[targetIndex];
@@ -85,7 +85,7 @@ exports.getTargetList = function (targets, adventure) {
 		let targetTeam;
 		if (targetData.team === "none") {
 			continue;
-		} else if (targetData.team === "ally") {
+		} else if (targetData.team === "delver") {
 			targetTeam = adventure.delvers;
 		} else {
 			targetTeam = adventure.room.enemies;
