@@ -11,7 +11,7 @@ module.exports = class Weapon {
 	targetingTags = {};
 	cost = 100;
 	maxUses = 10;
-	critMultiplier = 2; //TODO #159 convert to critBonus to allow for additive bonuses (cloak)
+	critBonus = 2;
 	damage = 0;
 	bonusDamage = 0;
 	block = 0;
@@ -20,7 +20,7 @@ module.exports = class Weapon {
 	speedBonus = 0;
 	modifiers = []; //[{name, stacks}]
 
-	setTargetingTags(tagObject) {  // tagObject {target: ["single", "all", "random", "self"], team: ["ally", "enemy", "any"]}
+	setTargetingTags(tagObject) {  // tagObject {target: ["single", "all", "random", "self"], team: ["delver", "enemy", "any"]}
 		this.targetingTags = tagObject;
 		return this;
 	}
@@ -45,8 +45,8 @@ module.exports = class Weapon {
 		return this;
 	}
 
-	setCritMultiplier(numberInput) {
-		this.critMultiplier = numberInput;
+	setCritBonus(numberInput) {
+		this.critBonus = numberInput;
 		return this;
 	}
 

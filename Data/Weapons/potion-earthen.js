@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { removeModifier, addModifier } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Earthen Potion", 2, "*Apply @{mod1Stacks} @{mod1} to a Earth element combatant, or @{mod2Stacks} @{mod2} to someone else*\nCritical Hit: @{mod1}/@{mod2} x@{critMultiplier}", "Earth", effect, ["Inky Potion", "Watery Potion"])
+module.exports = new Weapon("Earthen Potion", 2, "*Apply @{mod1Stacks} @{mod1} to a Earth element combatant, or @{mod2Stacks} @{mod2} to someone else*\nCritical Hit: @{mod1}/@{mod2} x@{critBonus}", "Earth", effect, ["Inky Potion", "Watery Potion"])
 	.setTargetingTags({ target: "single", team: "any" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Regen", stacks: 4 }, { name: "Poison", stacks: 4 }, { name: "Regen", stacks: 8 }, { name: "Poison", stacks: 8 }])
 	.setCost(350)

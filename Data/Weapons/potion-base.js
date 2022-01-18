@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { addModifier } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Unfinished Potion", 1, "*Apply @{mod1Stacks} @{mod1} to a foe*\nCritical Hit: @{mod1} x@{critMultiplier}", "Water", effect, ["Earthen Potion", "Inky Potion", "Watery Potion"])
+module.exports = new Weapon("Unfinished Potion", 1, "*Apply @{mod1Stacks} @{mod1} to a foe*\nCritical Hit: @{mod1} x@{critBonus}", "Water", effect, ["Earthen Potion", "Inky Potion", "Watery Potion"])
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Poison", stacks: 4 }, { name: "Poison", stacks: 8 }])
 	.setCost(200)

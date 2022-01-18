@@ -64,7 +64,7 @@ exports.dealDamage = async function (target, user, damage, isUnblockable, elemen
 				damageText += ` ${midasGold} gold scatters about the room.`;
 			}
 			if (target.hp <= 0) {
-				if (target.team === "ally") {
+				if (target.team === "delver") {
 					target.hp = target.maxHp;
 					adventure.lives -= 1;
 					damageText += ` *${targetName} has died* and been revived. ***${adventure.lives} lives remain.***`;

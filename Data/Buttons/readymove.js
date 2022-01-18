@@ -36,11 +36,11 @@ module.exports.execute = (interaction, args) => {
 					})
 				}
 			}
-			let allyOptions = adventure.delvers.map((ally, i) => {
+			let delverOptions = adventure.delvers.map((delver, i) => {
 				return {
-					label: ally.name,
-					description: miniPredict(delver.predict, ally),
-					value: `ally-${i}`
+					label: delver.name,
+					description: miniPredict(delver.predict, delver),
+					value: `delver-${i}`
 				}
 			})
 			let usableWeapons = delver.weapons.filter(weapon => weapon.uses > 0);
@@ -57,8 +57,8 @@ module.exports.execute = (interaction, args) => {
 							targetOptions = targetOptions.concat(enemyOptions);
 						}
 
-						if (team === "ally" || team === "any") {
-							targetOptions = targetOptions.concat(allyOptions);
+						if (team === "delver" || team === "any") {
+							targetOptions = targetOptions.concat(delverOptions);
 						}
 						moveMenu.push(new MessageActionRow().addComponents(
 							new MessageSelectMenu().setCustomId(`weapon-${weapon.name}-${i}`)
