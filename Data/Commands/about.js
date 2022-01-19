@@ -6,7 +6,7 @@ module.exports = new Command("about", "Get Dungeon Tamer's description and contr
 module.exports.execute = (interaction) => {
 	// Give the basic rules and information about the bot
 	let embed = new MessageEmbed().setColor('6b81eb')
-		.setTitle(`About Dungeon Tamers v0.3.1`)
+		.setTitle(`About Dungeon Tamers v0.4.0`)
 		// .setURL(/* bot invite link */)
 		.setThumbnail(interaction.client.user.displayAvatarURL())
 		.setDescription(`A roguelike dungeon crawl in Discord to play with other server members.`)
