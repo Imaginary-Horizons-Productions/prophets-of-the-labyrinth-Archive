@@ -19,6 +19,7 @@ module.exports.execute = (interaction, args) => {
 			let embed = new MessageEmbed().setColor(adventure.room.embedColor)
 				.setTitle(getFullName(delver, adventure.room.enemyTitles))
 				.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nWhen using ${delver.element} ${getEmoji(delver.element)} weapons, add 1 Stagger to enemies or remove 1 Stagger from allies`)
+				.addField("Readying a Move", "Pick one weapon from below as your move for this round:")
 				.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
 
 			let moveMenu = [];
