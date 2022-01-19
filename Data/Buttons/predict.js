@@ -3,7 +3,7 @@ const Button = require('../../Classes/Button.js');
 const { getAdventure } = require('../adventureDAO.js');
 const { getTargetList } = require('../moveDAO.js');
 const { getFullName, calculateTotalSpeed, modifiersToString } = require("../combatantDAO.js");
-const { getResistances, getWeaknesses } = require('../elementHelpers.js');
+const { getResistances, getWeaknesses, getColor } = require('../elementHelpers.js');
 const { ordinalSuffixEN } = require('../../helpers.js');
 
 module.exports = new Button("predict");
@@ -12,7 +12,7 @@ module.exports.execute = (interaction, args) => {
 	// Based on type, show the user information on the next battle round in an ephemeral message
 	let adventure = getAdventure(interaction.channel.id);
 	let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
-	let embed = new MessageEmbed().setColor(adventure.room.embedColor)
+	let embed = new MessageEmbed().setColor(getColor(adventure.room.element))
 		.setFooter({ text: `Room #${adventure.depth} - Round ${adventure.room.round}` });
 	let infoForNextRound = true;
 	let descriptionText = "";

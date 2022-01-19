@@ -281,7 +281,7 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 		})
 	}
 
-	embed.setColor(adventure.room.embedColor)
+	embed.setColor(getColor(adventure.room.element))
 		.setFooter({ text: `Room #${adventure.depth} - Round ${adventure.room.round}` });
 	if (!exports.checkNextRound(adventure)) {
 		let battleMenu = [new MessageActionRow().addComponents(

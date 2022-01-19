@@ -4,7 +4,7 @@ const { getAdventure } = require('../adventureDAO.js');
 const { getFullName } = require("../combatantDAO.js");
 const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
 const { weaponToEmbedField } = require('../weaponDAO.js');
-const { getEmoji, getResistances, getWeaknesses } = require('../elementHelpers.js');
+const { getEmoji, getResistances, getWeaknesses, getColor } = require('../elementHelpers.js');
 const Delver = require('../../Classes/Delver.js');
 const { isNonStacking, isBuff, isDebuff } = require("../Modifiers/_modifierDictionary.js");
 
@@ -16,7 +16,7 @@ module.exports.execute = (interaction, args) => {
 	let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 	if (delver) {
 		if (!delver.modifiers.Stun) { // Early out if stunned
-			let embed = new MessageEmbed().setColor(adventure.room.embedColor)
+			let embed = new MessageEmbed().setColor(getColor(adventure.room.element))
 				.setTitle(getFullName(delver, adventure.room.enemyTitles))
 				.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nWhen using ${delver.element} ${getEmoji(delver.element)} weapons, add 1 Stagger to enemies or remove 1 Stagger from allies`)
 				.addField("Readying a Move", "Pick one weapon from below as your move for this round:")
