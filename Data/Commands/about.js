@@ -6,7 +6,7 @@ module.exports = new Command("about", "Get Dungeon Tamer's description and contr
 module.exports.execute = (interaction) => {
 	// Give the basic rules and information about the bot
 	let embed = new MessageEmbed().setColor('6b81eb')
-		.setTitle(`About Dungeon Tamers v0.3.1`)
+		.setTitle(`About Dungeon Tamers v0.4.0`)
 		// .setURL(/* bot invite link */)
 		.setThumbnail(interaction.client.user.displayAvatarURL())
 		.setDescription(`A roguelike dungeon crawl in Discord to play with other server members.`)
@@ -14,7 +14,7 @@ module.exports.execute = (interaction) => {
 		.addField("Random Number Generator", "Alex Frank")
 		.addField("Room Loader", "Michel Momeyer")
 		.addField("Predict Balance", "Lucas Ensign")
-		.addField("Playtesting", "Henry Hu, Ralph Beishline, Eric Hu, elrois, Jon Puddicombe")
+		.addField("Playtesting", "Henry Hu, Ralph Beishline, Eric Hu, TheChreative, Jon Puddicombe")
 		.addField(`Embed Thumbnails`, `[game-icons.net](https://game-icons.net/)`)
 		.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
 

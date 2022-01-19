@@ -1,6 +1,5 @@
 const { getAdventure, nextRoom } = require('../adventureDAO.js');
 const Button = require('../../Classes/Button.js');
-const { MessageActionRow, MessageButton } = require('discord.js');
 
 module.exports = new Button("ready");
 
@@ -19,7 +18,7 @@ module.exports.execute = (interaction, args) => {
 		interaction.message.delete();
 		delete adventure.messageIds.start;
 
-		interaction.reply({ content: `The adventure has begun! You can use \`/delver-stats\`, or \`/party-stats\` to check adventure status. The leader can \`/give-up\`.`, fetchReply: true }).then(message => {
+		interaction.reply({ content: `The adventure has begun (and closed to new delvers joining)! You can use \`/delver-stats\`, or \`/party-stats\` to check adventure status. The leader can \`/give-up\`.`, fetchReply: true }).then(message => {
 			message.pin();
 			adventure.messageIds.utility = message.id;
 			nextRoom("Battle", adventure, interaction.channel);
