@@ -37,10 +37,10 @@ module.exports.execute = (interaction, args) => {
 					})
 				}
 			}
-			let delverOptions = adventure.delvers.map((delver, i) => {
+			let delverOptions = adventure.delvers.map((ally, i) => {
 				return {
-					label: delver.name,
-					description: miniPredict(delver.predict, delver),
+					label: ally.name,
+					description: miniPredict(delver.predict, ally),
 					value: `delver-${i}`
 				}
 			})

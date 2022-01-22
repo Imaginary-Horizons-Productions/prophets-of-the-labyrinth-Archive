@@ -8,7 +8,7 @@ module.exports.execute = (interaction, args) => {
 	// Join an existing adventure
 	let thread = interaction.message.thread;
 	var adventure = getAdventure(thread.id);
-	if (adventure.messageIds.utility) {
+	if (!adventure.messageIds.utility) {
 		if (!adventure.delvers.some(delver => delver.id == interaction.user.id)) {
 			// Update game logic
 			adventure.delvers.push(new Delver(interaction.user.id, interaction.member.displayName, adventure.id));

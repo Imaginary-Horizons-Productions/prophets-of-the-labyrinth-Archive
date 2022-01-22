@@ -10,6 +10,7 @@ module.exports = new Weapon("Sickle", 1, "*Strike a foe for @{damage} (+10% foe 
 
 function effect(target, user, isCrit, adventure) {
 	let { element: weaponElement, modifiers: [elementStagger], damage, critBonus } = module.exports;
+	damage += (0.1 * target.maxHp);
 	if (user.element === weaponElement) {
 		addModifier(target, elementStagger);
 	}
