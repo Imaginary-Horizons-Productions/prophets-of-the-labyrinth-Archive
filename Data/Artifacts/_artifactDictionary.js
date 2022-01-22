@@ -36,6 +36,6 @@ exports.getArtifactDescription = function (artifactName, copies) {
 
 exports.rollArtifact = function (adventure) {
 	let elementPool = [...adventure.delvers.map(delver => delver.element), "Untyped"];
-	let element = elementPool[generateRandomNumber(adventure, elementPool.length, "general")];
-	return ROLL_TABLE[element][generateRandomNumber(adventure, ROLL_TABLE[element].length, "general")];
+	let artifactPool = elementPool.reduce((artifacts, element) => artifacts.concat(ROLL_TABLE[element]), []);
+	return artifactPool[generateRandomNumber(adventure, artifactPool.length, "general")];;
 }

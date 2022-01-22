@@ -406,7 +406,6 @@ exports.endRound = async function (adventure, thread) {
 				if (type === "weapon") {
 					option.description = buildWeaponDescription(name, false);
 				} else if (type === "artifact") {
-					console.log({ ...adventure.room.loot, item }); //TODO #182 failure to get populate artifacts sometimes
 					option.description = getArtifactDescription(name, adventure.room.loot[item]);
 				} else {
 					option.description = "";
