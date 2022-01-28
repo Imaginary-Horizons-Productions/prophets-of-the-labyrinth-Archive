@@ -1,4 +1,4 @@
-const { calculateTotalSpeed } = require("../Data/combatantDAO");
+const { calculateTotalSpeed, removeModifier } = require("../Data/combatantDAO");
 
 module.exports = class Move {
 	constructor() {
