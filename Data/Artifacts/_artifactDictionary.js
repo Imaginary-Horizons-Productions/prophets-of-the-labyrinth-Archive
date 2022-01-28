@@ -1,4 +1,4 @@
-const { generateRandomNumber } = require("../../helpers");
+const { generateRandomNumber, parseCount } = require("../../helpers");
 
 let artifactWhitelist = [
 	"amethystspyglass.js",
@@ -31,7 +31,13 @@ exports.getArtifact = function (artifactName) {
 }
 
 exports.getArtifactDescription = function (artifactName, copies) {
-	return exports.getArtifact(artifactName).description.replace(/@{copies}/g, copies);
+	let description = exports.getArtifact(artifactName).description;
+	let copiesExpression = description.match(/@{(copies[\*\d]*)}/)?.[1].replace(/copies/g, "n");
+	if (copiesExpression) {
+		copies = parseCount(copiesExpression, copies);
+	}
+
+	return description.replace(/@{copies.*}/g, copies);
 }
 
 exports.rollArtifact = function (adventure) {
