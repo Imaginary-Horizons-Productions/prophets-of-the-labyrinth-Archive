@@ -16,6 +16,7 @@ const { spawnEnemy } = require("./enemyDAO.js");
 const { getWeaknesses, getColor } = require("./elementHelpers.js");
 const { rollWeaponDrop, getWeaponProperty, buildWeaponDescription } = require("./Weapons/_weaponDictionary.js");
 const { rollArtifact, getArtifactDescription } = require("./Artifacts/_artifactDictionary.js");
+const Resource = require("../Classes/Resource.js");
 
 var filePath = "./Saves/adventures.json";
 var requirePath = "./../Saves/adventures.json";
@@ -130,12 +131,14 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 			.setTitle(roomTemplate.title)
 			.setDescription(roomTemplate.description.replace("@{roomElement}", adventure.room.element))
 			.setFooter({ text: `Room #${adventure.depth}` });
-		for (let reward in roomTemplate.lootList) {
-			let rewardCount = parseCount(roomTemplate.lootList[reward], adventure.delvers.length);
-			if (reward === "forgeSupplies") {
-				embed.addField("Remaining Forge Supplies", rewardCount.toString());
+		for (let resource in roomTemplate.resourceList) {
+			let count = parseCount(roomTemplate.resourceList[resource], adventure.delvers.length);
+			let resourceType;
+			if (resource === "forgeSupplies") {
+				embed.addField("Remaining Forge Supplies", count.toString());
+				resourceType = "resource";
 			}
-			adventure.room.loot[reward] = rewardCount;
+			adventure.room.resources[resource] = new Resource(resource, resourceType, count, "resource");
 		}
 		if (["Battle", "Artifact Guardian", "Final Battle"].includes(roomType)) {
 			// Generate combat room
@@ -144,7 +147,8 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 				while (adventure.artifactGuardians.length <= adventure.scouting.artifactGuardiansEncountered) {
 					prerollBoss("Artifact Guardian", adventure);
 				}
-				adventure.room.loot[`artifact-${rollArtifact(adventure)}`] = 1;
+				let artifact = rollArtifact(adventure);
+				adventure.room.resources[artifact] = new Resource(artifact, "artifact", 1, "loot");
 			}
 			adventure.room.initializeCombatProperties();
 			let randomizeHp = roomType === "Battle";
@@ -156,63 +160,55 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 			exports.newRound(adventure, thread, embed);
 		} else {
 			// Generate non-combat room
-			let uiComponents = [...roomTemplate.uiRows];
 			for (let category in roomTemplate.saleList) {
 				if (category.startsWith("weapon")) {
 					let [type, tier] = category.split("-");
 					let parsedTier = tier;
 					let count = Math.min(25, parseCount(roomTemplate.saleList[category], adventure.delvers.length));
-					let weaponOptions = [];
 					for (let i = 0; i < count; i++) {
 						if (tier === "?") {
 							let threshold = 1;
 							let max = 8;
 							if (generateRandomNumber(adventure, max, "general") < threshold) {
-								parsedTier = 2;
+								parsedTier = "2";
 							} else {
-								parsedTier = 1;
+								parsedTier = "1";
 							}
 						}
 						let weaponName = rollWeaponDrop(parsedTier, adventure);
-						let lootIndex = `weapon-${weaponName}`;
-						if (adventure.room.loot[lootIndex]) {
-							adventure.room.loot[lootIndex]++;
+						if (adventure.room.resources[weaponName] && adventure.room.resources[weaponName].resourceType === "weapon") {
+							adventure.room.resources[weaponName].count++;
 						} else {
-							adventure.room.loot[lootIndex] = 1;
+							adventure.room.resources[weaponName] = new Resource(weaponName, "weapon", 1, "merchant")
+								.setUIGroup(category);
 						}
-						let cost = getWeaponProperty(weaponName, "cost");
-						weaponOptions.push({
-							label: `${cost}g: ${weaponName}`,
-							description: buildWeaponDescription(weaponName, false),
-							value: `${weaponName}-${cost}-${i}`
-						})
 					}
-					uiComponents.push(new MessageActionRow().addComponents(
-						new MessageSelectMenu().setCustomId(`buyweapon-${tier}`)
-							.setPlaceholder(`Check a ${tier === "2" ? "rare " : ""}weapon...`)
-							.setOptions(weaponOptions)));
 				} else if (category === "scouting") {
-					let bossScoutingCost = 150 - ((adventure.artifacts["Amethyst Spyglass"] || 0) * 5);
-					let guardScoutingCost = 100 - ((adventure.artifacts["Amethyst Spyglass"] || 0) * 5);
-					uiComponents.push(new MessageActionRow().addComponents(
-						new MessageButton().setCustomId(`buyscouting-finalbattle-${bossScoutingCost}`)
-							.setLabel(`${adventure.scouting.finalBoss ? `Final Battle: ${adventure.finalBoss}` : `${bossScoutingCost}g: Scout the Final Battle`}`)
-							.setStyle("SECONDARY")
-							.setDisabled(adventure.scouting.finalBoss || adventure.gold < bossScoutingCost),
-						new MessageButton().setCustomId(`buyscouting-artifactguardian-${guardScoutingCost}`)
-							.setLabel(`${guardScoutingCost}g: Scout the ${ordinalSuffixEN(adventure.scouting.artifactGuardians + 1)} Artifact Guardian`)
-							.setStyle("SECONDARY")
-					));
+					adventure.room.resources["bossScouting"] = new Resource("bossScouting", "scouting", true, "merchant")
+						.setUIGroup("scouting");
+					adventure.room.resources["guardScouting"] = new Resource("guardScouting", "scouting", true, "merchant")
+						.setUIGroup("scouting");
 				}
 			}
-			const { embed: embedFinal, uiRows } = addRoutingUI(embed, uiComponents, adventure);
-			let roomMessage = await thread.send({ embeds: [embedFinal], components: uiRows });
+			let roomMessage = await thread.send({
+				embeds: [embed.addField("Decide the next room", "Each delver can pick or change their pick for the next room. The party will move on when the decision is unanimous.")],
+				components: [...roomTemplate.uiRows, ...exports.generateMerchantRows(adventure), exports.generateRoutingRow(adventure)]
+			});
 			adventure.messageIds.room = roomMessage.id;
 		}
 		exports.setAdventure(adventure);
 	} else {
 		adventure.accumulatedScore = 10;
 		exports.completeAdventure(adventure, thread, new MessageEmbed().setTitle("Success"));
+	}
+}
+
+exports.calculateScoutingCost = function (adventure, type) {
+	switch (type) {
+		case "Final Battle":
+			return 150 - ((adventure.artifacts["Amethyst Spyglass"] || 0) * 5);
+		case "Artifact Guardian":
+			return 100 - ((adventure.artifacts["Amethyst Spyglass"] || 0) * 5);
 	}
 }
 
@@ -304,26 +300,118 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 	}
 }
 
-function addRoutingUI(embed, components, adventure) {
+exports.generateRoutingRow = function (adventure) {
 	let candidateKeys = Object.keys(adventure.roomCandidates);
-	let uiRows = [...components];
 	if (candidateKeys.length > 1) {
-		uiRows.push(new MessageActionRow().addComponents(
+		return new MessageActionRow().addComponents(
 			...candidateKeys.map(roomType => {
 				return new MessageButton().setCustomId(`routevote-${roomType}`)
 					.setLabel(`Next room: ${roomType}`)
 					.setStyle("SECONDARY")
-			})));
-		embed.addField("Decide the next room", "Each delver can pick or change their pick for the next room. The party will move on when the decision is unanimous.");
+			}));
 	} else {
-		uiRows.push(new MessageActionRow().addComponents(
+		return new MessageActionRow().addComponents(
 			new MessageButton().setCustomId("continue")
 				.setLabel(`Continue to the ${candidateKeys[0]}`)
 				.setStyle("SECONDARY")
-		));
+		);
+	}
+}
+
+exports.generateLootRow = function (adventure) {
+	let options = [];
+	for (const resource of Object.values(adventure.room.resources)) {
+		if (resource.uiType === "loot") {
+			const { name, resourceType: type, count } = resource;
+			let option = { value: `${name}-${options.length}` };
+
+			if (name == "gold") {
+				option.label = `${count} Gold`;
+			} else {
+				option.label = `${name} x ${count}`;
+			}
+
+			if (type === "weapon") {
+				option.description = buildWeaponDescription(name, false);
+			} else if (type === "artifact") {
+				option.description = getArtifactDescription(name, count);
+			} else {
+				option.description = "";
+			}
+			options.push(option)
+		}
+	}
+	if (options.length > 0) {
+		return new MessageActionRow().addComponents(
+			new MessageSelectMenu().setCustomId("loot")
+				.setPlaceholder("Take some of the spoils of combat...")
+				.setOptions(options))
+	} else {
+		return new MessageActionRow().addComponents(
+			new MessageSelectMenu().setCustomId("loot")
+				.setPlaceholder("No loot")
+				.setOptions([{ label: "If the menu is stuck, close and reopen the thread.", description: "This usually happens when two players try to take the last thing at the same time.", value: "placeholder" }])
+				.setDisabled(true)
+		)
+	}
+}
+
+exports.generateMerchantRows = function (adventure) {
+	let categorizedResources = {};
+	for (const resource of Object.values(adventure.room.resources)) {
+		if (resource.uiType === "merchant") {
+			let group = resource.uiGroup;
+			if (categorizedResources[group]) {
+				categorizedResources[group].push(resource.name);
+			} else {
+				categorizedResources[group] = [resource.name];
+			}
+		}
 	}
 
-	return { embed, uiRows };
+	let rows = [];
+	for (const groupName in categorizedResources) {
+		if (groupName.startsWith("weapon")) {
+			const [type, tier] = groupName.split("-");
+			let options = [];
+			categorizedResources[groupName].forEach((resource, i) => {
+				if (adventure.room.resources[resource].count > 0) {
+					const cost = getWeaponProperty(resource, "cost");
+					options.push({
+						label: `${cost}g: ${resource}`,
+						description: buildWeaponDescription(resource, false),
+						value: `${resource}-${i}`
+					})
+				}
+			})
+			if (options.length) {
+				rows.push(new MessageActionRow().addComponents(
+					new MessageSelectMenu().setCustomId(`buy${groupName}`)
+						.setPlaceholder(`Check a ${tier === "2" ? "rare " : ""}weapon...`)
+						.setOptions(options)));
+			} else {
+				rows.push(new MessageActionRow().addComponents(
+					new MessageSelectMenu().setCustomId(`buy${groupName}`)
+						.setPlaceholder("SOLD OUT")
+						.setOptions([{ label: "If the menu is stuck, close and reopen the thread.", description: "This usually happens when two players try to buy the last weapon at the same time.", value: "placeholder" }])
+						.setDisabled(true)));
+			}
+		} else if (groupName === "scouting") {
+			const bossScoutingCost = exports.calculateScoutingCost(adventure, "Final Battle");
+			const guardScoutingCost = exports.calculateScoutingCost(adventure, "Artifact Guardian");
+			rows.push(new MessageActionRow().addComponents(
+				new MessageButton().setCustomId(`buyscouting-Final Battle`)
+					.setLabel(`${adventure.scouting.finalBoss ? `Final Battle: ${adventure.finalBoss}` : `${bossScoutingCost}g: Scout the Final Battle`}`)
+					.setStyle("SECONDARY")
+					.setDisabled(adventure.scouting.finalBoss || adventure.gold < bossScoutingCost),
+				new MessageButton().setCustomId(`buyscouting-Artifact Guardian`)
+					.setLabel(`${guardScoutingCost}g: Scout the ${ordinalSuffixEN(adventure.scouting.artifactGuardians + 1)} Artifact Guardian`)
+					.setStyle("SECONDARY")
+					.setDisabled(adventure.gold < guardScoutingCost)
+			));
+		}
+	}
+	return rows;
 }
 
 exports.endRound = async function (adventure, thread) {
@@ -371,9 +459,9 @@ exports.endRound = async function (adventure, thread) {
 		// Check for Victory
 		if (adventure.room.enemies.every(enemy => enemy.hp === 0)) {
 			// Generate gold
-			let totalBounty = adventure.room.enemies.reduce((total, enemy) => total + enemy.bounty, adventure.room.loot.gold);
+			let totalBounty = adventure.room.enemies.reduce((total, enemy) => total + enemy.bounty, adventure.room.resources.gold.count);
 			totalBounty *= (90 + generateRandomNumber(adventure, 21, "general")) / 100;
-			adventure.room.loot.gold = Math.ceil(totalBounty);
+			adventure.room.resources.gold.count = Math.ceil(totalBounty);
 
 			// Weapon drops
 			let dropThreshold = 1;
@@ -386,58 +474,19 @@ exports.endRound = async function (adventure, thread) {
 					tier = 2;
 				}
 				let droppedWeapon = rollWeaponDrop(tier, adventure);
-				if (adventure.room.loot[`weapon-${droppedWeapon}`]) {
-					adventure.room.loot[`weapon-${droppedWeapon}`]++;
+				if (adventure.room.resources[droppedWeapon]) {
+					adventure.room.resources[droppedWeapon].count++;
 				} else {
-					adventure.room.loot[`weapon-${droppedWeapon}`] = 1;
+					adventure.room.resources[droppedWeapon] = new Resource(droppedWeapon, "weapon", 1, "loot");
 				}
-			}
-			let lootOptions = [];
-			for (const item in adventure.room.loot) {
-				const [type, name] = item.split("-");
-				let option = { value: `${type}-${name}-${lootOptions.length}` };
-
-				if (name) {
-					option.label = `${name} x ${adventure.room.loot[item]}`;
-				} else {
-					option.label = `${adventure.room.loot.gold} Gold`;
-				}
-
-				if (type === "weapon") {
-					option.description = buildWeaponDescription(name, false);
-				} else if (type === "artifact") {
-					option.description = getArtifactDescription(name, adventure.room.loot[item]);
-				} else {
-					option.description = "";
-				}
-				lootOptions.push(option)
 			}
 
 			// Finalize UI
-			let roomUI;
-			if (lootOptions.length > 0) {
-				roomUI = [
-					new MessageActionRow().addComponents(
-						new MessageSelectMenu().setCustomId("loot")
-							.setPlaceholder("Take some of the spoils of combat...")
-							.setMinValues(1)
-							.setMaxValues(lootOptions.length)
-							.setOptions(lootOptions))
-				];
-			} else {
-				roomUI = [
-					new MessageActionRow.addComponents(
-						new MessageSelectMenu().setCustomId("loot")
-							.setPlaceholder("No loot to take")
-							.setOptions([{ label: "placeholder", value: "placeholder" }])
-							.setDisabled(true)
-					)
-				];
-			}
-			const { embed: embedFinal, uiRows } = addRoutingUI(embed, roomUI, adventure);
 			return thread.send({
-				embeds: [embedFinal.setTitle("Victory!").setDescription(lastRoundText)],
-				components: uiRows
+				embeds: [embed.setTitle("Victory!")
+					.setDescription(lastRoundText)
+					.addField("Decide the next room", "Each delver can pick or change their pick for the next room. The party will move on when the decision is unanimous.")],
+				components: [exports.generateLootRow(adventure), exports.generateRoutingRow(adventure)]
 			}).then(message => {
 				adventure.messageIds.room = message.id;
 				adventure.room.moves = [];

@@ -1,47 +1,34 @@
 const Button = require('../../Classes/Button.js');
-const { getAdventure, setAdventure } = require('../adventureDAO.js');
-const { editSelectOption } = require('../roomDAO.js');
-const { getWeaponProperty, buildWeaponDescription } = require('../Weapons/_weaponDictionary.js');
+const { getAdventure, setAdventure, generateRoutingRow, generateLootRow, generateMerchantRows } = require('../adventureDAO.js');
+const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
 
 module.exports = new Button("replaceweapon");
 
-module.exports.execute = (interaction, [weaponName, weaponIndex, cost, tier]) => {
+module.exports.execute = (interaction, [name, weaponIndex, atMerchant]) => {
 	// Replace the delver's weapon at the given index with the given weapon
 	let adventure = getAdventure(interaction.channel.id);
-	if (adventure.room.loot[`weapon-${weaponName}`] > 0) {
+	const { count, cost } = adventure.room.resources[name];
+	if (count > 0) {
 		let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 		let discardedName = delver.weapons[weaponIndex].name;
-		delver.weapons.splice(weaponIndex, 1, { name: weaponName, uses: getWeaponProperty(weaponName, "maxUses") });
+		delver.weapons.splice(weaponIndex, 1, { name, uses: getWeaponProperty(name, "maxUses") });
 		interaction.channel.messages.fetch(adventure.messageIds.room).then(roomMessage => {
-			let optionLabel = `${weaponName} x ${adventure.room.loot[`weapon-${weaponName}`]}`; // generate label to look for before decrementing
-			let remaining = --adventure.room.loot[`weapon-${weaponName}`];
-			let replacementOption;
-			if (remaining !== 0) {
-				replacementOption = {
-					label: `${weaponName} x ${remaining}`,
-					description: buildWeaponDescription(weaponName, false),
-					value: `weapon-${weaponName}`
-				};
-			} else {
-				replacementOption = null;
-			}
-			let source;
-			let placeholder;
-			if (tier) {
-				source = `buyweapon-${tier}`;
-				placeholder = "SOLD OUT";
+			adventure.room.resources[name].count--;
+			let uiRows = [];
+			if (Boolean(atMerchant)) {
 				adventure.gold -= cost;
+				uiRows = generateMerchantRows(adventure);
 			} else {
-				source = "loot";
-				placeholder = "All looted";
+				uiRows.push(generateLootRow(adventure));
 			}
-			return roomMessage.edit({ components: editSelectOption(roomMessage, source, optionLabel, replacementOption, placeholder) });
+			uiRows.push(generateRoutingRow(adventure));
+			return roomMessage.edit({ components: uiRows });
 		}).then(() => {
 			interaction.update({ components: [] });
-			interaction.channel.send(`${interaction.user} discards ${discardedName} to take ${weaponName}.`);
+			interaction.channel.send(`${interaction.user} discards ${discardedName} to take ${name}.`);
 			setAdventure(adventure);
 		})
 	} else {
-		interaction.update({ content: `There aren't any more ${weaponName} to take.`, components: [] });
+		interaction.update({ content: `There aren't any more ${name} to take.`, components: [] });
 	}
 }

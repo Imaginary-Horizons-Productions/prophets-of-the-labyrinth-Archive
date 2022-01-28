@@ -1,7 +1,6 @@
 const { MessageActionRow, MessageButton } = require('discord.js');
 const Select = require('../../Classes/Select.js');
-const { getAdventure, setAdventure } = require('../adventureDAO.js');
-const { editSelectOption } = require('../roomDAO.js');
+const { getAdventure, setAdventure, generateMerchantRows, generateRoutingRow } = require('../adventureDAO.js');
 const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
 
 module.exports = new Select("buyweapon");
@@ -11,22 +10,23 @@ module.exports.execute = (interaction, [tier]) => {
 	let adventure = getAdventure(interaction.channel.id);
 	let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 	if (delver) {
-		let [weaponName, cost, menuIndex] = interaction.values[0].split("-");
-		if (adventure.room.loot[`weapon-${weaponName}`] > 0) {
+		const [name, menuIndex] = interaction.values[0].split("-");
+		const { count } = adventure.room.resources[name];
+		if (count > 0) {
+			const cost = getWeaponProperty(name, "cost");
 			if (adventure.gold >= cost) {
-				adventure.gold -= cost;
-				adventure.room.loot[weaponName]--;
-				let uses = getWeaponProperty(weaponName, "maxUses");
 				if (delver.weapons.length < adventure.getWeaponCapacity()) {
-					delver.weapons.push({ name: weaponName, uses });
-					let updatedUI = editSelectOption(interaction.message, interaction.customId, `${cost}g: ${weaponName}`, null, "SOLD OUT");
+					adventure.gold -= cost;
+					adventure.room.resources[name].count--;
+					delver.weapons.push({ name, uses: getWeaponProperty(name, "maxUses") });
+					let updatedUI = [...generateMerchantRows(adventure), generateRoutingRow(adventure)];
 					interaction.message.edit({ components: updatedUI });
-					interaction.reply({ content: `${interaction.member.displayName} takes a ${weaponName}.` });
+					interaction.reply({ content: `${interaction.member.displayName} takes a ${name}.` });
 					setAdventure(adventure);
 				} else {
 					let replaceUI = [new MessageActionRow().addComponents(
 						...delver.weapons.map((weapon, index) => {
-							return new MessageButton().setCustomId(`replaceweapon-${weaponName}-${index}-${cost}-${tier}`)
+							return new MessageButton().setCustomId(`replaceweapon-${name}-${index}-true`)
 								.setLabel(`Discard ${weapon.name}`)
 								.setStyle("SECONDARY")
 						})
@@ -37,7 +37,7 @@ module.exports.execute = (interaction, [tier]) => {
 				interaction.reply({ content: "You don't have enough money to buy that.", ephemeral: true });
 			}
 		} else {
-			interaction.reply({ content: `There are no more ${weaponName} for sale.`, ephemeral: true });
+			interaction.reply({ content: `There are no more ${name} for sale.`, ephemeral: true });
 		}
 	} else {
 		interaction.reply({ content: "Please purchase weapons in adventures you've joined.", ephemeral: true });

@@ -9,7 +9,7 @@ module.exports = new Select("randomupgrade");
 module.exports.execute = (interaction, [roomMessageId]) => {
 	// Randomly select an upgrade for a given weapon
 	let adventure = getAdventure(interaction.channel.id);
-	if (adventure.room.loot.forgeSupplies > 0) {
+	if (adventure.room.resources.forgeSupplies.count > 0) {
 		let user = adventure.delvers.find(delver => delver.id === interaction.user.id);
 		let [weaponName, weaponIndex] = interaction.values[0].split("-");
 		let upgradePool = getWeaponProperty(weaponName, "upgrades");
