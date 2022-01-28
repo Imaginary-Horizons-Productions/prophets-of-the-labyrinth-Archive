@@ -3,7 +3,7 @@ const { removeModifier, addModifier } = require('../combatantDAO.js');
 
 module.exports = new Weapon("Watery Potion", 2, "*Apply @{mod1Stacks} @{mod1} to a Water element combatant, or @{mod2Stacks} @{mod2} to someone else*\nCritical Hit: @{mod1}/@{mod2} x@{critBonus}", "Water", effect, ["Earthen Potion", "Inky Potion"])
 	.setTargetingTags({ target: "single", team: "any" })
-	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Regen", stacks: 4 }, { name: "Poison", stacks: 4 }, { name: "Regen", stacks: 8 }, { name: "Poison", stacks: 8 }])
+	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Regen", stacks: 4 }, { name: "Poison", stacks: 5 }, { name: "Regen", stacks: 8 }, { name: "Poison", stacks: 10 }])
 	.setCost(350)
 	.setUses(5);
 

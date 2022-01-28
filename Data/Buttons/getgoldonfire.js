@@ -11,7 +11,7 @@ module.exports.execute = (interaction, args) => {
 	let delver = adventure.delvers.find(delver => delver.id == interaction.user.id);
 	if (delver) {
 		adventure.gainGold(50);
-		dealDamage(delver, null, 100, true, "untyped", adventure).then(damageText => {
+		dealDamage(delver, null, 100, true, "Untyped", adventure).then(damageText => {
 			updateRoomHeader(adventure, interaction.message);
 			return interaction.reply(`${interaction.user} reaches into the flames and grabs some coin. ${damageText}`);
 		}).then(() => {

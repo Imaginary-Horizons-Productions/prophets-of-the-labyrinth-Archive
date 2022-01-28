@@ -107,7 +107,7 @@ const weaponDrops = {
 		"1": [],
 		"2": []
 	},
-	untyped: {
+	Untyped: {
 		"-1": [],
 		"0": [],
 		"1": [],

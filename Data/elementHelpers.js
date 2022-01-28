@@ -40,6 +40,13 @@ const ELEMENTS = {
 		opposite: "Light",
 		weaknesses: ["Wind", "Water"],
 		resistances: ["Earth", "Fire"]
+	},
+	"Untyped": {
+		color: "",
+		emoji: "",
+		opposite: "",
+		weaknesses: [],
+		resistances: []
 	}
 }
 exports.getResistances = function (element) {

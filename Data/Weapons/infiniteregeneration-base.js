@@ -17,5 +17,5 @@ function effect(target, user, isCrit, adventure) {
 		hpCost /= critBonus;
 	}
 	addModifier(target, regen);
-	return dealDamage(user, null, hpCost, true, "untyped", adventure); // result text
+	return dealDamage(user, null, hpCost, true, "Untyped", adventure); // result text
 }
