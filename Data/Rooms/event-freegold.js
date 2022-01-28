@@ -13,4 +13,4 @@ module.exports.uiRows.push(new MessageActionRow().addComponents(
 		.setStyle("DANGER")
 ))
 
-module.exports.lootList = { "gold": "30" };
+module.exports.resourceList = { "gold": "30" };

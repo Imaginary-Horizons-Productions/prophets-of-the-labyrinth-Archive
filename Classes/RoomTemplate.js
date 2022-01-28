@@ -7,7 +7,7 @@ module.exports = class RoomTemplate {
 	element = "";
 	uiRows = [];
 	enemyList = {};
-	lootList = {};
+	resourceList = {};
 	saleList = {};
 
 	setTypes(...typeEnum) {

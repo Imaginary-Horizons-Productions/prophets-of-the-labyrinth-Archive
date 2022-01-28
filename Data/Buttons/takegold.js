@@ -7,11 +7,12 @@ module.exports = new Button("takegold");
 module.exports.execute = (interaction, args) => {
 	// Move the gold and artifacts from loot into party inventory
 	let adventure = getAdventure(interaction.channel.id);
-	adventure.gainGold(adventure.room.loot.gold);
-	let updatedUI = editButton(interaction.message, "takegold", true, "✔️", `+${adventure.room.loot.gold} gold`)
+	let goldCount = adventure.room.resources.gold.count;
+	adventure.gainGold(goldCount);
+	let updatedUI = editButton(interaction.message, "takegold", true, "✔️", `+${goldCount} gold`)
 	interaction.update({ components: updatedUI }).then(() => {
 		updateRoomHeader(adventure, interaction.message);
-		adventure.room.loot.gold = 0;
+		adventure.room.resources.gold.count = 0;
 		setAdventure(adventure);
 	});
 }

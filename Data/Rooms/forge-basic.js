@@ -16,4 +16,4 @@ module.exports.uiRows.push(new MessageActionRow().addComponents(
 		.setStyle("PRIMARY")
 ))
 
-module.exports.lootList = { "forgeSupplies": "n" };
+module.exports.resourceList = { "forgeSupplies": "n" };

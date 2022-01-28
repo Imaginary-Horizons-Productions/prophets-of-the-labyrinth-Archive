@@ -1,18 +1,19 @@
 const Button = require('../../Classes/Button.js');
 const { ordinalSuffixEN } = require('../../helpers.js');
-const { getAdventure, setAdventure, updateRoomHeader } = require('../adventureDAO.js');
+const { getAdventure, setAdventure, updateRoomHeader, calculateScoutingCost } = require('../adventureDAO.js');
 const { editButton } = require("../roomDAO.js");
 const { prerollBoss } = require('../Rooms/_roomDictionary.js');
 
 module.exports = new Button("buyscouting");
 
-module.exports.execute = (interaction, [type, cost]) => {
+module.exports.execute = (interaction, [type]) => {
 	// Set flags for party scouting and remove gold from party inventory
 	let adventure = getAdventure(interaction.channel.id);
 	let user = adventure.delvers.find(delver => delver.id == interaction.user.id);
 	if (user) {
+		const cost = calculateScoutingCost(adventure, type);
 		adventure.gold -= cost;
-		if (type === "finalbattle") {
+		if (type === "Final Battle") {
 			adventure.scouting.finalBoss = true;
 			interaction.message.edit({ components: editButton(interaction.message, interaction.customId, true, "✔️", `Final Battle: ${adventure.finalBoss}`) });
 			interaction.reply(`The merchant reveals that final battle for this adventure will be **${adventure.finalBoss}** (you can review this with \`/party-stats\`).`);
