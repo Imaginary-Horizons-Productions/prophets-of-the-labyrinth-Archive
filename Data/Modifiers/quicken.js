@@ -1,7 +1,7 @@
 const Modifier = require("../../Classes/Modifier");
 
-module.exports = new Modifier("Quicken", 1)
-	.setDescription("Increased speed for @{stackCount} rounds.")
+module.exports = new Modifier("Quicken", 0)
+	.setDescription("The unit's next @{stackCount} move(s) will have +10 speed.")
 	.setIsBuff(false)
 	.setIsDebuff(true)
 	.setIsNonStacking(false)

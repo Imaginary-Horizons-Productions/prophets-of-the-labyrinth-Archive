@@ -7,7 +7,7 @@ const { getRoomTemplate, prerollBoss } = require("./Rooms/_roomDictionary.js");
 const Move = require("../Classes/Move.js");
 const { resolveMove } = require("./moveDAO.js");
 const Enemy = require("../Classes/Enemy.js");
-const { clearBlock } = require("./combatantDAO.js");
+const { clearBlock, removeModifier } = require("./combatantDAO.js");
 const Delver = require("../Classes/Delver.js");
 const { getTurnDecrement } = require("./Modifiers/_modifierDictionary.js");
 const { getEnemy } = require("./Enemies/_enemyDictionary");
@@ -267,12 +267,8 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 			}
 
 			// Decrement Modifiers
-			for (let modifierName in combatant.modifiers) {
-				combatant.modifiers[modifierName] -= getTurnDecrement(modifierName);
-
-				if (combatant.modifiers[modifierName] <= 0) {
-					delete combatant.modifiers[modifierName];
-				}
+			for (const modifier in combatant.modifiers) {
+				removeModifier(combatant, { name: modifier, stacks: getTurnDecrement(modifier) })
 			}
 		})
 	}
