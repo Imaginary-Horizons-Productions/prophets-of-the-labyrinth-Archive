@@ -15,6 +15,7 @@ jobs:
         with:
           token: ${{ secrets.SPONSORS_NTSENG }}
           file: 'README.md'
+          minimum: 2500
 
       - name: Deploy to GitHub Pages 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.1
