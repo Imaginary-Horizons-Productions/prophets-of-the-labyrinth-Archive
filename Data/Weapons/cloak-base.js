@@ -3,7 +3,7 @@ const { addModifier, removeModifier } = require('../combatantDAO.js');
 
 module.exports = new Weapon("Cloak", 1, "*Gain @{mod1Stacks} @{mod1}*\nCritical Hit: Gain @{mod2Stacks} @{mod2}", "Wind", effect, ["Long Cloak", "Swift Cloak", "Thick Cloak"])
 	.setTargetingTags({ target: "self", team: "self" })
-	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Evade", stacks: 1 }, { name: "Evade", stacks: 2 }])
+	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Evade", stacks: 2 }, { name: "Evade", stacks: 3 }])
 	.setCost(350)
 	.setUses(5);
 

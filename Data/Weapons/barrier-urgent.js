@@ -7,7 +7,7 @@ module.exports = new Weapon("Urgent Barrier", 2, "*Grant an ally @{block} block 
 	.setCost(350)
 	.setUses(1)
 	.setBlock(1000)
-	.setSpeedBonus(10);
+	.setSpeedBonus(5);
 
 function effect(target, user, isCrit, adventure) {
 	let { element: weaponElement, modifiers: [elementStagger], block, critBonus } = module.exports;

@@ -11,13 +11,13 @@ module.exports.execute = (interaction, args) => {
 	let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 	if (delver) {
 		const [name, index] = interaction.values[0].split("-");
-		let { resourceType: type, count } = adventure.room.resources[name];
 		let result;
+		let { resourceType: type, count } = adventure.room.resources[name];
 		switch (type) {
 			case "gold":
 				if (count && count > 0) { // Prevents double message if multiple players take near same time
 					adventure.gainGold(count);
-					delete adventure.room.resources.gold;
+					adventure.room.resources.gold = 0;
 					result = {
 						content: `The party acquires ${count} gold.`
 					}
@@ -26,7 +26,7 @@ module.exports.execute = (interaction, args) => {
 			case "artifact":
 				if (count && count > 0) { // Prevents double message if multiple players take near same time
 					adventure.gainArtifact(name, count);
-					delete adventure.room.resources[name];
+					adventure.room.resources[name] = 0;
 					result = {
 						content: `The party acquires ${name} x ${count}.`
 					}
@@ -38,7 +38,7 @@ module.exports.execute = (interaction, args) => {
 						delver.weapons.push({ name, uses: getWeaponProperty(name, "maxUses") });
 						let updatedCount = --adventure.room.resources[name].count;
 						if (adventure.room.resources[name].count < 1) {
-							delete adventure.room.resources[name];
+							adventure.room.resources[name] = 0;
 						}
 						result = {
 							content: `${interaction.member.displayName} takes a ${name}. There are ${updatedCount} remaining.`

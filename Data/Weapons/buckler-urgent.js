@@ -7,7 +7,7 @@ module.exports = new Weapon("Urgent Buckler", 2, "*Grant an ally @{block} block 
 	.setCost(350)
 	.setUses(10)
 	.setBlock(75)
-	.setSpeedBonus(10);
+	.setSpeedBonus(5);
 
 function effect(target, user, isCrit, adventure) {
 	let { element: weaponElement, modifiers: [elementStagger], block, critBonus } = module.exports;

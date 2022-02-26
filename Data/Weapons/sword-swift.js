@@ -3,7 +3,7 @@ const { dealDamage, addModifier } = require('../combatantDAO.js');
 
 module.exports = new Weapon("Swift Sword", 2, "*Strike a foe for @{damage} @{element} damage, then gain @{mod1Stacks} @{mod1} and @{mod2Stacks} @{mod2}*\nCritical Hit: Damage x@{critBonus}", "Earth", effect, ["Guarding Sword", "Reckless Sword"])
 	.setTargetingTags({ target: "single", team: "enemy" })
-	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Power Up", stacks: 25 }, { name: "Quicken", stacks: 2 }])
+	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Power Up", stacks: 25 }, { name: "Quicken", stacks: 1 }])
 	.setCost(350)
 	.setUses(10)
 	.setDamage(75);

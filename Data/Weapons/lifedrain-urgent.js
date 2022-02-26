@@ -8,7 +8,7 @@ module.exports = new Weapon("Spell: Urgent Life Drain", 2, "*Strike a foe for @{
 	.setUses(10)
 	.setDamage(75)
 	.setHealing(25)
-	.setSpeedBonus(10);
+	.setSpeedBonus(5);
 
 async function effect(target, user, isCrit, adventure) {
 	let { element: weaponElement, modifiers: [elementStagger], damage, healing, critBonus } = module.exports;

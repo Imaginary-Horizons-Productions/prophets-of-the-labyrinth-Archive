@@ -17,11 +17,11 @@ exports.getFullName = function (combatant, titleObject) {
 
 exports.calculateTotalSpeed = function (combatant) {
 	let totalSpeed = combatant.speed + combatant.roundSpeed + combatant.actionSpeed;
-	if (Object.keys(combatant.modifiers).includes("Slow")) {
-		totalSpeed /= 2;
+	if ("Slow" in combatant.modifiers) {
+		totalSpeed -= 10;
 	}
-	if (Object.keys(combatant.modifiers).includes("Quicken")) {
-		totalSpeed *= 2;
+	if ("Quicken" in combatant.modifiers) {
+		totalSpeed += 10;
 	}
 	return Math.ceil(totalSpeed);
 }
@@ -135,10 +135,14 @@ exports.addModifier = function (combatant, { name: modifier, stacks }) {
 }
 
 exports.removeModifier = function (combatant, { name: modifier, stacks }) {
-	if (combatant.modifiers[modifier]) {
+	let all = isNaN(parseInt(stacks));
+	if (!all && modifier in combatant.modifiers) {
 		combatant.modifiers[modifier] -= stacks;
+		if (combatant.modifiers[modifier] <= 0) {
+			all = true;
+		}
 	}
-	if (stacks < 0 || combatant.modifiers[modifier] <= 0) {
+	if (all) {
 		delete combatant.modifiers[modifier];
 	}
 	return combatant;

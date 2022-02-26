@@ -31,7 +31,7 @@ exports.getModifierDescription = function (modifierName, bearer) {
 	let description = modifierDictionary[modifierName].description;
 	let stackCountExpression = description.match(/@{(stackCount[\*\d]*)}/)?.[1].replace(/stackCount/g, "n");
 	if (stackCountExpression) {
-		description = description.replace(/@{(stackCount.*)}/g, parseCount(stackCountExpression, bearer.modifiers[modifierName]));
+		description = description.replace(/@{stackCount.*}/g, parseCount(stackCountExpression, bearer.modifiers[modifierName]));
 	}
 	return description.replace(/@{poise}/g, bearer.staggerThreshold)
 		.replace(/@{roundDecrement}/g, exports.getTurnDecrement(modifierName));

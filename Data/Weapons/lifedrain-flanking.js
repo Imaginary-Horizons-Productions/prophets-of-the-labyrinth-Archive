@@ -3,7 +3,7 @@ const { addModifier, dealDamage, gainHealth } = require('../combatantDAO.js');
 
 module.exports = new Weapon("Spell: Flanking Life Drain", 2, "*Strike a foe for @{damage} @{element} damage and inflict @{mod1Stacks} @{mod1}, then gain @{healing} hp*\nCritical Hit: Healing x@{critBonus}", "Darkness", effect, ["Spell: Reactive Life Drain", "Spell: Urgent Life Drain"])
 	.setTargetingTags({ target: "single", team: "enemy" })
-	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Exposed", stacks: 1 }])
+	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Exposed", stacks: 2 }])
 	.setCost(350)
 	.setUses(10)
 	.setDamage(75)

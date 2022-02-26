@@ -1,4 +1,4 @@
-const { getFullName, dealDamage, gainHealth } = require("./combatantDAO.js");
+const { getFullName, dealDamage, gainHealth, removeModifier } = require("./combatantDAO.js");
 const { getEnemy } = require("./Enemies/_enemyDictionary.js");
 const { selectAllFoes } = require("./enemyDAO.js");
 const { getWeaponProperty } = require("./Weapons/_weaponDictionary.js");
@@ -63,7 +63,7 @@ exports.resolveMove = async function (move, adventure) {
 			}
 			moveText += `${targetStatement}.${move.isCrit ? " *Critical Hit!*" : ""} ${resultTexts.join(" ")}${breakText}`;
 		} else {
-			delete user.modifiers.Stun;
+			removeModifier(user, { name: "Stun", stacks: "all" });
 			moveText += "is Stunned!";
 		}
 

@@ -4,7 +4,7 @@ module.exports = class Archetype {
 	}
 	maxHp = 300;
 	speed = 100;
-	element = "untyped";
+	element = "Untyped";
 	predict = "";
 	signatureWeapons = [];
 

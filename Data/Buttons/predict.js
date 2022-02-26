@@ -71,7 +71,7 @@ module.exports.execute = (interaction, args) => {
 						bar += "▱";
 					}
 				}
-				descriptionText += `\n__${getFullName(combatant, adventure.room.enemyTitles)}__ ${bar}\n${modifiersText ? `${modifiersText}` : "No modifiers\n"}`;
+				descriptionText += `\n__${getFullName(combatant, adventure.room.enemyTitles)}__\nStagger: ${bar}\n${modifiersText ? `${modifiersText}` : "No modifiers\n"}`;
 			})
 			break;
 		case "Enemy Moves": // Shows name of enemy next two round's move
@@ -79,7 +79,7 @@ module.exports.execute = (interaction, args) => {
 				if (move.userTeam === "enemy") {
 					let enemy = adventure.room.enemies[move.userIndex];
 					if (enemy.hp > 0) {
-						descriptionText += `\n__${getFullName(enemy, adventure.room.enemyTitles)}__\nRound ${adventure.room.round + 1}: ${move.name === "random" ? "???" : move.name}\nRound ${adventure.room.round + 2}: ${enemy.nextAction === "random" ? "???" : enemy.nextAction}\n`;
+						descriptionText += `\n__${getFullName(enemy, adventure.room.enemyTitles)}__\nRound ${adventure.room.round + 1}: ${move.name}\nRound ${adventure.room.round + 2}: ${enemy.nextAction}\n`;
 					}
 				}
 			})
