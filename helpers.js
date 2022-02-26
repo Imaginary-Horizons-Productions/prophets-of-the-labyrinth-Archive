@@ -4,21 +4,11 @@ exports.generateRandomNumber = function (adventure, exclusiveMax, branch) {
 	if (exclusiveMax === 1) {
 		return 0;
 	} else {
+		branch = branch.toLowerCase();
 		let digits = Math.ceil(Math.log2(exclusiveMax) / Math.log2(12));
-		let start;
-		let end;
-		switch (branch.toLowerCase()) {
-			case "general":
-				start = adventure.rnIndex;
-				end = start + digits;
-				adventure.rnIndex = end % adventure.rnTable.length;
-				break;
-			case "battle":
-				start = adventure.rnIndexBattle;
-				end = start + digits;
-				adventure.rnIndexBattle = end % adventure.rnTable.length;
-				break;
-		}
+		let start = adventure.rnIndices[branch];
+		let end = start + digits;
+		adventure.rnIndices[branch] = end % adventure.rnTable.length;
 		let max = 12 ** digits;
 		let sectionLength = max / exclusiveMax;
 		let roll = parseInt(adventure.rnTable.slice(start, end), 12);
