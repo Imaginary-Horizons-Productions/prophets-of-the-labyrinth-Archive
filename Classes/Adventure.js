@@ -33,7 +33,7 @@ module.exports = class Adventure {
 	gold = 100;
 	peakGold = 100;
 	artifacts = {};
-	rnIndex = 0;
+	rnIndex = 0; //TODO #204 combine indicies into a hashtable, to allow lookup rather than switch in rng
 	rnIndexBattle = 0;
 	rnTable = "";
 
