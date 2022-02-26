@@ -1,7 +1,7 @@
 const Command = require('../../Classes/Command.js');
 const { guildID, feedbackChannel } = require('../../Config/versionData.json');
 
-module.exports = new Command("feedback", "Provide feedback on Dungeon Tamers (eg a bug report or suggestion) and get a test server invite", false, false);
+module.exports = new Command("feedback", "Provide feedback on PotL (eg a bug report or suggestion) and get a test server invite", false, false);
 
 module.exports.data.addStringOption(option => option.setName("feedback").setDescription("Please describe the bug or feature request as clearly as possible").setRequired(true));
 

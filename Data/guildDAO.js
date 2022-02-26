@@ -28,10 +28,10 @@ exports.loadGuilds = function () {
 }
 
 exports.guildSetup = function (guild) {
-	return guild.channels.create("Dungeon Tamers", {
+	return guild.channels.create("Prophets of the Labyrinth", {
 		type: "GUILD_CATEGORY"
 	}).then(category => {
-		return guild.channels.create("dungeon-tamers-central", {
+		return guild.channels.create("potl-central", {
 			type: "GUILD_TEXT",
 			parent: category
 		}).then(channel => {
