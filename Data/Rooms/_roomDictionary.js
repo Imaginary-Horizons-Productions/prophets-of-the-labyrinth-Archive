@@ -1,5 +1,3 @@
-const { MessageActionRow, MessageButton } = require("discord.js");
-const RoomTemplate = require("../../Classes/RoomTemplate");
 const { generateRandomNumber } = require("../../helpers");
 
 let roomWhitelist = [
@@ -9,6 +7,7 @@ let roomWhitelist = [
 	"battle-mechabees.js",
 	"battle-slimes.js",
 	"battle-tortoises.js",
+	"empty.js",
 	"event-elementswap.js",
 	"event-freegold.js",
 	"event-goldonfire.js",
@@ -20,82 +19,54 @@ let roomWhitelist = [
 	"restsite-basic.js"
 ];
 
-const eventRooms = [];
-const battleRooms = [];
-const merchantRooms = [];
-const restRooms = [];
-const finalBattleRooms = [];
-const artifactGuardianRooms = [];
-const forgeRooms = [];
+const ROOMS = {
+	"Event": [],
+	"Battle": [],
+	"Merchant": [],
+	"Rest Site": [],
+	"Final Battle": [],
+	"Forge": [],
+	"Artifact Guardian": [],
+	"Empty": []
+};
 
 for (const file of roomWhitelist) {
 	const room = require(`./${file}`);
 	room.types.forEach(type => {
-		switch (type) {
-			case "Event":
-				eventRooms.push(room);
-				break;
-			case "Battle":
-				battleRooms.push(room);
-				break;
-			case "Merchant":
-				merchantRooms.push(room);
-				break;
-			case "Rest Site":
-				restRooms.push(room);
-				break;
-			case "Final Battle":
-				finalBattleRooms.push(room);
-				break;
-			case "Artifact Guardian":
-				artifactGuardianRooms.push(room);
-				break;
-			case "Forge":
-				forgeRooms.push(room);
-				break;
-			default:
-				console.error("Attempt to load room of unidentified type: " + type);
-				break;
+		if (ROOMS[type]) {
+			ROOMS[type].push(room);
+		} else {
+			console.error("Attempt to load room of unidentified type: " + type);
 		}
 	})
 }
 
 exports.prerollBoss = function (type, adventure) {
+	let roomPool = ROOMS[type];
+	let roomTitle = roomPool[generateRandomNumber(adventure, roomPool.length, "general")].title;
 	if (type === "Artifact Guardian") {
-		adventure.artifactGuardians.push(artifactGuardianRooms[generateRandomNumber(adventure, artifactGuardianRooms.length, "general")].title);
+		adventure.artifactGuardians.push(roomTitle);
 	} else {
-		adventure.finalBoss = finalBattleRooms[generateRandomNumber(adventure, finalBattleRooms.length, "general")].title;
+		adventure.finalBoss = roomTitle;
 	}
 }
 
 exports.getRoomTemplate = function (type, adventure) {
-	switch (type) {
-		case "Event":
-			return eventRooms[generateRandomNumber(adventure, eventRooms.length, "General")];
-		case "Battle":
-			return battleRooms[generateRandomNumber(adventure, battleRooms.length, "General")];
-		case "Merchant":
-			return merchantRooms[generateRandomNumber(adventure, merchantRooms.length, "General")];
-		case "Rest Site":
-			return restRooms[generateRandomNumber(adventure, restRooms.length, "General")];
-		case "Forge":
-			return forgeRooms[generateRandomNumber(adventure, forgeRooms.length, "General")];
-		case "Artifact Guardian":
-			return artifactGuardianRooms.find(room => room.title === adventure.artifactGuardians[adventure.scouting.artifactGuardiansEncountered]);
-		case "Final Battle":
-			return finalBattleRooms.find(room => room.title === adventure.finalBoss);
-		default:
-			console.error("Attempt to create room of unidentified type: " + type);
-			let empty = new RoomTemplate().setTitle("Empty Room")
-				.setDescription("This room is empty. Lucky you?");
-			adventure.roomCandidates = {
-				"Battle": true
-			};
-			empty.uiRows.push(new MessageActionRow().addComponents(
-				new MessageButton().setCustomId("continue")
-					.setLabel("Move on")
-					.setStyle("SECONDARY")
-			))
-			return empty;
+	let roomPool = ROOMS[type];
+	if (type === "Artifact Guardian") {
+		return roomPool.find(room => room.title === adventure.artifactGuardians[adventure.scouting.artifactGuardiansEncountered]);
 	}
+
+	if (type === "Final Battle") {
+		return roomPool.find(room => room.title === adventure.finalBoss);
+	}
+
+	if (!roomPool) {
+		console.error("Attempt to create room of unidentified type: " + type);
+		adventure.roomCandidates = {
+			"Battle": true
+		};
+		return ROOMS["Empty"][0];
+	}
+	return roomPool[generateRandomNumber(adventure, roomPool.length, "General")];
 }
