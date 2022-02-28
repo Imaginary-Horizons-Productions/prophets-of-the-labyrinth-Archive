@@ -1,5 +1,5 @@
 const Command = require('../../Classes/Command.js');
-const { guildID, feedbackChannel } = require('../../Config/versionData.json');
+const { guildId, feedbackChannel } = require('../../Config/versionData.json');
 
 module.exports = new Command("feedback", "Provide feedback on PotL (eg a bug report or suggestion) and get a test server invite", false, false);
 
@@ -11,8 +11,8 @@ module.exports.execute = (interaction) => {
 	let feedbackPreamble = `Feedback from <@${interaction.user.id}>:\n\t`;
 	let ticketSpace = 2000 - feedbackPreamble.length;
 	if (feedback.length < ticketSpace) {
-		if (guildID && feedbackChannel) {
-			interaction.client.guilds.fetch(guildID).then(testServer => {
+		if (guildId && feedbackChannel) {
+			interaction.client.guilds.fetch(guildId).then(testServer => {
 				testServer.channels.fetch(feedbackChannel).then(channel => {
 					channel.createInvite({ maxAge: 0 }).then(invite => {
 						channel.send(feedbackPreamble + feedback);
