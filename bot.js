@@ -1,12 +1,13 @@
 //#region Imports
 const { Client } = require("discord.js");
-const fs = require("fs");
+const fsa = require("fs").promises;
 const versionData = require('./Config/versionData.json');
 const { commandDictionary, slashData } = require(`./Data/Commands/_commandDictionary.js`);
 const { getSelect } = require("./Data/Selects/_selectDictionary.js");
 const { getButton } = require("./Data/Buttons/_buttonDictionary.js");
 const { loadPlayers } = require("./Data/playerDAO.js");
-const { guildSetup, getPremiumUsers, ensuredPathSave } = require("./helpers.js");
+const { guildSetup, getPremiumUsers } = require("./helpers.js");
+const helpers = require("./helpers.js");
 const { loadGuilds } = require("./Data/guildDAO.js");
 const { loadAdventures } = require("./Data/adventureDAO.js");
 //#endregion
@@ -38,8 +39,28 @@ const client = new Client({
 //#region Event Handlers
 client.on("ready", () => {
 	console.log(`Connected as ${client.user.tag}`);
+
+	// Post version notes
+	if (versionData.announcementsChannelId) {
+		fsa.readFile('./ChangeLog.md', { encoding: 'utf8' }).then(data => {
+			let [version] = data.match(/(\d+.\d+.\d+)/);
+			if (versionData.lastPostedVersion < version) {
+				helpers.versionEmbedBuilder(client.user.displayAvatarURL()).then(embed => {
+					client.guilds.fetch(versionData.guildId).then(guild => {
+						guild.channels.fetch(versionData.announcementsChannelId).then(annoucnementsChannel => {
+							annoucnementsChannel.send({ embeds: [embed] }).then(message => {
+								message.crosspost();
+								versionData.lastPostedVersion = version;
+								fsa.writeFile('./Config/versionData.json', JSON.stringify(versionData), "utf-8");
+							});
+						})
+					})
+				}).catch(console.error);
+			}
+		});
+	}
+
 	//TODO #2 upload slash commands gloabally
-	//TODO #3 post version notes
 })
 
 client.on("interactionCreate", interaction => {
