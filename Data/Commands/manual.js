@@ -5,7 +5,7 @@ const { getEmoji, getWeaknesses, getResistances, getColor } = require('../elemen
 module.exports = new Command("manual", "Get information about Prophets of the Labyrinth", false, false);
 
 module.exports.data.addStringOption(option => option.setName("topic").setDescription("The topic/page of information").setRequired(true)
-	.setChoices([["Credits", "Credits"], ["Elements", "Elements"]]));
+	.setChoices([["Credits", "Credits"], ["Elements", "Elements"], ["Stagger", "Stagger"]]));
 
 module.exports.execute = (interaction) => {
 	// Give information about the game
@@ -37,6 +37,13 @@ module.exports.execute = (interaction) => {
 				.addField(`Earth ${getEmoji("Earth")}`, `Weaknesses (receives 2x damage from): ${getWeaknesses("Earth").join(", ")}\nResistances (receives 1/2 damage from): ${getResistances("Earth").join(", ")}\nColor: ${getColor("Earth")}`)
 				.addField(`Darkness ${getEmoji("Darkness")}`, `Weaknesses (receives 2x damage from): ${getWeaknesses("Darkness").join(", ")}\nResistances (receives 1/2 damage from): ${getResistances("Darkness").join(", ")}\nColor: ${getColor("Darkness")}`)
 				.addField("Matching Element Stagger", "When a combatant makes a move that matches their element, their target gets a bonus effect. If the target is an ally, they are relieved of 1 Stagger. If the target is an enemy, they suffer 1 additional Stagger. Check the page on Stagger to learn more about Stagger and Stun.")
+			];
+			break;
+		case "Stagger":
+			response.embeds = [new MessageEmbed().setColor('6b81eb')
+				.setTitle("Stagger")
+				.setDescription("Stagger is a modifier (that is neither a buff nor debuff) that stacks up on a combatant eventually leading to the combatant getting Stunned (also not a buff or debuff). A stunned combatant misses their next turn, even if they had readied a move for that turn. Stagger promotes to Stun when a combatant's number of stacks exceeds their Stagger threshold (default 3 for delvers, varies for enemies).")
+				.addField("Matching Element Stagger", "When a combatant makes a move that matches their element, their target gets a bonus effect. If the target is an ally, they are relieved of 1 Stagger. If the target is an enemy, they suffer 1 additional Stagger. Check the page on Elements to learn more about move and combatant elements.")
 			];
 			break;
 	}
