@@ -43,20 +43,28 @@ client.on("ready", () => {
 	// Post version notes
 	if (versionData.announcementsChannelId) {
 		fsa.readFile('./ChangeLog.md', { encoding: 'utf8' }).then(data => {
-			let [version] = data.match(/(\d+.\d+.\d+)/);
-			if (versionData.lastPostedVersion < version) {
-				helpers.versionEmbedBuilder(client.user.displayAvatarURL()).then(embed => {
-					client.guilds.fetch(versionData.guildId).then(guild => {
-						guild.channels.fetch(versionData.announcementsChannelId).then(annoucnementsChannel => {
-							annoucnementsChannel.send({ embeds: [embed] }).then(message => {
-								message.crosspost();
-								versionData.lastPostedVersion = version;
-								fsa.writeFile('./Config/versionData.json', JSON.stringify(versionData), "utf-8");
-							});
-						})
-					})
-				}).catch(console.error);
+			let [currentFull, currentMajor, currentMinor, currentPatch] = data.match(/(\d+)\.(\d+)\.(\d+)/);
+			let [_lastFull, lastMajor, lastMinor, lastPatch] = versionData.lastPostedVersion.match(/(\d+)\.(\d+)\.(\d+)/);
+
+			if (currentMajor <= lastMajor) {
+				if (currentMinor <= lastMinor) {
+					if (currentPatch <= lastPatch) {
+						return;
+					}
+				}
 			}
+
+			helpers.versionEmbedBuilder(client.user.displayAvatarURL()).then(embed => {
+				client.guilds.fetch(versionData.guildId).then(guild => {
+					guild.channels.fetch(versionData.announcementsChannelId).then(annoucnementsChannel => {
+						annoucnementsChannel.send({ embeds: [embed] }).then(message => {
+							message.crosspost();
+							versionData.lastPostedVersion = currentFull;
+							fsa.writeFile('./Config/versionData.json', JSON.stringify(versionData), "utf-8");
+						});
+					})
+				})
+			}).catch(console.error);
 		});
 	}
 
