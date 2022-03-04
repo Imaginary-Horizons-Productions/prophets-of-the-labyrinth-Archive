@@ -2,14 +2,14 @@
 const { Client } = require("discord.js");
 const fsa = require("fs").promises;
 const versionData = require('./Config/versionData.json');
-const { commandDictionary, slashData } = require(`./Data/Commands/_commandDictionary.js`);
-const { getSelect } = require("./Data/Selects/_selectDictionary.js");
-const { getButton } = require("./Data/Buttons/_buttonDictionary.js");
-const { loadPlayers } = require("./Data/playerDAO.js");
+const { commandDictionary, slashData } = require(`./Source/Commands/_commandDictionary.js`);
+const { getSelect } = require("./Source/Selects/_selectDictionary.js");
+const { getButton } = require("./Source/Buttons/_buttonDictionary.js");
+const { loadPlayers } = require("./Source/playerDAO.js");
 const { guildSetup, getPremiumUsers } = require("./helpers.js");
 const helpers = require("./helpers.js");
-const { loadGuilds } = require("./Data/guildDAO.js");
-const { loadAdventures } = require("./Data/adventureDAO.js");
+const { loadGuilds } = require("./Source/guildDAO.js");
+const { loadAdventures } = require("./Source/adventureDAO.js");
 //#endregion
 
 //#region Executing Code
