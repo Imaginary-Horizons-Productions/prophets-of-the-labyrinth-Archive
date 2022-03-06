@@ -86,6 +86,7 @@ Deals unblockable damage
 
 #### Available on
 - Warhammer (Earth)
+- Scythe (Darkness)
 
 ### Prideful
 High value non-elemental damage

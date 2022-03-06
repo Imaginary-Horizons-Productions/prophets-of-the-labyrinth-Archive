@@ -55,6 +55,7 @@ var weaponWhitelist = [
 	"potion-watery.js",
 	"scythe-base.js",
 	"scythe-lethal.js",
+	"scythe-piercing.js",
 	"scythe-toxic.js",
 	"sickle-base.js",
 	"sickle-hunters",
