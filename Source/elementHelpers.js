@@ -65,8 +65,12 @@ exports.getWeaknesses = function (element) {
 	}
 }
 
-exports.elementsList = function () {
-	return Object.keys(ELEMENTS);
+exports.elementsList = function (includeUntyped = false) {
+	if (includeUntyped) {
+		return Object.keys(ELEMENTS);
+	} else {
+		return Object.keys(ELEMENTS).filter(element => element !== "Untyped");
+	}
 }
 
 exports.getColor = function (element) {
