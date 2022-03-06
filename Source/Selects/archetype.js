@@ -54,7 +54,7 @@ module.exports.execute = (interaction, args) => {
 			})
 		} else {
 			let join = new MessageActionRow().addComponents(
-				new MessageButton().setCustomId(`join-${interaction.channel.id}`)
+				new MessageButton().setCustomId(`join-${interaction.guildId}-${interaction.channelId}`)
 					.setLabel("Join")
 					.setStyle("SUCCESS"));
 			interaction.reply({ content: `You don't appear to be signed up for this adventure. You can join with the button below:`, components: [join], ephemeral: true });

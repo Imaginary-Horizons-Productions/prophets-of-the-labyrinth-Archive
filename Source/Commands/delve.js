@@ -22,8 +22,8 @@ module.exports.execute = (interaction) => {
 		prerollBoss("Final Battle", adventure);
 		prerollBoss("Artifact Guardian", adventure);
 
-		let elementIndex = generateRandomNumber(adventure, elementsList().length, "general");
-		let pickedElement = elementsList()[elementIndex];
+		let elementPool = elementsList();
+		let pickedElement = elementPool[generateRandomNumber(adventure, elementPool.length, "general")];
 		adventure.setName(`${DESCRIPTORS[generateRandomNumber(adventure, DESCRIPTORS.length, "general")]} ${LOCATIONS[generateRandomNumber(adventure, LOCATIONS.length, "general")]} of ${pickedElement}`)
 			.setElement(pickedElement);
 
@@ -33,14 +33,18 @@ module.exports.execute = (interaction) => {
 			.setThumbnail("https://cdn.discordapp.com/attachments/545684759276421120/734093574031016006/bountyboard.png")
 			.setDescription("A new adventure is starting!")
 			.addField("1 Party Member", `Leader: ${interaction.member}`)
-		let join = new MessageActionRow().addComponents(
-			new MessageButton().setCustomId(`join`)
-				.setLabel("Join")
-				.setStyle("SUCCESS")
-		)
-		interaction.reply({ embeds: [embed], components: [join], fetchReply: true }).then(recruitMessage => {
+		interaction.reply({ embeds: [embed], fetchReply: true }).then(recruitMessage => {
 			return recruitMessage.startThread({ name: adventure.name });
 		}).then(thread => {
+			thread.fetchStarterMessage().then(message => {
+				message.edit({
+					components: [new MessageActionRow().addComponents(
+						new MessageButton().setCustomId(`join-${thread.guildId}-${thread.id}`)
+							.setLabel("Join")
+							.setStyle("SUCCESS")
+					)]
+				});
+			})
 			adventure.delvers.push(new Delver(interaction.user.id, interaction.member.displayName, thread.id));
 
 			thread.send(`${interaction.user} Here's the channel for your new adventure. As adventure leader you're responsible for indicating when everyone's ready.`).then(leaderMessage => {
