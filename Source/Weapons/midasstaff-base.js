@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { addModifier } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Midas Staff", 1, "*Apply @{mod1Stacks} @{mod1} to a combatant*\nCritical Hit: @{mod1} x@{critBonus}", "Water", effect, ["Soothing Midas Staff"])
+module.exports = new Weapon("Midas Staff", 1, "*Apply @{mod1Stacks} @{mod1} to a combatant*\nCritical Hit: @{mod1} x@{critBonus}", "Water", effect, ["Soothing Midas Staff", "Swift Midas Staff"])
 	.setTargetingTags({ target: "single", team: "any" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Curse of Midas", stacks: 1 }, { name: "Curse of Midas", stacks: 2 }])
 	.setCost(200)

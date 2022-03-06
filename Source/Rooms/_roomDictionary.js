@@ -51,7 +51,7 @@ exports.prerollBoss = function (type, adventure) {
 	}
 }
 
-exports.getRoomTemplate = function (type, adventure) {
+exports.manufactureRoomTemplate = function (type, adventure) {
 	let roomPool = ROOMS[type];
 	if (type === "Artifact Guardian") {
 		return roomPool.find(room => room.title === adventure.artifactGuardians[adventure.scouting.artifactGuardiansEncountered]);

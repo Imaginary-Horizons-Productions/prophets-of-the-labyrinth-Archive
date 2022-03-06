@@ -149,6 +149,7 @@ Grants the user the Quicken modifier
 - Sun Flare (Light)
 - Cloak (Wind)
 - Sword (Earth)
+- Midas Staff (Water)
 
 ### Thick
 Increased durability, grants the differences in uses when upgraded.

@@ -3,7 +3,7 @@ const { ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordi
 const { MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu } = require("discord.js");
 const Adventure = require("../Classes/Adventure.js");
 const { setPlayer, getPlayer } = require("./playerDAO.js");
-const { getRoomTemplate, prerollBoss } = require("./Rooms/_roomDictionary.js");
+const { manufactureRoomTemplate, prerollBoss } = require("./Rooms/_roomDictionary.js");
 const Move = require("../Classes/Move.js");
 const { resolveMove } = require("./moveDAO.js");
 const Enemy = require("../Classes/Enemy.js");
@@ -118,7 +118,7 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 
 	// Generate current room
 	if (adventure.depth < 11) {
-		let roomTemplate = getRoomTemplate(roomType, adventure);
+		let roomTemplate = manufactureRoomTemplate(roomType, adventure);
 		adventure.room = new Room(roomTemplate.title, roomTemplate.element);
 		if (adventure.room.element === "@{adventure}") {
 			adventure.room.element = adventure.element;
