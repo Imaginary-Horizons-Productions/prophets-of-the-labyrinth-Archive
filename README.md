@@ -1,5 +1,5 @@
 # Prophets of the Labyrinth
-A rougelike dungeon crawl in Discord to play with other server members.
+A multiplayer rougelike dungeon crawl in Discord to play with other server members.
 
 ## Local Setup Instructions
 1. Clone the repo

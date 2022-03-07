@@ -10,6 +10,7 @@ exports.commandSets = [
 
 exports.commandFiles = exports.commandSets.reduce((allFiles, set) => allFiles.concat(set.fileNames), []);
 const commandDictionary = {};
+exports.slashData = [];
 
 exports.initializeCommands = function (isProduction, helpers) {
 	for (const file of exports.commandFiles) {
@@ -18,6 +19,7 @@ exports.initializeCommands = function (isProduction, helpers) {
 			command.initialize(helpers);
 		}
 		commandDictionary[command.name] = command;
+		exports.slashData.push(command.data.toJSON());
 	}
 }
 
