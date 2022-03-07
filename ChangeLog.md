@@ -1,5 +1,6 @@
 # Prophets of the Labyrinth Change Log
 #### Prophets of the Labyrinth Version 0.5.0:
+- `/commands` - a new command for listing PotL's slash commands
 - `/invite` - a new command for inviting friends to adventures
 - `/manual` - a new command for getting information about the game
 - `/ping` - a new command for sending a notification to players the game is waiting on input for

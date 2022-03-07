@@ -1,8 +1,14 @@
 const Command = require('../../Classes/Command.js');
-const { guildSetup } = require('../../helpers.js');
 const { resetScores } = require('../playerDAO.js');
 
-module.exports = new Command("reset", "Recreate the PotL category and central text channel and reset player scores", true, false);
+const options = [];
+module.exports = new Command("reset", "Recreate the PotL category and central text channel and reset player scores", true, false, options);
+
+// imports from files that depend on /Config
+// let guildSetup;
+module.exports.initialize = function (helpers) {
+	({ guildSetup } = helpers);
+}
 
 module.exports.execute = (interaction) => {
 	// Creates a new category and main text channel, storing the values in the guildDictionary

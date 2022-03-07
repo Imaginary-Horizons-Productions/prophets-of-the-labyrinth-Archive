@@ -3,12 +3,20 @@ const Adventure = require('../../Classes/Adventure.js');
 const Command = require('../../Classes/Command.js');
 const { elementsList, getColor } = require('../elementHelpers.js');
 const Delver = require('../../Classes/Delver.js');
-const { generateRandomNumber } = require('../../helpers.js');
 const { setAdventure } = require("../adventureDAO.js");
 const { prerollBoss } = require('../Rooms/_roomDictionary.js');
 
-module.exports = new Command("delve", "Start a new adventure", false, false);
-module.exports.data.addStringOption(option => option.setName("seed").setDescription("The value to base the random events of the run on").setRequired(false));
+const options = [
+	{ type: "String", name: "seed", description: "The value to base the random events of the run on", required: false, choices: {} }
+];
+module.exports = new Command("delve", "Start a new adventure", false, false, options);
+
+// imports from files that depend on /Config
+let generateRandomNumber;
+module.exports.initialize = function (helpers) {
+	({ generateRandomNumber } = helpers);
+}
+
 
 let DESCRIPTORS = ["Shining", "New", "Dusty", "Old", "Floating", "Undersea", "Future", "Intense"];
 let LOCATIONS = ["Adventure", "Castle", "Labyrinth", "Ruins", "Plateau", "Dungeon", "Maze", "Fortress", "Dream"];

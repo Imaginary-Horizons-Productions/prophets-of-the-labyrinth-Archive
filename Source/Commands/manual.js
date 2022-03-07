@@ -2,10 +2,23 @@ const Command = require('../../Classes/Command.js');
 const { MessageEmbed } = require("discord.js");
 const { getEmoji, getWeaknesses, getResistances, getColor } = require('../elementHelpers.js');
 
-module.exports = new Command("manual", "Get information about Prophets of the Labyrinth", false, false);
+const options = [
+	{
+		type: "String", name: "topic", description: "The topic/page of information", required: true, choices: {
+			"Credits": "Credits",
+			"Tutorial": "Tutorial",
+			"Elements": "Elements",
+			"Stagger": "Stagger"
+		}
+	}
+];
+module.exports = new Command("manual", "Get information about Prophets of the Labyrinth", false, false, options);
 
-module.exports.data.addStringOption(option => option.setName("topic").setDescription("The topic/page of information").setRequired(true)
-	.setChoices([["Credits", "Credits"], ["Tutorial", "Tutorial"], ["Elements", "Elements"], ["Stagger", "Stagger"]]));
+// imports from files that depend on /Config
+// let ;
+module.exports.initialize = function (helpers) {
+	({} = helpers);
+}
 
 module.exports.execute = (interaction) => {
 	// Give information about the game

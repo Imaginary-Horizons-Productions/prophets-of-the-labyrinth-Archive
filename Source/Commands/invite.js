@@ -2,8 +2,16 @@ const { MessageActionRow, MessageButton } = require('discord.js');
 const Command = require('../../Classes/Command.js');
 const { getAdventure } = require('../adventureDAO.js');
 
-module.exports = new Command("invite", "Invite a friend to an adventure", false, false);
-module.exports.data.addUserOption(option => option.setName("invitee").setDescription("The user's mention").setRequired(true));
+const options = [
+	{ type: "User", name: "invitee", description: "The user's mention", required: true, choices: {} }
+];
+module.exports = new Command("invite", "Invite a friend to an adventure", false, false, options);
+
+// imports from files that depend on /Config
+// let ;
+module.exports.initialize = function (helpers) {
+	({} = helpers);
+}
 
 module.exports.execute = (interaction) => {
 	// Invite a friend to an adventure

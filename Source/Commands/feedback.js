@@ -1,9 +1,15 @@
 const Command = require('../../Classes/Command.js');
-const { guildId, feedbackChannel } = require('../../Config/versionData.json');
 
-module.exports = new Command("feedback", "Provide feedback on PotL (eg a bug report or suggestion) and get a test server invite", false, false);
+const options = [
+	{ type: "String", name: "feedback", description: "Please describe the bug or feature request as clearly as possible", required: true, choices: {} }
+];
+module.exports = new Command("feedback", "Provide feedback on PotL (eg a bug report or suggestion) and get a test server invite", false, false, options);
 
-module.exports.data.addStringOption(option => option.setName("feedback").setDescription("Please describe the bug or feature request as clearly as possible").setRequired(true));
+// imports from files that depend on /Config
+let guildId, feedbackChannel;
+module.exports.initialize = function (helpers) {
+	({ guildId, feedbackChannel } = helpers.versionData);
+}
 
 module.exports.execute = (interaction) => {
 	// Post feedback to the test server channel and provide the user an invite

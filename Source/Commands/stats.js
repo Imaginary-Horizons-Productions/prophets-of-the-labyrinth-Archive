@@ -2,8 +2,16 @@ const { MessageEmbed } = require('discord.js');
 const Command = require('../../Classes/Command.js');
 const { getPlayer } = require('../playerDAO.js');
 
-module.exports = new Command("stats", "Get the stats for a user or yourself", false, false);
-module.exports.data.addUserOption(option => option.setName("user").setDescription("The user to look up (yourself if blank)").setRequired(false));
+const options = [
+	{ type: "User", name: "user", description: "The user to look up (yourself if blank)", required: false, choices: {} }
+];
+module.exports = new Command("stats", "Get the stats for a user or yourself", false, false, options);
+
+// imports from files that depend on /Config
+// let ;
+module.exports.initialize = function (helpers) {
+	({} = helpers);
+}
 
 module.exports.execute = (interaction) => {
 	// Get the stats on a user

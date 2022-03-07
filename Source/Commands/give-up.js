@@ -2,7 +2,14 @@ const Command = require('../../Classes/Command.js');
 const { MessageEmbed } = require('discord.js');
 const { completeAdventure, getAdventure } = require('../adventureDAO.js');
 
-module.exports = new Command("give-up", "Lets the adventure leader end the adventure", false, false);
+const options = [];
+module.exports = new Command("give-up", "Lets the adventure leader end the adventure", false, false, options);
+
+// imports from files that depend on /Config
+// let ;
+module.exports.initialize = function (helpers) {
+	({} = helpers);
+}
 
 module.exports.execute = (interaction) => {
 	// Give up on the current adventure

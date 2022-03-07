@@ -1,6 +1,8 @@
 const { MessageEmbed } = require("discord.js");
 const fs = require("fs");
 
+exports.versionData = require('./Config/versionData.json');
+
 exports.generateRandomNumber = function (adventure, exclusiveMax, branch) {
 	if (exclusiveMax === 1) {
 		return 0;
