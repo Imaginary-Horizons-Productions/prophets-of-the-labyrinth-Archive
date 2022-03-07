@@ -2,7 +2,7 @@
 const { Client } = require("discord.js");
 const fsa = require("fs").promises;
 const versionData = require('./Config/versionData.json');
-const { getCommand, initializeCommands } = require(`./Source/Commands/_commandDictionary.js`);
+const { getCommand, initializeCommands, slashData } = require(`./Source/Commands/_commandDictionary.js`);
 const { getSelect } = require("./Source/Selects/_selectDictionary.js");
 const { getButton } = require("./Source/Buttons/_buttonDictionary.js");
 const { loadPlayers } = require("./Source/playerDAO.js");
@@ -10,6 +10,8 @@ const { guildSetup, getPremiumUsers } = require("./helpers.js");
 const helpers = require("./helpers.js");
 const { loadGuilds } = require("./Source/guildDAO.js");
 const { loadAdventures } = require("./Source/adventureDAO.js");
+const { REST } = require("@discordjs/rest");
+const { Routes } = require("discord-api-types/v9");
 //#endregion
 
 //#region Executing Code
@@ -69,7 +71,17 @@ client.on("ready", () => {
 		});
 	}
 
-	//TODO #2 upload slash commands gloabally
+	// Upload slash commands globally
+	(async () => {
+		try {
+			await new REST({ version: 9 }).setToken(require("./Config/auth.json").token).put(
+				Routes.applicationCommands(client.user.id),
+				{ body: slashData },
+			);
+		} catch (error) {
+			console.error(error);
+		}
+	})();
 })
 
 client.on("interactionCreate", interaction => {
