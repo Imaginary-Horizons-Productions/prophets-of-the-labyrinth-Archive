@@ -2,7 +2,7 @@
 const { Client } = require("discord.js");
 const fsa = require("fs").promises;
 const versionData = require('./Config/versionData.json');
-const { commandDictionary, slashData } = require(`./Source/Commands/_commandDictionary.js`);
+const { getCommand, initializeCommands } = require(`./Source/Commands/_commandDictionary.js`);
 const { getSelect } = require("./Source/Selects/_selectDictionary.js");
 const { getButton } = require("./Source/Buttons/_buttonDictionary.js");
 const { loadPlayers } = require("./Source/playerDAO.js");
@@ -40,6 +40,7 @@ const client = new Client({
 client.on("ready", () => {
 	console.log(`Connected as ${client.user.tag}`);
 
+	initializeCommands(true, helpers);
 	// Post version notes
 	if (versionData.announcementsChannelId) {
 		fsa.readFile('./ChangeLog.md', { encoding: 'utf8' }).then(data => {
@@ -74,7 +75,7 @@ client.on("ready", () => {
 client.on("interactionCreate", interaction => {
 	if (interaction.inGuild()) {
 		if (interaction.isCommand()) {
-			var command = commandDictionary[interaction.commandName];
+			let command = getCommand(interaction.commandName);
 			if (!command.premiumCommand || !getPremiumUsers().includes(interaction.user.id)) {
 				if (!command.managerCommand || !interaction.member.manageable) {
 					command.execute(interaction);

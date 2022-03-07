@@ -2,7 +2,14 @@ const Command = require('../../Classes/Command.js');
 const { MessageEmbed, MessageActionRow, MessageSelectMenu } = require('discord.js');
 const { getAdventure } = require('../adventureDAO.js');
 
-module.exports = new Command("party-stats", "Get info about the current adventure", false, false);
+const options = [];
+module.exports = new Command("party-stats", "Get info about the current adventure", false, false, options);
+
+// imports from files that depend on /Config
+// let ;
+module.exports.initialize = function (helpers) {
+	({} = helpers);
+}
 
 module.exports.execute = (interaction) => {
 	// Show user the party stats

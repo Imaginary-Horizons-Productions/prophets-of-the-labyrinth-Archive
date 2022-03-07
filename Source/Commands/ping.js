@@ -1,7 +1,14 @@
 const Command = require('../../Classes/Command.js');
 const { getAdventure } = require('../adventureDAO.js');
 
-module.exports = new Command("ping", "Remind delvers to input their vote or move", false, false);
+const options = [];
+module.exports = new Command("ping", "Remind delvers to input their vote or move", false, false, options);
+
+// imports from files that depend on /Config
+// let ;
+module.exports.initialize = function (helpers) {
+	({} = helpers);
+}
 
 module.exports.execute = (interaction) => {
 	// Remind delvers to input their vote or move
