@@ -6,19 +6,18 @@ let options = [];
 module.exports = new Command("commands", "List PotL's slash commands", false, false, options);
 
 // imports from files that depend on /Config
-// let ;
+let wikiPage;
 module.exports.initialize = function (helpers) {
 	({} = helpers);
-}
 
-let wikiPage;
-fs.readFile("Wiki/Commands.md", { encoding: "utf-8" }, (error, data) => {
-	if (error) {
-		// console.error(error); //TODO #209 error handling for failing to read commands during development
-	} else {
-		wikiPage = data;
-	}
-})
+	fs.readFile("Wiki/Commands.md", { encoding: "utf-8" }, (error, data) => {
+		if (error) {
+			console.error(error);
+		} else {
+			wikiPage = data;
+		}
+	})
+}
 
 module.exports.execute = (interaction) => {
 	let embed = new MessageEmbed().setColor("#6b81eb")
