@@ -7,13 +7,13 @@ const { getArtifactDescription } = require('../Artifacts/_artifactDictionary.js'
 module.exports = new Button("startingartifact");
 
 module.exports.execute = (interaction, _args) => {
-	// Send the player a message with a select to pick an archetype
+	// Send the player a message with a select a starting artifact
 	let adventure = getAdventure(interaction.channel.id);
 	let playerProfile = getPlayer(interaction.user.id, interaction.guild.id);
 	let user = adventure.delvers.find(delver => delver.id == interaction.user.id);
 	if (user) {
 		let options = [];
-		for (const artifactName of playerProfile.artifacts) {
+		for (const artifactName of Object.values(playerProfile.artifacts)) {
 			let description = getArtifactDescription(artifactName);
 			options.push({
 				label: artifactName,

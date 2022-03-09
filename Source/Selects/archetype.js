@@ -7,10 +7,10 @@ const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
 
 module.exports = new Select("archetype");
 
-module.exports.execute = (interaction, args) => { //TODONOW reject interactions from adventures that have already started
+module.exports.execute = (interaction, args) => {
 	// Add the player's delver object to the adventure
 	let adventure = getAdventure(interaction.channel.id);
-	if (adventure) {
+	if (adventure && !adventure.messageIds.utility) {
 		// Add delver to list (or overwrite)
 		let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
 		if (userIndex !== -1) {
@@ -65,6 +65,6 @@ module.exports.execute = (interaction, args) => { //TODONOW reject interactions 
 			interaction.reply({ content: `You don't appear to be signed up for this adventure. You can join with the button below:`, components: [join], ephemeral: true });
 		}
 	} else {
-		interaction.reply({ content: "This adventure seems to be over already.", ephemeral: true });
+		interaction.reply({ content: "A valid adventure could not be found.", ephemeral: true });
 	}
 }

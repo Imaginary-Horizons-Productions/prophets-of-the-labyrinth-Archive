@@ -2,6 +2,7 @@ var buttonWhitelist = [
 	"buylife.js",
 	"buyscouting.js",
 	"challenge.js",
+	"collectartifact.js",
 	"continue.js",
 	"deploy.js",
 	"elementswap.js",

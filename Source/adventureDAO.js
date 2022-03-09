@@ -526,7 +526,7 @@ exports.completeAdventure = function (adventure, thread, scoreEmbed) { //TODO #2
 		setPlayer(player);
 	})
 
-	thread.fetchStarterMessage({ cache: false, force: true }).then(recruitMessage => { //TODONOW artifact collecting
+	thread.fetchStarterMessage({ cache: false, force: true }).then(recruitMessage => {
 		let [recruitEmbed] = recruitMessage.embeds;
 		recruitEmbed.setTitle(recruitEmbed.title + ": COMPLETE!")
 			.setThumbnail("https://cdn.discordapp.com/attachments/545684759276421120/734092918369026108/completion.png")
@@ -544,7 +544,15 @@ exports.completeAdventure = function (adventure, thread, scoreEmbed) { //TODO #2
 
 	adventureDictionary.delete(thread.id);
 	saveAdventures();
-	thread.send({ embeds: [scoreEmbed] });
+	let artifactCollection = [];
+	if (isSuccess) {
+		artifactCollection.push(new MessageActionRow().addComponents(
+			new MessageButton().setCustomId("collectartifact")
+				.setLabel("Collect Artifact")
+				.setStyle("SUCCESS")
+		))
+	}
+	thread.send({ embeds: [scoreEmbed], components: artifactCollection });
 }
 
 function saveAdventures() {

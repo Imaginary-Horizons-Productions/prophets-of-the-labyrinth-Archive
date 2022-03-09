@@ -5,10 +5,10 @@ const { getArtifactDescription } = require('../Artifacts/_artifactDictionary.js'
 
 module.exports = new Select("startingartifact");
 
-module.exports.execute = (interaction, _args) => { //TODONOW reject interactions from adventures that have already started
-	// Add the player's delver object to the adventure
+module.exports.execute = (interaction, _args) => {
+	// Set the player's starting artifact
 	let adventure = getAdventure(interaction.channel.id);
-	if (adventure) {
+	if (adventure && !adventure.messageIds.utility) {
 		// Add delver to list (or overwrite)
 		let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
 		if (userIndex !== -1) {
@@ -33,6 +33,6 @@ module.exports.execute = (interaction, _args) => { //TODONOW reject interactions
 			interaction.reply({ content: `You don't appear to be signed up for this adventure. You can join with the button below:`, components: [join], ephemeral: true });
 		}
 	} else {
-		interaction.reply({ content: "This adventure seems to be over already.", ephemeral: true });
+		interaction.reply({ content: "A valid adventure could not be found.", ephemeral: true });
 	}
 }
