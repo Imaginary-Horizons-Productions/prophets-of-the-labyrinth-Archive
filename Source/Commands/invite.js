@@ -17,7 +17,7 @@ module.exports.execute = (interaction) => {
 	// Invite a friend to an adventure
 	const adventure = getAdventure(interaction.channel.id);
 	if (adventure) {
-		if (!adventure.messageIds.utility) {
+		if (adventure.state === "config") {
 			const invitee = interaction.options.getUser("invitee");
 			invitee.send({
 				content: `${interaction.member} has invited you to join *${adventure.name}* in ${interaction.guild}!`,

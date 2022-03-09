@@ -14,7 +14,7 @@ module.exports.execute = (interaction, _args) => {
 	if (user) {
 		let options = [];
 		for (const artifactName of Object.values(playerProfile.artifacts)) {
-			let description = getArtifactDescription(artifactName);
+			let description = getArtifactDescription(artifactName, 1);
 			options.push({
 				label: artifactName,
 				description,

@@ -18,7 +18,7 @@ module.exports.execute = (interaction, _args) => {
 
 			// Send confirmation text
 			interaction.update({
-				content: getArtifactDescription(artifactName).description,
+				content: getArtifactDescription(artifactName, 1),
 				components: [new MessageActionRow().addComponents(
 					interaction.component.setPlaceholder("Pick a different artifact...")
 				)]

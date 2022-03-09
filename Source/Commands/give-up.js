@@ -13,8 +13,8 @@ module.exports.initialize = function (helpers) {
 
 module.exports.execute = (interaction) => {
 	// Give up on the current adventure
-	let adventure = getAdventure(interaction.channel.id);
-	if (adventure) {
+	const adventure = getAdventure(interaction.channel.id);
+	if (adventure && adventure.state !== "completed") {
 		if (interaction.user.id === adventure.leaderId) {
 			completeAdventure(adventure, interaction.channel, new MessageEmbed().setTitle("Defeat"));
 			interaction.reply({ content: "Give up completed.", ephemeral: true });
@@ -22,6 +22,6 @@ module.exports.execute = (interaction) => {
 			interaction.reply({ content: "Please ask the leader to end the adventure.", ephemeral: true });
 		}
 	} else {
-		interaction.reply({ content: "This channel doesn't appear to be an adventure's thread.", ephemeral: true });
+		interaction.reply({ content: "This channel doesn't appear to be an active adventure's thread.", ephemeral: true });
 	}
 }

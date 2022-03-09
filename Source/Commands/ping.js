@@ -14,7 +14,7 @@ module.exports.execute = (interaction) => {
 	// Remind delvers to input their vote or move
 
 	const adventure = getAdventure(interaction.channelId);
-	if (adventure) {
+	if (adventure?.state !== "completed") {
 		let mentions = adventure.delvers.reduce((ids, delver) => ids.add(delver.id), new Set());
 		let inCombat = adventure.room.enemies && !adventure.room.enemies.every(enemy => enemy.hp === 0);
 		if (inCombat) {
@@ -37,6 +37,6 @@ module.exports.execute = (interaction) => {
 		}
 		interaction.reply({ content: `Waiting on <@${Array.from(mentions.values()).join(">, <@")}> to ${inCombat ? "ready their move(s)" : "vote"} before moving on.` });
 	} else {
-		interaction.reply({ content: "This channel doesn't appear to be an adventure thread.", ephemeral: true });
+		interaction.reply({ content: "This channel doesn't appear to be an active adventure thread.", ephemeral: true });
 	}
 }

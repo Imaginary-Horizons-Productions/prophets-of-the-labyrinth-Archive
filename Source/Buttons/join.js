@@ -7,7 +7,7 @@ module.exports = new Button("join");
 module.exports.execute = (interaction, [guildId, adventureId]) => {
 	// Join an existing adventure
 	let adventure = getAdventure(adventureId);
-	if (!adventure.messageIds.utility) {
+	if (adventure.state === "config") {
 		if (!adventure.delvers.some(delver => delver.id == interaction.user.id)) {
 			// Update game logic
 			adventure.delvers.push(new Delver(interaction.user.id, interaction.member.displayName, adventureId));

@@ -5,6 +5,7 @@ module.exports = class Adventure {
 		this.initialSeed = seedInput || Date.now().toString();
 	}
 	id; // the id of the thread created for the adventure
+	state = "config"; // enum: "config", "ongoing", "completed"
 	name;
 	element;
 	messageIds = {

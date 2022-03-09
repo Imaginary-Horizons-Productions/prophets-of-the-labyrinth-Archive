@@ -16,7 +16,7 @@ module.exports.execute = (interaction, _args) => {
 			let options = [];
 			for (const artifactName in adventure.artifacts) {
 				if (!Object.values(playerProfile.artifacts).includes(artifactName)) {
-					let description = getArtifactDescription(artifactName);
+					let description = getArtifactDescription(artifactName, 1);
 					options.push({
 						label: artifactName,
 						description,

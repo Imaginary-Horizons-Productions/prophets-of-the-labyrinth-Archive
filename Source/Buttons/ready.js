@@ -26,6 +26,7 @@ module.exports.execute = (interaction, _args) => {
 
 		interaction.reply({ content: `The adventure has begun (and closed to new delvers joining)! You can use \`/delver-stats\`, or \`/party-stats\` to check adventure status. The leader can \`/give-up\`.`, fetchReply: true }).then(message => {
 			message.pin();
+			adventure.state = "ongoing";
 			adventure.messageIds.utility = message.id;
 			nextRoom("Battle", adventure, interaction.channel);
 		});

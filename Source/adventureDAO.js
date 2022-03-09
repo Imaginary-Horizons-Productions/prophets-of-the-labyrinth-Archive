@@ -18,45 +18,48 @@ const { rollWeaponDrop, getWeaponProperty, buildWeaponDescription } = require(".
 const { rollArtifact, getArtifactDescription } = require("./Artifacts/_artifactDictionary.js");
 const Resource = require("../Classes/Resource.js");
 
-var filePath = "./Saves/adventures.json";
-var requirePath = "./../Saves/adventures.json";
-var adventureDictionary = new Map();
+const filePath = "./Saves/adventures.json";
+const requirePath = "./../Saves/adventures.json";
+const adventureDictionary = new Map();
 
 exports.loadAdventures = function () {
 	return new Promise((resolve, reject) => {
 		if (fs.existsSync(filePath)) {
-			var adventures = require(requirePath);
+			const adventures = require(requirePath);
 			adventures.forEach(adventure => {
-				// Cast delvers into Delver class
-				let castDelvers = [];
-				for (let delver of adventure.delvers) {
-					castDelvers.push(Object.assign(new Delver(), delver));
-				}
-				adventure.delvers = castDelvers;
+				if (adventure.state !== "completed") {
+					// Cast delvers into Delver class
+					let castDelvers = [];
+					for (let delver of adventure.delvers) {
+						castDelvers.push(Object.assign(new Delver(), delver));
+					}
+					adventure.delvers = castDelvers;
 
-				if (adventure.room) {
-					// Cast enemies into Enemy class
-					if (adventure.room.enemies) {
-						let castEnemies = [];
-						for (let enemy of adventure.room.enemies) {
-							castEnemies.push(Object.assign(new Enemy(), enemy));
+					if (adventure.room) {
+						// Cast enemies into Enemy class
+						if (adventure.room.enemies) {
+							let castEnemies = [];
+							for (let enemy of adventure.room.enemies) {
+								castEnemies.push(Object.assign(new Enemy(), enemy));
+							}
+							adventure.room.enemies = castEnemies;
 						}
-						adventure.room.enemies = castEnemies;
+
+						// Cast moves into Move class
+						if (adventure.room.moves) {
+							let castMoves = [];
+							for (let move of adventure.room.moves) {
+								castMoves.push(Object.assign(new Move(), move));
+							}
+							adventure.room.moves = castMoves;
+						}
 					}
 
-					// Cast moves into Move class
-					if (adventure.room.moves) {
-						let castMoves = [];
-						for (let move of adventure.room.moves) {
-							castMoves.push(Object.assign(new Move(), move));
-						}
-						adventure.room.moves = castMoves;
-					}
+					// Set adventure
+					adventureDictionary.set(adventure.id, Object.assign(new Adventure(adventure.initialSeed), adventure));
 				}
-
-				// Set adventure
-				adventureDictionary.set(adventure.id, Object.assign(new Adventure(adventure.initialSeed), adventure));
 			})
+			resolve(`${adventures.length} adventures loaded`);
 		} else {
 			if (!fs.existsSync("./Saves")) {
 				fs.mkdirSync("./Saves", { recursive: true });
@@ -66,8 +69,8 @@ exports.loadAdventures = function () {
 					console.error(error);
 				}
 			})
+			resolve("adventures regenerated");
 		}
-		resolve(`${adventures.length} adventures loaded`);
 	})
 }
 
@@ -542,8 +545,6 @@ exports.completeAdventure = function (adventure, thread, scoreEmbed) { //TODO #2
 		thread.messages.delete(adventure.messageIds.leaderNotice);
 	}
 
-	adventureDictionary.delete(thread.id);
-	saveAdventures();
 	let artifactCollection = [];
 	if (isSuccess) {
 		artifactCollection.push(new MessageActionRow().addComponents(
@@ -553,6 +554,8 @@ exports.completeAdventure = function (adventure, thread, scoreEmbed) { //TODO #2
 		))
 	}
 	thread.send({ embeds: [scoreEmbed], components: artifactCollection });
+	adventure.state = "completed";
+	exports.setAdventure(adventure);
 }
 
 function saveAdventures() {
