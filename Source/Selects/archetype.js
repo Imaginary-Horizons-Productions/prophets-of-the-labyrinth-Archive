@@ -10,7 +10,7 @@ module.exports = new Select("archetype");
 module.exports.execute = (interaction, args) => {
 	// Add the player's delver object to the adventure
 	let adventure = getAdventure(interaction.channel.id);
-	if (adventure) {
+	if (adventure && !adventure.messageIds.utility) {
 		// Add delver to list (or overwrite)
 		let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
 		if (userIndex !== -1) {
@@ -27,7 +27,12 @@ module.exports.execute = (interaction, args) => {
 				.setPredict(archetypeTemplate.predict);
 
 			// Send confirmation text
-			interaction.update({ content: archetypeTemplate.description, components: [] });
+			interaction.update({
+				content: archetypeTemplate.description,
+				components: [new MessageActionRow().addComponents(
+					interaction.component.setPlaceholder("Pick a different archetype...")
+				)]
+			});
 			interaction.channel.send(`${interaction.user} ${isSwitching ? "has switched to" : "will be playing as"} ${archetype}.`).then(() => {
 				// Check if all ready
 				if (adventure.delvers.every(delver => delver.title)) {
@@ -60,6 +65,6 @@ module.exports.execute = (interaction, args) => {
 			interaction.reply({ content: `You don't appear to be signed up for this adventure. You can join with the button below:`, components: [join], ephemeral: true });
 		}
 	} else {
-		interaction.reply({ content: "This adventure seems to be over already.", ephemeral: true });
+		interaction.reply({ content: "A valid adventure could not be found.", ephemeral: true });
 	}
 }

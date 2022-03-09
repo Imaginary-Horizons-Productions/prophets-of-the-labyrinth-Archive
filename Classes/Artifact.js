@@ -5,7 +5,6 @@ module.exports = class Artifact {
 	}
 	element = "";
 	flavorText = [];
-	//TODO #217 artifact performance stats on artifact, show as field in artifact details embed
 
 	setElement(elementEnum) {
 		this.element = elementEnum;

@@ -13,7 +13,7 @@ module.exports.initialize = function (helpers) {
 
 module.exports.execute = (interaction) => {
 	// Show user the party stats
-	let adventure = getAdventure(interaction.channel.id);
+	const adventure = getAdventure(interaction.channel.id);
 	if (adventure) {
 		let embed = new MessageEmbed()
 			.setTitle("Party Stats")

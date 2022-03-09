@@ -2,17 +2,18 @@ var fs = require("fs");
 const { ensuredPathSave } = require("../helpers.js");
 const GuildProfile = require('../Classes/GuildProfile.js');
 
-var filePath = "./Saves/guilds.json";
-var requirePath = "./../Saves/guilds.json";
-var guildDictionary = new Map();
+const filePath = "./Saves/guilds.json";
+const requirePath = "./../Saves/guilds.json";
+const guildDictionary = new Map();
 
 exports.loadGuilds = function () {
 	return new Promise((resolve, reject) => {
 		if (fs.existsSync(filePath)) {
-			var guildProfiles = require(requirePath);
+			const guildProfiles = require(requirePath);
 			guildProfiles.forEach(guildProfile => {
 				guildDictionary.set(guildProfile.id, guildProfile);
 			})
+			resolve(`${guildProfiles.length} guilds loaded`);
 		} else {
 			if (!fs.existsSync("./Saves")) {
 				fs.mkdirSync("./Saves", { recursive: true });
@@ -22,8 +23,8 @@ exports.loadGuilds = function () {
 					console.error(error);
 				}
 			})
+			resolve("guilds regenerated");
 		}
-		resolve(`${guildProfiles.length} guilds loaded`);
 	})
 }
 

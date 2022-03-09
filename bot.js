@@ -19,7 +19,7 @@ const client = new Client({
 	retryLimit: 5,
 	presence: {
 		activities: [{
-			name: "/tutorial",
+			name: "/manual",
 			type: "LISTENING"
 		}]
 	},
@@ -96,7 +96,7 @@ client.on("interactionCreate", interaction => {
 						.catch(console.error);
 				}
 			} else {
-				interaction.reply(`The \`/${interaction.commandName}\` command is a premium command. Use \`/premium\` for more information.`)
+				interaction.reply(`The \`/${interaction.commandName}\` command is a premium command. Use \`/support\` for more information.`)
 					.catch(console.error);
 			}
 		} else if (interaction.isButton()) {

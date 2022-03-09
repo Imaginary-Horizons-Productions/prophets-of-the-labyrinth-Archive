@@ -40,6 +40,10 @@ exports.getArtifactDescription = function (artifactName, copies) {
 	return description.replace(/@{copies.*}/g, copies);
 }
 
+exports.getArtifactCounts = function () {
+	return Object.values(ARTIFACTS).length; //TODO #225 separate artifact counts by element
+}
+
 exports.rollArtifact = function (adventure) {
 	let elementPool = [...adventure.delvers.map(delver => delver.element), "Untyped"];
 	let artifactPool = elementPool.reduce((artifacts, element) => artifacts.concat(ROLL_TABLE[element]), []);

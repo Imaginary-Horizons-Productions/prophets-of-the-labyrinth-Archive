@@ -55,20 +55,27 @@ module.exports.execute = (interaction) => {
 			})
 			adventure.delvers.push(new Delver(interaction.user.id, interaction.member.displayName, thread.id));
 
-			thread.send(`${interaction.user} Here's the channel for your new adventure. As adventure leader you're responsible for indicating when everyone's ready.`).then(leaderMessage => {
-				let ready = new MessageActionRow().addComponents(
-					new MessageButton().setCustomId("deploy")
-						.setLabel("Pick an Archetype")
-						.setStyle("PRIMARY"),
+			thread.send({
+				content: `${interaction.user} Here's the channel for your new adventure. As adventure leader you're responsible for inputing the group's decisions (like difficulty options or indicating when everyone's ready).`,
+				components: [new MessageActionRow().addComponents(
 					new MessageButton().setCustomId("difficulty")
-						.setLabel("Vote on Difficulty Options (coming soon)")
+						.setLabel("Add Challenges (coming soon)")
 						.setStyle("DANGER")
 						.setDisabled(true)
+				)]
+			}).then(leaderMessage => {
+				let ready = new MessageActionRow().addComponents(
+					new MessageButton().setCustomId("deploy")
+						.setLabel("Pick Archetype")
+						.setStyle("PRIMARY"),
+					new MessageButton().setCustomId("startingartifact")
+						.setLabel("Pick Starting Artifact")
+						.setStyle("SECONDARY")
 				)
 				adventure.setId(thread.id)
 					.setLeaderId(interaction.user.id);
 				adventure.messageIds.leaderNotice = leaderMessage.id;
-				return thread.send({ content: "The adventure will begin when everyone has picked an archetype and the leader clicks the \"Ready!\" button.", components: [ready] });
+				return thread.send({ content: "The adventure will begin when everyone has picked an archetype and the leader clicks the \"Ready!\" button. Each player can optionally select a starting artifact.", components: [ready] });
 			}).then(deployMessage => {
 				adventure.messageIds.deploy = deployMessage.id;
 				setAdventure(adventure);

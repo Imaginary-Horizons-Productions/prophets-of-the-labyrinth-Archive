@@ -3,17 +3,18 @@ const { getGuild, saveGuilds } = require("./guildDAO.js");
 const fs = require("fs");
 const { ensuredPathSave } = require("../helpers.js");
 
-var filePath = "./Saves/players.json";
-var requirePath = "./../Saves/players.json";
-var playerDictionary = new Map();
+const filePath = "./Saves/players.json";
+const requirePath = "./../Saves/players.json";
+const playerDictionary = new Map();
 
 exports.loadPlayers = function () {
 	return new Promise((resolve, reject) => {
 		if (fs.existsSync(filePath)) {
-			var players = require(requirePath);
+			const players = require(requirePath);
 			players.forEach(player => {
 				playerDictionary.set(player.id, player);
 			})
+			resolve(`${players.length} players loaded`);
 		} else {
 			if (!fs.existsSync("./Saves")) {
 				fs.mkdirSync("./Saves", { recursive: true });
@@ -23,8 +24,8 @@ exports.loadPlayers = function () {
 					console.error(error);
 				}
 			})
+			resolve("players regenerated");
 		}
-		resolve(`${players.length} players loaded`);
 	})
 }
 

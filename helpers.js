@@ -84,7 +84,7 @@ exports.versionEmbedBuilder = function (avatarURL) {
 		let knownIssuesEnd = dividerRegEx.exec(data).index;
 
 		let embed = new MessageEmbed().setColor('6b81eb')
-			// .setAuthor({ name: tip.prefix + tip.text, iconURL: avatarURL, url: tip.url }) //TODO version embed author
+			// .setAuthor({ name: tip.prefix + tip.text, iconURL: avatarURL, url: tip.url }) //TODO #226 version embed author
 			.setTitle(data.slice(titleStart + 5, changesStartRegEx.lastIndex))
 			.setURL('https://discord.gg/bcE3Syu')
 			.setThumbnail('https://cdn.discordapp.com/attachments/545684759276421120/734099622846398565/newspaper.png')

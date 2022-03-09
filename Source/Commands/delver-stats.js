@@ -16,7 +16,7 @@ module.exports.initialize = function (helpers) {
 
 module.exports.execute = (interaction) => {
 	// Show the delver stats of the user
-	let adventure = getAdventure(interaction.channel.id);
+	const adventure = getAdventure(interaction.channel.id);
 	if (adventure) {
 		let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 		if (delver) {

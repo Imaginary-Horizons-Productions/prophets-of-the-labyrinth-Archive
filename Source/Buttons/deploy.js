@@ -24,14 +24,12 @@ module.exports.execute = (interaction, args) => {
 				})
 			}
 		}
-		let archetypeSelect = [new MessageActionRow()
-			.addComponents(
-				new MessageSelectMenu()
-					.setCustomId("archetype")
-					.setPlaceholder("Select an archetype...")
-					.addOptions(classOptions),
-			)
-		];
+		let archetypeSelect = [new MessageActionRow().addComponents(
+			new MessageSelectMenu()
+				.setCustomId("archetype")
+				.setPlaceholder("Select an archetype...")
+				.addOptions(classOptions)
+		)];
 		interaction.reply({ content: `Select your archetype for this adventure!\n\nArchetypes can predict different information in combat and have different weaknesses and resistances based on their element.`, components: archetypeSelect, ephemeral: true });
 	} else {
 		let join = new MessageActionRow().addComponents(

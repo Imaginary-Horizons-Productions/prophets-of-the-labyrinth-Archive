@@ -18,45 +18,48 @@ const { rollWeaponDrop, getWeaponProperty, buildWeaponDescription } = require(".
 const { rollArtifact, getArtifactDescription } = require("./Artifacts/_artifactDictionary.js");
 const Resource = require("../Classes/Resource.js");
 
-var filePath = "./Saves/adventures.json";
-var requirePath = "./../Saves/adventures.json";
-var adventureDictionary = new Map();
+const filePath = "./Saves/adventures.json";
+const requirePath = "./../Saves/adventures.json";
+const adventureDictionary = new Map();
 
 exports.loadAdventures = function () {
 	return new Promise((resolve, reject) => {
 		if (fs.existsSync(filePath)) {
-			var adventures = require(requirePath);
+			const adventures = require(requirePath);
 			adventures.forEach(adventure => {
-				// Cast delvers into Delver class
-				let castDelvers = [];
-				for (let delver of adventure.delvers) {
-					castDelvers.push(Object.assign(new Delver(), delver));
-				}
-				adventure.delvers = castDelvers;
+				if (adventure.state !== "completed") {
+					// Cast delvers into Delver class
+					let castDelvers = [];
+					for (let delver of adventure.delvers) {
+						castDelvers.push(Object.assign(new Delver(), delver));
+					}
+					adventure.delvers = castDelvers;
 
-				if (adventure.room) {
-					// Cast enemies into Enemy class
-					if (adventure.room.enemies) {
-						let castEnemies = [];
-						for (let enemy of adventure.room.enemies) {
-							castEnemies.push(Object.assign(new Enemy(), enemy));
+					if (adventure.room) {
+						// Cast enemies into Enemy class
+						if (adventure.room.enemies) {
+							let castEnemies = [];
+							for (let enemy of adventure.room.enemies) {
+								castEnemies.push(Object.assign(new Enemy(), enemy));
+							}
+							adventure.room.enemies = castEnemies;
 						}
-						adventure.room.enemies = castEnemies;
+
+						// Cast moves into Move class
+						if (adventure.room.moves) {
+							let castMoves = [];
+							for (let move of adventure.room.moves) {
+								castMoves.push(Object.assign(new Move(), move));
+							}
+							adventure.room.moves = castMoves;
+						}
 					}
 
-					// Cast moves into Move class
-					if (adventure.room.moves) {
-						let castMoves = [];
-						for (let move of adventure.room.moves) {
-							castMoves.push(Object.assign(new Move(), move));
-						}
-						adventure.room.moves = castMoves;
-					}
+					// Set adventure
+					adventureDictionary.set(adventure.id, Object.assign(new Adventure(adventure.initialSeed), adventure));
 				}
-
-				// Set adventure
-				adventureDictionary.set(adventure.id, Object.assign(new Adventure(adventure.initialSeed), adventure));
 			})
+			resolve(`${adventures.length} adventures loaded`);
 		} else {
 			if (!fs.existsSync("./Saves")) {
 				fs.mkdirSync("./Saves", { recursive: true });
@@ -66,8 +69,8 @@ exports.loadAdventures = function () {
 					console.error(error);
 				}
 			})
+			resolve("adventures regenerated");
 		}
-		resolve(`${adventures.length} adventures loaded`);
 	})
 }
 
@@ -503,7 +506,7 @@ exports.checkNextRound = function (adventure) {
 	return adventure.room.moves.length - adventure.room.enemies.length === adventure.delvers.length;
 }
 
-exports.completeAdventure = function (adventure, thread, scoreEmbed) {
+exports.completeAdventure = function (adventure, thread, scoreEmbed) { //TODO #227 functionalize scoreEmbed to allow sending as response to /give-up
 	let livesScore = adventure.lives * 10;
 	let goldScore = Math.floor(Math.log10(adventure.peakGold)) * 5;
 	let score = adventure.accumulatedScore + livesScore + goldScore + adventure.depth;
@@ -511,8 +514,9 @@ exports.completeAdventure = function (adventure, thread, scoreEmbed) {
 	if (!isSuccess) {
 		score = Math.floor(score / 2);
 	}
-	score = Math.max(1, score);
-	scoreEmbed.addField("Score Breakdown", `Depth: ${adventure.depth}\nLives: ${livesScore}\nGold: ${goldScore}\nBonus: ${adventure.accumulatedScore}\n\n__Total__: ${!isSuccess && score > 0 ? `score ÷ 2  = ${score} (Defeat)` : score}`);
+	let skippedStartingArtifactMultiplier = 1 + (adventure.delvers.reduce((count, delver) => delver.startingArtifact ? count : count + 1, 0) / adventure.delvers.length);
+	score = Math.max(1, score) * skippedStartingArtifactMultiplier;
+	scoreEmbed.addField("Score Breakdown", `Depth: ${adventure.depth}\nLives: ${livesScore}\nGold: ${goldScore}\nBonus: ${adventure.accumulatedScore}\nMultiplier (Skipped Starting Artifacts): ${skippedStartingArtifactMultiplier}\n\n__Total__: ${!isSuccess && score > 0 ? `score ÷ 2  = ${score} (Defeat)` : score}`);
 
 	let guildId = thread.guildId;
 	adventure.delvers.forEach(delver => {
@@ -530,7 +534,7 @@ exports.completeAdventure = function (adventure, thread, scoreEmbed) {
 		recruitEmbed.setTitle(recruitEmbed.title + ": COMPLETE!")
 			.setThumbnail("https://cdn.discordapp.com/attachments/545684759276421120/734092918369026108/completion.png")
 			.addField("Seed", adventure.initialSeed);
-		recruitMessage.edit({ embeds: [recruitEmbed] });
+		recruitMessage.edit({ embeds: [recruitEmbed], components: [] });
 	})
 	clearComponents(adventure.messageIds.battleRound, thread.messages);
 	clearComponents(adventure.messageIds.room, thread.messages);
@@ -541,9 +545,17 @@ exports.completeAdventure = function (adventure, thread, scoreEmbed) {
 		thread.messages.delete(adventure.messageIds.leaderNotice);
 	}
 
-	adventureDictionary.delete(thread.id);
-	saveAdventures();
-	thread.send({ embeds: [scoreEmbed] });
+	let artifactCollection = [];
+	if (isSuccess) {
+		artifactCollection.push(new MessageActionRow().addComponents(
+			new MessageButton().setCustomId("collectartifact")
+				.setLabel("Collect Artifact")
+				.setStyle("SUCCESS")
+		))
+	}
+	thread.send({ embeds: [scoreEmbed], components: artifactCollection });
+	adventure.state = "completed";
+	exports.setAdventure(adventure);
 }
 
 function saveAdventures() {
