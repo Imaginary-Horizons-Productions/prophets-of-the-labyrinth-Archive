@@ -503,7 +503,7 @@ exports.checkNextRound = function (adventure) {
 	return adventure.room.moves.length - adventure.room.enemies.length === adventure.delvers.length;
 }
 
-exports.completeAdventure = function (adventure, thread, scoreEmbed) {
+exports.completeAdventure = function (adventure, thread, scoreEmbed) { //TODONOW score bonus for skipping starting artifact
 	let livesScore = adventure.lives * 10;
 	let goldScore = Math.floor(Math.log10(adventure.peakGold)) * 5;
 	let score = adventure.accumulatedScore + livesScore + goldScore + adventure.depth;
@@ -525,12 +525,12 @@ exports.completeAdventure = function (adventure, thread, scoreEmbed) {
 		setPlayer(player);
 	})
 
-	thread.fetchStarterMessage({ cache: false, force: true }).then(recruitMessage => {
+	thread.fetchStarterMessage({ cache: false, force: true }).then(recruitMessage => { //TODONOW artifact collecting
 		let [recruitEmbed] = recruitMessage.embeds;
 		recruitEmbed.setTitle(recruitEmbed.title + ": COMPLETE!")
 			.setThumbnail("https://cdn.discordapp.com/attachments/545684759276421120/734092918369026108/completion.png")
 			.addField("Seed", adventure.initialSeed);
-		recruitMessage.edit({ embeds: [recruitEmbed] });
+		recruitMessage.edit({ embeds: [recruitEmbed], components: [] });
 	})
 	clearComponents(adventure.messageIds.battleRound, thread.messages);
 	clearComponents(adventure.messageIds.room, thread.messages);

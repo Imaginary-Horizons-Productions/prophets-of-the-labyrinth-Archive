@@ -19,6 +19,7 @@ module.exports.execute = (interaction) => {
 	let embed = new MessageEmbed()
 		.setTitle("Player Stats")
 		.setDescription(`Total Score: ${Object.values(player.scores).reduce((total, current) => total += current)}`)
+		//TODONOW artifact collection %
 		.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
 	interaction.reply({ embeds: [embed], ephemeral: true })
 		.catch(console.error);

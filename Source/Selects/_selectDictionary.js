@@ -5,6 +5,7 @@ var selectWhitelist = [
 	"loot.js",
 	"randomupgrade.js",
 	"repair.js",
+	"startingartifact.js",
 	"weapon.js"
 ];
 
