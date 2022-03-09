@@ -503,7 +503,7 @@ exports.checkNextRound = function (adventure) {
 	return adventure.room.moves.length - adventure.room.enemies.length === adventure.delvers.length;
 }
 
-exports.completeAdventure = function (adventure, thread, scoreEmbed) { //TODONOW score bonus for skipping starting artifact
+exports.completeAdventure = function (adventure, thread, scoreEmbed) { //TODO #227 functionalize scoreEmbed to allow sending as response to /give-up
 	let livesScore = adventure.lives * 10;
 	let goldScore = Math.floor(Math.log10(adventure.peakGold)) * 5;
 	let score = adventure.accumulatedScore + livesScore + goldScore + adventure.depth;
@@ -511,8 +511,9 @@ exports.completeAdventure = function (adventure, thread, scoreEmbed) { //TODONOW
 	if (!isSuccess) {
 		score = Math.floor(score / 2);
 	}
-	score = Math.max(1, score);
-	scoreEmbed.addField("Score Breakdown", `Depth: ${adventure.depth}\nLives: ${livesScore}\nGold: ${goldScore}\nBonus: ${adventure.accumulatedScore}\n\n__Total__: ${!isSuccess && score > 0 ? `score ÷ 2  = ${score} (Defeat)` : score}`);
+	let skippedStartingArtifactMultiplier = 1 + (adventure.delvers.reduce((count, delver) => delver.startingArtifact ? count : count + 1, 0) / adventure.delvers.length);
+	score = Math.max(1, score) * skippedStartingArtifactMultiplier;
+	scoreEmbed.addField("Score Breakdown", `Depth: ${adventure.depth}\nLives: ${livesScore}\nGold: ${goldScore}\nBonus: ${adventure.accumulatedScore}\nMultiplier (Skipped Starting Artifacts): ${skippedStartingArtifactMultiplier}\n\n__Total__: ${!isSuccess && score > 0 ? `score ÷ 2  = ${score} (Defeat)` : score}`);
 
 	let guildId = thread.guildId;
 	adventure.delvers.forEach(delver => {

@@ -7,7 +7,7 @@ const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
 
 module.exports = new Select("archetype");
 
-module.exports.execute = (interaction, args) => {
+module.exports.execute = (interaction, args) => { //TODONOW reject interactions from adventures that have already started
 	// Add the player's delver object to the adventure
 	let adventure = getAdventure(interaction.channel.id);
 	if (adventure) {
