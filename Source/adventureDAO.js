@@ -26,8 +26,10 @@ exports.loadAdventures = function () {
 	return new Promise((resolve, reject) => {
 		if (fs.existsSync(filePath)) {
 			const adventures = require(requirePath);
+			let loaded = 0;
 			adventures.forEach(adventure => {
 				if (adventure.state !== "completed") {
+					loaded++;
 					// Cast delvers into Delver class
 					let castDelvers = [];
 					for (let delver of adventure.delvers) {
@@ -59,7 +61,7 @@ exports.loadAdventures = function () {
 					adventureDictionary.set(adventure.id, Object.assign(new Adventure(adventure.initialSeed), adventure));
 				}
 			})
-			resolve(`${adventures.length} adventures loaded`);
+			resolve(`${loaded} adventures loaded`);
 		} else {
 			if (!fs.existsSync("./Saves")) {
 				fs.mkdirSync("./Saves", { recursive: true });
