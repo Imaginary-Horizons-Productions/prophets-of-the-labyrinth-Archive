@@ -2,7 +2,7 @@ const { getFullName, dealDamage, gainHealth, removeModifier } = require("./comba
 const { getEnemy } = require("./Enemies/_enemyDictionary.js");
 const isProduction = true;
 const { selectAllFoes } = require("./enemyDAO.js").initialize(isProduction);
-const { getWeaponProperty } = require("./Weapons/_weaponDictionary.js");
+const { getWeaponProperty } = require("./Weapons/_weaponDictionary.js").initialize();
 
 exports.resolveMove = async function (move, adventure) {
 	let userTeam = move.userTeam === "delver" ? adventure.delvers : adventure.room.enemies;

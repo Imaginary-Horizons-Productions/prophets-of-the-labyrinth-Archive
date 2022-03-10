@@ -1,4 +1,10 @@
-const { parseCount } = require("../../helpers");
+let parseCount;
+exports.initialize = function (isProduction) {
+	if (isProduction) {
+		({ parseCount } = require("../../helpers"));
+	}
+	return this;
+}
 
 var modifierWhitelist = [
 	"absorb-darkness.js",

@@ -14,7 +14,6 @@ const { getCommand, initializeCommands, slashData } = require(`./Source/Commands
 const { getSelect } = require("./Source/Selects/_selectDictionary.js");
 const { getButton } = require("./Source/Buttons/_buttonDictionary.js");
 const { guildSetup, getPremiumUsers, versionEmbedBuilder } = require("./helpers.js");
-
 //#endregion
 
 //#region Executing Code

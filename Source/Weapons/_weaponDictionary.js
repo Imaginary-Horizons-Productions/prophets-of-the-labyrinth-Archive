@@ -1,5 +1,11 @@
-const { generateRandomNumber } = require("../../helpers");
-const { getEmoji } = require("../elementHelpers");
+let generateRandomNumber;
+exports.initialize = function (isProduction) {
+	if (isProduction) {
+		({ generateRandomNumber } = require("../../helpers.js"));
+	}
+	return this;
+}
+const { getEmoji } = require("../elementHelpers.js");
 
 var weaponWhitelist = [
 	"-punch.js",

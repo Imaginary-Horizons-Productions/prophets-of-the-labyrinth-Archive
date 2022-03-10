@@ -6,7 +6,7 @@ const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
 const { weaponToEmbedField } = require('../weaponDAO.js');
 const { getEmoji, getResistances, getWeaknesses, getColor } = require('../elementHelpers.js');
 const Delver = require('../../Classes/Delver.js');
-const { isNonStacking, isBuff, isDebuff } = require("../Modifiers/_modifierDictionary.js");
+const { isNonStacking, isBuff, isDebuff } = require("../Modifiers/_modifierDictionary.js").initialize();
 
 module.exports = new Button("readymove");
 

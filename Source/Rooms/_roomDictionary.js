@@ -1,4 +1,10 @@
-const { generateRandomNumber } = require("../../helpers");
+let generateRandomNumber;
+exports.initialize = function (isProduction) {
+	if (isProduction) {
+		({ generateRandomNumber } = require("../../helpers.js"));
+	}
+	return this;
+}
 
 let roomWhitelist = [
 	"artifactguardian-royalslime.js",

@@ -11,11 +11,11 @@ const { getEnemy } = require("./Enemies/_enemyDictionary");
 const { spawnEnemy } = require("./enemyDAO.js").initialize(isProduction);
 const Delver = require("../Classes/Delver.js");
 const Room = require("../Classes/Room.js");
-const { manufactureRoomTemplate, prerollBoss } = require("./Rooms/_roomDictionary.js");
+const { manufactureRoomTemplate, prerollBoss } = require("./Rooms/_roomDictionary.js").initialize();
 const Resource = require("../Classes/Resource.js");
-const { getTurnDecrement } = require("./Modifiers/_modifierDictionary.js");
-const { rollWeaponDrop, getWeaponProperty, buildWeaponDescription } = require("./Weapons/_weaponDictionary.js");
-const { rollArtifact, getArtifactDescription } = require("./Artifacts/_artifactDictionary.js");
+const { getTurnDecrement } = require("./Modifiers/_modifierDictionary.js").initialize();
+const { rollWeaponDrop, getWeaponProperty, buildWeaponDescription } = require("./Weapons/_weaponDictionary.js").initialize();
+const { rollArtifact, getArtifactDescription } = require("./Artifacts/_artifactDictionary.js").initialize();
 const { clearBlock, removeModifier } = require("./combatantDAO.js");
 const { getWeaknesses, getColor } = require("./elementHelpers.js");
 

@@ -1,4 +1,10 @@
-const { generateRandomNumber, parseCount } = require("../../helpers");
+let generateRandomNumber, parseCount;
+exports.initialize = function (isProduction) {
+	if (isProduction) {
+		({ generateRandomNumber, parseCount } = require("../../helpers.js"));
+	}
+	return this;
+}
 
 let artifactWhitelist = [
 	"amethystspyglass.js",
