@@ -10,8 +10,8 @@ module.exports = new Command("stats", "Get the stats for a user or yourself", fa
 
 // imports from files that depend on /Config
 // let ;
-module.exports.initialize = function (helpers) {
-	({} = helpers);
+module.exports.initialize = function () {
+	({} = require("./../../helpers.js"));
 }
 
 module.exports.execute = (interaction) => {

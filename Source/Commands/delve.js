@@ -7,14 +7,14 @@ const { setAdventure } = require("../adventureDAO.js");
 const { prerollBoss } = require('../Rooms/_roomDictionary.js');
 
 const options = [
-	{ type: "String", name: "seed", description: "The value to base the random events of the run on", required: false, choices: {} }
+	{ type: "String", name: "seed", description: "The value to base the run's random events on", required: false, choices: {} }
 ];
 module.exports = new Command("delve", "Start a new adventure", false, false, options);
 
 // imports from files that depend on /Config
 let generateRandomNumber;
-module.exports.initialize = function (helpers) {
-	({ generateRandomNumber } = helpers);
+module.exports.initialize = function () {
+	({ generateRandomNumber } = require("./../../helpers.js"));
 }
 
 

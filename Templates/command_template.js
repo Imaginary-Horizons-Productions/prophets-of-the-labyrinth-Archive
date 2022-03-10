@@ -7,8 +7,8 @@ module.exports = new Command("name", "description", false, false, options);
 
 // imports from files that depend on /Config
 // let ;
-module.exports.initialize = function (helpers) {
-	({} = helpers);
+module.exports.initialize = function () {
+	({} = require("./../../helpers.js"));
 }
 
 module.exports.execute = (interaction) => {

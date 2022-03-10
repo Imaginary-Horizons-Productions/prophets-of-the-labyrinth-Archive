@@ -1,5 +1,4 @@
 const fs = require("fs");
-const { ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordinalSuffixEN } = require("../helpers.js");
 const { MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu } = require("discord.js");
 const Adventure = require("../Classes/Adventure.js");
 const { setPlayer, getPlayer } = require("./playerDAO.js");
@@ -17,6 +16,12 @@ const { rollWeaponDrop, getWeaponProperty, buildWeaponDescription } = require(".
 const { rollArtifact, getArtifactDescription } = require("./Artifacts/_artifactDictionary.js");
 const { clearBlock, removeModifier } = require("./combatantDAO.js");
 const { getWeaknesses, getColor } = require("./elementHelpers.js");
+
+let ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordinalSuffixEN;
+exports.initialize = function () {
+	({ ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordinalSuffixEN } = require("../helpers.js"));
+	return this;
+}
 
 const filePath = "./Saves/adventures.json";
 const requirePath = "./../Saves/adventures.json";

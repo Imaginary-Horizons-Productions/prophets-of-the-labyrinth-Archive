@@ -6,12 +6,12 @@ const { getFullName } = require('../combatantDAO.js');
 const { getEmoji } = require('../elementHelpers.js');
 
 const options = [];
-module.exports = new Command("delver-stats", "Get your personal stats for the channel's adventure", false, false, options);
+module.exports = new Command("delver-stats", "Get your adventure-specific stats for the thread's adventure", false, false, options);
 
 // imports from files that depend on /Config
 // let ;
-module.exports.initialize = function (helpers) {
-	({} = helpers);
+module.exports.initialize = function () {
+	({} = require("./../../helpers.js"));
 }
 
 module.exports.execute = (interaction) => {

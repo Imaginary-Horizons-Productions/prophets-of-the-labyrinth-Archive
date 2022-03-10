@@ -9,9 +9,11 @@ const { loadPlayers } = require("./Source/playerDAO.js");
 const { guildSetup, getPremiumUsers } = require("./helpers.js");
 const helpers = require("./helpers.js");
 const { loadGuilds } = require("./Source/guildDAO.js");
-const { loadAdventures } = require("./Source/adventureDAO.js");
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
+
+const adventureDAO = require("./Source/adventureDAO.js");
+const { loadAdventures } = adventureDAO.initialize();
 //#endregion
 
 //#region Executing Code

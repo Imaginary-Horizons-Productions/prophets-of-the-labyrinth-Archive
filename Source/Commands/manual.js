@@ -16,8 +16,8 @@ module.exports = new Command("manual", "Get information about Prophets of the La
 
 // imports from files that depend on /Config
 // let ;
-module.exports.initialize = function (helpers) {
-	({} = helpers);
+module.exports.initialize = function () {
+	({} = require("./../../helpers.js"));
 }
 
 module.exports.execute = (interaction) => {

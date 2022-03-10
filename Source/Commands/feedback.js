@@ -7,8 +7,8 @@ module.exports = new Command("feedback", "Provide feedback on PotL (eg a bug rep
 
 // imports from files that depend on /Config
 let guildId, feedbackChannel;
-module.exports.initialize = function (helpers) {
-	({ guildId, feedbackChannel } = helpers.versionData);
+module.exports.initialize = function () {
+	({ versionData: { guildId, feedbackChannel } } = require("./../../helpers.js"));
 }
 
 module.exports.execute = (interaction) => {
