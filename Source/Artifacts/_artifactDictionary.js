@@ -1,8 +1,6 @@
 let generateRandomNumber, parseCount;
-exports.initialize = function (isProduction) {
-	if (isProduction) {
-		({ generateRandomNumber, parseCount } = require("../../helpers.js"));
-	}
+exports.injectConfigArtifacts = function (isProduction) {
+	({ generateRandomNumber, parseCount } = require("../../helpers.js").injectConfig(isProduction));
 	return this;
 }
 

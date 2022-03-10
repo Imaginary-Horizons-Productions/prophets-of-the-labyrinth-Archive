@@ -1,5 +1,12 @@
 const Enemy = require("../../Classes/Enemy.js");
 
+// import from modules that depend on /Config
+// let ;
+module.exports.injectConfig = function (isProduction) {
+	({} = require("../enemyDAO.js").injectConfig(isProduction));
+	return this;
+}
+
 module.exports = new Enemy("name")
 	.setHp()
 	.setSpeed()

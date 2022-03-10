@@ -1,15 +1,12 @@
 const Command = require('../../Classes/Command.js');
-const { getAdventure } = require('../adventureDAO.js');
 
 const options = [];
 module.exports = new Command("ping", "Remind delvers to input their vote or move", false, false, options);
 
 // imports from files that depend on /Config
-// let ;
-module.exports.initialize = function (isProduction) {
-	if (isProduction) {
-		({} = require("./../../helpers.js"));
-	}
+let getAdventure;
+module.exports.injectConfig = function (isProduction) {
+	({ getAdventure } = require('../adventureDAO.js').injectConfig(isProduction));
 	return this;
 }
 

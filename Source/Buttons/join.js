@@ -1,6 +1,6 @@
 const Button = require('../../Classes/Button.js');
 const Delver = require('../../Classes/Delver.js');
-const { getAdventure, setAdventure } = require("./../adventureDAO.js").initialize(true);
+const { getAdventure, setAdventure } = require("./../adventureDAO.js").injectConfig(true);
 
 module.exports = new Button("join");
 

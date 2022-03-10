@@ -1,7 +1,12 @@
 const Enemy = require("../Classes/Enemy.js");
 const Delver = require("../Classes/Delver.js");
-const { getInverse, isNonStacking, getModifierDescription } = require("./Modifiers/_modifierDictionary.js").initialize();
 const { getWeaknesses, getResistances } = require("./elementHelpers.js");
+
+let getInverse, isNonStacking, getModifierDescription;
+exports.injectConfig = function (isProduction) {
+	({ getInverse, isNonStacking, getModifierDescription } = require("./Modifiers/_modifierDictionary.js").injectConfig(isProduction));
+	return this;
+}
 
 exports.getFullName = function (combatant, titleObject) {
 	if (combatant instanceof Enemy) {

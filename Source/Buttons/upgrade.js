@@ -1,7 +1,7 @@
 const { MessageActionRow, MessageSelectMenu } = require('discord.js');
 const Button = require('../../Classes/Button.js');
 const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
-const { getAdventure } = require("./../adventureDAO.js").initialize(true);
+const { getAdventure } = require("./../adventureDAO.js").injectConfig(true);
 
 module.exports = new Button("upgrade");
 

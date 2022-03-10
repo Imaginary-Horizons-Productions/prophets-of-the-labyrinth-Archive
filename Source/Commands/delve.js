@@ -1,9 +1,8 @@
 const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
 const Adventure = require('../../Classes/Adventure.js');
 const Command = require('../../Classes/Command.js');
-const { elementsList, getColor } = require('../elementHelpers.js');
 const Delver = require('../../Classes/Delver.js');
-const { prerollBoss } = require('../Rooms/_roomDictionary.js');
+const { elementsList, getColor } = require('../elementHelpers.js');
 
 const options = [
 	{ type: "String", name: "seed", description: "The value to base the run's random events on", required: false, choices: {} }
@@ -11,12 +10,11 @@ const options = [
 module.exports = new Command("delve", "Start a new adventure", false, false, options);
 
 // imports from files that depend on /Config
-let generateRandomNumber, setAdventure;
-module.exports.initialize = function (isProduction) {
-	if (isProduction) {
-		({ generateRandomNumber } = require("./../../helpers.js"));
-		({ setAdventure } = require("../adventureDAO.js").initialize(isProduction));
-	}
+let generateRandomNumber, setAdventure, prerollBoss;
+module.exports.injectConfig = function (isProduction) {
+	({ generateRandomNumber } = require("./../../helpers.js").injectConfig(isProduction));
+	({ setAdventure } = require("../adventureDAO.js").injectConfig(isProduction));
+	({ prerollBoss } = require('../Rooms/_roomDictionary.js').injectConfig(isProduction));
 	return this;
 }
 

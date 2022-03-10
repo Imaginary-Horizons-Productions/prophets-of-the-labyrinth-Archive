@@ -1,7 +1,5 @@
 const { MessageEmbed } = require('discord.js');
 const Command = require('../../Classes/Command.js');
-const { getArtifactCounts } = require('../Artifacts/_artifactDictionary.js');
-const { getPlayer } = require('../playerDAO.js');
 
 const options = [
 	{ type: "User", name: "user", description: "The user to look up (yourself if blank)", required: false, choices: {} }
@@ -9,11 +7,10 @@ const options = [
 module.exports = new Command("stats", "Get the stats for a user or yourself", false, false, options);
 
 // imports from files that depend on /Config
-// let ;
-module.exports.initialize = function (isProduction) {
-	if (isProduction) {
-		({} = require("./../../helpers.js"));
-	}
+let getArtifactCounts, getPlayer;
+module.exports.injectConfig = function (isProduction) {
+	({ getArtifactCounts } = require('../Artifacts/_artifactDictionary.js').injectConfigArtifacts(isProduction));
+	({ getPlayer } = require('../playerDAO.js').injectConfig(isProduction));
 	return this;
 }
 

@@ -1,20 +1,24 @@
 const Enemy = require("../../Classes/Enemy.js");
 const { elementsList } = require("../elementHelpers.js");
-const { generateRandomNumber } = require("../../helpers.js");
-const { addModifier, dealDamage, removeModifier } = require("../combatantDAO.js");
-const { nextRandom, selectSelf, selectAllFoes, selectRandomFoe } = require("../enemyDAO.js").initialize(true);
 
-module.exports = new Enemy("Royal Slime")
-	.setHp(600)
-	.setSpeed(90)
-	.setElement("@{adventure}")
-	.setStaggerThreshold(5)
-	.setFirstAction("Element Shift")
-	.addAction({ name: "Element Shift", effect: elementShift, selector: selectSelf, next: nextRandom })
-	.addAction({ name: "Rolling Tackle", effect: rollingTackleEffect, selector: selectAllFoes, next: nextRandom })
-	.addAction({ name: "Goop Deluge", effect: goopDelugeEffect, selector: selectAllFoes, next: nextRandom })
-	.addAction({ name: "Toxic Spike Shot", effect: toxicSpikeShotEffect, selector: selectRandomFoe, next: nextRandom })
-	.setBounty(100);
+// import from modules that depend on /Config
+let nextRandom, selectSelf, selectAllFoes, selectRandomFoe, generateRandomNumber, addModifier, dealDamage, removeModifier;
+module.exports.injectConfig = function (isProduction) {
+	({ nextRandom, selectSelf, selectAllFoes, selectRandomFoe } = require("../enemyDAO.js").injectConfig(isProduction));
+	({ generateRandomNumber } = require("../../helpers.js").injectConfig(isProduction));
+	({ addModifier, dealDamage, removeModifier } = require("../combatantDAO.js").injectConfig(isProduction));
+	return new Enemy("Royal Slime")
+		.setHp(600)
+		.setSpeed(90)
+		.setElement("@{adventure}")
+		.setStaggerThreshold(5)
+		.setFirstAction("Element Shift")
+		.addAction({ name: "Element Shift", effect: elementShift, selector: selectSelf, next: nextRandom })
+		.addAction({ name: "Rolling Tackle", effect: rollingTackleEffect, selector: selectAllFoes, next: nextRandom })
+		.addAction({ name: "Goop Deluge", effect: goopDelugeEffect, selector: selectAllFoes, next: nextRandom })
+		.addAction({ name: "Toxic Spike Shot", effect: toxicSpikeShotEffect, selector: selectRandomFoe, next: nextRandom })
+		.setBounty(100);
+}
 
 function elementShift(target, user, isCrit, adventure) {
 	user.element = elementsList()[generateRandomNumber(adventure, elementsList().length, "battle")];

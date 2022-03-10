@@ -1,4 +1,4 @@
-var enemyWhitelist = [
+const enemyWhitelist = [
 	"clone.js",
 	"geodetortoise.js",
 	"hawk.js",
@@ -11,9 +11,12 @@ var enemyWhitelist = [
 
 const enemyDictionary = {};
 
-for (const file of enemyWhitelist) {
-	const enemy = require(`./${file}`);
-	enemyDictionary[enemy.name] = enemy;
+exports.injectConfigEnemies = function (isProduction) {
+	for (const file of enemyWhitelist) {
+		const enemy = require(`./${file}`).injectConfig(isProduction);
+		enemyDictionary[enemy.name] = enemy;
+	}
+	return this;
 }
 
 exports.getEnemy = function (enemyName) {

@@ -2,28 +2,25 @@ const fs = require("fs");
 const { MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu } = require("discord.js");
 const Adventure = require("../Classes/Adventure.js");
 
-const isProduction = true;
-const { setPlayer, getPlayer } = require("./playerDAO.js").initialize(isProduction);
 const Move = require("../Classes/Move.js");
-const { resolveMove } = require("./moveDAO.js");
 const Enemy = require("../Classes/Enemy.js");
-const { getEnemy } = require("./Enemies/_enemyDictionary");
-const { spawnEnemy } = require("./enemyDAO.js").initialize(isProduction);
 const Delver = require("../Classes/Delver.js");
 const Room = require("../Classes/Room.js");
-const { manufactureRoomTemplate, prerollBoss } = require("./Rooms/_roomDictionary.js").initialize();
 const Resource = require("../Classes/Resource.js");
-const { getTurnDecrement } = require("./Modifiers/_modifierDictionary.js").initialize();
-const { rollWeaponDrop, getWeaponProperty, buildWeaponDescription } = require("./Weapons/_weaponDictionary.js").initialize();
-const { rollArtifact, getArtifactDescription } = require("./Artifacts/_artifactDictionary.js").initialize();
-const { clearBlock, removeModifier } = require("./combatantDAO.js");
 const { getWeaknesses, getColor } = require("./elementHelpers.js");
 
-let ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordinalSuffixEN;
-exports.initialize = function (isProduction) {
-	if (isProduction) {
-		({ ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordinalSuffixEN } = require("../helpers.js"));
-	}
+let ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordinalSuffixEN, setPlayer, getPlayer, spawnEnemy, manufactureRoomTemplate, prerollBoss, getTurnDecrement, rollWeaponDrop, getWeaponProperty, buildWeaponDescription, rollArtifact, getArtifactDescription, getEnemy, resolveMove, clearBlock, removeModifier;
+exports.injectConfig = function (isProduction) {
+	({ resolveMove } = require("./moveDAO.js").injectConfig(isProduction));
+	({ clearBlock, removeModifier } = require("./combatantDAO.js").injectConfig(isProduction));
+	({ getEnemy } = require("./Enemies/_enemyDictionary").injectConfigEnemies(isProduction));
+	({ ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordinalSuffixEN } = require("../helpers.js").injectConfig(isProduction));
+	({ setPlayer, getPlayer } = require("./playerDAO.js").injectConfig(isProduction));
+	({ spawnEnemy } = require("./enemyDAO.js").injectConfig(isProduction));
+	({ manufactureRoomTemplate, prerollBoss } = require("./Rooms/_roomDictionary.js").injectConfig(isProduction));
+	({ getTurnDecrement } = require("./Modifiers/_modifierDictionary.js").injectConfig(isProduction));
+	({ rollWeaponDrop, getWeaponProperty, buildWeaponDescription } = require("./Weapons/_weaponDictionary.js").injectConfig(isProduction));
+	({ rollArtifact, getArtifactDescription } = require("./Artifacts/_artifactDictionary.js").injectConfigArtifacts(isProduction));
 	return this;
 }
 

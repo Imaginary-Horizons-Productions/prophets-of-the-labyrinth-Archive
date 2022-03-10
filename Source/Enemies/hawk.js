@@ -1,15 +1,19 @@
 const Enemy = require("../../Classes/Enemy.js");
-const { dealDamage, addModifier } = require("../combatantDAO.js");
-const { selectRandomFoe, nextRepeat } = require("../enemyDAO.js").initialize(true);
 
-module.exports = new Enemy("Bloodtail Hawk")
-	.setHp(200)
-	.setSpeed(105)
-	.setElement("Wind")
-	.setStaggerThreshold(1)
-	.setFirstAction("Rake")
-	.addAction({ name: "Rake", effect: rakeEffect, selector: selectRandomFoe, next: nextRepeat })
-	.setBounty(25);
+// import from modules that depend on /Config
+let selectRandomFoe, nextRepeat, dealDamage, addModifier;
+module.exports.injectConfig = function (isProduction) {
+	({ selectRandomFoe, nextRepeat } = require("../enemyDAO.js").injectConfig(isProduction));
+	({ dealDamage, addModifier } = require("../combatantDAO.js").injectConfig(isProduction));
+	return new Enemy("Bloodtail Hawk")
+		.setHp(200)
+		.setSpeed(105)
+		.setElement("Wind")
+		.setStaggerThreshold(1)
+		.setFirstAction("Rake")
+		.addAction({ name: "Rake", effect: rakeEffect, selector: selectRandomFoe, next: nextRepeat })
+		.setBounty(25);
+}
 
 function rakeEffect(target, user, isCrit, adventure) {
 	let damage = 50;

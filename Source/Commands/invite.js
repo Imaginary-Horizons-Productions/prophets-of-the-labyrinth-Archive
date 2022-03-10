@@ -1,6 +1,5 @@
 const { MessageActionRow, MessageButton } = require('discord.js');
 const Command = require('../../Classes/Command.js');
-const { getAdventure } = require('../adventureDAO.js');
 
 const options = [
 	{ type: "User", name: "invitee", description: "The user's mention", required: true, choices: {} }
@@ -8,11 +7,9 @@ const options = [
 module.exports = new Command("invite", "Invite a friend to an adventure", false, false, options);
 
 // imports from files that depend on /Config
-// let ;
-module.exports.initialize = function (isProduction) {
-	if (isProduction) {
-		({} = require("./../../helpers.js"));
-	}
+let getAdventure;
+module.exports.injectConfig = function (isProduction) {
+	({ getAdventure } = require('../adventureDAO.js').injectConfig(isProduction));
 	return this;
 }
 

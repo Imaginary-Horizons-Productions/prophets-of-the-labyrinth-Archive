@@ -1,19 +1,16 @@
 const Command = require('../../Classes/Command.js');
 const { MessageEmbed } = require('discord.js');
-const { getAdventure } = require('../adventureDAO.js');
-const { weaponToEmbedField } = require('../weaponDAO.js');
-const { getFullName } = require('../combatantDAO.js');
 const { getEmoji } = require('../elementHelpers.js');
 
 const options = [];
 module.exports = new Command("delver-stats", "Get your adventure-specific stats for the thread's adventure", false, false, options);
 
 // imports from files that depend on /Config
-// let ;
-module.exports.initialize = function (isProduction) {
-	if (isProduction) {
-		({} = require("./../../helpers.js"));
-	}
+let getAdventure, weaponToEmbedField, getFullName;
+module.exports.injectConfig = function (isProduction) {
+	({ getAdventure } = require('../adventureDAO.js').injectConfig(isProduction));
+	({ weaponToEmbedField } = require('../weaponDAO.js').injectConfig(isProduction));
+	({ getFullName } = require('../combatantDAO.js').injectConfig(isProduction));
 	return this;
 }
 

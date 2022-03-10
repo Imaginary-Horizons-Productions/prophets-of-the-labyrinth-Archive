@@ -1,5 +1,10 @@
 const { getEmoji } = require("./elementHelpers.js");
-const { getWeaponProperty, buildWeaponDescription } = require("./Weapons/_weaponDictionary");
+
+let getWeaponProperty, buildWeaponDescription;
+exports.injectConfig = function (isProduction) {
+	({ getWeaponProperty, buildWeaponDescription } = require("./Weapons/_weaponDictionary").injectConfig(isProduction));
+	return this;
+}
 
 exports.weaponToEmbedField = function (weaponName, uses) {
 	return [

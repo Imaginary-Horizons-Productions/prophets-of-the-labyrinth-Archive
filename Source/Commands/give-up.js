@@ -1,16 +1,13 @@
 const Command = require('../../Classes/Command.js');
 const { MessageEmbed } = require('discord.js');
-const { completeAdventure, getAdventure } = require('../adventureDAO.js');
 
 const options = [];
 module.exports = new Command("give-up", "Lets the adventure leader end the adventure", false, false, options);
 
 // imports from files that depend on /Config
-// let ;
-module.exports.initialize = function (isProduction) {
-	if (isProduction) {
-		({} = require("./../../helpers.js"));
-	}
+let completeAdventure, getAdventure;
+module.exports.injectConfig = function (isProduction) {
+	({ completeAdventure, getAdventure } = require('../adventureDAO.js').injectConfig(isProduction));
 	return this;
 }
 

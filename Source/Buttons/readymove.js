@@ -1,12 +1,12 @@
 const Button = require('../../Classes/Button.js');
 const { MessageEmbed, MessageActionRow, MessageSelectMenu, MessageButton } = require('discord.js');
+const Delver = require('../../Classes/Delver.js');
+const { getEmoji, getResistances, getWeaknesses, getColor } = require('../elementHelpers.js');
 const { getAdventure } = require('../adventureDAO.js');
 const { getFullName } = require("../combatantDAO.js");
 const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
 const { weaponToEmbedField } = require('../weaponDAO.js');
-const { getEmoji, getResistances, getWeaknesses, getColor } = require('../elementHelpers.js');
-const Delver = require('../../Classes/Delver.js');
-const { isNonStacking, isBuff, isDebuff } = require("../Modifiers/_modifierDictionary.js").initialize();
+const { isNonStacking, isBuff, isDebuff } = require("../Modifiers/_modifierDictionary.js").injectConfig();
 
 module.exports = new Button("readymove");
 

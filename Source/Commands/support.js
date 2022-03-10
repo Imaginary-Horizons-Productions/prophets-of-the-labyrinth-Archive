@@ -6,10 +6,7 @@ module.exports = new Command("support", "List ways to support the game", false, 
 
 // imports from files that depend on /Config
 // let ;
-module.exports.initialize = function (isProduction) {
-	if (isProduction) {
-		({} = require("./../../helpers.js"));
-	}
+module.exports.injectConfig = function (isProduction) {
 	return this;
 }
 

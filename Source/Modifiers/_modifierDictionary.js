@@ -1,8 +1,6 @@
 let parseCount;
-exports.initialize = function (isProduction) {
-	if (isProduction) {
-		({ parseCount } = require("../../helpers"));
-	}
+exports.injectConfig = function (isProduction) {
+	({ parseCount } = require("../../helpers").injectConfig(isProduction));
 	return this;
 }
 

@@ -7,10 +7,8 @@ module.exports = new Command("version", "Get HorizonsBot's version notes", false
 
 // imports from files that depend on /Config
 let versionEmbedBuilder;
-module.exports.initialize = function (isProduction) {
-	if (isProduction) {
-		({ versionEmbedBuilder } = require("./../../helpers.js"));
-	}
+module.exports.injectConfig = function (isProduction) {
+	({ versionEmbedBuilder } = require("./../../helpers.js").injectConfig(isProduction));
 	return this;
 }
 

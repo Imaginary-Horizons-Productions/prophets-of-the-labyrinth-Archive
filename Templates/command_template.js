@@ -7,10 +7,8 @@ module.exports = new Command("name", "description", false, false, options);
 
 // imports from files that depend on /Config
 // let ;
-module.exports.initialize = function (isProduction) {
-	if (isProduction) {
-		({} = require("./../../helpers.js"));
-	}
+module.exports.injectConfigCommands = function (isProduction) {
+	({} = require("./../../helpers.js").injectConfig(isProduction));
 	return this;
 }
 

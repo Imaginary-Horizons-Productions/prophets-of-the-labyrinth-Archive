@@ -16,10 +16,7 @@ module.exports = new Command("manual", "Get information about Prophets of the La
 
 // imports from files that depend on /Config
 // let ;
-module.exports.initialize = function (isProduction) {
-	if (isProduction) {
-		({} = require("./../../helpers.js"));
-	}
+module.exports.injectConfig = function (isProduction) {
 	return this;
 }
 

@@ -1,7 +1,7 @@
 const fs = require('fs');
-const { initializeCommands, commandSets } = require('../../Source/Commands/_commandDictionary.js');
+const { injectConfigCommands, commandSets } = require('../../Source/Commands/_commandDictionary.js');
 
-initializeCommands(false);
+injectConfigCommands(false);
 
 let text = "";
 
@@ -18,6 +18,6 @@ commandSets.forEach(commandSet => {
 
 fs.writeFile('Wiki/Commands.md', text, (error) => {
 	if (error) {
-		console.log(error);
+		console.error(error);
 	}
 });

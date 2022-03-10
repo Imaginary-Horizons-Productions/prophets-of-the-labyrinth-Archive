@@ -1,14 +1,10 @@
 const Player = require("../Classes/Player.js");
-const isProduction = true;
-const { getGuild, saveGuilds } = require("./guildDAO.js").initialize(isProduction);
 const fs = require("fs");
 
-
-let ensuredPathSave;
-exports.initialize = function (isProduction) {
-	if (isProduction) {
-		({ ensuredPathSave } = require("../helpers.js"));
-	}
+let ensuredPathSave, getGuild, saveGuilds;
+exports.injectConfig = function (isProduction) {
+	({ getGuild, saveGuilds } = require("./guildDAO.js").injectConfig(isProduction));
+	({ ensuredPathSave } = require("../helpers.js").injectConfig(isProduction));
 	return this;
 }
 

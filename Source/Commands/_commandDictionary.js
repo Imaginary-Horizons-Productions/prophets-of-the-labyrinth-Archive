@@ -12,10 +12,10 @@ exports.commandFiles = exports.commandSets.reduce((allFiles, set) => allFiles.co
 const commandDictionary = {};
 exports.slashData = [];
 
-exports.initializeCommands = function (isProduction) {
+exports.injectConfigCommands = function (isProduction) {
 	for (const file of exports.commandFiles) {
 		const command = require(`./${file}`);
-		commandDictionary[command.name] = command.initialize(isProduction);
+		commandDictionary[command.name] = command.injectConfig(isProduction);
 		exports.slashData.push(command.data.toJSON());
 	}
 }

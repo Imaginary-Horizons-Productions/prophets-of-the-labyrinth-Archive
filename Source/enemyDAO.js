@@ -2,10 +2,8 @@ const Enemy = require("../Classes/Enemy.js");
 const { getOpposite } = require("./elementHelpers.js");
 
 let generateRandomNumber;
-exports.initialize = function (isProduction) {
-	if (isProduction) {
-		({ generateRandomNumber } = require("../helpers.js"));
-	}
+exports.injectConfig = function (isProduction) {
+	({ generateRandomNumber } = require("../helpers.js").injectConfig(isProduction));
 	return this;
 }
 

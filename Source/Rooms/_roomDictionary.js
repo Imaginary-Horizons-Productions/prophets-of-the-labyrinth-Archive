@@ -1,8 +1,6 @@
 let generateRandomNumber;
-exports.initialize = function (isProduction) {
-	if (isProduction) {
-		({ generateRandomNumber } = require("../../helpers.js"));
-	}
+exports.injectConfig = function (isProduction) {
+	({ generateRandomNumber } = require("../../helpers.js").injectConfig(isProduction));
 	return this;
 }
 

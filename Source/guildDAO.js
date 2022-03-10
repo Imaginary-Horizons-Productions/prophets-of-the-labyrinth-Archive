@@ -2,10 +2,8 @@ var fs = require("fs");
 const GuildProfile = require('../Classes/GuildProfile.js');
 
 let ensuredPathSave;
-exports.initialize = function (isProduction) {
-	if (isProduction) {
-		({ ensuredPathSave } = require("../helpers.js"));
-	}
+exports.injectConfig = function (isProduction) {
+	({ ensuredPathSave } = require("../helpers.js").injectConfig(isProduction));
 	return this;
 }
 const filePath = "./Saves/guilds.json";
