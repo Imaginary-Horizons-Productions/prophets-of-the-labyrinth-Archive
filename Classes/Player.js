@@ -5,6 +5,6 @@ module.exports = class Player {
 		this.nextFreeRoll = Date.now(); //TODO #36 roll starting classes randomly
 	}
 	scores = {};
-	artifacts = {};
+	artifacts = { "start": "Phoenix Fruit Blossom" };
 	archetypes = { "Knight": 1, "Assassin": 1, "Chemist": 1, "Martial Artist": 1, "Hemomancer": 1, "Ritualist": 1 };
 }

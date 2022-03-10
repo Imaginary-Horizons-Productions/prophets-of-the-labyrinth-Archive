@@ -5,6 +5,7 @@ module.exports = class Adventure {
 		this.initialSeed = seedInput || Date.now().toString();
 	}
 	id; // the id of the thread created for the adventure
+	state = "config"; // enum: "config", "ongoing", "completed"
 	name;
 	element;
 	messageIds = {
@@ -32,7 +33,7 @@ module.exports = class Adventure {
 	lives = 2;
 	gold = 100;
 	peakGold = 100;
-	artifacts = {};
+	artifacts = {}; // current: {artifactName: count} //TODO #217 artifact performance stats on artifact, show as field in artifact details embed // planned: {artifactName: {count, staistic1, statistic2...}}
 	rnIndices = {
 		general: 0,
 		battle: 0

@@ -1,14 +1,17 @@
 //#region Imports
 const { Client } = require("discord.js");
-const fs = require("fs");
+const fsa = require("fs").promises;
 const versionData = require('./Config/versionData.json');
-const { commandDictionary, slashData } = require(`./Data/Commands/_commandDictionary.js`);
-const { getSelect } = require("./Data/Selects/_selectDictionary.js");
-const { getButton } = require("./Data/Buttons/_buttonDictionary.js");
-const { loadPlayers } = require("./Data/playerDAO.js");
-const { guildSetup, getPremiumUsers, ensuredPathSave } = require("./helpers.js");
-const { loadGuilds } = require("./Data/guildDAO.js");
-const { loadAdventures } = require("./Data/adventureDAO.js");
+const { getCommand, initializeCommands, slashData } = require(`./Source/Commands/_commandDictionary.js`);
+const { getSelect } = require("./Source/Selects/_selectDictionary.js");
+const { getButton } = require("./Source/Buttons/_buttonDictionary.js");
+const { loadPlayers } = require("./Source/playerDAO.js");
+const { guildSetup, getPremiumUsers } = require("./helpers.js");
+const helpers = require("./helpers.js");
+const { loadGuilds } = require("./Source/guildDAO.js");
+const { loadAdventures } = require("./Source/adventureDAO.js");
+const { REST } = require("@discordjs/rest");
+const { Routes } = require("discord-api-types/v9");
 //#endregion
 
 //#region Executing Code
@@ -16,7 +19,7 @@ const client = new Client({
 	retryLimit: 5,
 	presence: {
 		activities: [{
-			name: "/tutorial",
+			name: "/manual",
 			type: "LISTENING"
 		}]
 	},
@@ -38,14 +41,53 @@ const client = new Client({
 //#region Event Handlers
 client.on("ready", () => {
 	console.log(`Connected as ${client.user.tag}`);
-	//TODO #2 upload slash commands gloabally
-	//TODO #3 post version notes
+
+	initializeCommands(true, helpers);
+	// Post version notes
+	if (versionData.announcementsChannelId) {
+		fsa.readFile('./ChangeLog.md', { encoding: 'utf8' }).then(data => {
+			let [currentFull, currentMajor, currentMinor, currentPatch] = data.match(/(\d+)\.(\d+)\.(\d+)/);
+			let [_lastFull, lastMajor, lastMinor, lastPatch] = versionData.lastPostedVersion.match(/(\d+)\.(\d+)\.(\d+)/);
+
+			if (currentMajor <= lastMajor) {
+				if (currentMinor <= lastMinor) {
+					if (currentPatch <= lastPatch) {
+						return;
+					}
+				}
+			}
+
+			helpers.versionEmbedBuilder(client.user.displayAvatarURL()).then(embed => {
+				client.guilds.fetch(versionData.guildId).then(guild => {
+					guild.channels.fetch(versionData.announcementsChannelId).then(annoucnementsChannel => {
+						annoucnementsChannel.send({ embeds: [embed] }).then(message => {
+							message.crosspost();
+							versionData.lastPostedVersion = currentFull;
+							fsa.writeFile('./Config/versionData.json', JSON.stringify(versionData), "utf-8");
+						});
+					})
+				})
+			}).catch(console.error);
+		});
+	}
+
+	// Upload slash commands globally
+	(async () => {
+		try {
+			await new REST({ version: 9 }).setToken(require("./Config/auth.json").token).put(
+				Routes.applicationCommands(client.user.id),
+				{ body: slashData },
+			);
+		} catch (error) {
+			console.error(error);
+		}
+	})();
 })
 
 client.on("interactionCreate", interaction => {
 	if (interaction.inGuild()) {
 		if (interaction.isCommand()) {
-			var command = commandDictionary[interaction.commandName];
+			let command = getCommand(interaction.commandName);
 			if (!command.premiumCommand || !getPremiumUsers().includes(interaction.user.id)) {
 				if (!command.managerCommand || !interaction.member.manageable) {
 					command.execute(interaction);
@@ -54,7 +96,7 @@ client.on("interactionCreate", interaction => {
 						.catch(console.error);
 				}
 			} else {
-				interaction.reply(`The \`/${interaction.commandName}\` command is a premium command. Use \`/premium\` for more information.`)
+				interaction.reply(`The \`/${interaction.commandName}\` command is a premium command. Use \`/support\` for more information.`)
 					.catch(console.error);
 			}
 		} else if (interaction.isButton()) {

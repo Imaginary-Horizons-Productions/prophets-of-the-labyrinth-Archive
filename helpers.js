@@ -1,4 +1,7 @@
+const { MessageEmbed } = require("discord.js");
 const fs = require("fs");
+
+exports.versionData = require('./Config/versionData.json');
 
 exports.generateRandomNumber = function (adventure, exclusiveMax, branch) {
 	if (exclusiveMax === 1) {
@@ -64,4 +67,39 @@ exports.ordinalSuffixEN = function (integer) {
 		default:
 			return `${integer}th`;
 	}
+}
+
+exports.versionEmbedBuilder = function (avatarURL) {
+	return fs.promises.readFile('./ChangeLog.md', { encoding: 'utf8' }).then(data => {
+		const dividerRegEx = /####/g;
+		const changesStartRegEx = /\.\d+:/g;
+		const knownIssuesStartRegEx = /### Known Issues/g;
+		let titleStart = dividerRegEx.exec(data).index;
+		changesStartRegEx.exec(data);
+		let knownIssuesStart;
+		let knownIssueStartResult = knownIssuesStartRegEx.exec(data);
+		if (knownIssueStartResult) {
+			knownIssuesStart = knownIssueStartResult.index;
+		}
+		let knownIssuesEnd = dividerRegEx.exec(data).index;
+
+		let embed = new MessageEmbed().setColor('6b81eb')
+			.setAuthor({ name: "Click here to check out the Imaginary Horizons GitHub", iconURL: avatarURL, url: "https://github.com/Imaginary-Horizons-Productions" })
+			.setTitle(data.slice(titleStart + 5, changesStartRegEx.lastIndex))
+			.setURL('https://discord.gg/bcE3Syu')
+			.setThumbnail('https://cdn.discordapp.com/attachments/545684759276421120/734099622846398565/newspaper.png')
+			.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" })
+			.setTimestamp();
+
+		if (knownIssuesStart && knownIssuesStart < knownIssuesEnd) {
+			// Known Issues section found
+			embed.setDescription(data.slice(changesStartRegEx.lastIndex, knownIssuesStart))
+				.addField(`Known Issues`, data.slice(knownIssuesStart + 16, knownIssuesEnd))
+		} else {
+			// Known Issues section not found
+			embed.setDescription(data.slice(changesStartRegEx.lastIndex, knownIssuesEnd));
+		}
+
+		return embed.addField(`Become a Sponsor`, `Chip in for server costs or get premimum features by sponsoring [PotL on GitHub](https://github.com/Imaginary-Horizons-Productions/prophets-of-the-labyrinth)`);
+	})
 }

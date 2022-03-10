@@ -10,6 +10,7 @@ module.exports = class Delver extends Combatant {
 	}
 	predict = "not picked";
 	weapons = []; // {name, uses}
+	startingArtifact = "";
 
 	setTitle = super.setTitle;
 

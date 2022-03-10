@@ -22,3 +22,23 @@ jobs:
         with:
           branch: main
           folder: '.'
+
+      - name: Setup npm
+        run: npm ci
+
+      - name: Update Commands
+        run: node .github/workflows/updateCommands.js
+
+      - name: Push Changes to Repo
+        run: git add .; git commit -m "updated commands page on wiki"; git push origin main
+
+      - name: Push Wiki Changes
+        uses: Andrew-Chen-Wang/github-wiki-action@v2
+        env:
+          # Make sure you have that / at the end. We use rsync
+          # WIKI_DIR's default is wiki/
+          WIKI_DIR: Wiki/
+          GH_TOKEN: ${{ secrets.WIKI }}
+          GH_MAIL: ${{ secrets.WIKI_EMAIL }}
+          GH_NAME: ${{ github.repository_owner }}
+          EXCLUDED_FILES: "a/ b.md"
