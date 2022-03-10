@@ -17,7 +17,7 @@ module.exports.execute = (interaction, args) => {
 				updateRoomHeader(adventure, interaction.message);
 				adventure.delvers.forEach(delver => {
 					if (delver.id !== interaction.user.id) {
-						gainHealth(delver, 50, adventure.room.enemyTitles);
+						gainHealth(delver, 50, adventure.room.enemyTitles, false);
 					}
 				})
 				return interaction.reply(`${damageText} Everyone else gains 50 hp.`);

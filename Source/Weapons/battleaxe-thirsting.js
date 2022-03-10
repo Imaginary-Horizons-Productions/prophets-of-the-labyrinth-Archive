@@ -23,7 +23,7 @@ function effect(target, user, isCrit, adventure) {
 	}
 	return dealDamage(target, user, damage, false, weaponElement, adventure).then(damageText => {
 		if (target.hp < 1) {
-			damageText += gainHealth(user, healing, adventure.room.enemyTitles);
+			damageText += gainHealth(user, healing, adventure);
 		}
 		return damageText;
 	});
