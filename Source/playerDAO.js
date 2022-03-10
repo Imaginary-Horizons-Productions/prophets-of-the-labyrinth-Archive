@@ -7,26 +7,24 @@ const filePath = "./Saves/players.json";
 const requirePath = "./../Saves/players.json";
 const playerDictionary = new Map();
 
-exports.loadPlayers = function () {
-	return new Promise((resolve, reject) => {
-		if (fs.existsSync(filePath)) {
-			const players = require(requirePath);
-			players.forEach(player => {
-				playerDictionary.set(player.id, player);
-			})
-			resolve(`${players.length} players loaded`);
-		} else {
-			if (!fs.existsSync("./Saves")) {
-				fs.mkdirSync("./Saves", { recursive: true });
-			}
-			fs.writeFile(filePath, "[]", "utf8", error => {
-				if (error) {
-					console.error(error);
-				}
-			})
-			resolve("players regenerated");
+exports.loadPlayers = async function () {
+	if (fs.existsSync(filePath)) {
+		const players = require(requirePath);
+		players.forEach(player => {
+			playerDictionary.set(player.id, player);
+		})
+		return `${players.length} players loaded`;
+	} else {
+		if (!fs.existsSync("./Saves")) {
+			fs.mkdirSync("./Saves", { recursive: true });
 		}
-	})
+		fs.writeFile(filePath, "[]", "utf8", error => {
+			if (error) {
+				console.error(error);
+			}
+		})
+		return "players regenerated";
+	}
 }
 
 exports.getPlayer = function (playerId, guildId) {

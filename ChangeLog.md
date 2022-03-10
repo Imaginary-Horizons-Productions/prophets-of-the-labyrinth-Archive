@@ -1,6 +1,6 @@
 # Prophets of the Labyrinth Change Log
 #### Prophets of the Labyrinth Version 0.5.0:
-- Renamed game
+- Game name no longer references unsupported game genre
 - Artifact Collecting: completing an adventure allows the delvers to save an artifact they found to bring into future adventures
 - New artifacts: Bloodshield Sword
 - New weapons: Swift Midas Staff, Piercing Scythe

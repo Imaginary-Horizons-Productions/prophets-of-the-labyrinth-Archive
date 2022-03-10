@@ -6,26 +6,24 @@ const filePath = "./Saves/guilds.json";
 const requirePath = "./../Saves/guilds.json";
 const guildDictionary = new Map();
 
-exports.loadGuilds = function () {
-	return new Promise((resolve, reject) => {
-		if (fs.existsSync(filePath)) {
-			const guildProfiles = require(requirePath);
-			guildProfiles.forEach(guildProfile => {
-				guildDictionary.set(guildProfile.id, guildProfile);
-			})
-			resolve(`${guildProfiles.length} guilds loaded`);
-		} else {
-			if (!fs.existsSync("./Saves")) {
-				fs.mkdirSync("./Saves", { recursive: true });
-			}
-			fs.writeFile(filePath, "[]", "utf8", error => {
-				if (error) {
-					console.error(error);
-				}
-			})
-			resolve("guilds regenerated");
+exports.loadGuilds = async function () {
+	if (fs.existsSync(filePath)) {
+		const guildProfiles = require(requirePath);
+		guildProfiles.forEach(guildProfile => {
+			guildDictionary.set(guildProfile.id, guildProfile);
+		})
+		return `${guildProfiles.length} guilds loaded`;
+	} else {
+		if (!fs.existsSync("./Saves")) {
+			fs.mkdirSync("./Saves", { recursive: true });
 		}
-	})
+		fs.writeFile(filePath, "[]", "utf8", error => {
+			if (error) {
+				console.error(error);
+			}
+		})
+		return "guilds regenerated";
+	}
 }
 
 exports.guildSetup = function (guild) {
