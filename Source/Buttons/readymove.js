@@ -62,14 +62,14 @@ module.exports.execute = (interaction, args) => {
 							targetOptions = targetOptions.concat(delverOptions);
 						}
 						moveMenu.push(new MessageActionRow().addComponents(
-							new MessageSelectMenu().setCustomId(`weapon-${weapon.name}-${i}`)
+							new MessageSelectMenu().setCustomId(`weapon-${weapon.name}-${adventure.round}-${i}`)
 								.setPlaceholder(`${elementEmoji} Use ${weapon.name} on...`)
 								.addOptions(targetOptions)
 						));
 					} else {
 						// Button
 						moveMenu.push(new MessageActionRow().addComponents(
-							new MessageButton().setCustomId(`nontargetweapon-${weapon.name}-${i}`)
+							new MessageButton().setCustomId(`nontargetweapon-${weapon.name}-${adventure.round}-${i}`)
 								.setLabel(`Use ${weapon.name}`)
 								.setEmoji(elementEmoji)
 								.setStyle("SECONDARY")

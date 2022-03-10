@@ -3,77 +3,75 @@ const { ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordi
 const { MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu } = require("discord.js");
 const Adventure = require("../Classes/Adventure.js");
 const { setPlayer, getPlayer } = require("./playerDAO.js");
-const { manufactureRoomTemplate, prerollBoss } = require("./Rooms/_roomDictionary.js");
 const Move = require("../Classes/Move.js");
 const { resolveMove } = require("./moveDAO.js");
 const Enemy = require("../Classes/Enemy.js");
-const { clearBlock, removeModifier } = require("./combatantDAO.js");
-const Delver = require("../Classes/Delver.js");
-const { getTurnDecrement } = require("./Modifiers/_modifierDictionary.js");
 const { getEnemy } = require("./Enemies/_enemyDictionary");
-const Room = require("../Classes/Room.js");
 const { spawnEnemy } = require("./enemyDAO.js");
-const { getWeaknesses, getColor } = require("./elementHelpers.js");
+const Delver = require("../Classes/Delver.js");
+const Room = require("../Classes/Room.js");
+const { manufactureRoomTemplate, prerollBoss } = require("./Rooms/_roomDictionary.js");
+const Resource = require("../Classes/Resource.js");
+const { getTurnDecrement } = require("./Modifiers/_modifierDictionary.js");
 const { rollWeaponDrop, getWeaponProperty, buildWeaponDescription } = require("./Weapons/_weaponDictionary.js");
 const { rollArtifact, getArtifactDescription } = require("./Artifacts/_artifactDictionary.js");
-const Resource = require("../Classes/Resource.js");
+const { clearBlock, removeModifier } = require("./combatantDAO.js");
+const { getWeaknesses, getColor } = require("./elementHelpers.js");
 
 const filePath = "./Saves/adventures.json";
 const requirePath = "./../Saves/adventures.json";
 const adventureDictionary = new Map();
 
-exports.loadAdventures = function () {
-	return new Promise((resolve, reject) => {
-		if (fs.existsSync(filePath)) {
-			const adventures = require(requirePath);
-			let loaded = 0;
-			adventures.forEach(adventure => {
-				if (adventure.state !== "completed") {
-					loaded++;
-					// Cast delvers into Delver class
-					let castDelvers = [];
-					for (let delver of adventure.delvers) {
-						castDelvers.push(Object.assign(new Delver(), delver));
-					}
-					adventure.delvers = castDelvers;
-
-					if (adventure.room) {
-						// Cast enemies into Enemy class
-						if (adventure.room.enemies) {
-							let castEnemies = [];
-							for (let enemy of adventure.room.enemies) {
-								castEnemies.push(Object.assign(new Enemy(), enemy));
-							}
-							adventure.room.enemies = castEnemies;
-						}
-
-						// Cast moves into Move class
-						if (adventure.room.moves) {
-							let castMoves = [];
-							for (let move of adventure.room.moves) {
-								castMoves.push(Object.assign(new Move(), move));
-							}
-							adventure.room.moves = castMoves;
-						}
-					}
-
-					// Set adventure
-					adventureDictionary.set(adventure.id, Object.assign(new Adventure(adventure.initialSeed), adventure));
+exports.loadAdventures = async function () {
+	if (fs.existsSync(filePath)) {
+		const adventures = require(requirePath);
+		let loaded = 0;
+		adventures.forEach(adventure => {
+			if (adventure.state !== "completed") {
+				loaded++;
+				// Cast delvers into Delver class
+				let castDelvers = [];
+				for (let delver of adventure.delvers) {
+					castDelvers.push(Object.assign(new Delver(), delver));
 				}
-			})
-			resolve(`${loaded} adventures loaded`);
-		} else {
-			if (!fs.existsSync("./Saves")) {
-				fs.mkdirSync("./Saves", { recursive: true });
+				adventure.delvers = castDelvers;
+
+				if (adventure.room) {
+					// Cast enemies into Enemy class
+					if (adventure.room.enemies) {
+						let castEnemies = [];
+						for (let enemy of adventure.room.enemies) {
+							castEnemies.push(Object.assign(new Enemy(), enemy));
+						}
+						adventure.room.enemies = castEnemies;
+					}
+
+					// Cast moves into Move class
+					if (adventure.room.moves) {
+						let castMoves = [];
+						for (let move of adventure.room.moves) {
+							castMoves.push(Object.assign(new Move(), move));
+						}
+						adventure.room.moves = castMoves;
+					}
+				}
+
+				// Set adventure
+				adventureDictionary.set(adventure.id, Object.assign(new Adventure(adventure.initialSeed), adventure));
 			}
-			fs.writeFile(filePath, "[]", "utf8", error => {
-				if (error) {
-					console.error(error);
-				}
-			})
-			resolve("adventures regenerated");
+		})
+		return `${loaded} adventures loaded`;
+	} else {
+		if (!fs.existsSync("./Saves")) {
+			fs.mkdirSync("./Saves", { recursive: true });
 		}
-	})
+		fs.writeFile(filePath, "[]", "utf8", error => {
+			if (error) {
+				console.error(error);
+			}
+		})
+		return "adventures regenerated";
+	}
 }
 
 exports.getAdventure = function (id) {
@@ -208,12 +206,12 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 	}
 }
 
-exports.calculateScoutingCost = function (adventure, type) {
+exports.calculateScoutingCost = function ({ artifacts: { "Amethyst Spyglass": amethystSpyglassCount = 0 } }, type) {
 	switch (type) {
 		case "Final Battle":
-			return 150 - ((adventure.artifacts["Amethyst Spyglass"] || 0) * 5);
+			return 150 - ((amethystSpyglassCount) * 5);
 		case "Artifact Guardian":
-			return 100 - ((adventure.artifacts["Amethyst Spyglass"] || 0) * 5);
+			return 100 - ((amethystSpyglassCount) * 5);
 	}
 }
 
