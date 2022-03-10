@@ -1,7 +1,13 @@
 var fs = require("fs");
-const { ensuredPathSave } = require("../helpers.js");
 const GuildProfile = require('../Classes/GuildProfile.js');
 
+let ensuredPathSave;
+exports.initialize = function (isProduction) {
+	if (isProduction) {
+		({ ensuredPathSave } = require("../helpers.js"));
+	}
+	return this;
+}
 const filePath = "./Saves/guilds.json";
 const requirePath = "./../Saves/guilds.json";
 const guildDictionary = new Map();

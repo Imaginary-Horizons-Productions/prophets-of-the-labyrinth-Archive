@@ -1,7 +1,16 @@
 const Player = require("../Classes/Player.js");
-const { getGuild, saveGuilds } = require("./guildDAO.js");
+const isProduction = true;
+const { getGuild, saveGuilds } = require("./guildDAO.js").initialize(isProduction);
 const fs = require("fs");
-const { ensuredPathSave } = require("../helpers.js");
+
+
+let ensuredPathSave;
+exports.initialize = function (isProduction) {
+	if (isProduction) {
+		({ ensuredPathSave } = require("../helpers.js"));
+	}
+	return this;
+}
 
 const filePath = "./Saves/players.json";
 const requirePath = "./../Saves/players.json";

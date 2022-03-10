@@ -1,6 +1,6 @@
 const Enemy = require("../../Classes/Enemy.js");
 const { dealDamage, addModifier, removeModifier } = require("../combatantDAO.js");
-const { selectRandomFoe, selectSelf, selectNone, selectAllFoes, spawnEnemy } = require("../enemyDAO.js");
+const { selectRandomFoe, selectSelf, selectNone, selectAllFoes, spawnEnemy } = require("../enemyDAO.js").initialize(true);
 
 module.exports = new Enemy("Mechabee")
 	.setHp(200)

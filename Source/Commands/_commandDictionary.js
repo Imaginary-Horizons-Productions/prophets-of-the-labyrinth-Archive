@@ -15,10 +15,7 @@ exports.slashData = [];
 exports.initializeCommands = function (isProduction) {
 	for (const file of exports.commandFiles) {
 		const command = require(`./${file}`);
-		if (isProduction) {
-			command.initialize();
-		}
-		commandDictionary[command.name] = command;
+		commandDictionary[command.name] = command.initialize(isProduction);
 		exports.slashData.push(command.data.toJSON());
 	}
 }

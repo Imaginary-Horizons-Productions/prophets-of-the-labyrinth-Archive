@@ -10,8 +10,11 @@ module.exports = new Command("delver-stats", "Get your adventure-specific stats 
 
 // imports from files that depend on /Config
 // let ;
-module.exports.initialize = function () {
-	({} = require("./../../helpers.js"));
+module.exports.initialize = function (isProduction) {
+	if (isProduction) {
+		({} = require("./../../helpers.js"));
+	}
+	return this;
 }
 
 module.exports.execute = (interaction) => {

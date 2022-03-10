@@ -1,6 +1,6 @@
 const Enemy = require("../../Classes/Enemy.js");
 const { addModifier, getFullName, dealDamage } = require("../combatantDAO.js");
-const { selectRandomFoe, nextRandom } = require("../enemyDAO.js");
+const { selectRandomFoe, nextRandom } = require("../enemyDAO.js").initialize(true);
 
 module.exports = new Enemy("@{adventureOpposite} Ooze")
 	.setHp(200)

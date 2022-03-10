@@ -1,12 +1,14 @@
 const fs = require("fs");
 const { MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu } = require("discord.js");
 const Adventure = require("../Classes/Adventure.js");
-const { setPlayer, getPlayer } = require("./playerDAO.js");
+
+const isProduction = true;
+const { setPlayer, getPlayer } = require("./playerDAO.js").initialize(isProduction);
 const Move = require("../Classes/Move.js");
 const { resolveMove } = require("./moveDAO.js");
 const Enemy = require("../Classes/Enemy.js");
 const { getEnemy } = require("./Enemies/_enemyDictionary");
-const { spawnEnemy } = require("./enemyDAO.js");
+const { spawnEnemy } = require("./enemyDAO.js").initialize(isProduction);
 const Delver = require("../Classes/Delver.js");
 const Room = require("../Classes/Room.js");
 const { manufactureRoomTemplate, prerollBoss } = require("./Rooms/_roomDictionary.js");
@@ -18,8 +20,10 @@ const { clearBlock, removeModifier } = require("./combatantDAO.js");
 const { getWeaknesses, getColor } = require("./elementHelpers.js");
 
 let ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordinalSuffixEN;
-exports.initialize = function () {
-	({ ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordinalSuffixEN } = require("../helpers.js"));
+exports.initialize = function (isProduction) {
+	if (isProduction) {
+		({ ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordinalSuffixEN } = require("../helpers.js"));
+	}
 	return this;
 }
 

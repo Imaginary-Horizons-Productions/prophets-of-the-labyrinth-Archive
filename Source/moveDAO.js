@@ -1,6 +1,7 @@
 const { getFullName, dealDamage, gainHealth, removeModifier } = require("./combatantDAO.js");
 const { getEnemy } = require("./Enemies/_enemyDictionary.js");
-const { selectAllFoes } = require("./enemyDAO.js");
+const isProduction = true;
+const { selectAllFoes } = require("./enemyDAO.js").initialize(isProduction);
 const { getWeaponProperty } = require("./Weapons/_weaponDictionary.js");
 
 exports.resolveMove = async function (move, adventure) {

@@ -1,6 +1,6 @@
 const Enemy = require("../../Classes/Enemy.js");
 const { addModifier, addBlock, removeModifier, dealDamage } = require("../combatantDAO.js");
-const { selectSelf, selectNone, selectAllFoes, selectRandomFoe } = require("../enemyDAO.js");
+const { selectSelf, selectNone, selectAllFoes, selectRandomFoe } = require("../enemyDAO.js").initialize(true);
 
 module.exports = new Enemy("Treasure Elemental")
 	.setHp(99999)

@@ -1,6 +1,6 @@
 const Enemy = require("../../Classes/Enemy.js");
 const { addBlock, addModifier, removeModifier, dealDamage } = require("../combatantDAO.js");
-const { selectRandomFoe, selectSelf, nextRandom } = require("../enemyDAO.js");
+const { selectRandomFoe, selectSelf, nextRandom } = require("../enemyDAO.js").initialize();
 
 module.exports = new Enemy("Geode Tortoise")
 	.setHp(350)

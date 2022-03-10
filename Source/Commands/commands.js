@@ -7,16 +7,19 @@ module.exports = new Command("commands", "List PotL's slash commands", false, fa
 
 // imports from files that depend on /Config
 let wikiPage;
-module.exports.initialize = function () {
-	({} = require("./../../helpers.js"));
+module.exports.initialize = function (isProduction) {
+	if (isProduction) {
+		({} = require("./../../helpers.js"));
 
-	fs.readFile("Wiki/Commands.md", { encoding: "utf-8" }, (error, data) => {
-		if (error) {
-			console.error(error);
-		} else {
-			wikiPage = data;
-		}
-	})
+		fs.readFile("Wiki/Commands.md", { encoding: "utf-8" }, (error, data) => {
+			if (error) {
+				console.error(error);
+			} else {
+				wikiPage = data;
+			}
+		})
+	}
+	return this;
 }
 
 module.exports.execute = (interaction) => {

@@ -1,19 +1,20 @@
 //#region Imports
 const { Client } = require("discord.js");
 const fsa = require("fs").promises;
-const versionData = require('./Config/versionData.json');
-const { getCommand, initializeCommands, slashData } = require(`./Source/Commands/_commandDictionary.js`);
-const { getSelect } = require("./Source/Selects/_selectDictionary.js");
-const { getButton } = require("./Source/Buttons/_buttonDictionary.js");
-const { loadPlayers } = require("./Source/playerDAO.js");
-const { guildSetup, getPremiumUsers } = require("./helpers.js");
-const helpers = require("./helpers.js");
-const { loadGuilds } = require("./Source/guildDAO.js");
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
 
-const adventureDAO = require("./Source/adventureDAO.js");
-const { loadAdventures } = adventureDAO.initialize();
+const versionData = require('./Config/versionData.json');
+
+const isProduction = true;
+const { loadAdventures } = require("./Source/adventureDAO.js").initialize(isProduction);
+const { loadGuilds } = require("./Source/guildDAO.js").initialize(isProduction);
+const { loadPlayers } = require("./Source/playerDAO.js").initialize(isProduction);
+const { getCommand, initializeCommands, slashData } = require(`./Source/Commands/_commandDictionary.js`);
+const { getSelect } = require("./Source/Selects/_selectDictionary.js");
+const { getButton } = require("./Source/Buttons/_buttonDictionary.js");
+const { guildSetup, getPremiumUsers, versionEmbedBuilder } = require("./helpers.js");
+
 //#endregion
 
 //#region Executing Code
@@ -44,7 +45,7 @@ const client = new Client({
 client.on("ready", () => {
 	console.log(`Connected as ${client.user.tag}`);
 
-	initializeCommands(true, helpers);
+	initializeCommands(true);
 	// Post version notes
 	if (versionData.announcementsChannelId) {
 		fsa.readFile('./ChangeLog.md', { encoding: 'utf8' }).then(data => {
@@ -59,7 +60,7 @@ client.on("ready", () => {
 				}
 			}
 
-			helpers.versionEmbedBuilder(client.user.displayAvatarURL()).then(embed => {
+			versionEmbedBuilder(client.user.displayAvatarURL()).then(embed => {
 				client.guilds.fetch(versionData.guildId).then(guild => {
 					guild.channels.fetch(versionData.announcementsChannelId).then(annoucnementsChannel => {
 						annoucnementsChannel.send({ embeds: [embed] }).then(message => {

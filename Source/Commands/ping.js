@@ -6,8 +6,11 @@ module.exports = new Command("ping", "Remind delvers to input their vote or move
 
 // imports from files that depend on /Config
 // let ;
-module.exports.initialize = function () {
-	({} = require("./../../helpers.js"));
+module.exports.initialize = function (isProduction) {
+	if (isProduction) {
+		({} = require("./../../helpers.js"));
+	}
+	return this;
 }
 
 module.exports.execute = (interaction) => {

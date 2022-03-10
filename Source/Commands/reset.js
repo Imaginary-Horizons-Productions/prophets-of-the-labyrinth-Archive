@@ -6,8 +6,11 @@ module.exports = new Command("reset", "Recreate the PotL category and central te
 
 // imports from files that depend on /Config
 // let guildSetup;
-module.exports.initialize = function () {
-	({ guildSetup } = require("./../../helpers.js"));
+module.exports.initialize = function (isProduction) {
+	if (isProduction) {
+		({ guildSetup } = require("./../../helpers.js"));
+	}
+	return this;
 }
 
 module.exports.execute = (interaction) => {

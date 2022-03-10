@@ -3,7 +3,6 @@ const Adventure = require('../../Classes/Adventure.js');
 const Command = require('../../Classes/Command.js');
 const { elementsList, getColor } = require('../elementHelpers.js');
 const Delver = require('../../Classes/Delver.js');
-const { setAdventure } = require("../adventureDAO.js");
 const { prerollBoss } = require('../Rooms/_roomDictionary.js');
 
 const options = [
@@ -12,9 +11,13 @@ const options = [
 module.exports = new Command("delve", "Start a new adventure", false, false, options);
 
 // imports from files that depend on /Config
-let generateRandomNumber;
-module.exports.initialize = function () {
-	({ generateRandomNumber } = require("./../../helpers.js"));
+let generateRandomNumber, setAdventure;
+module.exports.initialize = function (isProduction) {
+	if (isProduction) {
+		({ generateRandomNumber } = require("./../../helpers.js"));
+		({ setAdventure } = require("../adventureDAO.js").initialize(isProduction));
+	}
+	return this;
 }
 
 
