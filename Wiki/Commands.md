@@ -3,7 +3,7 @@ Here are the commands you'll use when playing Prophets of the Labyrinth
 ### /delve
 Start a new adventure
 #### seed (optional)
-The value to base the random events of the run on
+The value to base the run's random events on
 ### /invite
 Invite a friend to an adventure
 #### invitee
@@ -11,7 +11,7 @@ The user's mention
 ### /party-stats
 Get info about the current adventure
 ### /delver-stats
-Get your personal stats for the channel's adventure
+Get your adventure-specific stats for the thread's adventure
 ### /ping
 Remind delvers to input their vote or move
 ### /give-up
@@ -36,6 +36,8 @@ Please describe the bug or feature request as clearly as possible
 Get HorizonsBot's version notes
 #### full-notes
 Get the file with the full version notes?
+### /support
+List ways to support the game
 ## Configuration Commands
 These commands change how the bot operates on your server. They require bot management permission (a role above the bot's roles).
 ### /reset
