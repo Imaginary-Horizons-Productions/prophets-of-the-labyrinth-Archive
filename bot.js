@@ -8,12 +8,12 @@ const versionData = require('./Config/versionData.json');
 
 const isProduction = true;
 const { loadAdventures } = require("./Source/adventureDAO.js").injectConfig(isProduction);
-const { loadGuilds } = require("./Source/guildDAO.js").injectConfig(isProduction);
+const { guildSetup, loadGuilds } = require("./Source/guildDAO.js").injectConfig(isProduction);
 const { loadPlayers } = require("./Source/playerDAO.js").injectConfig(isProduction);
 const { getCommand, injectConfigCommands, slashData } = require(`./Source/Commands/_commandDictionary.js`);
 const { getSelect } = require("./Source/Selects/_selectDictionary.js");
 const { getButton } = require("./Source/Buttons/_buttonDictionary.js");
-const { guildSetup, getPremiumUsers, versionEmbedBuilder } = require("./helpers.js");
+const { getPremiumUsers, versionEmbedBuilder } = require("./helpers.js");
 //#endregion
 
 //#region Executing Code
