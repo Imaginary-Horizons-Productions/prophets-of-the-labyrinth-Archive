@@ -37,7 +37,7 @@ Get HorizonsBot's version notes
 #### full-notes
 Get the file with the full version notes?
 ### /support
-List ways to support the game
+List ways to support PotL
 ## Configuration Commands
 These commands change how the bot operates on your server. They require bot management permission (a role above the bot's roles).
 ### /reset
