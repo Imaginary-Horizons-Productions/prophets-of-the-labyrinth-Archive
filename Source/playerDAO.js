@@ -49,9 +49,10 @@ exports.setPlayer = function (player) {
 
 exports.resetScores = function (userIds, guildId) {
 	userIds.forEach(id => {
-		playerDictionary[id].scores[guildId] = 0;
+		let player = playerDictionary[id];
+		player.scores[guildId] = 0;
+		exports.setPlayer(player);
 	})
-	exports.setPlayer(player);
 }
 
 exports.savePlayers = function () {

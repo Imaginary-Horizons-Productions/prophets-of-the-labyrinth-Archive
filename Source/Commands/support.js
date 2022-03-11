@@ -2,7 +2,7 @@ const { MessageEmbed } = require('discord.js');
 const Command = require('../../Classes/Command.js');
 
 const options = [];
-module.exports = new Command("support", "List ways to support the game", false, false, options);
+module.exports = new Command("support", "List ways to support PotL", false, false, options);
 
 // imports from files that depend on /Config
 // let ;
