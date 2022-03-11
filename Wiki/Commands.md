@@ -29,7 +29,7 @@ Get the stats for a user or yourself
 #### user (optional)
 The user to look up (yourself if blank)
 ### /feedback
-Provide feedback on PotL (eg a bug report or suggestion) and get a test server invite
+Send PotL feedback to the test server and get an invite
 #### feedback
 Please describe the bug or feature request as clearly as possible
 ### /version
