@@ -12,7 +12,7 @@ const options = [
 		}
 	}
 ];
-module.exports = new Command("manual", "Get information about Prophets of the Labyrinth", false, false, options);
+module.exports = new Command("manual", "Get information about Prophets of the Labyrinth (v0.5.1)", false, false, options);
 
 // imports from files that depend on /Config
 // let ;
