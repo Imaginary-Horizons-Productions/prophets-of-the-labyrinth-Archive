@@ -1,4 +1,7 @@
 # Prophets of the Labyrinth Change Log
+#### Prophets of the Labyrinth Version 0.5.1:
+- Fixed several crashes with `/reset`
+- Fixed an issue where all readied moves were input for the wrong turn, and thus ignored
 #### Prophets of the Labyrinth Version 0.5.0:
 - Game name no longer references unsupported game genre
 - Artifact Collecting: completing an adventure allows the delvers to save an artifact they found to bring into future adventures

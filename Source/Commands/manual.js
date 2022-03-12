@@ -26,7 +26,7 @@ module.exports.execute = (interaction) => {
 	switch (interaction.options.getString("topic")) {
 		case "Credits":
 			response.embeds = [new MessageEmbed().setColor('6b81eb')
-				.setTitle("Prophets of the Labyrinth v0.5.0")
+				.setTitle("Prophets of the Labyrinth v0.5.1")
 				// .setURL(/* bot invite link */)
 				.setThumbnail(interaction.client.user.displayAvatarURL())
 				.setDescription(`A roguelike dungeon crawl in Discord to play with other server members.`)

@@ -9,7 +9,7 @@ module.exports = new Button("nontargetweapon");
 module.exports.execute = async function (interaction, [weaponName, round, _weaponIndex]) {
 	// Add move object to adventure
 	let adventure = getAdventure(interaction.channel.id);
-	if (adventure.round === round) {
+	if (adventure.room.round === Number(round)) {
 		let user = adventure.delvers.find(delver => delver.id === interaction.user.id);
 		if (user.weapons.some(weapon => weapon.name === weaponName && weapon.uses > 0)) {
 			// Add move to round list (overwrite exisiting readied move)
