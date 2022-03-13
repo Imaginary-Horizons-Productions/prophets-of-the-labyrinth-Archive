@@ -2,9 +2,9 @@ const { MessageEmbed } = require('discord.js');
 const Command = require('../../Classes/Command.js');
 
 const options = [
-	{ type: "User", name: "user", description: "The user to look up (yourself if blank)", required: false, choices: {} }
+	{ type: "User", name: "user", description: "The user's mention", required: false, choices: {} }
 ];
-module.exports = new Command("stats", "Get the stats for a user or yourself", false, false, options);
+module.exports = new Command("stats", "Get the stats for a user (default: yourself)", false, false, options);
 
 // imports from files that depend on /Config
 let getArtifactCounts, getPlayer;

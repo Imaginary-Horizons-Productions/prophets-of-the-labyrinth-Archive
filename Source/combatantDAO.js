@@ -91,7 +91,7 @@ exports.dealDamage = async function (target, user, damage, isUnblockable, elemen
 	}
 }
 
-exports.gainHealth = function (combatant, healing, { room: { titleObject }, artifacts: { "Bloodshield Sword": bloodshieldSwordCount } }, inCombat = true) {
+exports.gainHealth = function (combatant, healing, { room: { enemyTitles }, artifacts: { "Bloodshield Sword": bloodshieldSwordCount } }, inCombat = true) {
 	combatant.hp += healing;
 	let excessHealing = 0;
 	if (combatant.hp > combatant.maxHp) {
@@ -103,9 +103,9 @@ exports.gainHealth = function (combatant, healing, { room: { titleObject }, arti
 	}
 
 	if (combatant.hp === combatant.maxHp) {
-		return `${exports.getFullName(combatant, titleObject)} was fully healed${excessHealing && inCombat > 0 ? ` (and gained block)` : ""}!`;
+		return `${exports.getFullName(combatant, enemyTitles)} was fully healed${excessHealing && inCombat > 0 ? ` (and gained block)` : ""}!`;
 	} else {
-		return `${exports.getFullName(combatant, titleObject)} *gained ${healing} hp*.`
+		return `${exports.getFullName(combatant, enemyTitles)} *gained ${healing} hp*.`
 	}
 }
 

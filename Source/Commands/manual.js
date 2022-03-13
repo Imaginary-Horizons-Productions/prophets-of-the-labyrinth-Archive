@@ -12,7 +12,7 @@ const options = [
 		}
 	}
 ];
-module.exports = new Command("manual", "Get information about Prophets of the Labyrinth (v0.5.1)", false, false, options);
+module.exports = new Command("manual", "Get information about Prophets of the Labyrinth (v0.5.2)", false, false, options);
 
 // imports from files that depend on /Config
 // let ;
@@ -26,7 +26,7 @@ module.exports.execute = (interaction) => {
 	switch (interaction.options.getString("topic")) {
 		case "Credits":
 			response.embeds = [new MessageEmbed().setColor('6b81eb')
-				.setTitle("Prophets of the Labyrinth v0.5.1")
+				.setTitle("Prophets of the Labyrinth v0.5.2")
 				// .setURL(/* bot invite link */)
 				.setThumbnail(interaction.client.user.displayAvatarURL())
 				.setDescription(`A roguelike dungeon crawl in Discord to play with other server members.`)
@@ -52,12 +52,12 @@ module.exports.execute = (interaction) => {
 			response.embeds = [new MessageEmbed().setColor('6b81eb')
 				.setTitle("Elements")
 				.setDescription("Each combatant is associated with one of the following elements: Fire, Wind, Light, Water, Earth, Darkness. Based on this element, damage they receive may be increased, decreased, or not changed based on the element of the received damage (damage can be \"Untyped\"). This change is calculated before block.")
-				.addField(`Fire ${getEmoji("Fire")}`, `Weaknesses (receives 2x damage from): ${getWeaknesses("Fire").join(", ")}\nResistances (receives 1/2 damage from): ${getResistances("Fire").join(", ")}\nColor: ${getColor("Fire")}`)
-				.addField(`Wind ${getEmoji("Wind")}`, `Weaknesses (receives 2x damage from): ${getWeaknesses("Wind").join(", ")}\nResistances (receives 1/2 damage from): ${getResistances("Wind").join(", ")}\nColor: ${getColor("Wind")}`)
-				.addField(`Light ${getEmoji("Light")}`, `Weaknesses (receives 2x damage from): ${getWeaknesses("Light").join(", ")}\nResistances (receives 1/2 damage from): ${getResistances("Light").join(", ")}\nColor: ${getColor("Light")}`)
-				.addField(`Water ${getEmoji("Water")}`, `Weaknesses (receives 2x damage from): ${getWeaknesses("Water").join(", ")}\nResistances (receives 1/2 damage from): ${getResistances("Water").join(", ")}\nColor: ${getColor("Water")}`)
-				.addField(`Earth ${getEmoji("Earth")}`, `Weaknesses (receives 2x damage from): ${getWeaknesses("Earth").join(", ")}\nResistances (receives 1/2 damage from): ${getResistances("Earth").join(", ")}\nColor: ${getColor("Earth")}`)
-				.addField(`Darkness ${getEmoji("Darkness")}`, `Weaknesses (receives 2x damage from): ${getWeaknesses("Darkness").join(", ")}\nResistances (receives 1/2 damage from): ${getResistances("Darkness").join(", ")}\nColor: ${getColor("Darkness")}`)
+				.addField(`Fire ${getEmoji("Fire")}`, `Weaknesses (2x damage from): ${getWeaknesses("Fire").map(element => getEmoji(element)).join(", ")}\nResistances (1/2 damage from): ${getResistances("Fire").map(element => getEmoji(element)).join(", ")}\nColor: ${getColor("Fire")}`)
+				.addField(`Wind ${getEmoji("Wind")}`, `Weaknesses (2x damage from): ${getWeaknesses("Wind").map(element => getEmoji(element)).join(", ")}\nResistances (1/2 damage from): ${getResistances("Wind").map(element => getEmoji(element)).join(", ")}\nColor: ${getColor("Wind")}`)
+				.addField(`Light ${getEmoji("Light")}`, `Weaknesses (2x damage from): ${getWeaknesses("Light").map(element => getEmoji(element)).join(", ")}\nResistances (1/2 damage from): ${getResistances("Light").map(element => getEmoji(element)).join(", ")}\nColor: ${getColor("Light")}`)
+				.addField(`Water ${getEmoji("Water")}`, `Weaknesses (2x damage from): ${getWeaknesses("Water").map(element => getEmoji(element)).join(", ")}\nResistances (1/2 damage from): ${getResistances("Water").map(element => getEmoji(element)).join(", ")}\nColor: ${getColor("Water")}`)
+				.addField(`Earth ${getEmoji("Earth")}`, `Weaknesses (2x damage from): ${getWeaknesses("Earth").map(element => getEmoji(element)).join(", ")}\nResistances (1/2 damage from): ${getResistances("Earth").map(element => getEmoji(element)).join(", ")}\nColor: ${getColor("Earth")}`)
+				.addField(`Darkness ${getEmoji("Darkness")}`, `Weaknesses (2x damage from): ${getWeaknesses("Darkness").map(element => getEmoji(element)).join(", ")}\nResistances (1/2 damage from): ${getResistances("Darkness").map(element => getEmoji(element)).join(", ")}\nColor: ${getColor("Darkness")}`)
 				.addField("Matching Element Stagger", "When a combatant makes a move that matches their element, their target gets a bonus effect. If the target is an ally, they are relieved of 1 Stagger. If the target is an enemy, they suffer 1 additional Stagger. Check the page on Stagger to learn more about Stagger and Stun.")
 			];
 			break;
