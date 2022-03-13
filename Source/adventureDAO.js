@@ -169,6 +169,7 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 			exports.newRound(adventure, thread, embed);
 		} else {
 			// Generate non-combat room
+			const cloverCount = adventure.artifacts["Negative-One Leaf Clover"] || 0;
 			for (let category in roomTemplate.saleList) {
 				if (category.startsWith("weapon")) {
 					let [type, tier] = category.split("-");
@@ -176,8 +177,8 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 					let count = Math.min(25, parseCount(roomTemplate.saleList[category], adventure.delvers.length));
 					for (let i = 0; i < count; i++) {
 						if (tier === "?") {
-							let threshold = 1;
-							let max = 8;
+							let threshold = 1 + cloverCount;
+							let max = 8 + cloverCount;
 							if (generateRandomNumber(adventure, max, "general") < threshold) {
 								parsedTier = "2";
 							} else {
@@ -472,9 +473,10 @@ exports.endRound = async function (adventure, thread) {
 			let dropThreshold = 1;
 			let dropMax = 8;
 			if (generateRandomNumber(adventure, dropMax, "general") < dropThreshold) {
+				const cloverCount = adventure.artifacts["Negative-One Leaf Clover"] || 0;
 				let tier = 1;
-				let upgradeThreshold = 1;
-				let upgradeMax = 8;
+				let upgradeThreshold = 1 + cloverCount;
+				let upgradeMax = 8 + cloverCount;
 				if (generateRandomNumber(adventure, upgradeMax, "general") < upgradeThreshold) {
 					tier = 2;
 				}
