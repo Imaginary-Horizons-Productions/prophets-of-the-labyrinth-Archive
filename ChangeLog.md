@@ -1,4 +1,7 @@
 # Prophets of the Labyrinth Change Log
+#### Prophets of the Labyrinth Version 0.5.2:
+- Fixed a crash when enemies healed
+- Health predict now shows element using emoji
 #### Prophets of the Labyrinth Version 0.5.1:
 - Fixed several crashes with `/reset`
 - Fixed an issue where all readied moves were input for the wrong turn, and thus ignored
