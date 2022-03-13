@@ -19,15 +19,15 @@ Lets the adventure leader end the adventure
 ## Informational Commands
 Use these commands to look up information about Prophets of the Labyrinth!
 ### /manual
-Get information about Prophets of the Labyrinth (v0.5.1)
+Get information about Prophets of the Labyrinth (v0.5.2)
 #### topic
 The topic/page of information
 ### /commands
 List PotL's slash commands
 ### /stats
-Get the stats for a user or yourself
+Get the stats for a user (default: yourself)
 #### user (optional)
-The user to look up (yourself if blank)
+The user's mention
 ### /feedback
 Send PotL feedback to the test server and get an invite
 #### feedback
