@@ -9,6 +9,7 @@ let artifactWhitelist = [
 	"bloodshieldsword.js",
 	"enchantedmap.js",
 	"hammerspaceholster.js",
+	"negativeoneleafclover.js",
 	"oilpainting.js",
 	"phoenixfruitblossom.js"
 ];

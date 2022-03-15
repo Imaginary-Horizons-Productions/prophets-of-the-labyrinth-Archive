@@ -66,7 +66,7 @@ exports.dealDamage = async function (target, user, damage, isUnblockable, elemen
 			if (targetModifiers.includes("Curse of Midas")) {
 				let midasGold = Math.floor(pendingDamage / 10);
 				adventure.room.resources.gold.count += midasGold;
-				damageText += ` ${midasGold} gold scatters about the room.`;
+				damageText += ` Gold scatters about the room.`;
 			}
 			if (target.hp <= 0) {
 				if (target.team === "delver") {

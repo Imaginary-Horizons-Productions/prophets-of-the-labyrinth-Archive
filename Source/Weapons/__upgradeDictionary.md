@@ -39,6 +39,7 @@ Adds block on the user
 #### Available on
 - Buckler (Earth)
 - Sword (Earth)
+- all Ice Ward (Water)
 
 ### Heavy
 Increased base block
@@ -46,6 +47,7 @@ Increased base block
 #### Available on
 - Buckler (Earth)
 - Blood Aegis (Darkness)
+- Ice Ward (Water)
 
 ### Hunter's
 Gain gold on kill
@@ -142,6 +144,7 @@ Hits all enemes/allies
 - Spear (Light)
 - Blood Aegis (Darkness)
 - Inspiration (Light)
+- Ice Ward (Water)
 
 ### Swift
 Grants the user the Quicken modifier

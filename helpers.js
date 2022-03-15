@@ -92,7 +92,7 @@ exports.versionEmbedBuilder = function (avatarURL) {
 		let embed = new MessageEmbed().setColor('6b81eb')
 			.setAuthor({ name: "Click here to check out the Imaginary Horizons GitHub", iconURL: avatarURL, url: "https://github.com/Imaginary-Horizons-Productions" })
 			.setTitle(data.slice(titleStart + 5, changesStartRegEx.lastIndex))
-			.setURL('https://discord.gg/bcE3Syu')
+			.setURL('https://discord.gg/JxqE9EpKt9')
 			.setThumbnail('https://cdn.discordapp.com/attachments/545684759276421120/734099622846398565/newspaper.png')
 			.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" })
 			.setTimestamp();
