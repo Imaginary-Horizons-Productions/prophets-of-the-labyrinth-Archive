@@ -122,6 +122,12 @@ Increased damage if user has 0 block
 - all Battleaxes (Fire)
 - Sword (Earth)
 
+### Reinforcing
+Adds block to target
+
+#### Available on
+- Inspiration (Light)
+
 ### Sharpened
 Increased base damage
 
@@ -219,7 +225,6 @@ Increased damage against enemies with 0 block
 - Empowering ___ - Adds stacks to buffs
 - Seeking ___ - targets lowest hp enemy
 - Kite Shield - single target attack that grants user block (Guarding)
-- Tower Shield - blocks for target and user (non-starting weapon)
 - Bashing - bonus damage for block on user
 - Siphoning ___ - regain uses if killing blow
 - Stalwart ___ - removes a stagger from the user

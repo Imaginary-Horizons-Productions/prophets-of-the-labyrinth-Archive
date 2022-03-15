@@ -1,7 +1,7 @@
 # Prophets of the Labyrinth Change Log
 #### Prophets of the Labyrinth Version 0.6.0:
 - New artifact: Negative-One Leaf Clover
-- New weapons: Ice Ward, Heavy Ice Ward, Sweeping Ice Ward
+- New weapons: Ice Ward, Heavy Ice Ward, Sweeping Ice Ward, Reinforcing Inspiration
 #### Prophets of the Labyrinth Version 0.5.3:
 - Fixed typo in rest site healing amount
 - Fixed a crash on mechabee call for help

@@ -47,6 +47,7 @@ var weaponWhitelist = [
 	"iceward-sweeping.js",
 	"infiniteregeneration-base.js",
 	"inspiration-base.js",
+	"inspiration-reinforcing.js",
 	"inspiration-soothing.js",
 	"inspiration-sweeping.js",
 	"lifedrain-base.js",
