@@ -49,7 +49,7 @@ function evadeEffect(target, user, isCrit, adventure) {
 }
 
 function summonEffect(target, user, isCrit, adventure) {
-	spawnEnemy(adventure, module.exports, true);
+	spawnEnemy(adventure, module.exports.injectConfig(true), true);
 	return "Another mechabee arrives.";
 }
 
