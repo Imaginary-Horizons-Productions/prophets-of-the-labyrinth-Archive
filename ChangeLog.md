@@ -3,6 +3,7 @@
 - New weapons: Ice Ward, Heavy Ice Ward, Sweeping Ice Ward
 #### Prophets of the Labyrinth Version 0.5.3:
 - Fixed typo in rest site healing amount
+- Fixed a crash on mechabee call for help
 #### Prophets of the Labyrinth Version 0.5.2:
 - Fixed a crash when enemies healed
 - Health predict now shows element using emoji
