@@ -1,5 +1,3 @@
-# Upgrade Names
-
 ### Charging
 User gains Power Up modifier
 
@@ -220,11 +218,3 @@ Increased damage against enemies with 0 block
 - Disarm (power down to enemy)
 - Midas Staff (apply Curse of Midas)
 - Pact of Healing (pay hp to apply regen)
-
-## Ideas
-- Empowering ___ - Adds stacks to buffs
-- Seeking ___ - targets lowest hp enemy
-- Kite Shield - single target attack that grants user block (Guarding)
-- Bashing - bonus damage for block on user
-- Siphoning ___ - regain uses if killing blow
-- Stalwart ___ - removes a stagger from the user
