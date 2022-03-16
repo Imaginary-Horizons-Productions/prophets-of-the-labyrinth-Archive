@@ -12,7 +12,8 @@ module.exports.execute = (interaction, [roomMessageId]) => {
 		let [weaponName, weaponIndex, value] = interaction.values[0].split("-");
 		user.weapons[weaponIndex].uses += Number(value);
 		decrementForgeSupplies(interaction, roomMessageId, adventure).then(() => {
-			interaction.reply({ content: `Your ${weaponName} regained ${value} uses.`, ephemeral: true });
+			interaction.update({ components: [] });
+			interaction.channel.send({ content: `${interaction.user} repaired ${value} uses on their ${weaponName}.` });
 			setAdventure(adventure);
 		});
 	} else {
