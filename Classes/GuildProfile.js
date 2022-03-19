@@ -4,4 +4,5 @@ module.exports = class GuildProfile {
         this.id = idInput;
     }
 	userIds = [];
+	adventuring = new Set();
 }

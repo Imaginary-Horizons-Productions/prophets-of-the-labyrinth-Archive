@@ -14,6 +14,7 @@ exports.loadGuilds = async function () {
 	if (fs.existsSync(filePath)) {
 		const guildProfiles = require(requirePath);
 		guildProfiles.forEach(guildProfile => {
+			guildProfile.adventuring = new Set();
 			guildDictionary.set(guildProfile.id, guildProfile);
 		})
 		return `${guildProfiles.length} guilds loaded`;
@@ -56,9 +57,9 @@ exports.getGuild = function (guildId) {
 
 exports.setGuild = function (guildProfile) {
 	guildDictionary.set(guildProfile.id, guildProfile);
-	exports.saveGuilds();
+	saveGuilds();
 }
 
-exports.saveGuilds = function () {
+function saveGuilds() {
 	ensuredPathSave("./Saves", "guilds.json", JSON.stringify(Array.from((guildDictionary.values()))));
 }

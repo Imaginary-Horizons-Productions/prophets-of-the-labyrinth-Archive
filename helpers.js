@@ -2,11 +2,25 @@ const { MessageEmbed } = require("discord.js");
 const fs = require("fs");
 
 exports.versionData = {};
+exports.sponsors = {};
 exports.injectConfig = function (isProduction) {
 	if (isProduction) {
 		exports.versionData = require('./Config/versionData.json');
+		exports.sponsors = require("./Config/sponsors.json");
 	}
 	return this;
+}
+
+exports.isSponsor = function (id) {
+	let allSponsors = new Set();
+	for (const group in exports.sponsors) {
+		exports.sponsors[group].forEach(sponsorId => {
+			if (!allSponsors.has(sponsorId)) {
+				allSponsors.add(sponsorId);
+			}
+		})
+	}
+	return allSponsors.has(id);
 }
 
 exports.generateRandomNumber = function (adventure, exclusiveMax, branch) {
