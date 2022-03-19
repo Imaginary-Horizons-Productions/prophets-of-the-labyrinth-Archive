@@ -1,9 +1,9 @@
 const Player = require("../Classes/Player.js");
 const fs = require("fs");
 
-let ensuredPathSave, getGuild, saveGuilds;
+let ensuredPathSave, getGuild, setGuild;
 exports.injectConfig = function (isProduction) {
-	({ getGuild, saveGuilds } = require("./guildDAO.js").injectConfig(isProduction));
+	({ getGuild, setGuild } = require("./guildDAO.js").injectConfig(isProduction));
 	({ ensuredPathSave } = require("../helpers.js").injectConfig(isProduction));
 	return this;
 }
@@ -37,7 +37,7 @@ exports.getPlayer = function (playerId, guildId) {
 		exports.setPlayer(new Player(playerId));
 		let guildProfile = getGuild(guildId);
 		guildProfile.userIds.push(playerId);
-		saveGuilds();
+		setGuild(guildProfile);
 	}
 	return playerDictionary.get(playerId);
 }
