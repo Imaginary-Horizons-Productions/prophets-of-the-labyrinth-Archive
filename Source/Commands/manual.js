@@ -12,7 +12,7 @@ const options = [
 		}
 	}
 ];
-module.exports = new Command("manual", "Get information about Prophets of the Labyrinth (v0.5.3)", false, false, options);
+module.exports = new Command("manual", "Get information about Prophets of the Labyrinth (v0.6.0)", false, false, options);
 
 // imports from files that depend on /Config
 // let ;
@@ -25,7 +25,7 @@ module.exports.execute = (interaction) => {
 	let response = { ephemeral: true };
 	switch (interaction.options.getString("topic")) {
 		case "Credits":
-			response.embeds = [embedTemplate(interaction.client.user.displayAvatarURL()).setTitle("Prophets of the Labyrinth v0.5.3")
+			response.embeds = [embedTemplate(interaction.client.user.displayAvatarURL()).setTitle("Prophets of the Labyrinth v0.6.0")
 				.setThumbnail(interaction.client.user.displayAvatarURL())
 				.setDescription(`A roguelike dungeon crawl in Discord to play with other server members.`)
 				.addField(`Design & Engineering`, `Nathaniel Tseng ( <@106122478715150336> | [Twitter](https://twitter.com/Arcane_ish) )`)
@@ -39,7 +39,7 @@ module.exports.execute = (interaction) => {
 		case "Tutorial":
 			response.embeds = [embedTemplate(interaction.client.user.displayAvatarURL()).setTitle("Prophets of the Labyrinth Tutorial")
 				.setDescription("Prophets of the Labyrinth (or PotL) is a multiplayer roguelike dungeon crawl played directly on Discord. Each dungeon delve will start a new thread where players can discuss their strategies and votes.")
-				.addField("Voting", "During the game, your team will explore various rooms. At the end of exploring each room, the party will vote on which room to explore next. The party must reach a consensus to continue, and you are encouraged to talk your reasoning in the thread.")
+				.addField("Voting", "During a delve, your team will explore various rooms. At the end of exploring each room, the party will vote on which room to explore next. The party must reach a consensus to continue, and you are encouraged to talk your reasoning in the thread.")
 				.addField("Combat", "If you encounter enemies (such as during the Final Battle in the last room), each player will be prompted to pick a move to do during the next turn. When everyone has selected their move, the game will report the results. Each character archetype starts with different weapons and, importantly, predicts different information about the upcoming round. Make sure to share your info with your party!")
 				.addField("Suggested Party Size", "Though the game has player count scaling, it is balanced primarily for groups of 3-6. Due to UI limitations, the max party size is 12. ***It is highly recommended to avoid playing by yourself.***")
 			];
