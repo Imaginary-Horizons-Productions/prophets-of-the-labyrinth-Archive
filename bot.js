@@ -102,12 +102,10 @@ client.on("interactionCreate", interaction => {
 					.catch(console.error);
 			}
 		} else if (interaction.isButton()) {
-			let args = interaction.customId.split("-");
-			let command = args.shift();
+			const [command, ...args] = interaction.customId.split("-");
 			getButton(command).execute(interaction, args);
 		} else if (interaction.isSelectMenu()) {
-			let args = interaction.customId.split("-");
-			let command = args.shift();
+			const [command, ...args] = interaction.customId.split("-");
 			getSelect(command).execute(interaction, args);
 		}
 	} else {

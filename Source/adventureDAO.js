@@ -9,8 +9,9 @@ const Room = require("../Classes/Room.js");
 const Resource = require("../Classes/Resource.js");
 const { getWeaknesses, getColor } = require("./elementHelpers.js");
 
-let ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordinalSuffixEN, setPlayer, getPlayer, spawnEnemy, manufactureRoomTemplate, prerollBoss, getTurnDecrement, rollWeaponDrop, getWeaponProperty, buildWeaponDescription, rollArtifact, getArtifactDescription, getEnemy, resolveMove, clearBlock, removeModifier;
+let getGuild, ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordinalSuffixEN, setPlayer, getPlayer, spawnEnemy, manufactureRoomTemplate, prerollBoss, getTurnDecrement, rollWeaponDrop, getWeaponProperty, buildWeaponDescription, rollArtifact, getArtifactDescription, getEnemy, resolveMove, clearBlock, removeModifier;
 exports.injectConfig = function (isProduction) {
+	({ getGuild } = require("./guildDAO.js").injectConfig(isProduction));
 	({ resolveMove } = require("./moveDAO.js").injectConfig(isProduction));
 	({ clearBlock, removeModifier } = require("./combatantDAO.js").injectConfig(isProduction));
 	({ getEnemy } = require("./Enemies/_enemyDictionary").injectConfigEnemies(isProduction));
@@ -37,8 +38,12 @@ exports.loadAdventures = async function () {
 				loaded++;
 				// Cast delvers into Delver class
 				let castDelvers = [];
+				let guildProfile = getGuild(adventure.guildId);
 				for (let delver of adventure.delvers) {
 					castDelvers.push(Object.assign(new Delver(), delver));
+					if (!guildProfile.adventuring.has(delver.id)) {
+						guildProfile.adventuring.add(delver.id);
+					}
 				}
 				adventure.delvers = castDelvers;
 
@@ -63,7 +68,7 @@ exports.loadAdventures = async function () {
 				}
 
 				// Set adventure
-				adventureDictionary.set(adventure.id, Object.assign(new Adventure(adventure.initialSeed), adventure));
+				adventureDictionary.set(adventure.id, Object.assign(new Adventure(adventure.initialSeed, adventure.guildId), adventure));
 			}
 		})
 		return `${loaded} adventures loaded`;
@@ -103,7 +108,7 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 	adventure.room = {};
 
 	// Roll options for next room type
-	let roomTypes = ["Battle", "Event", "Forge", "Rest Site", "Artifact Guardian"]; //TODO #126 add weights to room types
+	let roomTypes = ["Battle", "Event", "Forge", "Rest Site", "Artifact Guardian", "Merchant"]; //TODO #126 add weights to room types
 	let finalBossDepths = [10];
 	if (!finalBossDepths.includes(adventure.depth + 1)) {
 		adventure.roomCandidates = {};
@@ -169,6 +174,7 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 			exports.newRound(adventure, thread, embed);
 		} else {
 			// Generate non-combat room
+			const cloverCount = adventure.artifacts["Negative-One Leaf Clover"] || 0;
 			for (let category in roomTemplate.saleList) {
 				if (category.startsWith("weapon")) {
 					let [type, tier] = category.split("-");
@@ -176,8 +182,8 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 					let count = Math.min(25, parseCount(roomTemplate.saleList[category], adventure.delvers.length));
 					for (let i = 0; i < count; i++) {
 						if (tier === "?") {
-							let threshold = 1;
-							let max = 8;
+							let threshold = 1 + cloverCount;
+							let max = 8 + cloverCount;
 							if (generateRandomNumber(adventure, max, "general") < threshold) {
 								parsedTier = "2";
 							} else {
@@ -472,9 +478,10 @@ exports.endRound = async function (adventure, thread) {
 			let dropThreshold = 1;
 			let dropMax = 8;
 			if (generateRandomNumber(adventure, dropMax, "general") < dropThreshold) {
+				const cloverCount = adventure.artifacts["Negative-One Leaf Clover"] || 0;
 				let tier = 1;
-				let upgradeThreshold = 1;
-				let upgradeMax = 8;
+				let upgradeThreshold = 1 + cloverCount;
+				let upgradeMax = 8 + cloverCount;
 				if (generateRandomNumber(adventure, upgradeMax, "general") < upgradeThreshold) {
 					tier = 2;
 				}
@@ -525,6 +532,7 @@ exports.completeAdventure = function (adventure, thread, scoreEmbed) { //TODO #2
 	scoreEmbed.addField("Score Breakdown", `Depth: ${adventure.depth}\nLives: ${livesScore}\nGold: ${goldScore}\nBonus: ${adventure.accumulatedScore}\nMultiplier (Skipped Starting Artifacts): ${skippedStartingArtifactMultiplier}\n\n__Total__: ${!isSuccess && score > 0 ? `score ÷ 2  = ${score} (Defeat)` : score}`);
 
 	let guildId = thread.guildId;
+	let guildProfile = getGuild(guildId);
 	adventure.delvers.forEach(delver => {
 		let player = getPlayer(delver.id, guildId);
 		if (player.scores[guildId]) {
@@ -533,6 +541,7 @@ exports.completeAdventure = function (adventure, thread, scoreEmbed) { //TODO #2
 			player.scores[guildId] = score;
 		}
 		setPlayer(player);
+		guildProfile.adventuring.delete(delver.id);
 	})
 
 	thread.fetchStarterMessage({ cache: false, force: true }).then(recruitMessage => {

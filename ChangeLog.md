@@ -1,4 +1,14 @@
 # Prophets of the Labyrinth Change Log
+#### Prophets of the Labyrinth Version 0.6.0:
+- New artifact: Negative-One Leaf Clover
+- New weapons: Ice Ward, Heavy Ice Ward, Sweeping Ice Ward, Reinforcing Inspiration
+- Participating in more than one adventure per server is now a premium perk
+- Capped delvers in an adventure to 12
+- Multiple Royal Slimes now appear in opposition to larger party sizes
+- Fixed merchant rooms never rolling during room generation
+#### Prophets of the Labyrinth Version 0.5.3:
+- Fixed typo in rest site healing amount
+- Fixed a crash on mechabee call for help
 #### Prophets of the Labyrinth Version 0.5.3:
 - Fixed typo in rest site healing amount
 - Fixed a crash on mechabee call for help

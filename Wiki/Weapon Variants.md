@@ -1,5 +1,3 @@
-# Upgrade Names
-
 ### Charging
 User gains Power Up modifier
 
@@ -39,6 +37,7 @@ Adds block on the user
 #### Available on
 - Buckler (Earth)
 - Sword (Earth)
+- all Ice Ward (Water)
 
 ### Heavy
 Increased base block
@@ -46,6 +45,7 @@ Increased base block
 #### Available on
 - Buckler (Earth)
 - Blood Aegis (Darkness)
+- Ice Ward (Water)
 
 ### Hunter's
 Gain gold on kill
@@ -120,6 +120,12 @@ Increased damage if user has 0 block
 - all Battleaxes (Fire)
 - Sword (Earth)
 
+### Reinforcing
+Adds block to target
+
+#### Available on
+- Inspiration (Light)
+
 ### Sharpened
 Increased base damage
 
@@ -142,6 +148,7 @@ Hits all enemes/allies
 - Spear (Light)
 - Blood Aegis (Darkness)
 - Inspiration (Light)
+- Ice Ward (Water)
 
 ### Swift
 Grants the user the Quicken modifier
@@ -211,12 +218,3 @@ Increased damage against enemies with 0 block
 - Disarm (power down to enemy)
 - Midas Staff (apply Curse of Midas)
 - Pact of Healing (pay hp to apply regen)
-
-## Ideas
-- Empowering ___ - Adds stacks to buffs
-- Seeking ___ - targets lowest hp enemy
-- Kite Shield - single target attack that grants user block (Guarding)
-- Tower Shield - blocks for target and user (non-starting weapon)
-- Bashing - bonus damage for block on user
-- Siphoning ___ - regain uses if killing blow
-- Stalwart ___ - removes a stagger from the user

@@ -1,12 +1,13 @@
 const crypto = require("crypto");
 
 module.exports = class Adventure {
-	constructor(seedInput) {
+	constructor(seedInput, guildIdInput) {
 		this.initialSeed = seedInput || Date.now().toString();
+		this.guildId = guildIdInput;
 	}
 	id; // the id of the thread created for the adventure
-	state = "config"; // enum: "config", "ongoing", "completed"
 	name;
+	state = "config"; // enum: "config", "ongoing", "completed"
 	element;
 	messageIds = {
 		start: "",

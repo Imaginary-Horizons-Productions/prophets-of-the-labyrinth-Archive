@@ -1,9 +1,7 @@
-Welcome to the dungeon-tamers wiki!
+Welcome to the Prophets of the Labyrinth wiki!
 
-## Player setup
-Dungeon tamers creates private text channels for parties to coordinate in. To keep these channels organized, dungeon tamers also creates its own category and central channel from which players can start adventures.
-
-1. Join link (coming soon)
+## Links
+- [Bot Invite Link](https://discord.com/api/oauth2/authorize?client_id=950469509628702740&permissions=397284665360&scope=applications.commands%20bot)
 
 ## Writing Good Bug Reports and Feature Requests
 Coming soon!
