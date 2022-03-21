@@ -103,7 +103,7 @@ exports.gainHealth = function (combatant, healing, { room: { enemyTitles }, arti
 	}
 
 	if (combatant.hp === combatant.maxHp) {
-		return `${exports.getFullName(combatant, enemyTitles)} was fully healed${excessHealing && inCombat > 0 ? ` (and gained block)` : ""}!`;
+		return `${exports.getFullName(combatant, enemyTitles)} was fully healed${excessHealing && inCombat && bloodshieldSwordCount > 0 ? ` (and gained block)` : ""}!`;
 	} else {
 		return `${exports.getFullName(combatant, enemyTitles)} *gained ${healing} hp*.`
 	}
