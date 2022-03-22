@@ -31,7 +31,7 @@ exports.loadGuilds = async function () {
 	}
 }
 
-exports.guildSetup = function (guild) {
+exports.guildSetup = function (guild) { //TODO #273 remove channel creation logic
 	return guild.channels.create("Prophets of the Labyrinth", {
 		type: "GUILD_CATEGORY"
 	}).then(category => {
