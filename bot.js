@@ -4,11 +4,12 @@ const fsa = require("fs").promises;
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
 
+const GuildProfile = require("./Classes/GuildProfile");
 const versionData = require('./Config/versionData.json');
 
 const isProduction = true;
 const { loadAdventures } = require("./Source/adventureDAO.js").injectConfig(isProduction);
-const { guildSetup, loadGuilds } = require("./Source/guildDAO.js").injectConfig(isProduction);
+const { loadGuilds, setGuild } = require("./Source/guildDAO.js").injectConfig(isProduction);
 const { loadPlayers } = require("./Source/playerDAO.js").injectConfig(isProduction);
 const { getCommand, injectConfigCommands, slashData } = require(`./Source/Commands/_commandDictionary.js`);
 const { getSelect } = require("./Source/Selects/_selectDictionary.js");
@@ -116,6 +117,6 @@ client.on("interactionCreate", interaction => {
 })
 
 client.on("guildCreate", guild => {
-	guildSetup(guild);
+	setGuild(new GuildProfile(guild.id));
 })
 //#endregion

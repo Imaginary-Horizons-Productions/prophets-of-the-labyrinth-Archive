@@ -26,21 +26,6 @@ exports.loadGuilds = async function () {
 	}
 }
 
-exports.guildSetup = function (guild) { //TODO #273 remove channel creation logic
-	return guild.channels.create("Prophets of the Labyrinth", {
-		type: "GUILD_CATEGORY"
-	}).then(category => {
-		return guild.channels.create("potl-central", {
-			type: "GUILD_TEXT",
-			parent: category
-		}).then(channel => {
-			let guildProfile = new GuildProfile(guild.id);
-			exports.setGuild(guildProfile);
-			return guildProfile;
-		})
-	})
-}
-
 exports.getGuild = function (guildId) {
 	let guildProfile = guildDictionary.get(guildId);
 	if (!guildProfile) {
