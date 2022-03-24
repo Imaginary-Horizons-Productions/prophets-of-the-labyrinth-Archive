@@ -41,7 +41,7 @@ module.exports.execute = (interaction) => {
 		if (commandSetName.startsWith("## ")) {
 			commandSetName = commandSetName.slice(2);
 		}
-		commandSetText = `*${commandSetText}*`;
+		commandSetText = `*${commandSetText.trim()}*`;
 		for (const command of commands.slice(1)) {
 			let [commandName, description, ...args] = command.split(/\r*\n/)
 			commandSetText += `\n__${commandName}__ ${description}`;
