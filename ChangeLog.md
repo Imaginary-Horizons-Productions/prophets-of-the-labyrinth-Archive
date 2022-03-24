@@ -1,4 +1,9 @@
 # Prophets of the Labyrinth Change Log
+#### Prophets of the Labyrinth Version 0.7.0:
+- Bot no longer creates a (no longer required) category and text channel for starting adventures in
+- Fixed healing reporting block gained while party has no Bloodshield Swords
+- Fixed text interpolation for modifier descriptions with more than 1 dynamic value
+- Other stuff
 #### Prophets of the Labyrinth Version 0.6.0:
 - New artifact: Negative-One Leaf Clover
 - New weapons: Ice Ward, Heavy Ice Ward, Sweeping Ice Ward, Reinforcing Inspiration
