@@ -1,15 +1,8 @@
 # Prophets of the Labyrinth
 A multiplayer rougelike dungeon crawl in Discord to play with other server members.
 
-## Local Setup Instructions
-1. Clone the repo
-2. Setup your discord bot
-3. Copy `/Templates/Dev Setup` into root and rename it to `/Config`
-4. Populate `/Config/auth.json`, `/Config/versionData.json`, and `/Config/sponsors.json`
-5. Make sure you're in root and run the following:
-   1. Run `npm install`
-   2. Run `node .\upload_commands.js`
-   3. Run `node .\bot.js`
+## Join Link
+[Click here](https://discord.com/api/oauth2/authorize?client_id=950469509628702740&permissions=397284665360&scope=bot%20applications.commands) to add Prophets of the Labyrinth to your server!
 
 ## Sponsors
 <!-- sponsors --><!-- sponsors -->
