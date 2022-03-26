@@ -10,6 +10,7 @@ const Resource = require("../Classes/Resource.js");
 const { getWeaknesses, getColor } = require("./elementHelpers.js");
 
 let getGuild, ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordinalSuffixEN, setPlayer, getPlayer, spawnEnemy, manufactureRoomTemplate, prerollBoss, getTurnDecrement, rollWeaponDrop, getWeaponProperty, buildWeaponDescription, rollArtifact, getArtifactDescription, getEnemy, resolveMove, clearBlock, removeModifier;
+let getChallenge;
 exports.injectConfig = function (isProduction) {
 	({ getGuild } = require("./guildDAO.js").injectConfig(isProduction));
 	({ resolveMove } = require("./moveDAO.js").injectConfig(isProduction));
@@ -22,6 +23,7 @@ exports.injectConfig = function (isProduction) {
 	({ getTurnDecrement } = require("./Modifiers/_modifierDictionary.js").injectConfig(isProduction));
 	({ rollWeaponDrop, getWeaponProperty, buildWeaponDescription } = require("./Weapons/_weaponDictionary.js").injectConfig(isProduction));
 	({ rollArtifact, getArtifactDescription } = require("./Artifacts/_artifactDictionary.js").injectConfigArtifacts(isProduction));
+	({ getChallenge } = require("./Challenges/_challengeDictionary.js").injectConfigChallenges(isProduction));
 	return this;
 }
 
@@ -488,6 +490,16 @@ exports.endRound = async function (adventure, thread) {
 				}
 			}
 
+			// Decrement Challenge Duration
+			for (const challengeName in adventure.challenges) {
+				if (adventure.challenges[challengeName].duration) {
+					adventure.challenges[challengeName].duration--;
+					if (adventure.challenges[challengeName].duration < 1) {
+						getChallenge(challengeName).reward(adventure);
+					}
+				}
+			}
+
 			// Finalize UI
 			return thread.send({
 				embeds: [embed.setTitle("Victory!")
@@ -518,13 +530,19 @@ exports.completeAdventure = function (adventure, thread, scoreEmbed) { //TODO #2
 	let livesScore = adventure.lives * 10;
 	let goldScore = Math.floor(Math.log10(adventure.peakGold)) * 5;
 	let score = adventure.accumulatedScore + livesScore + goldScore + adventure.depth;
+	let challengeMultiplier = 1;
+	Object.keys(adventure.challenges).forEach(challengeName => {
+		const challenge = getChallenge(challengeName);
+		challengeMultiplier *= challenge.scoreMultiplier;
+	})
+	score *= challengeMultiplier;
 	let isSuccess = scoreEmbed.title === "Success";
 	if (!isSuccess) {
 		score = Math.floor(score / 2);
 	}
 	let skippedStartingArtifactMultiplier = 1 + (adventure.delvers.reduce((count, delver) => delver.startingArtifact ? count : count + 1, 0) / adventure.delvers.length);
 	score = Math.max(1, score) * skippedStartingArtifactMultiplier;
-	scoreEmbed.addField("Score Breakdown", `Depth: ${adventure.depth}\nLives: ${livesScore}\nGold: ${goldScore}\nBonus: ${adventure.accumulatedScore}\nMultiplier (Skipped Starting Artifacts): ${skippedStartingArtifactMultiplier}\n\n__Total__: ${!isSuccess && score > 0 ? `score ÷ 2  = ${score} (Defeat)` : score}`);
+	scoreEmbed.addField("Score Breakdown", `Depth: ${adventure.depth}\nLives: ${livesScore}\nGold: ${goldScore}\nBonus: ${adventure.accumulatedScore}\nChallenges Multiplier: ${challengeMultiplier}\nMultiplier (Skipped Starting Artifacts): ${skippedStartingArtifactMultiplier}\n\n__Total__: ${!isSuccess && score > 0 ? `score ÷ 2  = ${score} (Defeat)` : score}`);
 
 	let guildId = thread.guildId;
 	let guildProfile = getGuild(guildId);
