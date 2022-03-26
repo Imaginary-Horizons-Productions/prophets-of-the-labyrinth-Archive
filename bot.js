@@ -44,7 +44,6 @@ const client = new Client({
 
 //#region Event Handlers
 client.on("ready", () => {
-	client.user.setAvatar("./Source/Images/potl-logo.png");
 	console.log(`Connected as ${client.user.tag}`);
 
 	injectConfigCommands(isProduction);
