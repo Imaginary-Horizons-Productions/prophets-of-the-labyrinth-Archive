@@ -2,7 +2,7 @@ const Select = require('../../Classes/Select.js');
 const helpers = require('../../helpers.js');
 const { getAdventure, setAdventure } = require('../adventureDAO');
 const { MessageActionRow, MessageButton } = require('discord.js');
-const { getArtifactDescription } = require('../Artifacts/_artifactDictionary.js');
+const { getArtifact } = require('../Artifacts/_artifactDictionary.js');
 
 module.exports = new Select("startingartifact");
 
@@ -14,17 +14,22 @@ module.exports.execute = (interaction, _args) => {
 		let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
 		if (userIndex !== -1) {
 			let [artifactName] = interaction.values;
-			let isSwitching = adventure.delvers[userIndex].startingArtifact !== "";
-			adventure.delvers[userIndex].startingArtifact = artifactName;
+			if (artifactName === "None") {
+				adventure.delvers[userIndex].startingArtifact = "";
+				interaction.channel.send(`${interaction.user} is not planning to bring a starting artifact.`);
+			} else {
+				let isSwitching = adventure.delvers[userIndex].startingArtifact !== "";
+				adventure.delvers[userIndex].startingArtifact = artifactName;
 
-			// Send confirmation text
-			interaction.update({
-				content: getArtifactDescription(artifactName, 1),
-				components: [new MessageActionRow().addComponents(
-					interaction.component.setPlaceholder("Pick a different artifact...")
-				)]
-			});
-			interaction.channel.send(`${interaction.user} ${isSwitching ? "has switched to" : "is taking"} ${artifactName} for their starting artifact.`);
+				// Send confirmation text
+				interaction.update({
+					content: getArtifact(artifactName).dynamicDescription(1),
+					components: [new MessageActionRow().addComponents(
+						interaction.component.setPlaceholder("Pick a different artifact...")
+					)]
+				});
+				interaction.channel.send(`${interaction.user} ${isSwitching ? "has switched to" : "is taking"} ${artifactName} for their starting artifact.`);
+			}
 			setAdventure(adventure);
 		} else {
 			let join = new MessageActionRow().addComponents(

@@ -61,12 +61,11 @@ module.exports.execute = (interaction) => {
 				guildProfile.adventuring.add(interaction.user.id);
 
 				thread.send({
-					content: `${interaction.user} Here's the channel for your new adventure. As adventure leader you're responsible for inputing the group's decisions (like difficulty options or indicating when everyone's ready).`,
+					content: `${interaction.user} Here's the channel for your new adventure. As adventure leader you're responsible for inputing the group's decisions (like challenges or indicating when everyone's ready).`,
 					components: [new MessageActionRow().addComponents(
-						new MessageButton().setCustomId("difficulty")
-							.setLabel("Add Challenges (coming soon)")
+						new MessageButton().setCustomId("startingchallenges")
+							.setLabel("Add Challenges")
 							.setStyle("DANGER")
-							.setDisabled(true)
 					)]
 				}).then(leaderMessage => {
 					let ready = new MessageActionRow().addComponents(
