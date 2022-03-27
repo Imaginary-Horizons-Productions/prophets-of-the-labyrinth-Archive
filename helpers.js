@@ -133,3 +133,5 @@ exports.versionEmbedBuilder = function (avatarURL) {
 		return embed.addField(`Become a Sponsor`, `Chip in for server costs or get premimum features by sponsoring [PotL on GitHub](https://github.com/Imaginary-Horizons-Productions/prophets-of-the-labyrinth)`);
 	})
 }
+
+exports.SAFE_DELIMITER = "→";
