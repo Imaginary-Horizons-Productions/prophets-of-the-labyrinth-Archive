@@ -9,7 +9,7 @@ const Room = require("../Classes/Room.js");
 const Resource = require("../Classes/Resource.js");
 const { getWeaknesses, getColor } = require("./elementHelpers.js");
 
-let getGuild, ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordinalSuffixEN, setPlayer, getPlayer, spawnEnemy, manufactureRoomTemplate, prerollBoss, getTurnDecrement, rollWeaponDrop, getWeaponProperty, buildWeaponDescription, rollArtifact, getArtifactDescription, getEnemy, resolveMove, clearBlock, removeModifier;
+let getGuild, ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordinalSuffixEN, setPlayer, getPlayer, spawnEnemy, manufactureRoomTemplate, prerollBoss, getTurnDecrement, rollWeaponDrop, getWeaponProperty, buildWeaponDescription, getArtifact, rollArtifact, getEnemy, resolveMove, clearBlock, removeModifier;
 let getChallenge;
 exports.injectConfig = function (isProduction) {
 	({ getGuild } = require("./guildDAO.js").injectConfig(isProduction));
@@ -22,7 +22,7 @@ exports.injectConfig = function (isProduction) {
 	({ manufactureRoomTemplate, prerollBoss } = require("./Rooms/_roomDictionary.js").injectConfig(isProduction));
 	({ getTurnDecrement } = require("./Modifiers/_modifierDictionary.js").injectConfig(isProduction));
 	({ rollWeaponDrop, getWeaponProperty, buildWeaponDescription } = require("./Weapons/_weaponDictionary.js").injectConfig(isProduction));
-	({ rollArtifact, getArtifactDescription } = require("./Artifacts/_artifactDictionary.js").injectConfigArtifacts(isProduction));
+	({ getArtifact, rollArtifact } = require("./Artifacts/_artifactDictionary.js").injectConfigArtifacts(isProduction));
 	({ getChallenge } = require("./Challenges/_challengeDictionary.js").injectConfigChallenges(isProduction));
 	return this;
 }
@@ -347,7 +347,7 @@ exports.generateLootRow = function (adventure) {
 			if (type === "weapon") {
 				option.description = buildWeaponDescription(name, false);
 			} else if (type === "artifact") {
-				option.description = getArtifactDescription(name, count);
+				option.description = getArtifact(name).dynamicDescription(count);
 			} else {
 				option.description = "";
 			}
@@ -411,7 +411,7 @@ exports.generateMerchantRows = function (adventure) {
 			}
 		} else if (groupName === "scouting") {
 			const bossScoutingCost = calculateScoutingCost(adventure, "Final Battle");
-			const guardScoutingCost =calculateScoutingCost(adventure, "Artifact Guardian");
+			const guardScoutingCost = calculateScoutingCost(adventure, "Artifact Guardian");
 			rows.push(new MessageActionRow().addComponents(
 				new MessageButton().setCustomId(`buyscouting-Final Battle`)
 					.setLabel(`${adventure.scouting.finalBoss ? `Final Battle: ${adventure.finalBoss}` : `${bossScoutingCost}g: Scout the Final Battle`}`)
