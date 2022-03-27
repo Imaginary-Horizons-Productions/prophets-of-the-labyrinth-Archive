@@ -152,7 +152,7 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 				embed.addField("Remaining Forge Supplies", count.toString());
 				resourceType = "resource";
 			}
-			adventure.room.resources[resource] = new Resource(resource, resourceType, count, "resource");
+			adventure.room.resources[resource] = new Resource(resource, resourceType, count, "resource", 0);
 		}
 		if (["Battle", "Artifact Guardian", "Final Battle"].includes(roomType)) {
 			// Generate combat room
@@ -162,7 +162,7 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 					prerollBoss("Artifact Guardian", adventure);
 				}
 				let artifact = rollArtifact(adventure);
-				adventure.room.resources[artifact] = new Resource(artifact, "artifact", 1, "loot");
+				adventure.room.resources[artifact] = new Resource(artifact, "artifact", 1, "loot", 0);
 			}
 			adventure.room.initializeCombatProperties();
 			let randomizeHp = roomType === "Battle";
@@ -194,14 +194,14 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 						if (adventure.room.resources[weaponName] && adventure.room.resources[weaponName].resourceType === "weapon") {
 							adventure.room.resources[weaponName].count++;
 						} else {
-							adventure.room.resources[weaponName] = new Resource(weaponName, "weapon", 1, "merchant")
+							adventure.room.resources[weaponName] = new Resource(weaponName, "weapon", 1, "merchant", getWeaponProperty(weaponName, "cost"))
 								.setUIGroup(category);
 						}
 					}
 				} else if (category === "scouting") {
-					adventure.room.resources["bossScouting"] = new Resource("bossScouting", "scouting", true, "merchant")
+					adventure.room.resources["bossScouting"] = new Resource("bossScouting", "scouting", true, "merchant", calculateScoutingCost(adventure, "Final Battle"))
 						.setUIGroup("scouting");
-					adventure.room.resources["guardScouting"] = new Resource("guardScouting", "scouting", true, "merchant")
+					adventure.room.resources["guardScouting"] = new Resource("guardScouting", "scouting", true, "merchant", calculateScoutingCost(adventure, "Artifact Guardian"))
 						.setUIGroup("scouting");
 				}
 			}
@@ -218,7 +218,7 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 	}
 }
 
-exports.calculateScoutingCost = function ({ artifacts: { "Amethyst Spyglass": amethystSpyglassCount = 0 } }, type) {
+function calculateScoutingCost({ artifacts: { "Amethyst Spyglass": amethystSpyglassCount = 0 } }, type) {
 	switch (type) {
 		case "Final Battle":
 			return 150 - ((amethystSpyglassCount) * 5);
@@ -408,8 +408,8 @@ exports.generateMerchantRows = function (adventure) {
 						.setDisabled(true)));
 			}
 		} else if (groupName === "scouting") {
-			const bossScoutingCost = exports.calculateScoutingCost(adventure, "Final Battle");
-			const guardScoutingCost = exports.calculateScoutingCost(adventure, "Artifact Guardian");
+			const bossScoutingCost = calculateScoutingCost(adventure, "Final Battle");
+			const guardScoutingCost =calculateScoutingCost(adventure, "Artifact Guardian");
 			rows.push(new MessageActionRow().addComponents(
 				new MessageButton().setCustomId(`buyscouting-Final Battle`)
 					.setLabel(`${adventure.scouting.finalBoss ? `Final Battle: ${adventure.finalBoss}` : `${bossScoutingCost}g: Scout the Final Battle`}`)
@@ -489,7 +489,7 @@ exports.endRound = async function (adventure, thread) {
 				if (adventure.room.resources[droppedWeapon]) {
 					adventure.room.resources[droppedWeapon].count++;
 				} else {
-					adventure.room.resources[droppedWeapon] = new Resource(droppedWeapon, "weapon", 1, "loot");
+					adventure.room.resources[droppedWeapon] = new Resource(droppedWeapon, "weapon", 1, "loot", 0);
 				}
 			}
 
