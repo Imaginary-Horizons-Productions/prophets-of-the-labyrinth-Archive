@@ -12,7 +12,7 @@ const options = [
 		}
 	}
 ];
-module.exports = new Command("manual", "Get information about Prophets of the Labyrinth (v0.6.0)", false, false, options);
+module.exports = new Command("manual", "Get information about Prophets of the Labyrinth (v0.7.0)", false, false, options);
 
 // imports from files that depend on /Config
 // let ;
@@ -25,7 +25,7 @@ module.exports.execute = (interaction) => {
 	let response = { ephemeral: true };
 	switch (interaction.options.getString("topic")) {
 		case "Credits":
-			response.embeds = [embedTemplate(interaction.client.user.displayAvatarURL()).setTitle("Prophets of the Labyrinth v0.6.0")
+			response.embeds = [embedTemplate(interaction.client.user.displayAvatarURL()).setTitle("Prophets of the Labyrinth v0.7.0")
 				.setThumbnail(interaction.client.user.displayAvatarURL())
 				.setDescription(`A roguelike dungeon crawl in Discord to play with other server members.`)
 				.addField(`Design & Engineering`, `Nathaniel Tseng ( <@106122478715150336> | [Twitter](https://twitter.com/Arcane_ish) )`)
