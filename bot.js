@@ -8,6 +8,7 @@ const GuildProfile = require("./Classes/GuildProfile");
 const versionData = require('./Config/versionData.json');
 
 const isProduction = true;
+const helpers = require('./helpers.js');
 const { loadAdventures } = require("./Source/adventureDAO.js").injectConfig(isProduction);
 const { loadGuilds, setGuild } = require("./Source/guildDAO.js").injectConfig(isProduction);
 const { loadPlayers } = require("./Source/playerDAO.js").injectConfig(isProduction);
@@ -103,10 +104,10 @@ client.on("interactionCreate", interaction => {
 					.catch(console.error);
 			}
 		} else if (interaction.isButton()) {
-			const [command, ...args] = interaction.customId.split("-");
+			const [command, ...args] = interaction.customId.split(helpers.SAFE_DELIMITER);
 			getButton(command).execute(interaction, args);
 		} else if (interaction.isSelectMenu()) {
-			const [command, ...args] = interaction.customId.split("-");
+			const [command, ...args] = interaction.customId.split(helpers.SAFE_DELIMITER);
 			getSelect(command).execute(interaction, args);
 		}
 	} else {

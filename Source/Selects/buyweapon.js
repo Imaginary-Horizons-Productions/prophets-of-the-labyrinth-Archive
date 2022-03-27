@@ -1,5 +1,6 @@
 const { MessageActionRow, MessageButton } = require('discord.js');
 const Select = require('../../Classes/Select.js');
+const helpers = require('../../helpers.js');
 const { getAdventure, setAdventure, generateMerchantRows, generateRoutingRow } = require('../adventureDAO.js');
 const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
 
@@ -10,7 +11,7 @@ module.exports.execute = (interaction, [tier]) => {
 	let adventure = getAdventure(interaction.channel.id);
 	let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 	if (delver) {
-		const [name, menuIndex] = interaction.values[0].split("-");
+		const [name, menuIndex] = interaction.values[0].split(helpers.SAFE_DELIMITER);
 		const { count, cost } = adventure.room.resources[name];
 		if (count > 0) {
 			if (adventure.gold >= cost) {
@@ -25,7 +26,7 @@ module.exports.execute = (interaction, [tier]) => {
 				} else {
 					let replaceUI = [new MessageActionRow().addComponents(
 						...delver.weapons.map((weapon, index) => {
-							return new MessageButton().setCustomId(`replaceweapon-${name}-${index}-true`)
+							return new MessageButton().setCustomId(`replaceweapon${helpers.SAFE_DELIMITER}${name}${helpers.SAFE_DELIMITER}${index}${helpers.SAFE_DELIMITER}true`)
 								.setLabel(`Discard ${weapon.name}`)
 								.setStyle("SECONDARY")
 						})

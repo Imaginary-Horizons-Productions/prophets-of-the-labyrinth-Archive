@@ -1,6 +1,7 @@
 const Button = require('../../Classes/Button.js');
 const { MessageEmbed, MessageActionRow, MessageSelectMenu, MessageButton } = require('discord.js');
 const Delver = require('../../Classes/Delver.js');
+const helpers = require('../../helpers.js');
 const { getEmoji, getResistances, getWeaknesses, getColor } = require('../elementHelpers.js');
 const { getAdventure } = require('../adventureDAO.js');
 const { getFullName } = require("../combatantDAO.js");
@@ -33,7 +34,7 @@ module.exports.execute = (interaction, args) => {
 					enemyOptions.push({
 						label: getFullName(enemy, adventure.room.enemyTitles),
 						description: miniPredict(delver.predict, enemy),
-						value: `enemy-${i}`
+						value: `enemy${helpers.SAFE_DELIMITER}${i}`
 					})
 				}
 			}
@@ -41,7 +42,7 @@ module.exports.execute = (interaction, args) => {
 				return {
 					label: ally.name,
 					description: miniPredict(delver.predict, ally),
-					value: `delver-${i}`
+					value: `delver${helpers.SAFE_DELIMITER}${i}`
 				}
 			})
 			let usableWeapons = delver.weapons.filter(weapon => weapon.uses > 0);
@@ -62,14 +63,14 @@ module.exports.execute = (interaction, args) => {
 							targetOptions = targetOptions.concat(delverOptions);
 						}
 						moveMenu.push(new MessageActionRow().addComponents(
-							new MessageSelectMenu().setCustomId(`weapon-${weapon.name}-${adventure.room.round}-${i}`)
+							new MessageSelectMenu().setCustomId(`weapon${helpers.SAFE_DELIMITER}${weapon.name}${helpers.SAFE_DELIMITER}${adventure.room.round}${helpers.SAFE_DELIMITER}${i}`)
 								.setPlaceholder(`${elementEmoji} Use ${weapon.name} on...`)
 								.addOptions(targetOptions)
 						));
 					} else {
 						// Button
 						moveMenu.push(new MessageActionRow().addComponents(
-							new MessageButton().setCustomId(`nontargetweapon-${weapon.name}-${adventure.room.round}-${i}`)
+							new MessageButton().setCustomId(`nontargetweapon${helpers.SAFE_DELIMITER}${weapon.name}${helpers.SAFE_DELIMITER}${adventure.room.round}${helpers.SAFE_DELIMITER}${i}`)
 								.setLabel(`Use ${weapon.name}`)
 								.setEmoji(elementEmoji)
 								.setStyle("SECONDARY")
@@ -81,7 +82,7 @@ module.exports.execute = (interaction, args) => {
 				moveMenu.push(new MessageActionRow()
 					.addComponents(
 						new MessageSelectMenu()
-							.setCustomId(`weapon-Punch-${adventure.room.round}-`)
+							.setCustomId(`weapon${helpers.SAFE_DELIMITER}Punch${helpers.SAFE_DELIMITER}${adventure.room.round}${helpers.SAFE_DELIMITER}`)
 							.setPlaceholder(`Use Punch on...`)
 							.addOptions(enemyOptions)
 					));
@@ -140,12 +141,12 @@ function modifiersToActionRow(combatant) {
 		} else {
 			style = "SECONDARY";
 		}
-		actionRow.push(new MessageButton().setCustomId(`modifier-${modifierName}-${i}`)
+		actionRow.push(new MessageButton().setCustomId(`modifier${helpers.SAFE_DELIMITER}${modifierName}${helpers.SAFE_DELIMITER}${i}`)
 			.setLabel(`${modifierName}${isNonStacking(modifierName) ? "" : ` x ${combatant.modifiers[modifierName]}`}`)
 			.setStyle(style))
 	}
 	if (modifiers.length > 4) {
-		actionRow.push(new MessageButton().setCustomId(`modifier-MORE`)
+		actionRow.push(new MessageButton().setCustomId(`modifier${helpers.SAFE_DELIMITER}MORE`)
 			.setLabel(`${modifiers.length - 4} more...`)
 			.setStyle("SECONDARY")
 			.setDisabled(combatant.predict !== "Modifiers"))
