@@ -12,7 +12,7 @@ module.exports.execute = (interaction, _args) => {
 	let playerProfile = getPlayer(interaction.user.id, interaction.guild.id);
 	let user = adventure.delvers.find(delver => delver.id == interaction.user.id);
 	if (user) {
-		let options = [];
+		let options = [{ label: "None", description: "Deselect your picked starting artifact", value: "None" }];
 		for (const artifactName of Object.values(playerProfile.artifacts)) {
 			let description = getArtifactDescription(artifactName, 1);
 			options.push({
