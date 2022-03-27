@@ -86,9 +86,9 @@ exports.clearComponents = function (messageId, messageManager) {
 }
 
 /**
- * Generate parent directories if necessary, and save a file. 
+ * Generate parent directories if necessary, and save a file.
  * Keeps a backup of the fileName that may be replaced, until writing succeeds
- * 
+ *
  * @param {string} dirPath path to the directory of a file
  * @param {string} fileName name of the file to be saved
  * @param {string} data string to be written to the file
