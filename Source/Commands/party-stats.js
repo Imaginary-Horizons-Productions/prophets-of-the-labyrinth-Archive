@@ -27,8 +27,11 @@ module.exports.execute = (interaction) => {
 					return encounter;
 				}
 			}).join(", ")}...`)
-			//TODO #184 list difficulty options
 			.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
+		let challenges = Object.keys(adventure.challenges);
+		if (challenges.length) {
+			embed.addField("Challenges", Object.keys(adventure.challenges).join(", "));
+		}
 		let artifactOptions = Object.keys(adventure.artifacts).map(artifact => {
 			return {
 				label: `${artifact} x ${adventure.artifacts[artifact]}`,
