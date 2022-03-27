@@ -2,7 +2,7 @@ const Button = require('../../Classes/Button.js');
 const { MessageActionRow, MessageSelectMenu, MessageButton } = require('discord.js');
 const { getPlayer } = require('../playerDAO.js');
 const { getAdventure } = require('../adventureDAO.js');
-const { getArtifactDescription } = require('../Artifacts/_artifactDictionary.js');
+const { getArtifact } = require('../Artifacts/_artifactDictionary.js');
 
 module.exports = new Button("startingartifact");
 
@@ -14,7 +14,7 @@ module.exports.execute = (interaction, _args) => {
 	if (user) {
 		let options = [{ label: "None", description: "Deselect your picked starting artifact", value: "None" }];
 		for (const artifactName of Object.values(playerProfile.artifacts)) {
-			let description = getArtifactDescription(artifactName, 1);
+			let description = getArtifact(artifactName).dynamicDescription(1);
 			options.push({
 				label: artifactName,
 				description,

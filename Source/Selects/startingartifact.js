@@ -1,7 +1,7 @@
 const Select = require('../../Classes/Select.js');
 const { getAdventure, setAdventure } = require('../adventureDAO');
 const { MessageActionRow, MessageButton } = require('discord.js');
-const { getArtifactDescription } = require('../Artifacts/_artifactDictionary.js');
+const { getArtifact } = require('../Artifacts/_artifactDictionary.js');
 
 module.exports = new Select("startingartifact");
 
@@ -22,7 +22,7 @@ module.exports.execute = (interaction, _args) => {
 
 				// Send confirmation text
 				interaction.update({
-					content: getArtifactDescription(artifactName, 1),
+					content: getArtifact(artifactName).dynamicDescription(1),
 					components: [new MessageActionRow().addComponents(
 						interaction.component.setPlaceholder("Pick a different artifact...")
 					)]

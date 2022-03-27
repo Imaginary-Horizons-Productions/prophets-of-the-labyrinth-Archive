@@ -2,7 +2,7 @@ const Button = require('../../Classes/Button.js');
 const { MessageActionRow, MessageSelectMenu } = require('discord.js');
 const { getPlayer } = require('../playerDAO.js');
 const { getAdventure } = require('../adventureDAO.js');
-const { getArtifactDescription } = require('../Artifacts/_artifactDictionary.js');
+const { getArtifact } = require('../Artifacts/_artifactDictionary.js');
 
 module.exports = new Button("collectartifact");
 
@@ -16,7 +16,7 @@ module.exports.execute = (interaction, _args) => {
 			let options = [];
 			for (const artifactName in adventure.artifacts) {
 				if (!Object.values(playerProfile.artifacts).includes(artifactName)) {
-					let description = getArtifactDescription(artifactName, 1);
+					let description = getArtifact(artifactName).dynamicDescription(1);
 					options.push({
 						label: artifactName,
 						description,
