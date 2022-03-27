@@ -1,5 +1,6 @@
 const Button = require('../../Classes/Button.js');
 const { MessageActionRow, MessageSelectMenu, MessageButton } = require('discord.js');
+const helpers = require('../../helpers.js');
 const { getPlayer } = require('../playerDAO.js');
 const { getArchetype } = require('../Archetypes/_archetypeDictionary.js');
 const { getAdventure } = require('../adventureDAO.js');
@@ -33,7 +34,7 @@ module.exports.execute = (interaction, args) => {
 		interaction.reply({ content: `Select your archetype for this adventure!\n\nArchetypes can predict different information in combat and have different weaknesses and resistances based on their element.`, components: archetypeSelect, ephemeral: true });
 	} else {
 		let join = new MessageActionRow().addComponents(
-			new MessageButton().setCustomId(`join-${interaction.guildId}-${interaction.channelId}`)
+			new MessageButton().setCustomId(`join${helpers.SAFE_DELIMITER}${interaction.guildId}${helpers.SAFE_DELIMITER}${interaction.channelId}`)
 				.setLabel("Join")
 				.setStyle("SUCCESS"));
 		interaction.reply({ content: `You don't appear to be signed up for this adventure. You can join with the button below:`, components: [join], ephemeral: true });

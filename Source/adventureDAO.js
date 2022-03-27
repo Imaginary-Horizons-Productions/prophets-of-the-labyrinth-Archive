@@ -9,21 +9,55 @@ const Room = require("../Classes/Room.js");
 const Resource = require("../Classes/Resource.js");
 const { getWeaknesses, getColor } = require("./elementHelpers.js");
 
-let getGuild, ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordinalSuffixEN, setPlayer, getPlayer, spawnEnemy, manufactureRoomTemplate, prerollBoss, getTurnDecrement, rollWeaponDrop, getWeaponProperty, buildWeaponDescription, rollArtifact, getArtifactDescription, getEnemy, resolveMove, clearBlock, removeModifier;
-exports.injectConfig = function (isProduction) {
-	({ getGuild } = require("./guildDAO.js").injectConfig(isProduction));
-	({ resolveMove } = require("./moveDAO.js").injectConfig(isProduction));
-	({ clearBlock, removeModifier } = require("./combatantDAO.js").injectConfig(isProduction));
-	({ getEnemy } = require("./Enemies/_enemyDictionary").injectConfigEnemies(isProduction));
-	({ ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordinalSuffixEN } = require("../helpers.js").injectConfig(isProduction));
-	({ setPlayer, getPlayer } = require("./playerDAO.js").injectConfig(isProduction));
-	({ spawnEnemy } = require("./enemyDAO.js").injectConfig(isProduction));
-	({ manufactureRoomTemplate, prerollBoss } = require("./Rooms/_roomDictionary.js").injectConfig(isProduction));
-	({ getTurnDecrement } = require("./Modifiers/_modifierDictionary.js").injectConfig(isProduction));
-	({ rollWeaponDrop, getWeaponProperty, buildWeaponDescription } = require("./Weapons/_weaponDictionary.js").injectConfig(isProduction));
-	({ rollArtifact, getArtifactDescription } = require("./Artifacts/_artifactDictionary.js").injectConfigArtifacts(isProduction));
-	return this;
-}
+// define injectable vars
+let
+	//helpers
+	ensuredPathSave,
+	parseCount,
+	generateRandomNumber,
+	clearComponents,
+	ordinalSuffixEN,
+	SAFE_DELIMITER,
+	//guildDAO 
+	getGuild,
+	//playerDAO
+	setPlayer,
+	getPlayer,
+	//enemyDAO
+	spawnEnemy,
+	// moveDAO
+	resolveMove,
+	//combatantDAO
+	clearBlock,
+	removeModifier,
+	//roomDictionary
+	manufactureRoomTemplate,
+	prerollBoss,
+	//modifierDictionary
+	getTurnDecrement,
+	//weaponDictionary
+	rollWeaponDrop,
+	getWeaponProperty,
+	buildWeaponDescription,
+	//artifactDictionary
+	rollArtifact,
+	getArtifactDescription,
+	//enemyDictionary
+	getEnemy;
+	exports.injectConfig = function (isProduction) {
+		({ ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordinalSuffixEN, SAFE_DELIMITER } = require("../helpers.js").injectConfig(isProduction));
+		({ getGuild } = require("./guildDAO.js").injectConfig(isProduction));
+		({ setPlayer, getPlayer } = require("./playerDAO.js").injectConfig(isProduction));
+		({ spawnEnemy } = require("./enemyDAO.js").injectConfig(isProduction));
+		({ resolveMove } = require("./moveDAO.js").injectConfig(isProduction));
+		({ clearBlock, removeModifier } = require("./combatantDAO.js").injectConfig(isProduction));
+		({ manufactureRoomTemplate, prerollBoss } = require("./Rooms/_roomDictionary.js").injectConfig(isProduction));
+		({ getTurnDecrement } = require("./Modifiers/_modifierDictionary.js").injectConfig(isProduction));
+		({ rollWeaponDrop, getWeaponProperty, buildWeaponDescription } = require("./Weapons/_weaponDictionary.js").injectConfig(isProduction));
+		({ rollArtifact, getArtifactDescription } = require("./Artifacts/_artifactDictionary.js").injectConfigArtifacts(isProduction));
+		({ getEnemy } = require("./Enemies/_enemyDictionary").injectConfigEnemies(isProduction));
+		return this;
+	}
 
 const filePath = "./Saves/adventures.json";
 const requirePath = "./../Saves/adventures.json";
@@ -177,7 +211,7 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 			const cloverCount = adventure.artifacts["Negative-One Leaf Clover"] || 0;
 			for (let category in roomTemplate.saleList) {
 				if (category.startsWith("weapon")) {
-					let [type, tier] = category.split("-");
+					let [type, tier] = category.split(SAFE_DELIMITER);
 					let parsedTier = tier;
 					let count = Math.min(25, parseCount(roomTemplate.saleList[category], adventure.delvers.length));
 					for (let i = 0; i < count; i++) {
@@ -316,7 +350,7 @@ exports.generateRoutingRow = function (adventure) {
 	if (candidateKeys.length > 1) {
 		return new MessageActionRow().addComponents(
 			...candidateKeys.map(roomType => {
-				return new MessageButton().setCustomId(`routevote-${roomType}`)
+				return new MessageButton().setCustomId(`routevote${SAFE_DELIMITER}${roomType}`)
 					.setLabel(`Next room: ${roomType}`)
 					.setStyle("SECONDARY")
 			}));
@@ -334,7 +368,7 @@ exports.generateLootRow = function (adventure) {
 	for (const resource of Object.values(adventure.room.resources)) {
 		if (resource.uiType === "loot") {
 			const { name, resourceType: type, count } = resource;
-			let option = { value: `${name}-${options.length}` };
+			let option = { value: `${name}${SAFE_DELIMITER}${options.length}` };
 
 			if (name == "gold") {
 				option.label = `${count} Gold`;
@@ -383,7 +417,7 @@ exports.generateMerchantRows = function (adventure) {
 	let rows = [];
 	for (const groupName in categorizedResources) {
 		if (groupName.startsWith("weapon")) {
-			const [type, tier] = groupName.split("-");
+			const [type, tier] = groupName.split(SAFE_DELIMITER);
 			let options = [];
 			categorizedResources[groupName].forEach((resource, i) => {
 				if (adventure.room.resources[resource].count > 0) {
@@ -391,7 +425,7 @@ exports.generateMerchantRows = function (adventure) {
 					options.push({
 						label: `${cost}g: ${resource}`,
 						description: buildWeaponDescription(resource, false),
-						value: `${resource}-${i}`
+						value: `${resource}${SAFE_DELIMITER}${i}`
 					})
 				}
 			})
@@ -411,11 +445,11 @@ exports.generateMerchantRows = function (adventure) {
 			const bossScoutingCost = exports.calculateScoutingCost(adventure, "Final Battle");
 			const guardScoutingCost = exports.calculateScoutingCost(adventure, "Artifact Guardian");
 			rows.push(new MessageActionRow().addComponents(
-				new MessageButton().setCustomId(`buyscouting-Final Battle`)
+				new MessageButton().setCustomId(`buyscouting${SAFE_DELIMITER}Final Battle`)
 					.setLabel(`${adventure.scouting.finalBoss ? `Final Battle: ${adventure.finalBoss}` : `${bossScoutingCost}g: Scout the Final Battle`}`)
 					.setStyle("SECONDARY")
 					.setDisabled(adventure.scouting.finalBoss || adventure.gold < bossScoutingCost),
-				new MessageButton().setCustomId(`buyscouting-Artifact Guardian`)
+				new MessageButton().setCustomId(`buyscouting${SAFE_DELIMITER}Artifact Guardian`)
 					.setLabel(`${guardScoutingCost}g: Scout the ${ordinalSuffixEN(adventure.scouting.artifactGuardians + 1)} Artifact Guardian`)
 					.setStyle("SECONDARY")
 					.setDisabled(adventure.gold < guardScoutingCost)

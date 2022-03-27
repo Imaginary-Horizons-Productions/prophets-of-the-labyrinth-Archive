@@ -1,3 +1,4 @@
+const helpers = require("../../helpers.js");
 const RoomTemplate = require("../../Classes/RoomTemplate.js");
 
 module.exports = new RoomTemplate()
@@ -7,7 +8,7 @@ module.exports = new RoomTemplate()
 	.setElement("@{adventure}");
 
 module.exports.saleList = {
-	"weapon-?": "n",
-	"weapon-2": "1",
+	[`weapon${helpers.SAFE_DELIMITER}?`]: "n",
+	[`weapon${helpers.SAFE_DELIMITER}2`]: "1",
 	"scouting": "1"
 };

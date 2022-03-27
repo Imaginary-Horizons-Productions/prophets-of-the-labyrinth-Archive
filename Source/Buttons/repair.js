@@ -1,5 +1,6 @@
 const { MessageActionRow, MessageSelectMenu } = require('discord.js');
 const Button = require('../../Classes/Button.js');
+const helpers = require('../../helpers.js');
 const { getAdventure } = require("../adventureDAO.js").injectConfig(true);
 const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
 
@@ -18,14 +19,14 @@ module.exports.execute = (interaction, args) => {
 				weaponOptions.push({
 					label: weapon.name,
 					description: `Regain ${value} uses`,
-					value: `${weapon.name}-${index}-${value}`
+					value: `${weapon.name}${helpers.SAFE_DELIMITER}${index}${helpers.SAFE_DELIMITER}${value}`
 				})
 			}
 		})
 		if (adventure.room.resources.forgeSupplies.count > 0) {
 			if (weaponOptions.length > 0) {
 				let upgradeSelect = new MessageActionRow().addComponents(
-					new MessageSelectMenu().setCustomId(`repair-${interaction.message.id}`)
+					new MessageSelectMenu().setCustomId(`repair${helpers.SAFE_DELIMITER}${interaction.message.id}`)
 						.setPlaceholder("Pick a weapon to repair...")
 						.setOptions(weaponOptions)
 				)
