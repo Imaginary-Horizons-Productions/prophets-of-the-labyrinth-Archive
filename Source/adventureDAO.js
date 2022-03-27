@@ -41,25 +41,26 @@ let
 	buildWeaponDescription,
 	//artifactDictionary
 	rollArtifact,
+	getArtifactDescription,
 	//enemyDictionary
-	getEnemy
+	getEnemy,
 	//challengeDictionary
 	getChallenge;
-	exports.injectConfig = function (isProduction) {
-		({ ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordinalSuffixEN, SAFE_DELIMITER } = require("../helpers.js").injectConfig(isProduction));
-		({ getGuild } = require("./guildDAO.js").injectConfig(isProduction));
-		({ setPlayer, getPlayer } = require("./playerDAO.js").injectConfig(isProduction));
-		({ spawnEnemy } = require("./enemyDAO.js").injectConfig(isProduction));
-		({ resolveMove } = require("./moveDAO.js").injectConfig(isProduction));
-		({ clearBlock, removeModifier } = require("./combatantDAO.js").injectConfig(isProduction));
-		({ manufactureRoomTemplate, prerollBoss } = require("./Rooms/_roomDictionary.js").injectConfig(isProduction));
-		({ getTurnDecrement } = require("./Modifiers/_modifierDictionary.js").injectConfig(isProduction));
-		({ rollWeaponDrop, getWeaponProperty, buildWeaponDescription } = require("./Weapons/_weaponDictionary.js").injectConfig(isProduction));
-		({ getArtifact, rollArtifact } = require("./Artifacts/_artifactDictionary.js").injectConfigArtifacts(isProduction));
-		({ getEnemy } = require("./Enemies/_enemyDictionary").injectConfigEnemies(isProduction));
-		({ getChallenge } = require("./Challenges/_challengeDictionary.js").injectConfigChallenges(isProduction));
-		return this;
-	}
+exports.injectConfig = function (isProduction) {
+	({ ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordinalSuffixEN, SAFE_DELIMITER } = require("../helpers.js").injectConfig(isProduction));
+	({ getGuild } = require("./guildDAO.js").injectConfig(isProduction));
+	({ setPlayer, getPlayer } = require("./playerDAO.js").injectConfig(isProduction));
+	({ spawnEnemy } = require("./enemyDAO.js").injectConfig(isProduction));
+	({ resolveMove } = require("./moveDAO.js").injectConfig(isProduction));
+	({ clearBlock, removeModifier } = require("./combatantDAO.js").injectConfig(isProduction));
+	({ manufactureRoomTemplate, prerollBoss } = require("./Rooms/_roomDictionary.js").injectConfig(isProduction));
+	({ getTurnDecrement } = require("./Modifiers/_modifierDictionary.js").injectConfig(isProduction));
+	({ rollWeaponDrop, getWeaponProperty, buildWeaponDescription } = require("./Weapons/_weaponDictionary.js").injectConfig(isProduction));
+	({ getArtifact, rollArtifact, getArtifactDescription } = require("./Artifacts/_artifactDictionary.js").injectConfigArtifacts(isProduction));
+	({ getEnemy } = require("./Enemies/_enemyDictionary").injectConfigEnemies(isProduction));
+	({ getChallenge } = require("./Challenges/_challengeDictionary.js").injectConfigChallenges(isProduction));
+	return this;
+}
 
 const dirPath = "./Saves";
 const fileName = "adventures.json";
@@ -111,7 +112,7 @@ exports.loadAdventures = async function () {
 		})
 		return `${loaded} adventures loaded`;
 	} else {
-		ensuredPathSave(dirPath,fileName,"[]");
+		ensuredPathSave(dirPath, fileName, "[]");
 		return "adventures regenerated";
 	}
 }
