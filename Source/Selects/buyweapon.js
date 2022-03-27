@@ -11,9 +11,8 @@ module.exports.execute = (interaction, [tier]) => {
 	let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 	if (delver) {
 		const [name, menuIndex] = interaction.values[0].split("-");
-		const { count } = adventure.room.resources[name];
+		const { count, cost } = adventure.room.resources[name];
 		if (count > 0) {
-			const cost = getWeaponProperty(name, "cost");
 			if (adventure.gold >= cost) {
 				if (delver.weapons.length < adventure.getWeaponCapacity()) {
 					adventure.gold -= cost;
