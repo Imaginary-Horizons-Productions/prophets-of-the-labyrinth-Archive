@@ -42,7 +42,7 @@ let
 	//artifactDictionary
 	rollArtifact,
 	//enemyDictionary
-	getEnemy
+	getEnemy,
 	//challengeDictionary
 	getChallenge;
 	exports.injectConfig = function (isProduction) {
