@@ -1,5 +1,5 @@
 const { MessageActionRow, MessageButton } = require('discord.js');
-const helpers = require('../../helpers.js');
+const { SAFE_DELIMITER } = require('../../helpers.js');
 const Command = require('../../Classes/Command.js');
 
 const options = [
@@ -23,7 +23,7 @@ module.exports.execute = (interaction) => {
 			invitee.send({
 				content: `${interaction.member} has invited you to join *${adventure.name}* in ${interaction.guild}!`,
 				components: [new MessageActionRow().addComponents(
-					new MessageButton().setCustomId(`join${helpers.SAFE_DELIMITER}${interaction.guildId}${helpers.SAFE_DELIMITER}${interaction.channelId}`)
+					new MessageButton().setCustomId(`join${SAFE_DELIMITER}${interaction.guildId}${SAFE_DELIMITER}${interaction.channelId}`)
 						.setLabel("Join")
 						.setStyle("SUCCESS")
 				)]

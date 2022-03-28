@@ -1,5 +1,5 @@
 const { MessageActionRow, MessageButton } = require('discord.js');
-const helpers = require('../../helpers.js');
+const { SAFE_DELIMITER } = require('../../helpers.js');
 const Archetype = require('../../Classes/Archetype.js');
 const Select = require('../../Classes/Select.js');
 const { getAdventure, setAdventure } = require('../adventureDAO');
@@ -60,7 +60,7 @@ module.exports.execute = (interaction, args) => {
 			})
 		} else {
 			let join = new MessageActionRow().addComponents(
-				new MessageButton().setCustomId(`join${helpers.SAFE_DELIMITER}${interaction.guildId}${helpers.SAFE_DELIMITER}${interaction.channelId}`)
+				new MessageButton().setCustomId(`join${SAFE_DELIMITER}${interaction.guildId}${SAFE_DELIMITER}${interaction.channelId}`)
 					.setLabel("Join")
 					.setStyle("SUCCESS"));
 			interaction.reply({ content: `You don't appear to be signed up for this adventure. You can join with the button below:`, components: [join], ephemeral: true });
