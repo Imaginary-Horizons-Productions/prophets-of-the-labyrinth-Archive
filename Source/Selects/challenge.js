@@ -26,17 +26,17 @@ module.exports.execute = (interaction, args) => {
 			})
 			interaction.channel.fetchStarterMessage().then(starterMessage => {
 				let embed = starterMessage.embeds[0];
-				let challengesText = Object.keys(adventure.challenges).join(", ");
+				let challengesText = Object.keys(adventure.challenges).join("\n• ");
 				let fieldIndex = embed.fields.findIndex(field => field.name === "Challenges");
 				if (fieldIndex !== -1) {
-					embed.spliceFields(fieldIndex, 1, { name: "Challenges", value: challengesText })
+					embed.spliceFields(fieldIndex, 1, { name: "Challenges", value: `• ${challengesText}` })
 				} else {
-					embed.addField("Challenges", challengesText);
+					embed.addField("Challenges", `• ${challengesText}`);
 				}
 				starterMessage.edit({ embeds: [embed] });
 			})
 			interaction.update({ components: [] });
-			interaction.channel.send({ content: `The following challenges have been added to this adventure: ${interaction.values.join(", ")}` });
+			interaction.channel.send({ content: `The following challenges have been added to this adventure: "${interaction.values.join("\", \"")}"` });
 		}
 	} else {
 		interaction.reply({ content: "This adventure seems to have already ended.", ephemeral: true });
