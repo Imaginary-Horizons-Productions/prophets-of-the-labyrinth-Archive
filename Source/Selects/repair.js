@@ -1,5 +1,5 @@
 const Select = require('../../Classes/Select.js');
-const helpers = require('../../helpers.js');
+const { SAFE_DELIMITER } = require('../../helpers.js');
 const { getAdventure, setAdventure } = require('../adventureDAO.js');
 const { decrementForgeSupplies } = require('../roomDAO.js');
 
@@ -10,7 +10,7 @@ module.exports.execute = (interaction, [roomMessageId]) => {
 	let adventure = getAdventure(interaction.channel.id);
 	if (adventure.room.resources.forgeSupplies.count > 0) {
 		let user = adventure.delvers.find(delver => delver.id === interaction.user.id);
-		let [weaponName, weaponIndex, value] = interaction.values[0].split(helpers.SAFE_DELIMITER);
+		let [weaponName, weaponIndex, value] = interaction.values[0].split(SAFE_DELIMITER);
 		user.weapons[weaponIndex].uses += Number(value);
 		decrementForgeSupplies(interaction, roomMessageId, adventure).then(() => {
 			interaction.update({ components: [] });

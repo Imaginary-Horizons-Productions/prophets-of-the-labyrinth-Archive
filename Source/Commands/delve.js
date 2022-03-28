@@ -1,5 +1,5 @@
 const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
-const helpers = require('../../helpers.js');
+const { SAFE_DELIMITER } = require('../../helpers.js');
 const Adventure = require('../../Classes/Adventure.js');
 const Command = require('../../Classes/Command.js');
 const Delver = require('../../Classes/Delver.js');
@@ -51,7 +51,7 @@ module.exports.execute = (interaction) => {
 				thread.fetchStarterMessage().then(message => {
 					message.edit({
 						components: [new MessageActionRow().addComponents(
-							new MessageButton().setCustomId(`join${helpers.SAFE_DELIMITER}${thread.guildId}${helpers.SAFE_DELIMITER}${thread.id}`)
+							new MessageButton().setCustomId(`join${SAFE_DELIMITER}${thread.guildId}${SAFE_DELIMITER}${thread.id}`)
 								.setLabel("Join")
 								.setStyle("SUCCESS")
 						)]

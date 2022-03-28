@@ -36,6 +36,16 @@ exports.getArtifact = function (artifactName) {
 	return ARTIFACTS[artifactName];
 }
 
+exports.getArtifactDescription = function (artifactName, copies) {
+	let description = exports.getArtifact(artifactName).description;
+	let copiesExpression = description.match(/@{(copies[\*\d]*)}/)?.[1].replace(/copies/g, "n");
+	if (copiesExpression) {
+		copies = parseCount(copiesExpression, copies);
+	}
+
+	return description.replace(/@{copies.*}/g, copies);
+}
+
 exports.getArtifactCounts = function () {
 	return Object.values(ARTIFACTS).length; //TODO #225 separate artifact counts by element
 }

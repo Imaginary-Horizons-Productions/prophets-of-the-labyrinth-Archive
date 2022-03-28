@@ -1,5 +1,5 @@
 const { MessageEmbed } = require('discord.js');
-const helpers = require('../../helpers.js');
+const { SAFE_DELIMITER } = require('../../helpers.js');
 const Select = require('../../Classes/Select.js');
 const { getArtifact } = require('../Artifacts/_artifactDictionary.js');
 
@@ -7,7 +7,7 @@ module.exports = new Select("artifact");
 
 module.exports.execute = (interaction, args) => {
 	// Provide information about the selected artifact
-	const [artifactName, artifactCount] = interaction.values[0].split(helpers.SAFE_DELIMITER);
+	const [artifactName, artifactCount] = interaction.values[0].split(SAFE_DELIMITER);
 	let artifact = getArtifact(artifactName);
 	let embed = new MessageEmbed()
 		.setTitle(artifactName)

@@ -1,7 +1,7 @@
 const { nextRoom, getAdventure } = require('../adventureDAO.js');
 const Button = require('../../Classes/Button.js');
 const { MessageActionRow, MessageButton } = require('discord.js');
-const helpers = require('../../helpers.js');
+const { SAFE_DELIMITER, clearComponents } = require('../../helpers.js');
 
 module.exports = new Button("routevote");
 
@@ -22,11 +22,11 @@ module.exports.execute = (interaction, [direction]) => {
 		interaction.reply(`${interaction.user} ${changeVote ? "changed their vote to" : "voted for"} ${direction}.`).then(() => {
 			// Decide by unanimous vote
 			if (adventure.roomCandidates[direction].length === adventure.delvers.length) {
-				helpers.clearComponents(adventure.messageIds.battleRound, interaction.channel.messages);
+				clearComponents(adventure.messageIds.battleRound, interaction.channel.messages);
 				let uiRows = [...interaction.message.components.map(row => {
 					return new MessageActionRow().addComponents(...row.components.map(component => {
 						let editedComponent = component.setDisabled(true);
-						if (component.customId === `routevote${helpers.SAFE_DELIMITER}${direction}`) {
+						if (component.customId === `routevote${SAFE_DELIMITER}${direction}`) {
 							editedComponent.setEmoji("✔️");
 						} else {
 							if (component instanceof MessageButton && !component.emoji?.name) {

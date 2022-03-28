@@ -56,7 +56,7 @@ let
 		({ manufactureRoomTemplate, prerollBoss } = require("./Rooms/_roomDictionary.js").injectConfig(isProduction));
 		({ getTurnDecrement } = require("./Modifiers/_modifierDictionary.js").injectConfig(isProduction));
 		({ rollWeaponDrop, getWeaponProperty, buildWeaponDescription } = require("./Weapons/_weaponDictionary.js").injectConfig(isProduction));
-		({ rollArtifact, getArtifactDescription } = require("./Artifacts/_artifactDictionary.js").injectConfigArtifacts(isProduction));
+		({ getArtifact, rollArtifact } = require("./Artifacts/_artifactDictionary.js").injectConfigArtifacts(isProduction));
 		({ getEnemy } = require("./Enemies/_enemyDictionary").injectConfigEnemies(isProduction));
 		({ getChallenge } = require("./Challenges/_challengeDictionary.js").injectConfigChallenges(isProduction));
 		return this;
