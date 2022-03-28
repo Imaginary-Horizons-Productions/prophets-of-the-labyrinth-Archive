@@ -18,7 +18,7 @@ let
 	clearComponents,
 	ordinalSuffixEN,
 	SAFE_DELIMITER,
-	//guildDAO 
+	//guildDAO
 	getGuild,
 	//playerDAO
 	setPlayer,
@@ -41,7 +41,6 @@ let
 	buildWeaponDescription,
 	//artifactDictionary
 	rollArtifact,
-	getArtifactDescription,
 	//enemyDictionary
 	getEnemy,
 	//challengeDictionary
