@@ -1,4 +1,5 @@
 const Select = require('../../Classes/Select.js');
+const { SAFE_DELIMITER } = require('../../helpers.js');
 const { generateRandomNumber } = require('../../helpers.js');
 const { getAdventure, setAdventure } = require('../adventureDAO.js');
 const { decrementForgeSupplies } = require('../roomDAO.js');
@@ -11,7 +12,7 @@ module.exports.execute = (interaction, [roomMessageId]) => {
 	let adventure = getAdventure(interaction.channel.id);
 	if (adventure.room.resources.forgeSupplies.count > 0) {
 		let user = adventure.delvers.find(delver => delver.id === interaction.user.id);
-		let [weaponName, weaponIndex] = interaction.values[0].split("-");
+		let [weaponName, weaponIndex] = interaction.values[0].split(SAFE_DELIMITER);
 		let upgradePool = getWeaponProperty(weaponName, "upgrades");
 		let upgradeName = upgradePool[generateRandomNumber(adventure, upgradePool.length, "general")];
 		let upgradeUses = getWeaponProperty(upgradeName, "maxUses");
