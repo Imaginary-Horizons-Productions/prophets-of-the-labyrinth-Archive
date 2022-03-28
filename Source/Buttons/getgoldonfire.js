@@ -1,4 +1,3 @@
-const { MessageEmbed } = require('discord.js');
 const Button = require('../../Classes/Button.js');
 const { getAdventure, completeAdventure, updateRoomHeader, setAdventure } = require('../adventureDAO.js');
 const { dealDamage } = require("../combatantDAO.js");
@@ -13,12 +12,11 @@ module.exports.execute = (interaction, args) => {
 		adventure.gainGold(50);
 		dealDamage(delver, null, 100, true, "Untyped", adventure).then(damageText => {
 			updateRoomHeader(adventure, interaction.message);
-			return interaction.reply(`${interaction.user} reaches into the flames and grabs some coin. ${damageText}`);
-		}).then(() => {
 			if (adventure.lives < 1) {
-				completeAdventure(adventure, interaction.channel, new MessageEmbed().setTitle("Defeat"));
+				interaction.reply({ embeds: [completeAdventure(adventure, interaction.channel, { isSuccess: false, description: null })] });
 			} else {
 				setAdventure(adventure);
+				interaction.reply(`${interaction.user} reaches into the flames and grabs some coin. ${damageText}`);
 			}
 		});
 	} else {
