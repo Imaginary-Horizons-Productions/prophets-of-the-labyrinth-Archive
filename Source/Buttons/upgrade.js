@@ -1,6 +1,6 @@
 const { MessageActionRow, MessageSelectMenu } = require('discord.js');
 const Button = require('../../Classes/Button.js');
-const helpers = require('../../helpers.js');
+const { SAFE_DELIMITER } = require('../../helpers.js');
 const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
 const { getAdventure } = require("./../adventureDAO.js").injectConfig(true);
 
@@ -18,14 +18,14 @@ module.exports.execute = (interaction, args) => {
 				weaponOptions.push({
 					label: weapon.name,
 					description: `Results: ${upgrades.join(", ")}`,
-					value: `${weapon.name}${helpers.SAFE_DELIMITER}${index}`
+					value: `${weapon.name}${SAFE_DELIMITER}${index}`
 				})
 			}
 		})
 		if (adventure.room.resources.forgeSupplies.count > 0) {
 			if (weaponOptions.length > 0) {
 				let upgradeSelect = new MessageActionRow().addComponents(
-					new MessageSelectMenu().setCustomId(`randomupgrade${helpers.SAFE_DELIMITER}${interaction.message.id}`)
+					new MessageSelectMenu().setCustomId(`randomupgrade${SAFE_DELIMITER}${interaction.message.id}`)
 						.setPlaceholder("Pick a weapon to randomly tinker with...")
 						.setOptions(weaponOptions)
 				)

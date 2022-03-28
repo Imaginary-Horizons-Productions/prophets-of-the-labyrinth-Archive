@@ -2,7 +2,7 @@ const { MessageActionRow, MessageButton } = require('discord.js');
 const Select = require('../../Classes/Select.js');
 const { getAdventure, updateRoomHeader, setAdventure, generateLootRow, generateRoutingRow } = require('../adventureDAO.js');
 const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
-const helpers = require('../../helpers.js');
+const { SAFE_DELIMITER } = require('../../helpers.js');
 
 module.exports = new Select("loot");
 
@@ -11,7 +11,7 @@ module.exports.execute = (interaction, args) => {
 	let adventure = getAdventure(interaction.channel.id);
 	let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 	if (delver) {
-		const [name, index] = interaction.values[0].split(helpers.SAFE_DELIMITER);
+		const [name, index] = interaction.values[0].split(SAFE_DELIMITER);
 		let result;
 		let { resourceType: type, count } = adventure.room.resources[name];
 		switch (type) {
@@ -48,7 +48,7 @@ module.exports.execute = (interaction, args) => {
 						result = {
 							content: `You can only carry ${adventure.getWeaponCapacity()} weapons at a time. Pick one to replace with the ${name}:`,
 							components: [new MessageActionRow().addComponents(...delver.weapons.map((weapon, weaponIndex) => {
-								return new MessageButton().setCustomId(`replaceweapon${helpers.SAFE_DELIMITER}${name}${helpers.SAFE_DELIMITER}${weaponIndex}${helpers.SAFE_DELIMITER}false`)
+								return new MessageButton().setCustomId(`replaceweapon${SAFE_DELIMITER}${name}${SAFE_DELIMITER}${weaponIndex}${SAFE_DELIMITER}false`)
 									.setLabel(`Discard ${weapon.name}`)
 									.setStyle("SECONDARY")
 							}))],

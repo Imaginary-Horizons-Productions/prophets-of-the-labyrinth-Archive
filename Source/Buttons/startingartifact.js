@@ -1,6 +1,6 @@
 const Button = require('../../Classes/Button.js');
 const { MessageActionRow, MessageSelectMenu, MessageButton } = require('discord.js');
-const helpers = require('../../helpers.js');
+const { SAFE_DELIMITER } = require('../../helpers.js');
 const { getPlayer } = require('../playerDAO.js');
 const { getAdventure } = require('../adventureDAO.js');
 const { getArtifact } = require('../Artifacts/_artifactDictionary.js');
@@ -31,7 +31,7 @@ module.exports.execute = (interaction, _args) => {
 		interaction.reply({ content: `Select your starting artifact for this adventure! Different artifacts can be collected by completing adventures.`, components: artifactSelect, ephemeral: true });
 	} else {
 		let join = new MessageActionRow().addComponents(
-			new MessageButton().setCustomId(`join${helpers.SAFE_DELIMITER}${interaction.guildId}${helpers.SAFE_DELIMITER}${interaction.channelId}`)
+			new MessageButton().setCustomId(`join${SAFE_DELIMITER}${interaction.guildId}${SAFE_DELIMITER}${interaction.channelId}`)
 				.setLabel("Join")
 				.setStyle("SUCCESS"));
 		interaction.reply({ content: `You don't appear to be signed up for this adventure. You can join with the button below:`, components: [join], ephemeral: true });

@@ -1,6 +1,6 @@
 const Command = require('../../Classes/Command.js');
 const { MessageEmbed, MessageActionRow, MessageSelectMenu } = require('discord.js');
-const helpers = require('../../helpers.js');
+const { SAFE_DELIMITER } = require('../../helpers.js');
 
 const options = [];
 module.exports = new Command("party-stats", "Get info about the current adventure", false, false, options);
@@ -37,7 +37,7 @@ module.exports.execute = (interaction) => {
 			return {
 				label: `${artifact} x ${adventure.artifacts[artifact]}`,
 				description: "",
-				value: `${artifact}${helpers.SAFE_DELIMITER}${adventure.artifacts[artifact]}`
+				value: `${artifact}${SAFE_DELIMITER}${adventure.artifacts[artifact]}`
 			}
 		})
 		let artifactSelect;
