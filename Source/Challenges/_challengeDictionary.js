@@ -3,7 +3,8 @@ exports.injectConfigChallenges = function (isProduction) {
 }
 
 let challengeWhitelist = [
-	"cantholdallthisvalue.js"
+	"cantholdallthisvalue.js",
+	"restless.js"
 ];
 
 const CHALLENGES = {};

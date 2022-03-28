@@ -64,7 +64,7 @@ module.exports.execute = (interaction) => {
 					content: `${interaction.user} Here's the channel for your new adventure. As adventure leader you're responsible for inputing the group's decisions (like challenges or indicating when everyone's ready).`,
 					components: [new MessageActionRow().addComponents(
 						new MessageButton().setCustomId("startingchallenges")
-							.setLabel("Add Challenges")
+							.setLabel("Set Challenges")
 							.setStyle("DANGER")
 					)]
 				}).then(leaderMessage => {
