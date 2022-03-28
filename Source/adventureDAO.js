@@ -41,7 +41,6 @@ let
 	buildWeaponDescription,
 	//artifactDictionary
 	rollArtifact,
-	getArtifactDescription,
 	//enemyDictionary
 	getEnemy,
 	//challengeDictionary
