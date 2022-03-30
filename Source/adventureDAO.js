@@ -45,21 +45,21 @@ let
 	getEnemy,
 	//challengeDictionary
 	getChallenge;
-	exports.injectConfig = function (isProduction) {
-		({ ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordinalSuffixEN, SAFE_DELIMITER } = require("../helpers.js").injectConfig(isProduction));
-		({ getGuild } = require("./guildDAO.js").injectConfig(isProduction));
-		({ setPlayer, getPlayer } = require("./playerDAO.js").injectConfig(isProduction));
-		({ spawnEnemy } = require("./enemyDAO.js").injectConfig(isProduction));
-		({ resolveMove } = require("./moveDAO.js").injectConfig(isProduction));
-		({ clearBlock, removeModifier } = require("./combatantDAO.js").injectConfig(isProduction));
-		({ manufactureRoomTemplate, prerollBoss } = require("./Rooms/_roomDictionary.js").injectConfig(isProduction));
-		({ getTurnDecrement } = require("./Modifiers/_modifierDictionary.js").injectConfig(isProduction));
-		({ rollWeaponDrop, getWeaponProperty, buildWeaponDescription } = require("./Weapons/_weaponDictionary.js").injectConfig(isProduction));
-		({ getArtifact, rollArtifact } = require("./Artifacts/_artifactDictionary.js").injectConfigArtifacts(isProduction));
-		({ getEnemy } = require("./Enemies/_enemyDictionary").injectConfigEnemies(isProduction));
-		({ getChallenge } = require("./Challenges/_challengeDictionary.js").injectConfigChallenges(isProduction));
-		return this;
-	}
+exports.injectConfig = function (isProduction) {
+	({ ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordinalSuffixEN, SAFE_DELIMITER } = require("../helpers.js").injectConfig(isProduction));
+	({ getGuild } = require("./guildDAO.js").injectConfig(isProduction));
+	({ setPlayer, getPlayer } = require("./playerDAO.js").injectConfig(isProduction));
+	({ spawnEnemy } = require("./enemyDAO.js").injectConfig(isProduction));
+	({ resolveMove } = require("./moveDAO.js").injectConfig(isProduction));
+	({ clearBlock, removeModifier } = require("./combatantDAO.js").injectConfig(isProduction));
+	({ manufactureRoomTemplate, prerollBoss } = require("./Rooms/_roomDictionary.js").injectConfig(isProduction));
+	({ getTurnDecrement } = require("./Modifiers/_modifierDictionary.js").injectConfig(isProduction));
+	({ rollWeaponDrop, getWeaponProperty, buildWeaponDescription } = require("./Weapons/_weaponDictionary.js").injectConfig(isProduction));
+	({ getArtifact, rollArtifact } = require("./Artifacts/_artifactDictionary.js").injectConfigArtifacts(isProduction));
+	({ getEnemy } = require("./Enemies/_enemyDictionary").injectConfigEnemies(isProduction));
+	({ getChallenge } = require("./Challenges/_challengeDictionary.js").injectConfigChallenges(isProduction));
+	return this;
+}
 
 const filePath = "./Saves/adventures.json";
 const requirePath = "./../Saves/adventures.json";
@@ -328,6 +328,9 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 		.setFooter({ text: `Room #${adventure.depth} - Round ${adventure.room.round}` });
 	if (!exports.checkNextRound(adventure)) {
 		let battleMenu = [new MessageActionRow().addComponents(
+			new MessageButton().setCustomId("inspectself")
+				.setLabel("Inspect Self")
+				.setStyle("SECONDARY"),
 			new MessageButton().setCustomId("predict")
 				.setLabel("Predict")
 				.setStyle("SECONDARY"),
@@ -607,9 +610,6 @@ exports.completeAdventure = function (adventure, thread, scoreEmbed) { //TODO #2
 	clearComponents(adventure.messageIds.room, thread.messages);
 	if (adventure.messageIds.utility) {
 		thread.messages.delete(adventure.messageIds.utility);
-	}
-	if (adventure.messageIds.leaderNotice) {
-		thread.messages.delete(adventure.messageIds.leaderNotice);
 	}
 
 	let artifactCollection = [];

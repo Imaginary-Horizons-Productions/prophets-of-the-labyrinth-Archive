@@ -8,6 +8,7 @@ var buttonWhitelist = [
 	"elementswap.js",
 	"getgoldonfire.js",
 	"hpshare.js",
+	"inspectself.js",
 	"join.js",
 	"modifier.js",
 	"nontargetweapon.js",
