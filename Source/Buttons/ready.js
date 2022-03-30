@@ -15,6 +15,10 @@ module.exports.execute = (interaction, _args) => {
 			interaction.channel.messages.delete(adventure.messageIds.deploy);
 			delete adventure.messageIds.deploy;
 		}
+		if (adventure.messageIds.leaderNotice) {
+			interaction.channel.messages.delete(adventure.messageIds.leaderNotice);
+			delete adventure.messageIds.leaderNotice;
+		}
 		interaction.message.delete();
 		delete adventure.messageIds.start;
 
