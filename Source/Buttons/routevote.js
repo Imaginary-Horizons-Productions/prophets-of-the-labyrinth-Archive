@@ -8,7 +8,7 @@ module.exports = new Button("routevote");
 module.exports.execute = (interaction, [candidate, depth]) => {
 	// Tally votes for next room
 	let adventure = getAdventure(interaction.channel.id);
-	const candidateTag = candidate + SAFE_DELIMITER + depth;
+	const candidateTag = `${candidate}${SAFE_DELIMITER}${depth}`;
 	if (adventure.roomCandidates[candidateTag]) {
 		let delverIds = adventure.delvers.map(delver => delver.id);
 		if (delverIds.includes(interaction.user.id)) {
