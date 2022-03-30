@@ -12,6 +12,10 @@ module.exports.execute = (interaction, [guildId, adventureId]) => {
 	if (isSponsor(interaction.user.id) || !guildProfile.adventuring.has(interaction.user.id)) {
 		let adventure = getAdventure(adventureId);
 		if (adventure.state === "config") {
+			let recruitMessage = interaction.message;
+			if (!recruitMessage.hasThread) {
+				recruitMessage = await interaction.channel.fetchStartingMessage();
+			}
 			if (adventure.delvers.length < 12) {
 				if (!adventure.delvers.some(delver => delver.id == interaction.user.id)) {
 					// Update game logic
@@ -38,10 +42,10 @@ module.exports.execute = (interaction, [guildId, adventureId]) => {
 						}
 					}
 					let embeds = [];
-					if (interaction.message.embeds[0]) {
-						embeds = [interaction.message.embeds[0].spliceFields(0, 1, { name: `${adventure.delvers.length} Party Member${adventure.delvers.length == 1 ? "" : "s"}`, value: partyList })];
+					if (recruitMessage.embeds[0]) {
+						embeds = [recruitMessage.embeds[0].spliceFields(0, 1, { name: `${adventure.delvers.length} Party Member${adventure.delvers.length == 1 ? "" : "s"}`, value: partyList })];
 					}
-					let components = interaction.message.components;
+					let components = recruitMessage.components;
 					if (adventure.delvers.length > 11) {
 						components = [];
 					}
@@ -51,7 +55,7 @@ module.exports.execute = (interaction, [guildId, adventureId]) => {
 						.catch(console.error);
 				}
 			} else {
-				interaction.message.edit({ components: [] });
+				recruitMessage.edit({ components: [] });
 				interaction.reply({ content: "Due to UI limitations, maximum number of delvers on an adventure is 12.", ephemeral: true });
 			}
 		} else {
