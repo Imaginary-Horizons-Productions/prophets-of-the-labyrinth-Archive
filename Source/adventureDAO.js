@@ -332,6 +332,9 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 		.setFooter({ text: `Room #${adventure.depth} - Round ${adventure.room.round}` });
 	if (!exports.checkNextRound(adventure)) {
 		let battleMenu = [new MessageActionRow().addComponents(
+			new MessageButton().setCustomId("inspectself")
+				.setLabel("Inspect Self")
+				.setStyle("SECONDARY"),
 			new MessageButton().setCustomId("predict")
 				.setLabel("Predict")
 				.setStyle("SECONDARY"),
@@ -618,9 +621,6 @@ exports.completeAdventure = function (adventure, thread, { isSuccess, descriptio
 	clearComponents(adventure.messageIds.room, thread.messages);
 	if (adventure.messageIds.utility) {
 		thread.messages.delete(adventure.messageIds.utility);
-	}
-	if (adventure.messageIds.leaderNotice) {
-		thread.messages.delete(adventure.messageIds.leaderNotice);
 	}
 
 	adventure.state = "completed";
