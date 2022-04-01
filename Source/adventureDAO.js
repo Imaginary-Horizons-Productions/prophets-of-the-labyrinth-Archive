@@ -45,21 +45,21 @@ let
 	getEnemy,
 	//challengeDictionary
 	getChallenge;
-	exports.injectConfig = function (isProduction) {
-		({ ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordinalSuffixEN, SAFE_DELIMITER } = require("../helpers.js").injectConfig(isProduction));
-		({ getGuild } = require("./guildDAO.js").injectConfig(isProduction));
-		({ setPlayer, getPlayer } = require("./playerDAO.js").injectConfig(isProduction));
-		({ spawnEnemy } = require("./enemyDAO.js").injectConfig(isProduction));
-		({ resolveMove } = require("./moveDAO.js").injectConfig(isProduction));
-		({ clearBlock, removeModifier } = require("./combatantDAO.js").injectConfig(isProduction));
-		({ manufactureRoomTemplate, prerollBoss } = require("./Rooms/_roomDictionary.js").injectConfig(isProduction));
-		({ getTurnDecrement } = require("./Modifiers/_modifierDictionary.js").injectConfig(isProduction));
-		({ rollWeaponDrop, getWeaponProperty, buildWeaponDescription } = require("./Weapons/_weaponDictionary.js").injectConfig(isProduction));
-		({ getArtifact, rollArtifact } = require("./Artifacts/_artifactDictionary.js").injectConfigArtifacts(isProduction));
-		({ getEnemy } = require("./Enemies/_enemyDictionary").injectConfigEnemies(isProduction));
-		({ getChallenge } = require("./Challenges/_challengeDictionary.js").injectConfigChallenges(isProduction));
-		return this;
-	}
+exports.injectConfig = function (isProduction) {
+	({ ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordinalSuffixEN, SAFE_DELIMITER } = require("../helpers.js").injectConfig(isProduction));
+	({ getGuild } = require("./guildDAO.js").injectConfig(isProduction));
+	({ setPlayer, getPlayer } = require("./playerDAO.js").injectConfig(isProduction));
+	({ spawnEnemy } = require("./enemyDAO.js").injectConfig(isProduction));
+	({ resolveMove } = require("./moveDAO.js").injectConfig(isProduction));
+	({ clearBlock, removeModifier } = require("./combatantDAO.js").injectConfig(isProduction));
+	({ manufactureRoomTemplate, prerollBoss } = require("./Rooms/_roomDictionary.js").injectConfig(isProduction));
+	({ getTurnDecrement } = require("./Modifiers/_modifierDictionary.js").injectConfig(isProduction));
+	({ rollWeaponDrop, getWeaponProperty, buildWeaponDescription } = require("./Weapons/_weaponDictionary.js").injectConfig(isProduction));
+	({ getArtifact, rollArtifact } = require("./Artifacts/_artifactDictionary.js").injectConfigArtifacts(isProduction));
+	({ getEnemy } = require("./Enemies/_enemyDictionary").injectConfigEnemies(isProduction));
+	({ getChallenge } = require("./Challenges/_challengeDictionary.js").injectConfigChallenges(isProduction));
+	return this;
+}
 
 const filePath = "./Saves/adventures.json";
 const requirePath = "./../Saves/adventures.json";
@@ -250,7 +250,14 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 		exports.setAdventure(adventure);
 	} else {
 		adventure.accumulatedScore = 10;
-		exports.completeAdventure(adventure, thread, new MessageEmbed().setTitle("Success"));
+		thread.send({
+			embeds: [exports.completeAdventure(adventure, thread, { isSuccess: true, description: null })],
+			components: [new MessageActionRow().addComponents(
+				new MessageButton().setCustomId("collectartifact")
+					.setLabel("Collect Artifact")
+					.setStyle("SUCCESS")
+			)]
+		})
 	}
 }
 
@@ -499,7 +506,7 @@ exports.endRound = async function (adventure, thread) {
 		lastRoundText += await resolveMove(move, adventure);
 		// Check for Defeat
 		if (adventure.lives <= 0) {
-			exports.completeAdventure(adventure, thread, embed.setTitle("Defeat").setDescription(lastRoundText));
+			thread.send({ embeds: [exports.completeAdventure(adventure, thread, { isSuccess: false, description: lastRoundText })] })
 			return;
 		}
 
@@ -565,7 +572,7 @@ exports.checkNextRound = function (adventure) {
 	return adventure.room.moves.length - adventure.room.enemies.length === adventure.delvers.length;
 }
 
-exports.completeAdventure = function (adventure, thread, scoreEmbed) { //TODO #227 functionalize scoreEmbed to allow sending as response to /give-up
+exports.completeAdventure = function (adventure, thread, { isSuccess, description }) {
 	let livesScore = adventure.lives * 10;
 	let goldScore = Math.floor(Math.log10(adventure.peakGold)) * 5;
 	let score = adventure.accumulatedScore + livesScore + goldScore + adventure.depth;
@@ -575,12 +582,18 @@ exports.completeAdventure = function (adventure, thread, scoreEmbed) { //TODO #2
 		challengeMultiplier *= challenge.scoreMultiplier;
 	})
 	score *= challengeMultiplier;
-	let isSuccess = scoreEmbed.title === "Success";
+	let scoreEmbed = new MessageEmbed();
+	if (description) {
+		scoreEmbed.setDescription(description);
+	}
 	if (!isSuccess) {
+		scoreEmbed.setTitle("Defeat");
 		score = Math.floor(score / 2);
+	} else {
+		scoreEmbed.setTitle("Success");
 	}
 	let skippedStartingArtifactMultiplier = 1 + (adventure.delvers.reduce((count, delver) => delver.startingArtifact ? count : count + 1, 0) / adventure.delvers.length);
-	score = Math.max(1, score) * skippedStartingArtifactMultiplier;
+	score = Math.max(1, score * skippedStartingArtifactMultiplier);
 	scoreEmbed.addField("Score Breakdown", `Depth: ${adventure.depth}\nLives: ${livesScore}\nGold: ${goldScore}\nBonus: ${adventure.accumulatedScore}\nChallenges Multiplier: ${challengeMultiplier}\nMultiplier (Skipped Starting Artifacts): ${skippedStartingArtifactMultiplier}\n\n__Total__: ${!isSuccess && score > 0 ? `score ÷ 2  = ${score} (Defeat)` : score}`);
 
 	let guildId = thread.guildId;
@@ -612,17 +625,9 @@ exports.completeAdventure = function (adventure, thread, scoreEmbed) { //TODO #2
 		thread.messages.delete(adventure.messageIds.leaderNotice);
 	}
 
-	let artifactCollection = [];
-	if (isSuccess) {
-		artifactCollection.push(new MessageActionRow().addComponents(
-			new MessageButton().setCustomId("collectartifact")
-				.setLabel("Collect Artifact")
-				.setStyle("SUCCESS")
-		))
-	}
-	thread.send({ embeds: [scoreEmbed], components: artifactCollection });
 	adventure.state = "completed";
 	exports.setAdventure(adventure);
+	return scoreEmbed;
 }
 
 function saveAdventures() {

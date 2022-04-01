@@ -1,4 +1,3 @@
-const { MessageEmbed } = require('discord.js');
 const Button = require('../../Classes/Button.js');
 const { getAdventure, completeAdventure, updateRoomHeader } = require('../adventureDAO.js');
 const { gainHealth, dealDamage } = require("../combatantDAO.js");
@@ -22,10 +21,10 @@ module.exports.execute = (interaction, args) => {
 				})
 				return interaction.reply(`${damageText} Everyone else gains 50 hp.`);
 			}).then(() => {
-				let updatedUI = editButton(interaction.message, "hpshare", true, "✔️", `${interaction.user} shared HP.`);
-				interaction.update({ components: updatedUI });
 				if (adventure.lives < 1) {
-					completeAdventure(adventure, interaction.channel, new MessageEmbed().setTitle("Defeat"));
+					interaction.reply({ embeds: [completeAdventure(adventure, interaction.channel, { isSuccess: false, description: null })] });
+				} else {
+					interaction.update({ components: editButton(interaction.message, "hpshare", true, "✔️", `${interaction.user} shared HP.`) });
 				}
 			})
 		} else {
