@@ -191,6 +191,15 @@ exports.addModifier = function (combatant, { name: modifier, stacks }) {
 	if (combatant.modifiers?.Stagger >= combatant.staggerThreshold) {
 		combatant.modifiers.Stagger -= combatant.staggerThreshold;
 		combatant.modifiers.Stun = 1;
+		if (combatant.modifiers.Progress) {
+			combatant.modifiers.Progress = Math.ceil(combatant.modifiers.Progress * 0.8);
+		}
+	}
+
+	// Check if Progress yields results
+	if (combatant.modifiers?.Progress >= 100) {
+		combatant.modifiers.Progress -= 100;
+		exports.addModifier(combatant, { name: "Power Up", stacks: 100 });
 	}
 	return combatant;
 }
