@@ -6,9 +6,9 @@ const options = [
 module.exports = new Command("version", "Get HorizonsBot's version notes", false, false, options);
 
 // imports from files that depend on /Config
-let versionEmbedBuilder;
+let getVersionEmbed;
 module.exports.injectConfig = function (isProduction) {
-	({ versionEmbedBuilder } = require("./../../helpers.js").injectConfig(isProduction));
+	({ getVersionEmbed } = require("./../../helpers.js").injectConfig(isProduction));
 	return this;
 }
 
@@ -24,7 +24,7 @@ module.exports.execute = (interaction) => {
 			ephemeral: true
 		});
 	} else {
-		versionEmbedBuilder(interaction.client.user.displayAvatarURL()).then(embed => {
+		getVersionEmbed(interaction.client.user.displayAvatarURL()).then(embed => {
 			interaction.reply({ embeds: [embed], ephemeral: true });
 		}).catch(console.error);
 	}

@@ -8,10 +8,10 @@ let
 	// adventureDAO
 	getAdventure,
 	// combatantDAO
-	delverStatsBuilder;
+	delverStatsPayload;
 module.exports.injectConfig = function (isProduction) {
 	({ getAdventure } = require('../adventureDAO.js').injectConfig(isProduction));
-	({ delverStatsBuilder } = require('../combatantDAO.js').injectConfig(isProduction));
+	({ delverStatsPayload } = require('../combatantDAO.js').injectConfig(isProduction));
 	return this;
 }
 
@@ -21,7 +21,7 @@ module.exports.execute = (interaction) => {
 	if (adventure) {
 		let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 		if (delver) {
-			interaction.reply(delverStatsBuilder(delver))
+			interaction.reply(delverStatsPayload(delver))
 				.catch(console.error);
 		} else {
 			interaction.reply({ content: "You are not a part of this adventure.", ephemeral: true });
