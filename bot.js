@@ -15,7 +15,7 @@ const { loadPlayers } = require("./Source/playerDAO.js").injectConfig(isProducti
 const { getCommand, injectConfigCommands, slashData } = require(`./Source/Commands/_commandDictionary.js`);
 const { getSelect } = require("./Source/Selects/_selectDictionary.js");
 const { getButton } = require("./Source/Buttons/_buttonDictionary.js");
-const { getPremiumUsers, versionEmbedBuilder } = require("./helpers.js");
+const { getPremiumUsers, getVersionEmbed } = require("./helpers.js");
 //#endregion
 
 //#region Executing Code
@@ -61,7 +61,7 @@ client.on("ready", () => {
 				}
 			}
 
-			versionEmbedBuilder(client.user.displayAvatarURL()).then(embed => {
+			getVersionEmbed(client.user.displayAvatarURL()).then(embed => {
 				client.guilds.fetch(versionData.guildId).then(guild => {
 					guild.channels.fetch(versionData.announcementsChannelId).then(annoucnementsChannel => {
 						annoucnementsChannel.send({ embeds: [embed] }).then(message => {

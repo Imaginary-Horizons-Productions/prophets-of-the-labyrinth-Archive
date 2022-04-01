@@ -44,7 +44,7 @@ exports.calculateTotalSpeed = function (combatant) {
 	return Math.ceil(totalSpeed);
 }
 
-exports.delverStatsBuilder = function (delver) {
+exports.delverStatsPayload = function (delver) {
 	let embed = new MessageEmbed()
 		.setTitle(exports.getFullName(delver, {}))
 		.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nPredicts: ${delver.predict}\nWhen using ${delver.element} ${getEmoji(delver.element)} weapons, add 1 Stagger to enemies or remove 1 Stagger from allies`)

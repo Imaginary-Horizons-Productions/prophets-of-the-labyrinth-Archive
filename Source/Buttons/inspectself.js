@@ -1,6 +1,6 @@
 const Button = require('../../Classes/Button.js');
 const { getAdventure } = require('../adventureDAO.js');
-const { delverStatsBuilder } = require('../combatantDAO.js');
+const { delverStatsPayload } = require('../combatantDAO.js');
 
 module.exports = new Button("inspectself");
 
@@ -10,7 +10,7 @@ module.exports.execute = (interaction, args) => {
 	if (adventure) {
 		let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 		if (delver) {
-			interaction.reply(delverStatsBuilder(delver))
+			interaction.reply(delverStatsPayload(delver))
 				.catch(console.error);
 		} else {
 			interaction.reply({ content: "You are not a part of this adventure.", ephemeral: true });

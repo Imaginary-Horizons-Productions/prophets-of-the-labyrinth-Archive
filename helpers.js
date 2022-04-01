@@ -99,7 +99,7 @@ exports.ordinalSuffixEN = function (integer) {
 	}
 }
 
-exports.versionEmbedBuilder = function (avatarURL) {
+exports.getVersionEmbed = function (avatarURL) {
 	return fs.promises.readFile('./ChangeLog.md', { encoding: 'utf8' }).then(data => {
 		const dividerRegEx = /####/g;
 		const changesStartRegEx = /\.\d+:/g;
