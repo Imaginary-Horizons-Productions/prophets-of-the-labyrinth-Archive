@@ -6,7 +6,7 @@ const { getAdventure, setAdventure } = require("./../adventureDAO.js").injectCon
 
 module.exports = new Button("join");
 
-module.exports.execute = (interaction, [guildId, adventureId]) => {
+module.exports.execute = async (interaction, [guildId, adventureId]) => {
 	// Join an existing adventure
 	let guildProfile = getGuild(interaction.guildId);
 	if (isSponsor(interaction.user.id) || !guildProfile.adventuring.has(interaction.user.id)) {
