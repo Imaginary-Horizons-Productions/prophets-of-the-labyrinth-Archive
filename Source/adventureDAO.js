@@ -149,11 +149,10 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 	if (!finalBossDepths.includes(adventure.depth + 1)) {
 		adventure.roomCandidates = {};
 		let numCandidates = 2 + (adventure.artifacts["Enchanted Map"] || 0);
-		let candidateType = "";
 		for (let i = 0; i < numCandidates; i++) {
-			candidateType = roomTypes[generateRandomNumber(adventure, roomTypes.length, "general")];
-			if (!adventure.roomCandidates[candidateType]) {
-				adventure.roomCandidates[candidateType] = [];
+			const candidateTag = `${roomTypes[generateRandomNumber(adventure, roomTypes.length, "general")]}${SAFE_DELIMITER}${adventure.depth}`;
+			if (!adventure.roomCandidates[candidateTag]) {
+				adventure.roomCandidates[candidateTag] = [];
 				if (Object.keys(adventure.roomCandidates).length === 5) {
 					// Should not execed 5, as only 5 buttons can be in a MessageActionRow
 					break;
@@ -161,9 +160,7 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 			}
 		}
 	} else {
-		adventure.roomCandidates = {
-			"Final Battle": true
-		};
+		adventure.roomCandidates[`Final Battle${SAFE_DELIMITER}${adventure.depth}`] = true;
 	}
 
 	// Generate current room
@@ -358,15 +355,16 @@ exports.generateRoutingRow = function (adventure) {
 	let candidateKeys = Object.keys(adventure.roomCandidates);
 	if (candidateKeys.length > 1) {
 		return new MessageActionRow().addComponents(
-			...candidateKeys.map(roomType => {
-				return new MessageButton().setCustomId(`routevote${SAFE_DELIMITER}${roomType}`)
+			...candidateKeys.map(candidateTag => {
+				let [roomType, _depth] = candidateTag.split(SAFE_DELIMITER);
+				return new MessageButton().setCustomId(`routevote${SAFE_DELIMITER}${candidateTag}`)
 					.setLabel(`Next room: ${roomType}`)
 					.setStyle("SECONDARY")
 			}));
 	} else {
 		return new MessageActionRow().addComponents(
 			new MessageButton().setCustomId("continue")
-				.setLabel(`Continue to the ${candidateKeys[0]}`)
+				.setLabel(`Continue to the ${candidateKeys[0].split(SAFE_DELIMITER)[0]}`)
 				.setStyle("SECONDARY")
 		);
 	}
