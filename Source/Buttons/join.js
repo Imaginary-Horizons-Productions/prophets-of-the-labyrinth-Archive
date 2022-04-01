@@ -57,7 +57,7 @@ module.exports.execute = async (interaction, [guildId, adventureId]) => {
 				}
 			} else {
 				recruitMessage.edit({ components: [] });
-				interaction.reply({ content: "Due to UI limitations, maximum number of delvers on an adventure is 12.", ephemeral: true });
+				interaction.update({ content: "Due to UI limitations, maximum number of delvers on an adventure is 12.", components: [], ephemeral: true });
 			}
 		} else {
 			interaction.reply({ content: "This adventure has already started, but you can recruit for your own with `/delve`.", ephemeral: true });
