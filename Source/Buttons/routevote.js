@@ -21,9 +21,9 @@ module.exports.execute = (interaction, [candidate, depth]) => {
 			}
 			adventure.roomCandidates[candidateTag].push(interaction.user.id);
 
-			interaction.reply(`${interaction.user} ${changeVote ? "changed their vote to" : "voted for"} ${candidateTag}.`).then(() => {
+			interaction.reply(`${interaction.user} ${changeVote ? "changed their vote to" : "voted for"} ${candidate}.`).then(_message => {
 				// Decide by unanimous vote
-				if (adventure.roomCandidates[candidateTag].length === adventure.delvers.length) {
+				if (adventure.roomCandidates[candidateTag]?.length === adventure.delvers.length) {
 					clearComponents(adventure.messageIds.battleRound, interaction.channel.messages);
 					let uiRows = [...interaction.message.components.map(row => {
 						return new MessageActionRow().addComponents(...row.components.map(component => {
@@ -39,15 +39,13 @@ module.exports.execute = (interaction, [candidate, depth]) => {
 						}));
 					})];
 					interaction.message.edit({ components: uiRows });
-					interaction.followUp(`The party moves on to ${candidate}.`).then(message => {
-						nextRoom(candidate, adventure, interaction.channel);
-					});
+					nextRoom(candidate, adventure, interaction.channel);
 				}
 			});
 		} else {
-			interaction.update({ content: "\u200B" });
+			interaction.reply({ content: "Please vote on routes in adventures you've joined.", ephemeral: true });
 		}
 	} else {
-		interaction.reply({ content: "Please vote on routes in adventures you've joined.", ephemeral: true });
+		interaction.update({ content: "\u200B" });
 	}
 }

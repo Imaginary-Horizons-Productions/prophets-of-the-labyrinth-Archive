@@ -142,12 +142,12 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 	// Clean up old room
 	adventure.depth++;
 	adventure.room = {};
+	adventure.roomCandidates = {};
 
 	// Roll options for next room type
 	let roomTypes = ["Battle", "Event", "Forge", "Rest Site", "Artifact Guardian", "Merchant"]; //TODO #126 add weights to room types
 	let finalBossDepths = [10];
 	if (!finalBossDepths.includes(adventure.depth + 1)) {
-		adventure.roomCandidates = {};
 		let numCandidates = 2 + (adventure.artifacts["Enchanted Map"] || 0);
 		for (let i = 0; i < numCandidates; i++) {
 			const candidateTag = `${roomTypes[generateRandomNumber(adventure, roomTypes.length, "general")]}${SAFE_DELIMITER}${adventure.depth}`;
