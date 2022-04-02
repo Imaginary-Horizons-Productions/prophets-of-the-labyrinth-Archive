@@ -3,10 +3,13 @@
 - Added challenges
    - These can be applied at the beginning of the run or at a rest site for a score bonus and other rewards
    - New challenges: Can't Hold All this Value, Restless
+- `/stats` now shows if a player is available for adventures
 - Bot no longer creates a (no longer required) category and text channel for starting adventures in
 - Allowed deselecting starting artifact
 - Fixed healing reporting block gained while party has no Bloodshield Swords
 - Fixed text interpolation for modifier descriptions with more than 1 dynamic value
+- Fixed several multiplayer bugs
+- Culled some unnecessary bot output
 - Other stuff
 #### Prophets of the Labyrinth Version 0.6.0:
 - New artifact: Negative-One Leaf Clover
