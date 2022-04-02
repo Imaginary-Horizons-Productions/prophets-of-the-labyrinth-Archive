@@ -17,6 +17,7 @@ var modifierWhitelist = [
 	"poison.js",
 	"power-down.js",
 	"power-up.js",
+	"progress.js",
 	"quicken.js",
 	"regen.js",
 	"slow.js",
