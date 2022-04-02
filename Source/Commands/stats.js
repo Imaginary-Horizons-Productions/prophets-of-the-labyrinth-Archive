@@ -20,7 +20,7 @@ module.exports.injectConfig = function (isProduction) {
 	({ getArtifactCounts } = require('../Artifacts/_artifactDictionary.js').injectConfigArtifacts(isProduction));
 	({ getPlayer } = require('../playerDAO.js').injectConfig(isProduction));
 	({ isSponsor } = require('../../helpers.js').injectConfig(isProduction));
-	({ getGuild, getGuild } = require('../guildDAO.js').injectConfig(isProduction));
+	({ getGuild } = require('../guildDAO.js').injectConfig(isProduction));
 	return this;
 }
 
