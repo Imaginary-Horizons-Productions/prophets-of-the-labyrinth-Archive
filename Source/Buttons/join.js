@@ -6,7 +6,7 @@ const { getAdventure, setAdventure } = require("./../adventureDAO.js").injectCon
 
 module.exports = new Button("join");
 
-module.exports.execute = (interaction, [guildId, adventureId]) => {
+module.exports.execute = async (interaction, [guildId, adventureId]) => {
 	// Join an existing adventure
 	let guildProfile = getGuild(interaction.guildId);
 	if (isSponsor(interaction.user.id) || !guildProfile.adventuring.has(interaction.user.id)) {
@@ -14,7 +14,7 @@ module.exports.execute = (interaction, [guildId, adventureId]) => {
 		if (adventure.state === "config") {
 			let recruitMessage = interaction.message;
 			if (!recruitMessage.hasThread) {
-				recruitMessage = await interaction.channel.fetchStartingMessage();
+				recruitMessage = await interaction.channel.fetchStarterMessage();
 			}
 			if (adventure.delvers.length < 12) {
 				if (!adventure.delvers.some(delver => delver.id == interaction.user.id)) {
@@ -49,7 +49,8 @@ module.exports.execute = (interaction, [guildId, adventureId]) => {
 					if (adventure.delvers.length > 11) {
 						components = [];
 					}
-					interaction.update({ embeds, components });
+					recruitMessage.edit({ embeds, components });
+					interaction.update({ components: [] })
 				} else {
 					interaction.reply({ content: "You are already part of this adventure!", ephemeral: true })
 						.catch(console.error);

@@ -104,11 +104,11 @@ client.on("interactionCreate", interaction => {
 					.catch(console.error);
 			}
 		} else if (interaction.isButton()) {
-			const [command, ...args] = interaction.customId.split(SAFE_DELIMITER);
-			getButton(command).execute(interaction, args);
+			const [customId, ...args] = interaction.customId.split(SAFE_DELIMITER);
+			getButton(customId).execute(interaction, args);
 		} else if (interaction.isSelectMenu()) {
-			const [command, ...args] = interaction.customId.split(SAFE_DELIMITER);
-			getSelect(command).execute(interaction, args);
+			const [customId, ...args] = interaction.customId.split(SAFE_DELIMITER);
+			getSelect(customId).execute(interaction, args);
 		}
 	} else {
 		interaction.reply({ content: "Direct message commands are not supported at this time.", ephemeral: true })
