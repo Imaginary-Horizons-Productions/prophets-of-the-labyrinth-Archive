@@ -1,6 +1,7 @@
 const { MessageActionRow, MessageSelectMenu, MessageButton } = require('discord.js');
 const Button = require('../../Classes/Button.js');
 const { SAFE_DELIMITER } = require('../../helpers.js');
+const { getAdventure } = require('../adventureDAO.js');
 const { getChallenge } = require('../Challenges/_challengeDictionary.js');
 
 module.exports = new Button("startingchallenges");

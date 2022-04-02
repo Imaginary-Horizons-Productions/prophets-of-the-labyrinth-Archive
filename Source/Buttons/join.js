@@ -14,7 +14,7 @@ module.exports.execute = async (interaction, [guildId, adventureId]) => {
 		if (adventure.state === "config") {
 			let recruitMessage = interaction.message;
 			if (!recruitMessage.hasThread) {
-				recruitMessage = await interaction.channel.fetchStartingMessage();
+				recruitMessage = await interaction.channel.fetchStarterMessage();
 			}
 			if (adventure.delvers.length < 12) {
 				if (!adventure.delvers.some(delver => delver.id == interaction.user.id)) {
@@ -49,7 +49,8 @@ module.exports.execute = async (interaction, [guildId, adventureId]) => {
 					if (adventure.delvers.length > 11) {
 						components = [];
 					}
-					interaction.update({ embeds, components });
+					recruitMessage.edit({ embeds, components });
+					interaction.update({ components: [] })
 				} else {
 					interaction.reply({ content: "You are already part of this adventure!", ephemeral: true })
 						.catch(console.error);
