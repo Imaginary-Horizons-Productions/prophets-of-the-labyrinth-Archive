@@ -22,7 +22,7 @@ module.exports.execute = (interaction, args) => {
 		} else {
 			interaction.values.forEach(challengeName => {
 				const challenge = getChallenge(challengeName);
-				adventure.challenges[challengeName] = { intensity: challenge.startingValue, duration: challenge.duration };
+				adventure.challenges[challengeName] = { intensity: challenge.intensity, duration: challenge.duration };
 			})
 			interaction.channel.fetchStarterMessage().then(starterMessage => {
 				let embed = starterMessage.embeds[0];

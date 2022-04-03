@@ -143,7 +143,7 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 	let roomTypes = ["Battle", "Event", "Forge", "Rest Site", "Artifact Guardian", "Merchant"]; //TODO #126 add weights to room types
 	let finalBossDepths = [10];
 	if (!finalBossDepths.includes(adventure.depth + 1)) {
-		let numCandidates = 2 + (adventure.artifacts["Enchanted Map"] || 0);
+		let numCandidates = 2 + adventure.getArtifactCount("Enchanted Map");
 		for (let i = 0; i < numCandidates; i++) {
 			const candidateTag = `${roomTypes[generateRandomNumber(adventure, roomTypes.length, "general")]}${SAFE_DELIMITER}${adventure.depth}`;
 			if (!adventure.roomCandidates[candidateTag]) {
@@ -202,7 +202,7 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 			exports.newRound(adventure, thread, embed);
 		} else {
 			// Generate non-combat room
-			const cloverCount = adventure.artifacts["Negative-One Leaf Clover"] || 0;
+			const cloverCount = adventure.getArtifactCount("Negative-One Leaf Clover");
 			for (let category in roomTemplate.saleList) {
 				if (category.startsWith("weapon")) {
 					let [type, tier] = category.split(SAFE_DELIMITER);
@@ -517,7 +517,7 @@ exports.endRound = async function (adventure, thread) {
 			let dropThreshold = 1;
 			let dropMax = 8;
 			if (generateRandomNumber(adventure, dropMax, "general") < dropThreshold) {
-				const cloverCount = adventure.artifacts["Negative-One Leaf Clover"] || 0;
+				const cloverCount = adventure.getArtifactCount("Negative-One Leaf Clover");
 				let tier = 1;
 				let upgradeThreshold = 1 + cloverCount;
 				let upgradeMax = 8 + cloverCount;
