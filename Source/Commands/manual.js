@@ -29,10 +29,11 @@ module.exports.execute = (interaction) => {
 				.setThumbnail(interaction.client.user.displayAvatarURL())
 				.setDescription(`A roguelike dungeon crawl in Discord to play with other server members.`)
 				.addField(`Design & Engineering`, `Nathaniel Tseng ( <@106122478715150336> | [Twitter](https://twitter.com/Arcane_ish) )`)
+				.addField(`Dev & Review`, `Henry Hu ( <@113108081990176768> | [Twitter](https://twitter.com/hdoubledh) )`)
 				.addField("Random Number Generator", "Alex Frank")
 				.addField("Room Loader", "Michel Momeyer")
 				.addField("Predict Balance", "Lucas Ensign")
-				.addField("Playtesting", "Henry Hu, Ralph Beishline, Eric Hu, TheChreative, Jon Puddicombe")
+				.addField("Playtesting", "Ralph Beishline, Eric Hu, TheChreative, Jon Puddicombe")
 				.addField(`Embed Thumbnails`, `[game-icons.net](https://game-icons.net/)`)
 			];
 			break;
