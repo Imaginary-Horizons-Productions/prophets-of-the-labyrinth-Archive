@@ -44,7 +44,8 @@ let
 	//enemyDictionary
 	getEnemy,
 	//challengeDictionary
-	getChallenge;
+	getChallenge,
+	rollChallenges;
 exports.injectConfig = function (isProduction) {
 	({ ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordinalSuffixEN, SAFE_DELIMITER } = require("../helpers.js").injectConfig(isProduction));
 	({ getGuild } = require("./guildDAO.js").injectConfig(isProduction));
@@ -57,7 +58,7 @@ exports.injectConfig = function (isProduction) {
 	({ rollWeaponDrop, getWeaponProperty, buildWeaponDescription } = require("./Weapons/_weaponDictionary.js").injectConfig(isProduction));
 	({ getArtifact, rollArtifact, getArtifactDescription } = require("./Artifacts/_artifactDictionary.js").injectConfigArtifacts(isProduction));
 	({ getEnemy } = require("./Enemies/_enemyDictionary").injectConfigEnemies(isProduction));
-	({ getChallenge } = require("./Challenges/_challengeDictionary.js").injectConfigChallenges(isProduction));
+	({ getChallenge, rollChallenges } = require("./Challenges/_challengeDictionary.js").injectConfigChallenges(isProduction));
 	return this;
 }
 
@@ -139,27 +140,36 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 	adventure.room = {};
 	adventure.roomCandidates = {};
 
-	// Roll options for next room type
-	let roomTypes = ["Battle", "Event", "Forge", "Rest Site", "Artifact Guardian", "Merchant"]; //TODO #126 add weights to room types
-	let finalBossDepths = [10];
-	if (!finalBossDepths.includes(adventure.depth + 1)) {
-		let numCandidates = 2 + adventure.getArtifactCount("Enchanted Map");
-		for (let i = 0; i < numCandidates; i++) {
-			const candidateTag = `${roomTypes[generateRandomNumber(adventure, roomTypes.length, "general")]}${SAFE_DELIMITER}${adventure.depth}`;
-			if (!adventure.roomCandidates[candidateTag]) {
-				adventure.roomCandidates[candidateTag] = [];
-				if (Object.keys(adventure.roomCandidates).length === 5) {
-					// Should not execed 5, as only 5 buttons can be in a MessageActionRow
-					break;
-				}
+	for (const challengeName in adventure.challenges) {
+		if (adventure.challenges[challengeName].duration) {
+			adventure.challenges[challengeName].duration--;
+			if (adventure.challenges[challengeName].duration < 1) {
+				getChallenge(challengeName).complete(adventure, thread);
 			}
 		}
-	} else {
-		adventure.roomCandidates[`Final Battle${SAFE_DELIMITER}${adventure.depth}`] = true;
 	}
 
 	// Generate current room
 	if (adventure.depth < 11) {
+		// Roll options for next room type
+		let roomTypes = ["Battle", "Event", "Forge", "Rest Site", "Artifact Guardian", "Merchant"]; //TODO #126 add weights to room types
+		let finalBossDepths = [10];
+		if (!finalBossDepths.includes(adventure.depth + 1)) {
+			let numCandidates = 2 + adventure.getArtifactCount("Enchanted Map");
+			for (let i = 0; i < numCandidates; i++) {
+				const candidateTag = `${roomTypes[generateRandomNumber(adventure, roomTypes.length, "general")]}${SAFE_DELIMITER}${adventure.depth}`;
+				if (!adventure.roomCandidates[candidateTag]) {
+					adventure.roomCandidates[candidateTag] = [];
+					if (Object.keys(adventure.roomCandidates).length === 5) {
+						// Should not execed 5, as only 5 buttons can be in a MessageActionRow
+						break;
+					}
+				}
+			}
+		} else {
+			adventure.roomCandidates[`Final Battle${SAFE_DELIMITER}${adventure.depth}`] = true;
+		}
+
 		let roomTemplate = manufactureRoomTemplate(roomType, adventure);
 		adventure.room = new Room(roomTemplate.title, roomTemplate.element);
 		if (adventure.room.element === "@{adventure}") {
@@ -174,13 +184,19 @@ exports.nextRoom = async function (roomType, adventure, thread) {
 			.setDescription(roomTemplate.description.replace("@{roomElement}", adventure.room.element))
 			.setFooter({ text: `Room #${adventure.depth}` });
 		for (let resource in roomTemplate.resourceList) {
-			let count = parseCount(roomTemplate.resourceList[resource], adventure.delvers.length);
-			let resourceType;
-			if (resource === "forgeSupplies") {
-				embed.addField("Remaining Forge Supplies", count.toString());
-				resourceType = "resource";
+			if (resource === "challenges") {
+				rollChallenges(2, adventure).forEach(challengeName => {
+					adventure.room.resources[challengeName] = new Resource(challengeName, "challenges", true, "resource", 0);
+				})
+			} else {
+				let count = parseCount(roomTemplate.resourceList[resource], adventure.delvers.length);
+				let resourceType;
+				if (resource === "forgeSupplies") {
+					embed.addField("Remaining Forge Supplies", count.toString());
+					resourceType = "resource";
+				}
+				adventure.room.resources[resource] = new Resource(resource, resourceType, count, "resource", 0);
 			}
-			adventure.room.resources[resource] = new Resource(resource, resourceType, count, "resource", 0);
 		}
 		if (["Battle", "Artifact Guardian", "Final Battle"].includes(roomType)) {
 			// Generate combat room

@@ -8,15 +8,16 @@ module.exports = class ChallengeTemplate {
 	intensity = 1;
 	duration = null;
 	scoreMultiplier = 1;
+	reward = 0;
 
-	reward(adventure) { }
+	complete(adventure, thread) { }
 
-	dynamicDescription(intensity, duration) {
+	dynamicDescription(intensity, duration, reward) {
 		let intensityExpression = this.description.match(/@{(intensity[\*\d]*)}/)?.[1].replace(/intensity/g, "n");
 		if (intensityExpression) {
 			intensity = parseCount(intensityExpression, intensity);
 		}
-		return this.description.replace(/@{intensity.*}/g, intensity).replace(/@{duration}/g, duration);
+		return this.description.replace(/@{intensity[\d*]*}/g, intensity).replace(/@{duration}/g, duration).replace(/@{reward}/g, reward);
 	}
 
 	setIntensity(intensityInput) {
@@ -31,6 +32,11 @@ module.exports = class ChallengeTemplate {
 
 	setScoreMultiplier(multiplierInput) {
 		this.scoreMultiplier = multiplierInput;
+		return this;
+	}
+
+	setReward(rewardInput) {
+		this.reward = rewardInput;
 		return this;
 	}
 }

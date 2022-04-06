@@ -1,43 +1,28 @@
 const Select = require('../../Classes/Select.js');
-const { getAdventure } = require('../adventureDAO.js');
+const { getAdventure, setAdventure } = require('../adventureDAO.js');
 const { getChallenge } = require('../Challenges/_challengeDictionary.js');
+const { editButton } = require('../roomDAO.js');
 
 module.exports = new Select("challenge");
 
 module.exports.execute = (interaction, args) => {
 	let adventure = getAdventure(interaction.channelId);
 	if (adventure) {
-		if (interaction.values.includes("None")) {
-			adventure.challenges = {};
-			interaction.channel.fetchStarterMessage().then(starterMessage => {
-				let embed = starterMessage.embeds[0];
-				let fieldIndex = embed.fields.findIndex(field => field.name === "Challenges");
-				if (fieldIndex !== -1) {
-					embed.spliceFields(fieldIndex, 1);
-				}
-				starterMessage.edit({ embeds: [embed] });
-			})
-			interaction.update({ components: [] });
-			interaction.channel.send({ content: "Starting Challenges have been cleared for this adventure." });
+		const [challengeName] = interaction.values;
+		const challenge = getChallenge(challengeName);
+		if (adventure.challenges[challengeName]) {
+			adventure.challenges[challengeName].intensity += challenge.intensity;
+			adventure.challenges[challengeName].duration += challenge.duration;
+			adventure.challenges[challengeName].reward += challenge.reward;
 		} else {
-			interaction.values.forEach(challengeName => {
-				const challenge = getChallenge(challengeName);
-				adventure.challenges[challengeName] = { intensity: challenge.intensity, duration: challenge.duration };
-			})
-			interaction.channel.fetchStarterMessage().then(starterMessage => {
-				let embed = starterMessage.embeds[0];
-				let challengesText = Object.keys(adventure.challenges).join("\n• ");
-				let fieldIndex = embed.fields.findIndex(field => field.name === "Challenges");
-				if (fieldIndex !== -1) {
-					embed.spliceFields(fieldIndex, 1, { name: "Challenges", value: `• ${challengesText}` })
-				} else {
-					embed.addField("Challenges", `• ${challengesText}`);
-				}
-				starterMessage.edit({ embeds: [embed] });
-			})
-			interaction.update({ components: [] });
-			interaction.channel.send({ content: `The following challenges have been added to this adventure: "${interaction.values.join("\", \"")}"` });
+			adventure.challenges[challengeName] = { intensity: challenge.intensity, duration: challenge.duration, reward: challenge.reward };
 		}
+		interaction.update({ components: [] });
+		interaction.channel.messages.fetch(adventure.messageIds.room).then(roomMessage => {
+			roomMessage.edit({ components: editButton(roomMessage, "challenge", true, "✔️", challengeName) });
+		})
+		setAdventure(adventure);
+		interaction.channel.send({ content: `The party takes on a new challenge: ${challengeName}` });
 	} else {
 		interaction.reply({ content: "This adventure seems to have already ended.", ephemeral: true });
 	}

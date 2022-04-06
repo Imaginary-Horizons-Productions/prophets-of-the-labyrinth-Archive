@@ -16,7 +16,7 @@ module.exports.execute = (interaction, _args) => {
 				options.push({ label: challengeName, description: challenge.dynamicDescription(challenge.intensity, challenge.duration), value: challengeName });
 			})
 			let components = [new MessageActionRow().addComponents(
-				new MessageSelectMenu().setCustomId("challenge")
+				new MessageSelectMenu().setCustomId("startingchallenges")
 					.setPlaceholder("Select challenge(s)...")
 					.setMinValues(1)
 					.setMaxValues(options.length)
