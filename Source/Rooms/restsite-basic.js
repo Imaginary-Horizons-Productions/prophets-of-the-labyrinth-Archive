@@ -11,8 +11,9 @@ module.exports.uiRows.push(new MessageActionRow().addComponents(
 	new MessageButton().setCustomId("rest")
 		.setLabel("Rest [30% hp]")
 		.setStyle("PRIMARY"),
-	new MessageButton().setCustomId("challenge") //TODO #285 finish linking to challenges
-		.setLabel("Take a challenge (coming soon)")
+	new MessageButton().setCustomId("challenge")
+		.setLabel("Take a challenge")
 		.setStyle("DANGER")
-		.setDisabled(true)
 ))
+
+module.exports.resourceList = { "challenges": "2" };

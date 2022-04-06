@@ -19,7 +19,7 @@ module.exports = class Adventure {
 	};
 	leaderId = "";
 	delvers = [];
-	challenges = {}; // {challengeName: {intensity, duration}} 0 = done, null = permanent
+	challenges = {}; // {challengeName: {intensity, reward, duration}} 0 = done, null = permanent
 	scouting = {
 		finalBoss: false,
 		artifactGuardians: 0,
@@ -77,6 +77,10 @@ module.exports = class Adventure {
 
 	getChallengeIntensity(challengeName) {
 		return this.challenges[challengeName]?.intensity || 0;
+	}
+
+	getChallengeDuration(challengeName) {
+		return this.challenges[challengeName]?.duration || 0;
 	}
 
 	getWeaponCapacity() {
