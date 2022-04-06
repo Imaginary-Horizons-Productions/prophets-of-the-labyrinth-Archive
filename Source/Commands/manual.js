@@ -33,7 +33,7 @@ module.exports.execute = (interaction) => {
 				.addField("Random Number Generator", "Alex Frank")
 				.addField("Room Loader", "Michel Momeyer")
 				.addField("Predict Balance", "Lucas Ensign")
-				.addField("Playtesting", "Henry Hu, Ralph Beishline, Eric Hu, TheChreative, Jon Puddicombe")
+				.addField("Playtesting", "Ralph Beishline, Eric Hu, TheChreative, Jon Puddicombe")
 				.addField(`Embed Thumbnails`, `[game-icons.net](https://game-icons.net/)`)
 			];
 			break;
