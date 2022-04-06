@@ -157,8 +157,6 @@ exports.nextRoom = async function (roomType, thread) {
 				}
 			}
 		}
-	} else {
-		adventure.roomCandidates[`Final Battle${SAFE_DELIMITER}${adventure.depth}`] = true;
 	}
 
 	// Generate current room
@@ -187,7 +185,6 @@ exports.nextRoom = async function (roomType, thread) {
 				embed.addField("Remaining Forge Supplies", count.toString());
 				resourceType = "resource";
 			}
-			adventure.room.resources[resource] = new Resource(resource, resourceType, count, "resource", 0);
 		}
 	}
 	if (["Battle", "Artifact Guardian", "Final Battle"].includes(roomType)) {
