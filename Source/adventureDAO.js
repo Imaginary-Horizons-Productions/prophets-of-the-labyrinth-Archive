@@ -234,11 +234,11 @@ exports.nextRoom = async function (roomType, thread) {
 					}
 				}
 			} else if (category === "scouting") {
-				adventure.room.resources["bossScouting"] = new Resource("bossScouting", "scouting", true, "merchant", calculateScoutingCost(adventure, "Final Battle"))
+				adventure.room.resources["bossScouting"] = new Resource("bossScouting", "scouting", true, "merchant", calculateScoutingCost(adventure.getArtifactCount("Amethyst Spyglass"), "Final Battle"))
 					.setUIGroup("scouting");
-				adventure.room.resources["guardScouting"] = new Resource("guardScouting", "scouting", true, "merchant", calculateScoutingCost(adventure, "Artifact Guardian"))
+				adventure.room.resources["guardScouting"] = new Resource("guardScouting", "scouting", true, "merchant", calculateScoutingCost(adventure.getArtifactCount("Amethyst Spyglass"), "Artifact Guardian"))
 					.setUIGroup("scouting");
-			}
+		}
 		}
 		if (adventure.depth < 11) {
 			let roomMessage = await thread.send({
@@ -260,12 +260,12 @@ exports.nextRoom = async function (roomType, thread) {
 	exports.setAdventure(adventure);
 }
 
-function calculateScoutingCost({ artifacts: { "Amethyst Spyglass": amethystSpyglassCount = 0 } }, type) {
+function calculateScoutingCost(count, type) {
 	switch (type) {
 		case "Final Battle":
-			return 150 - ((amethystSpyglassCount) * 5);
+			return 150 - (count * 5);
 		case "Artifact Guardian":
-			return 100 - ((amethystSpyglassCount) * 5);
+			return 100 - (count * 5);
 	}
 }
 
@@ -471,8 +471,8 @@ exports.generateMerchantRows = function (adventure) {
 						.setDisabled(true)));
 			}
 		} else if (groupName === "scouting") {
-			const bossScoutingCost = calculateScoutingCost(adventure, "Final Battle");
-			const guardScoutingCost = calculateScoutingCost(adventure, "Artifact Guardian");
+			const bossScoutingCost = calculateScoutingCost(adventure.getArtifactCount("Amethyst Spyglass"), "Final Battle");
+			const guardScoutingCost = calculateScoutingCost(adventure.getArtifactCount("Amethyst Spyglass"), "Artifact Guardian");
 			rows.push(new MessageActionRow().addComponents(
 				new MessageButton().setCustomId(`buyscouting${SAFE_DELIMITER}Final Battle`)
 					.setLabel(`${adventure.scouting.finalBoss ? `Final Battle: ${adventure.finalBoss}` : `${bossScoutingCost}g: Scout the Final Battle`}`)
