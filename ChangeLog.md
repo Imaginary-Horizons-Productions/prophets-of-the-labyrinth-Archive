@@ -2,7 +2,7 @@
 #### Prophets of the Labyrinth Version 0.7.0:
 - Added challenges
    - These can be applied at the beginning of the run or at a rest site for a score bonus and other rewards
-   - New challenges: Can't Hold All this Value, Restless
+   - New challenges: Can't Hold All this Value, Restless, Blind Avarice
 - New final battle: A Northern Laboratory
 - `/stats` now shows if a player is available for adventures
 - Bot no longer creates a (no longer required) category and text channel for starting adventures in
