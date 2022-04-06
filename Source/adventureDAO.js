@@ -635,6 +635,8 @@ exports.completeAdventure = function (adventure, thread, { isSuccess, descriptio
 	})
 	clearComponents(adventure.messageIds.battleRound, thread.messages);
 	clearComponents(adventure.messageIds.room, thread.messages);
+	clearComponents(adventure.messageIds.deploy, thread.messages);
+	clearComponents(adventure.messageIds.leaderNotice, thread.messages);
 	if (adventure.messageIds.utility) {
 		thread.messages.delete(adventure.messageIds.utility);
 	}
