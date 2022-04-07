@@ -226,7 +226,7 @@ exports.nextRoom = async function (roomType, thread) {
 						}
 					}
 					let weaponName = rollWeaponDrop(parsedTier, adventure);
-					if (adventure.room.resources[weaponName] && adventure.room.resources[weaponName].resourceType === "weapon") {
+					if (adventure.room.resources[weaponName]?.resourceType === "weapon") {
 						adventure.room.resources[weaponName].count++;
 					} else {
 						adventure.room.resources[weaponName] = new Resource(weaponName, "weapon", 1, "merchant", getWeaponProperty(weaponName, "cost"))
@@ -247,7 +247,6 @@ exports.nextRoom = async function (roomType, thread) {
 			});
 			adventure.messageIds.room = roomMessage.id;
 		} else {
-			adventure.accumulatedScore = 10;
 			thread.send({
 				embeds: [embed, exports.completeAdventure(adventure, thread, { isSuccess: true, description: null })],
 				components: [new MessageActionRow().addComponents(
@@ -568,11 +567,10 @@ exports.endRound = async function (adventure, thread) {
 			}
 
 			// Finalize UI
+			embed = embed.setTitle("Victory!").setDescription(lastRoundText);
 			if (adventure.depth < 11) {
 				return thread.send({
-					embeds: [embed.setTitle("Victory!")
-						.setDescription(lastRoundText)
-						.addField("Decide the next room", "Each delver can pick or change their pick for the next room. The party will move on when the decision is unanimous.")],
+					embeds: [embed.addField("Decide the next room", "Each delver can pick or change their pick for the next room. The party will move on when the decision is unanimous.")],
 					components: [exports.generateLootRow(adventure), exports.generateRoutingRow(adventure)]
 				}).then(message => {
 					adventure.messageIds.room = message.id;
@@ -585,13 +583,8 @@ exports.endRound = async function (adventure, thread) {
 					exports.setAdventure(adventure);
 				});
 			} else {
-				adventure.accumulatedScore = 10;
 				return thread.send({
-					embeds: [
-						embed.setTitle("Victory!")
-							.setDescription(lastRoundText),
-						exports.completeAdventure(adventure, thread, { isSuccess: true, description: null })
-					],
+					embeds: [embed, exports.completeAdventure(adventure, thread, { isSuccess: true, description: null })],
 					components: [new MessageActionRow().addComponents(
 						new MessageButton().setCustomId("collectartifact")
 							.setLabel("Collect Artifact")
@@ -655,11 +648,11 @@ exports.completeAdventure = function (adventure, thread, { isSuccess, descriptio
 	})
 	clearComponents(adventure.messageIds.battleRound, thread.messages);
 	clearComponents(adventure.messageIds.room, thread.messages);
-	clearComponents(adventure.messageIds.deploy, thread.messages);
-	clearComponents(adventure.messageIds.leaderNotice, thread.messages);
-	if (adventure.messageIds.utility) {
-		thread.messages.delete(adventure.messageIds.utility);
-	}
+	[adventure.messageIds.utility, adventure.messageIds.deploy, adventure.messageIds.leaderNotice].forEach(id => {
+		if (id) {
+			thread.messages.delete(id);
+		}
+	})
 
 	adventure.state = "completed";
 	exports.setAdventure(adventure);
