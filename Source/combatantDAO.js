@@ -87,7 +87,9 @@ exports.dealDamage = async function (target, user, damage, isUnblockable, elemen
 	let targetModifiers = Object.keys(target.modifiers);
 	if (!targetModifiers.includes(`${element} Absorb`)) {
 		if (!targetModifiers.includes("Evade") || isUnblockable) {
-			let pendingDamage = damage + (user?.modifiers["Power Up"] || 0);
+			let limitBreak = user?.modifiers["Power Up"] || 0;
+			let damageCap = 500 + limitBreak;
+			let pendingDamage = damage + limitBreak;
 			if (targetModifiers.includes("Exposed")) {
 				pendingDamage *= 1.5;
 			}
@@ -112,6 +114,7 @@ exports.dealDamage = async function (target, user, damage, isUnblockable, elemen
 					pendingDamage = 0;
 				}
 			}
+			pendingDamage = Math.min(pendingDamage, damageCap);
 			target.hp -= pendingDamage;
 			let damageText = ` ${targetName} takes *${pendingDamage} damage*${blockedDamage > 0 ? ` (${blockedDamage} blocked)` : ""}${element === "Poison" ? " from Poison" : ""}${isWeakness ? "!!!" : isResistance ? "." : "!"}`;
 			if (targetModifiers.includes("Curse of Midas")) {

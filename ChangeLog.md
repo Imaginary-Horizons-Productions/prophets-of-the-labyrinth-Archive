@@ -5,6 +5,8 @@
    - New challenges: Can't Hold All this Value, Restless, Blind Avarice
 - New final battle: A Northern Laboratory
 - `/stats` now shows if a player is available for adventures
+- Reduced max hp % damage on Sickles from 10% to 5%
+- Damage is now capped at 500 damage per instance, this can be exceeded by having Power Up
 - Bot no longer creates a (no longer required) category and text channel for starting adventures in
 - Allowed deselecting starting artifact
 - Fixed healing reporting block gained while party has no Bloodshield Swords

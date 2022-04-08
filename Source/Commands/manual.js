@@ -8,7 +8,8 @@ const options = [
 			"Credits": "Credits",
 			"Tutorial": "Tutorial",
 			"Elements": "Elements",
-			"Stagger": "Stagger"
+			"Stagger": "Stagger",
+			"Damage Cap": "Damage Cap"
 		}
 	}
 ];
@@ -28,7 +29,7 @@ module.exports.execute = (interaction) => {
 			response.embeds = [embedTemplate(interaction.client.user.displayAvatarURL()).setTitle("Prophets of the Labyrinth v0.7.0")
 				.setThumbnail(interaction.client.user.displayAvatarURL())
 				.setDescription(`A roguelike dungeon crawl in Discord to play with other server members.`)
-				.addField(`Design & Engineering`, `Nathaniel Tseng ( <@106122478715150336> | [Twitter](https://twitter.com/Arcane_ish) )`)
+				.addField(`Design & Engineering`, `Nathaniel Tseng ( <@106122478715150336> | [GitHub](https://github.com/ntseng) )`)
 				.addField(`Dev & Review`, `Henry Hu ( <@113108081990176768> | [Twitter](https://twitter.com/hdoubledh) )`)
 				.addField("Random Number Generator", "Alex Frank")
 				.addField("Room Loader", "Michel Momeyer")
@@ -61,6 +62,12 @@ module.exports.execute = (interaction) => {
 			response.embeds = [embedTemplate(interaction.client.user.displayAvatarURL()).setTitle("Stagger")
 				.setDescription("Stagger is a modifier (that is neither a buff nor debuff) that stacks up on a combatant eventually leading to the combatant getting Stunned (also not a buff or debuff). A stunned combatant misses their next turn, even if they had readied a move for that turn. Stagger promotes to Stun when a combatant's number of stacks exceeds their Stagger threshold (default 3 for delvers, varies for enemies).")
 				.addField("Matching Element Stagger", "When a combatant makes a move that matches their element, their target gets a bonus effect. If the target is an ally, they are relieved of 1 Stagger. If the target is an enemy, they suffer 1 additional Stagger. Check the page on Elements to learn more about move and combatant elements.")
+			];
+			break;
+		case "Damage Cap":
+			response.embeds = [
+				embedTemplate(interaction.client.user.displayAvatarURL()).setTitle("Damage Cap")
+					.setDescription("The maximum amount of damage that can be done in one shot after block is 500. This cap is raised for each stack of Power Up a user has.")
 			];
 			break;
 	}
