@@ -1,4 +1,4 @@
-const { nextRoom, getAdventure } = require('../adventureDAO.js');
+const { getAdventure, endRoom } = require('../adventureDAO.js');
 const Button = require('../../Classes/Button.js');
 const { MessageActionRow, MessageButton } = require('discord.js');
 const { SAFE_DELIMITER, clearComponents } = require('../../helpers.js');
@@ -39,7 +39,7 @@ module.exports.execute = (interaction, [candidate, depth]) => {
 						}));
 					})];
 					interaction.message.edit({ components: uiRows });
-					nextRoom(candidate, adventure, interaction.channel);
+					endRoom(candidate, interaction.channel);
 				}
 			});
 		} else {

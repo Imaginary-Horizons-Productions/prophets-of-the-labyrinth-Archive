@@ -32,7 +32,7 @@ module.exports.execute = (interaction, _args) => {
 			message.pin();
 			adventure.state = "ongoing";
 			adventure.messageIds.utility = message.id;
-			nextRoom("Battle", adventure, interaction.channel);
+			nextRoom("Battle", interaction.channel);
 		});
 	} else {
 		interaction.reply({ content: "Please wait for the leader to start the adventure.", ephemeral: true });
