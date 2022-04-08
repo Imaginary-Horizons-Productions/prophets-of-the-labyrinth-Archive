@@ -264,7 +264,7 @@ function calculateScoutingCost({ artifacts: { "Amethyst Spyglass": amethystSpygl
 	}
 }
 
-exports.cleanUpRoom = function (roomType, thread) {
+exports.endRoom = function (roomType, thread) {
 	let adventure = exports.getAdventure(thread.id);
 	adventure.depth++;
 	adventure.room = {};
