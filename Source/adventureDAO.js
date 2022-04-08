@@ -233,11 +233,11 @@ exports.nextRoom = async function (roomType, thread) {
 							.setUIGroup(category);
 					}
 				}
-			} else if (category === "scouting") {
-				adventure.room.resources["bossScouting"] = new Resource("bossScouting", "scouting", true, "merchant", calculateScoutingCost(adventure.getArtifactCount("Amethyst Spyglass"), "Final Battle"))
-					.setUIGroup("scouting");
-				adventure.room.resources["guardScouting"] = new Resource("guardScouting", "scouting", true, "merchant", calculateScoutingCost(adventure.getArtifactCount("Amethyst Spyglass"), "Artifact Guardian"))
-					.setUIGroup("scouting");
+				} else if (category === "scouting") {
+					adventure.room.resources["bossScouting"] = new Resource("bossScouting", "scouting", true, "merchant", calculateScoutingCost(adventure.getArtifactCount("Amethyst Spyglass"), "Final Battle"))
+						.setUIGroup("scouting");
+					adventure.room.resources["guardScouting"] = new Resource("guardScouting", "scouting", true, "merchant", calculateScoutingCost(adventure.getArtifactCount("Amethyst Spyglass"), "Artifact Guardian"))
+						.setUIGroup("scouting");
 		}
 		}
 		if (adventure.depth < 11) {
