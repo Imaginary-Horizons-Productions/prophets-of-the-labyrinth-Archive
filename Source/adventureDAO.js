@@ -239,7 +239,7 @@ exports.nextRoom = async function (roomType, thread) {
 					.setUIGroup("scouting");
 				adventure.room.resources["guardScouting"] = new Resource("guardScouting", "scouting", true, "merchant", calculateScoutingCost(adventure.getArtifactCount("Amethyst Spyglass"), "Artifact Guardian"))
 					.setUIGroup("scouting");
-		}
+			}
 		}
 		if (adventure.depth < 11) {
 			let roomMessage = await thread.send({
