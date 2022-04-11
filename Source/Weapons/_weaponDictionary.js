@@ -6,7 +6,7 @@ exports.injectConfig = function (isProduction) {
 const { getEmoji } = require("../elementHelpers.js");
 
 var weaponWhitelist = [
-	"-punch.js",
+	"punch.js",
 	"barrier-base.js",
 	"barrier-purifying.js",
 	"barrier-thick.js",

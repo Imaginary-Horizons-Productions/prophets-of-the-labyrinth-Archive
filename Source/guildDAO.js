@@ -6,7 +6,9 @@ exports.injectConfig = function (isProduction) {
 	({ ensuredPathSave } = require("../helpers.js").injectConfig(isProduction));
 	return this;
 }
-const filePath = "./Saves/guilds.json";
+const dirPath = "./Saves";
+const fileName = "guilds.json";
+const filePath = `${dirPath}/${fileName}`;
 const requirePath = "./../Saves/guilds.json";
 const guildDictionary = new Map();
 
@@ -19,14 +21,7 @@ exports.loadGuilds = async function () {
 		})
 		return `${guildProfiles.length} guilds loaded`;
 	} else {
-		if (!fs.existsSync("./Saves")) {
-			fs.mkdirSync("./Saves", { recursive: true });
-		}
-		fs.writeFile(filePath, "[]", "utf8", error => {
-			if (error) {
-				console.error(error);
-			}
-		})
+		ensuredPathSave(dirPath,fileName,"[]");
 		return "guilds regenerated";
 	}
 }

@@ -11,7 +11,7 @@ module.exports.execute = async function (interaction, [weaponName, round, _weapo
 	let adventure = getAdventure(interaction.channel.id);
 	if (adventure.room.round === Number(round)) {
 		let user = adventure.delvers.find(delver => delver.id === interaction.user.id);
-		if (weaponName === "Punch" || user.weapons.some(weapon => weapon.name === weaponName && weapon.uses > 0)) {
+		if (weaponName == "Punch" || user.weapons.some(weapon => weapon.name === weaponName && weapon.uses > 0)) {
 			// Add move to round list (overwrite exisiting readied move)
 			let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
 			let [targetTeam, targetIndex] = interaction.values[0].split("-");

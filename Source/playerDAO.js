@@ -8,7 +8,10 @@ exports.injectConfig = function (isProduction) {
 	return this;
 }
 
-const filePath = "./Saves/players.json";
+const dirPath = "./Saves"
+const fileName = "players.json";
+const filePath = `${dirPath}/${fileName}`;
+
 const requirePath = "./../Saves/players.json";
 const playerDictionary = new Map();
 
@@ -20,14 +23,7 @@ exports.loadPlayers = async function () {
 		})
 		return `${players.length} players loaded`;
 	} else {
-		if (!fs.existsSync("./Saves")) {
-			fs.mkdirSync("./Saves", { recursive: true });
-		}
-		fs.writeFile(filePath, "[]", "utf8", error => {
-			if (error) {
-				console.error(error);
-			}
-		})
+		ensuredPathSave(dirPath,fileName,"[]");
 		return "players regenerated";
 	}
 }

@@ -81,8 +81,8 @@ module.exports.execute = (interaction, args) => {
 				moveMenu.push(new MessageActionRow()
 					.addComponents(
 						new MessageSelectMenu()
-							.setCustomId(`weapon-Punch-${adventure.room.round}-`)
-							.setPlaceholder(`Use Punch on...`)
+							.setCustomId(`weapon${SAFE_DELIMITER}Punch${SAFE_DELIMITER}${adventure.room.round}${SAFE_DELIMITER}`)
+							.setPlaceholder(`Use punch on...`)
 							.addOptions(enemyOptions)
 					));
 			}
