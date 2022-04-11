@@ -131,8 +131,14 @@ exports.setAdventure = function (adventure) {
 	saveAdventures();
 }
 
-function roomHeaderString(adventure) {
-	return `Lives: ${adventure.lives} - Party Gold: ${adventure.gold} - Score: ${adventure.accumulatedScore}`;
+/**
+ * A room embed's author field contains the most important or commonly viewed party resources and stats
+ *
+ * @param {Adventure} adventure
+ * @returns {string} text to put in the author name field of a room embed
+ */
+function roomHeaderString({ lives, gold, accumulatedScore }) {
+	return `Lives: ${lives} - Party Gold: ${gold} - Score: ${accumulatedScore}`;
 }
 
 exports.updateRoomHeader = function (adventure, message) {
@@ -233,12 +239,12 @@ exports.nextRoom = async function (roomType, thread) {
 							.setUIGroup(category);
 					}
 				}
-				} else if (category === "scouting") {
-					adventure.room.resources["bossScouting"] = new Resource("bossScouting", "scouting", true, "merchant", calculateScoutingCost(adventure.getArtifactCount("Amethyst Spyglass"), "Final Battle"))
-						.setUIGroup("scouting");
-					adventure.room.resources["guardScouting"] = new Resource("guardScouting", "scouting", true, "merchant", calculateScoutingCost(adventure.getArtifactCount("Amethyst Spyglass"), "Artifact Guardian"))
-						.setUIGroup("scouting");
-		}
+			} else if (category === "scouting") {
+				adventure.room.resources["bossScouting"] = new Resource("bossScouting", "scouting", true, "merchant", calculateScoutingCost(adventure.getArtifactCount("Amethyst Spyglass"), "Final Battle"))
+					.setUIGroup("scouting");
+				adventure.room.resources["guardScouting"] = new Resource("guardScouting", "scouting", true, "merchant", calculateScoutingCost(adventure.getArtifactCount("Amethyst Spyglass"), "Artifact Guardian"))
+					.setUIGroup("scouting");
+			}
 		}
 		if (adventure.depth < 11) {
 			let roomMessage = await thread.send({
