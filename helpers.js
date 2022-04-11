@@ -99,7 +99,7 @@ exports.ordinalSuffixEN = function (integer) {
 	}
 }
 
-exports.versionEmbedBuilder = function (avatarURL) {
+exports.getVersionEmbed = function (avatarURL) {
 	return fs.promises.readFile('./ChangeLog.md', { encoding: 'utf8' }).then(data => {
 		const dividerRegEx = /####/g;
 		const changesStartRegEx = /\.\d+:/g;
@@ -133,3 +133,5 @@ exports.versionEmbedBuilder = function (avatarURL) {
 		return embed.addField(`Become a Sponsor`, `Chip in for server costs or get premimum features by sponsoring [PotL on GitHub](https://github.com/Imaginary-Horizons-Productions/prophets-of-the-labyrinth)`);
 	})
 }
+
+exports.SAFE_DELIMITER = "→";

@@ -5,7 +5,7 @@ module.exports = class Room {
 	constructor(titleInput, elementInput) {
 		this.title = titleInput;
 		this.element = elementInput;
-		this.resources = { "gold": new Resource("gold", "gold", 0, "loot")};
+		this.resources = { "gold": new Resource("gold", "gold", 0, "loot", 0)};
 	}
 
 	initializeCombatProperties() {

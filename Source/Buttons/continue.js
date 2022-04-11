@@ -1,6 +1,7 @@
-const { nextRoom, getAdventure } = require('../adventureDAO.js');
+const { getAdventure, endRoom } = require('../adventureDAO.js');
 const Button = require('../../Classes/Button.js');
 const { MessageActionRow, MessageButton } = require('discord.js');
+const { SAFE_DELIMITER } = require('../../helpers.js');
 
 module.exports = new Button("continue");
 
@@ -27,8 +28,8 @@ module.exports.execute = (interaction, args) => {
 			})
 			]
 		}).then(() => {
-			let roomType = Object.keys(adventure.roomCandidates)[0];
-			nextRoom(roomType, adventure, interaction.channel);
+			let [roomType, _depth] = Object.keys(adventure.roomCandidates)[0].split(SAFE_DELIMITER);
+			endRoom(roomType, interaction.channel);
 		})
 	} else {
 		interaction.reply({ content: "Please wait for the leader to move to the next room.", ephemeral: true });

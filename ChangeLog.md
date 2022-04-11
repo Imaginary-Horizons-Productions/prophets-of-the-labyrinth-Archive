@@ -1,4 +1,19 @@
 # Prophets of the Labyrinth Change Log
+#### Prophets of the Labyrinth Version 0.7.0:
+- Added challenges
+   - These can be applied at the beginning of the run or at a rest site for a score bonus and other rewards
+   - New challenges: Can't Hold All this Value, Restless, Blind Avarice
+- New final battle: A Northern Laboratory
+- `/stats` now shows if a player is available for adventures
+- Reduced max hp % damage on Sickles from 10% to 5%
+- Damage is now capped at 500 damage per instance, this can be exceeded by having Power Up
+- Bot no longer creates a (no longer required) category and text channel for starting adventures in
+- Allowed deselecting starting artifact
+- Fixed healing reporting block gained while party has no Bloodshield Swords
+- Fixed text interpolation for modifier descriptions with more than 1 dynamic value
+- Fixed several multiplayer bugs
+- Culled some unnecessary bot output
+- Other stuff
 #### Prophets of the Labyrinth Version 0.6.0:
 - New artifact: Negative-One Leaf Clover
 - New weapons: Ice Ward, Heavy Ice Ward, Sweeping Ice Ward, Reinforcing Inspiration
@@ -6,9 +21,6 @@
 - Capped delvers in an adventure to 12
 - Multiple Royal Slimes now appear in opposition to larger party sizes
 - Fixed merchant rooms never rolling during room generation
-#### Prophets of the Labyrinth Version 0.5.3:
-- Fixed typo in rest site healing amount
-- Fixed a crash on mechabee call for help
 #### Prophets of the Labyrinth Version 0.5.3:
 - Fixed typo in rest site healing amount
 - Fixed a crash on mechabee call for help

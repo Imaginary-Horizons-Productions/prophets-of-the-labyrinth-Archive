@@ -4,16 +4,18 @@ const fsa = require("fs").promises;
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
 
+const GuildProfile = require("./Classes/GuildProfile");
 const versionData = require('./Config/versionData.json');
 
 const isProduction = true;
+const { SAFE_DELIMITER } = require('./helpers.js');
 const { loadAdventures } = require("./Source/adventureDAO.js").injectConfig(isProduction);
-const { guildSetup, loadGuilds } = require("./Source/guildDAO.js").injectConfig(isProduction);
+const { loadGuilds, setGuild } = require("./Source/guildDAO.js").injectConfig(isProduction);
 const { loadPlayers } = require("./Source/playerDAO.js").injectConfig(isProduction);
 const { getCommand, injectConfigCommands, slashData } = require(`./Source/Commands/_commandDictionary.js`);
 const { getSelect } = require("./Source/Selects/_selectDictionary.js");
 const { getButton } = require("./Source/Buttons/_buttonDictionary.js");
-const { getPremiumUsers, versionEmbedBuilder } = require("./helpers.js");
+const { getPremiumUsers, getVersionEmbed } = require("./helpers.js");
 //#endregion
 
 //#region Executing Code
@@ -59,7 +61,7 @@ client.on("ready", () => {
 				}
 			}
 
-			versionEmbedBuilder(client.user.displayAvatarURL()).then(embed => {
+			getVersionEmbed(client.user.displayAvatarURL()).then(embed => {
 				client.guilds.fetch(versionData.guildId).then(guild => {
 					guild.channels.fetch(versionData.announcementsChannelId).then(annoucnementsChannel => {
 						annoucnementsChannel.send({ embeds: [embed] }).then(message => {
@@ -102,11 +104,11 @@ client.on("interactionCreate", interaction => {
 					.catch(console.error);
 			}
 		} else if (interaction.isButton()) {
-			const [command, ...args] = interaction.customId.split("-");
-			getButton(command).execute(interaction, args);
+			const [customId, ...args] = interaction.customId.split(SAFE_DELIMITER);
+			getButton(customId).execute(interaction, args);
 		} else if (interaction.isSelectMenu()) {
-			const [command, ...args] = interaction.customId.split("-");
-			getSelect(command).execute(interaction, args);
+			const [customId, ...args] = interaction.customId.split(SAFE_DELIMITER);
+			getSelect(customId).execute(interaction, args);
 		}
 	} else {
 		interaction.reply({ content: "Direct message commands are not supported at this time.", ephemeral: true })
@@ -115,6 +117,6 @@ client.on("interactionCreate", interaction => {
 })
 
 client.on("guildCreate", guild => {
-	guildSetup(guild);
+	setGuild(new GuildProfile(guild.id));
 })
 //#endregion

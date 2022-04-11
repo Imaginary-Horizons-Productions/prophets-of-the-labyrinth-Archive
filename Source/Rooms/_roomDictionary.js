@@ -1,6 +1,6 @@
-let generateRandomNumber;
+let SAFE_DELIMITER, generateRandomNumber;
 exports.injectConfig = function (isProduction) {
-	({ generateRandomNumber } = require("../../helpers.js").injectConfig(isProduction));
+	({ SAFE_DELIMITER, generateRandomNumber } = require("../../helpers.js").injectConfig(isProduction));
 	return this;
 }
 
@@ -17,6 +17,7 @@ let roomWhitelist = [
 	"event-goldonfire.js",
 	"event-hpshare.js",
 	"event-scorebeggar.js",
+	"finalBattle-elkemist.js",
 	"finalBattle-mirrors.js",
 	"forge-basic.js",
 	"merchant-basic.js",
@@ -67,9 +68,8 @@ exports.manufactureRoomTemplate = function (type, adventure) {
 
 	if (!roomPool) {
 		console.error("Attempt to create room of unidentified type: " + type);
-		adventure.roomCandidates = {
-			"Battle": true
-		};
+		adventure.roomCandidates = {};
+		adventure.roomCandidates[`Battle${SAFE_DELIMITER}${adventure.depth}`] = true;
 		return ROOMS["Empty"][0];
 	}
 	return roomPool[generateRandomNumber(adventure, roomPool.length, "General")];

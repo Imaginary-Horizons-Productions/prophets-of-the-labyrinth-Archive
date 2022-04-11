@@ -1,4 +1,5 @@
 const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
+const { SAFE_DELIMITER } = require('../../helpers.js');
 const Adventure = require('../../Classes/Adventure.js');
 const Command = require('../../Classes/Command.js');
 const Delver = require('../../Classes/Delver.js');
@@ -50,7 +51,7 @@ module.exports.execute = (interaction) => {
 				thread.fetchStarterMessage().then(message => {
 					message.edit({
 						components: [new MessageActionRow().addComponents(
-							new MessageButton().setCustomId(`join-${thread.guildId}-${thread.id}`)
+							new MessageButton().setCustomId(`join${SAFE_DELIMITER}${thread.guildId}${SAFE_DELIMITER}${thread.id}`)
 								.setLabel("Join")
 								.setStyle("SUCCESS")
 						)]
@@ -60,12 +61,11 @@ module.exports.execute = (interaction) => {
 				guildProfile.adventuring.add(interaction.user.id);
 
 				thread.send({
-					content: `${interaction.user} Here's the channel for your new adventure. As adventure leader you're responsible for inputing the group's decisions (like difficulty options or indicating when everyone's ready).`,
+					content: `${interaction.user} Here's the channel for your new adventure. As adventure leader you're responsible for inputing the group's decisions (like challenges or indicating when everyone's ready).`,
 					components: [new MessageActionRow().addComponents(
-						new MessageButton().setCustomId("difficulty")
-							.setLabel("Add Challenges (coming soon)")
+						new MessageButton().setCustomId("startingchallenges")
+							.setLabel("Set Challenges")
 							.setStyle("DANGER")
-							.setDisabled(true)
 					)]
 				}).then(leaderMessage => {
 					let ready = new MessageActionRow().addComponents(

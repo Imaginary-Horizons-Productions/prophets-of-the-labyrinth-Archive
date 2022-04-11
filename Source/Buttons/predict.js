@@ -1,6 +1,6 @@
 const { MessageEmbed } = require('discord.js');
 const Button = require('../../Classes/Button.js');
-const { getAdventure } = require('../adventureDAO.js');
+const { getAdventure, updateRoomHeader, setAdventure } = require('../adventureDAO.js');
 const { getTargetList } = require('../moveDAO.js');
 const { getFullName, calculateTotalSpeed, modifiersToString } = require("../combatantDAO.js");
 const { getResistances, getWeaknesses, getColor, getEmoji } = require('../elementHelpers.js');
@@ -11,6 +11,18 @@ module.exports = new Button("predict");
 module.exports.execute = (interaction, args) => {
 	// Based on type, show the user information on the next battle round in an ephemeral message
 	let adventure = getAdventure(interaction.channel.id);
+	if (adventure.getChallengeDuration("Blind Avarice") > 0) {
+		let cost = adventure.getChallengeIntensity("Blind Avarice");
+		if (adventure.gold >= cost) {
+			adventure.gold -= cost;
+			interaction.channel.messages.fetch(adventure.messageIds.battleRound).then(roomMessage => {
+				updateRoomHeader(adventure, roomMessage);
+				setAdventure(adventure);
+			})
+		} else {
+			return interaction.reply({ content: "*Blind Avarice* prevents you from predicting until you get more gold.", ephemeral: true });
+		}
+	}
 	let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 	let embed = new MessageEmbed().setColor(getColor(adventure.room.element))
 		.setFooter({ text: `Room #${adventure.depth} - Round ${adventure.room.round}` });
@@ -23,13 +35,13 @@ module.exports.execute = (interaction, args) => {
 				let user = team[move.userIndex];
 				if (user.hp > 0) {
 					let targets = getTargetList(move.targets, adventure);
-					descriptionText += `\n__${getFullName(user, adventure.room.enemyTitles)}__\nTargeting: **${targets.length ? targets.join(", ") : "???"}**\nResistances: ${getResistances(user.element).join(", ")}\n`;
+					descriptionText += `\n__${getFullName(user, adventure.room.enemyTitles)}__\nTargeting: **${targets.length ? targets.join(", ") : "???"}**\nResistances: ${getResistances(user.element).map(element => getEmoji(element)).join(" ")}\n`;
 				}
 			})
 			break;
 		case "Critical Hits": // Shows which combatants are going to critically hit next round and elemental weakness
 			adventure.room.enemies.concat(adventure.delvers).filter(combatant => combatant.hp > 0).forEach(combatant => {
-				descriptionText += `\n__${getFullName(combatant, adventure.room.enemyTitles)}__\nCritical Hit: ${combatant.crit}\nWeaknesses: ${getWeaknesses(combatant.element).join(", ")}\n`;
+				descriptionText += `\n__${getFullName(combatant, adventure.room.enemyTitles)}__\nCritical Hit: ${combatant.crit}\nWeaknesses: ${getWeaknesses(combatant.element).map(element => getEmoji(element)).join(" ")}\n`;
 			});
 			break;
 		case "Health": // Shows current HP, max HP, block, and element of all combatants

@@ -19,7 +19,7 @@ module.exports = class Adventure {
 	};
 	leaderId = "";
 	delvers = [];
-	difficultyOptions = [];
+	challenges = {}; // {challengeName: {intensity, reward, duration}} 0 = done, null = permanent
 	scouting = {
 		finalBoss: false,
 		artifactGuardians: 0,
@@ -71,8 +71,20 @@ module.exports = class Adventure {
 		return this;
 	}
 
+	getArtifactCount(artifactName) {
+		return this.artifacts[artifactName] || 0;
+	}
+
+	getChallengeIntensity(challengeName) {
+		return this.challenges[challengeName]?.intensity || 0;
+	}
+
+	getChallengeDuration(challengeName) {
+		return this.challenges[challengeName]?.duration || 0;
+	}
+
 	getWeaponCapacity() {
-		let count = 4 + (this.artifacts["Hammerspace Holster"] || 0);
+		let count = 4 + this.getArtifactCount("Hammerspace Holster") - this.getChallengeIntensity("Can't Hold All this Value");
 		count = Math.min(5, count);
 		count = Math.max(1, count);
 		return count;

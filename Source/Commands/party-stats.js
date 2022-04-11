@@ -1,5 +1,6 @@
 const Command = require('../../Classes/Command.js');
 const { MessageEmbed, MessageActionRow, MessageSelectMenu } = require('discord.js');
+const { SAFE_DELIMITER } = require('../../helpers.js');
 
 const options = [];
 module.exports = new Command("party-stats", "Get info about the current adventure", false, false, options);
@@ -27,13 +28,16 @@ module.exports.execute = (interaction) => {
 					return encounter;
 				}
 			}).join(", ")}...`)
-			//TODO #184 list difficulty options
 			.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
+		let challenges = Object.keys(adventure.challenges);
+		if (challenges.length) {
+			embed.addField("Challenges", Object.keys(adventure.challenges).join(", "));
+		}
 		let artifactOptions = Object.keys(adventure.artifacts).map(artifact => {
 			return {
 				label: `${artifact} x ${adventure.artifacts[artifact]}`,
 				description: "",
-				value: `${artifact}-${adventure.artifacts[artifact]}`
+				value: `${artifact}${SAFE_DELIMITER}${adventure.artifacts[artifact]}`
 			}
 		})
 		let artifactSelect;

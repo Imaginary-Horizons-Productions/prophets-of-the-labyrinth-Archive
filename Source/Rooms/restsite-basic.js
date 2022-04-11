@@ -12,7 +12,8 @@ module.exports.uiRows.push(new MessageActionRow().addComponents(
 		.setLabel("Rest [30% hp]")
 		.setStyle("PRIMARY"),
 	new MessageButton().setCustomId("challenge")
-		.setLabel("Take a challenge (coming soon)")
+		.setLabel("Take a challenge")
 		.setStyle("DANGER")
-		.setDisabled(true)
 ))
+
+module.exports.resourceList = { "challenges": "2" };

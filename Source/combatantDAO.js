@@ -1,10 +1,23 @@
 const Enemy = require("../Classes/Enemy.js");
 const Delver = require("../Classes/Delver.js");
-const { getWeaknesses, getResistances } = require("./elementHelpers.js");
+const { getWeaknesses, getResistances, getEmoji } = require("./elementHelpers.js");
+const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
 
-let getInverse, isNonStacking, getModifierDescription;
+let
+	// modifierDictionary
+	getInverse,
+	isNonStacking,
+	getModifierDescription,
+	isBuff,
+	isDebuff,
+	// weaponDAO
+	weaponToEmbedField,
+	// helpers
+	SAFE_DELIMITER;
 exports.injectConfig = function (isProduction) {
-	({ getInverse, isNonStacking, getModifierDescription } = require("./Modifiers/_modifierDictionary.js").injectConfig(isProduction));
+	({ getInverse, isNonStacking, getModifierDescription, isBuff, isDebuff } = require("./Modifiers/_modifierDictionary.js").injectConfig(isProduction));
+	({ weaponToEmbedField } = require("./weaponDAO.js").injectConfig(isProduction));
+	({ SAFE_DELIMITER } = require("../helpers.js").injectConfig(isProduction));
 	return this;
 }
 
@@ -31,12 +44,52 @@ exports.calculateTotalSpeed = function (combatant) {
 	return Math.ceil(totalSpeed);
 }
 
+exports.delverStatsPayload = function (delver) {
+	let embed = new MessageEmbed()
+		.setTitle(exports.getFullName(delver, {}))
+		.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nPredicts: ${delver.predict}\nWhen using ${delver.element} ${getEmoji(delver.element)} weapons, add 1 Stagger to enemies or remove 1 Stagger from allies`)
+		.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
+	for (let weapon of delver.weapons) {
+		embed.addField(...weaponToEmbedField(weapon.name, weapon.uses));
+	}
+	let components = [];
+	if (Object.keys(delver.modifiers).length) {
+		let actionRow = [];
+		let modifiers = Object.keys(delver.modifiers);
+		let buttonCount = Math.min(modifiers.length, 4); // 5 buttons per row, save 1 spot for "and X more..." button
+		for (let i = 0; i < buttonCount; i++) {
+			let modifierName = modifiers[i];
+			let style;
+			if (isBuff(modifierName)) {
+				style = "PRIMARY";
+			} else if (isDebuff(modifierName)) {
+				style = "DANGER";
+			} else {
+				style = "SECONDARY";
+			}
+			actionRow.push(new MessageButton().setCustomId(`modifier${SAFE_DELIMITER}${modifierName}${SAFE_DELIMITER}${i}`)
+				.setLabel(`${modifierName}${isNonStacking(modifierName) ? "" : ` x ${delver.modifiers[modifierName]}`}`)
+				.setStyle(style))
+		}
+		if (modifiers.length > 4) {
+			actionRow.push(new MessageButton().setCustomId(`modifier${SAFE_DELIMITER}MORE`)
+				.setLabel(`${modifiers.length - 4} more...`)
+				.setStyle("SECONDARY")
+				.setDisabled(delver.predict !== "Modifiers"))
+		}
+		components.push(new MessageActionRow().addComponents(...actionRow));
+	}
+	return { embeds: [embed], components, ephemeral: true };
+}
+
 exports.dealDamage = async function (target, user, damage, isUnblockable, element, adventure) {
 	let targetName = exports.getFullName(target, adventure.room.enemyTitles);
 	let targetModifiers = Object.keys(target.modifiers);
 	if (!targetModifiers.includes(`${element} Absorb`)) {
 		if (!targetModifiers.includes("Evade") || isUnblockable) {
-			let pendingDamage = damage + (user?.modifiers["Power Up"] || 0);
+			let limitBreak = user?.modifiers["Power Up"] || 0;
+			let damageCap = 500 + limitBreak;
+			let pendingDamage = damage + limitBreak;
 			if (targetModifiers.includes("Exposed")) {
 				pendingDamage *= 1.5;
 			}
@@ -61,6 +114,7 @@ exports.dealDamage = async function (target, user, damage, isUnblockable, elemen
 					pendingDamage = 0;
 				}
 			}
+			pendingDamage = Math.min(pendingDamage, damageCap);
 			target.hp -= pendingDamage;
 			let damageText = ` ${targetName} takes *${pendingDamage} damage*${blockedDamage > 0 ? ` (${blockedDamage} blocked)` : ""}${element === "Poison" ? " from Poison" : ""}${isWeakness ? "!!!" : isResistance ? "." : "!"}`;
 			if (targetModifiers.includes("Curse of Midas")) {
@@ -103,7 +157,7 @@ exports.gainHealth = function (combatant, healing, { room: { enemyTitles }, arti
 	}
 
 	if (combatant.hp === combatant.maxHp) {
-		return `${exports.getFullName(combatant, enemyTitles)} was fully healed${excessHealing && inCombat > 0 ? ` (and gained block)` : ""}!`;
+		return `${exports.getFullName(combatant, enemyTitles)} was fully healed${excessHealing && inCombat && bloodshieldSwordCount > 0 ? ` (and gained block)` : ""}!`;
 	} else {
 		return `${exports.getFullName(combatant, enemyTitles)} *gained ${healing} hp*.`
 	}
@@ -140,6 +194,15 @@ exports.addModifier = function (combatant, { name: modifier, stacks }) {
 	if (combatant.modifiers?.Stagger >= combatant.staggerThreshold) {
 		combatant.modifiers.Stagger -= combatant.staggerThreshold;
 		combatant.modifiers.Stun = 1;
+		if (combatant.modifiers.Progress) {
+			combatant.modifiers.Progress = Math.ceil(combatant.modifiers.Progress * 0.8);
+		}
+	}
+
+	// Check if Progress yields results
+	if (combatant.modifiers?.Progress >= 100) {
+		combatant.modifiers.Progress -= 100;
+		exports.addModifier(combatant, { name: "Power Up", stacks: 100 });
 	}
 	return combatant;
 }

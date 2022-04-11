@@ -1,5 +1,4 @@
 const Command = require('../../Classes/Command.js');
-const { MessageEmbed } = require('discord.js');
 
 const options = [];
 module.exports = new Command("give-up", "Lets the adventure leader end the adventure", false, false, options);
@@ -13,11 +12,10 @@ module.exports.injectConfig = function (isProduction) {
 
 module.exports.execute = (interaction) => {
 	// Give up on the current adventure
-	const adventure = getAdventure(interaction.channel.id);
+	const adventure = getAdventure(interaction.channelId);
 	if (adventure && adventure.state !== "completed") {
 		if (interaction.user.id === adventure.leaderId) {
-			completeAdventure(adventure, interaction.channel, new MessageEmbed().setTitle("Defeat"));
-			interaction.reply({ content: "Give up completed.", ephemeral: true });
+			interaction.reply({ embeds: [completeAdventure(adventure, interaction.channel, { isSuccess: false, description: null })] });
 		} else {
 			interaction.reply({ content: "Please ask the leader to end the adventure.", ephemeral: true });
 		}

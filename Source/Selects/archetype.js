@@ -1,8 +1,9 @@
+const { MessageActionRow, MessageButton } = require('discord.js');
+const { SAFE_DELIMITER } = require('../../helpers.js');
 const Archetype = require('../../Classes/Archetype.js');
 const Select = require('../../Classes/Select.js');
 const { getAdventure, setAdventure } = require('../adventureDAO');
 const { getArchetype } = require('../Archetypes/_archetypeDictionary.js');
-const { MessageActionRow, MessageButton } = require('discord.js');
 const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
 
 module.exports = new Select("archetype");
@@ -59,7 +60,7 @@ module.exports.execute = (interaction, args) => {
 			})
 		} else {
 			let join = new MessageActionRow().addComponents(
-				new MessageButton().setCustomId(`join-${interaction.guildId}-${interaction.channelId}`)
+				new MessageButton().setCustomId(`join${SAFE_DELIMITER}${interaction.guildId}${SAFE_DELIMITER}${interaction.channelId}`)
 					.setLabel("Join")
 					.setStyle("SUCCESS"));
 			interaction.reply({ content: `You don't appear to be signed up for this adventure. You can join with the button below:`, components: [join], ephemeral: true });

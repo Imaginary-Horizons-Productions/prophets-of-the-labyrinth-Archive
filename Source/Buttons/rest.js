@@ -11,7 +11,7 @@ module.exports.execute = (interaction, args) => {
 	if (adventure.delvers.map(delver => delver.id).includes(interaction.user.id)) {
 		let healText = [];
 		for (let delver of adventure.delvers) {
-			healText.push(gainHealth(delver, delver.maxHp * 0.30, adventure, 0));
+			healText.push(gainHealth(delver, delver.maxHp * 0.30 * (1 - adventure.getChallengeIntensity("Restless")), adventure, 0));
 		}
 		let updatedUI = editButton(interaction.message, "rest", true, "✔️", "The party rested")
 		interaction.update({ components: updatedUI }).then(() => {

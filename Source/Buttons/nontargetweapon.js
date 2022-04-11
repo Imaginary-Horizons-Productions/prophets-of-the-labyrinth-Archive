@@ -1,6 +1,6 @@
 const Button = require('../../Classes/Button.js');
 const Move = require('../../Classes/Move');
-const { generateRandomNumber } = require('../../helpers.js');
+const { SAFE_DELIMITER, generateRandomNumber } = require('../../helpers.js');
 const { getAdventure, checkNextRound, endRound, setAdventure } = require('../adventureDAO');
 const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
 
@@ -36,7 +36,7 @@ module.exports.execute = async function (interaction, [weaponName, round, _weapo
 					newMove.addTarget(team, i);
 				}
 			} else if (target.startsWith("random")) {
-				let targetCount = Number(target.split("-")[1]);
+				let targetCount = Number(target.split(SAFE_DELIMITER)[1]);
 				let poolSize = 0;
 				if (team === "delver") {
 					poolSize = adventure.delvers.length;

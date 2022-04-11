@@ -15,6 +15,10 @@ module.exports.execute = (interaction, _args) => {
 			interaction.channel.messages.delete(adventure.messageIds.deploy);
 			delete adventure.messageIds.deploy;
 		}
+		if (adventure.messageIds.leaderNotice) {
+			interaction.channel.messages.delete(adventure.messageIds.leaderNotice);
+			delete adventure.messageIds.leaderNotice;
+		}
 		interaction.message.delete();
 		delete adventure.messageIds.start;
 
@@ -28,7 +32,7 @@ module.exports.execute = (interaction, _args) => {
 			message.pin();
 			adventure.state = "ongoing";
 			adventure.messageIds.utility = message.id;
-			nextRoom("Battle", adventure, interaction.channel);
+			nextRoom("Battle", interaction.channel);
 		});
 	} else {
 		interaction.reply({ content: "Please wait for the leader to start the adventure.", ephemeral: true });
