@@ -7,7 +7,8 @@ exports.injectConfig = function (isProduction) {
 let roomWhitelist = [
 	"artifactguardian-royalslime.js",
 	"artifactguardian-treasureelemental.js",
-	"battle-hawks.js",
+	"battle-bloodtailhawks.js",
+	"battle-firearrowfrogs.js",
 	"battle-mechabees.js",
 	"battle-slimes.js",
 	"battle-tortoises.js",

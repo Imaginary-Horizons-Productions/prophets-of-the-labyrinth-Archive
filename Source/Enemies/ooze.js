@@ -6,14 +6,14 @@ module.exports.injectConfig = function (isProduction) {
 	({ selectRandomFoe, nextRandom } = require("../enemyDAO.js").injectConfig(isProduction));
 	({ addModifier, getFullName, dealDamage } = require("../combatantDAO.js").injectConfig(isProduction));
 	return new Enemy("@{adventureOpposite} Ooze")
-		.setHp(200)
-		.setSpeed(90)
-		.setElement("@{adventureOpposite}")
-		.setStaggerThreshold(5)
 		.setFirstAction("Goop Spray")
 		.addAction({ name: "Goop Spray", effect: goopSprayEffect, selector: selectRandomFoe, next: nextRandom })
 		.addAction({ name: "Tackle", effect: tackleEffect, selector: selectRandomFoe, next: nextRandom })
-		.setBounty(25);
+		.setBounty(25)
+		.setHp(200)
+		.setSpeed(90)
+		.setElement("@{adventureOpposite}")
+		.setStaggerThreshold(5);
 }
 
 function tackleEffect(target, user, isCrit, adventure) {

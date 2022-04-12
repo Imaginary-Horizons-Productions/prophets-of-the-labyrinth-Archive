@@ -307,8 +307,8 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 			combatant.roundSpeed = Math.floor(combatant.speed * percentBonus);
 
 			// Roll Critical Hit
-			let critRoll = generateRandomNumber(adventure, 4, "Battle");
-			combatant.crit = critRoll > 2;
+			let critRoll = generateRandomNumber(adventure, combatant.getCritDenominator(adventure.getArtifactCount("Hawk Tailfeather")), "Battle");
+			combatant.crit = critRoll < combatant.getCritNumerator(adventure.getArtifactCount("Hawk Tailfeather"));
 
 			// Roll Enemy Moves and Generate Dummy Moves
 			let move = new Move()

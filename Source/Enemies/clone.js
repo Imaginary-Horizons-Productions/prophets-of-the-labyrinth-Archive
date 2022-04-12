@@ -4,9 +4,9 @@ const Enemy = require("../../Classes/Enemy.js");
 // let ;
 module.exports.injectConfig = function (isProduction) {
 	return new Enemy("@{clone}")
-	.setHp(300)
-	.setSpeed(100)
-	.setElement("@{clone}")
-	.setStaggerThreshold(3)
-	.setBounty(50);
+		.setBounty(50)
+		.setHp(300)
+		.setSpeed(100)
+		.setElement("@{clone}")
+		.setStaggerThreshold(3);
 }
