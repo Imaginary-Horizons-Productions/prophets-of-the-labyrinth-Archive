@@ -46,43 +46,41 @@ module.exports.execute = (interaction) => {
 				.setDescription("A new adventure is starting!")
 				.addField("1 Party Member", `Leader: ${interaction.member}`)
 			interaction.reply({ embeds: [embed], fetchReply: true }).then(recruitMessage => {
-				return recruitMessage.startThread({ name: adventure.name });
-			}).then(thread => {
-				thread.fetchStarterMessage().then(message => {
-					message.edit({
+				return recruitMessage.startThread({ name: adventure.name }).then(thread => {
+					recruitMessage.edit({
 						components: [new MessageActionRow().addComponents(
-							new MessageButton().setCustomId(`join${SAFE_DELIMITER}${thread.guildId}${SAFE_DELIMITER}${thread.id}`)
+							new MessageButton().setCustomId(`join${SAFE_DELIMITER}${thread.guildId}${SAFE_DELIMITER}${thread.id}${SAFE_DELIMITER}recruit`)
 								.setLabel("Join")
 								.setStyle("SUCCESS")
 						)]
 					});
-				})
-				adventure.delvers.push(new Delver(interaction.user.id, interaction.member.displayName, thread.id));
-				guildProfile.adventuring.add(interaction.user.id);
+					adventure.delvers.push(new Delver(interaction.user.id, interaction.member.displayName, thread.id));
+					guildProfile.adventuring.add(interaction.user.id);
 
-				thread.send({
-					content: `${interaction.user} Here's the channel for your new adventure. As adventure leader you're responsible for inputing the group's decisions (like challenges or indicating when everyone's ready).`,
-					components: [new MessageActionRow().addComponents(
-						new MessageButton().setCustomId("startingchallenges")
-							.setLabel("Set Challenges")
-							.setStyle("DANGER")
-					)]
-				}).then(leaderMessage => {
-					let ready = new MessageActionRow().addComponents(
-						new MessageButton().setCustomId("deploy")
-							.setLabel("Pick Archetype")
-							.setStyle("PRIMARY"),
-						new MessageButton().setCustomId("startingartifact")
-							.setLabel("Pick Starting Artifact")
-							.setStyle("SECONDARY")
-					)
-					adventure.setId(thread.id)
-						.setLeaderId(interaction.user.id);
-					adventure.messageIds.leaderNotice = leaderMessage.id;
-					return thread.send({ content: "The adventure will begin when everyone has picked an archetype and the leader clicks the \"Ready!\" button. Each player can optionally select a starting artifact.", components: [ready] });
-				}).then(deployMessage => {
-					adventure.messageIds.deploy = deployMessage.id;
-					setAdventure(adventure);
+					thread.send({
+						content: `${interaction.user} Here's the channel for your new adventure. As adventure leader you're responsible for inputing the group's decisions (like challenges or indicating when everyone's ready).`,
+						components: [new MessageActionRow().addComponents(
+							new MessageButton().setCustomId("startingchallenges")
+								.setLabel("Set Challenges")
+								.setStyle("DANGER")
+						)]
+					}).then(leaderMessage => {
+						let ready = new MessageActionRow().addComponents(
+							new MessageButton().setCustomId("deploy")
+								.setLabel("Pick Archetype")
+								.setStyle("PRIMARY"),
+							new MessageButton().setCustomId("startingartifact")
+								.setLabel("Pick Starting Artifact")
+								.setStyle("SECONDARY")
+						)
+						adventure.setId(thread.id)
+							.setLeaderId(interaction.user.id);
+						adventure.messageIds.leaderNotice = leaderMessage.id;
+						return thread.send({ content: "The adventure will begin when everyone has picked an archetype and the leader clicks the \"Ready!\" button. Each player can optionally select a starting artifact.", components: [ready] });
+					}).then(deployMessage => {
+						adventure.messageIds.deploy = deployMessage.id;
+						setAdventure(adventure);
+					});
 				});
 			}).catch(console.error);
 		} else {
