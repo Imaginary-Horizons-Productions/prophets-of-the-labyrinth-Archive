@@ -6,13 +6,14 @@ module.exports.injectConfig = function (isProduction) {
 	({ selectRandomFoe, nextRepeat } = require("../enemyDAO.js").injectConfig(isProduction));
 	({ dealDamage, addModifier } = require("../combatantDAO.js").injectConfig(isProduction));
 	return new Enemy("Bloodtail Hawk")
+		.setFirstAction("Rake")
+		.addAction({ name: "Rake", effect: rakeEffect, selector: selectRandomFoe, next: nextRepeat })
+		.setBounty(25)
 		.setHp(200)
 		.setSpeed(105)
 		.setElement("Wind")
 		.setStaggerThreshold(1)
-		.setFirstAction("Rake")
-		.addAction({ name: "Rake", effect: rakeEffect, selector: selectRandomFoe, next: nextRepeat })
-		.setBounty(25);
+		.setCritDenominator(3);
 }
 
 function rakeEffect(target, user, isCrit, adventure) {

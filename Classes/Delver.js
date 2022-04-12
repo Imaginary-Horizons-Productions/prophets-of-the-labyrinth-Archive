@@ -22,8 +22,34 @@ module.exports = class Delver extends Combatant {
 
 	setElement = super.setElement;
 
-	setPredict = (predictEnum) => {
+	/**
+	 * Sets the predict for the delver.
+	 *
+	 * @param {string} predictEnum
+	 * @returns {Delver}
+	 */
+	setPredict(predictEnum) {
 		this.predict = predictEnum;
 		return this;
+	}
+
+	/**
+	 * Overwrite of Combatant.getCritNumerator(). `count` included so delvers can modify value via artifacts.
+	 *
+	 * @param {number} hawkTailfeatherCount
+	 * @returns {number}
+	 */
+	getCritNumerator(hawkTailfeatherCount) {
+		return this.critNumerator + hawkTailfeatherCount;
+	}
+
+	/**
+	 * Overwrite of Combatant.getCritDenominator(). `count` included so delvers can modify value via artifacts.
+	 *
+	 * @param {number} hawkTailfeatherCount
+	 * @returns {number}
+	 */
+	 getCritDenominator(hawkTailfeatherCount) {
+		return this.critDenominator + hawkTailfeatherCount;
 	}
 }

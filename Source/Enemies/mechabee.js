@@ -6,16 +6,16 @@ module.exports.injectConfig = function (isProduction) {
 	({ selectRandomFoe, selectSelf, selectNone, selectAllFoes, spawnEnemy } = require("../enemyDAO.js").injectConfig(isProduction));
 	({ dealDamage, addModifier, removeModifier } = require("../combatantDAO.js").injectConfig(isProduction));
 	return new Enemy("Mechabee")
-		.setHp(200)
-		.setSpeed(100)
-		.setElement("Darkness")
-		.setStaggerThreshold(3)
 		.setFirstAction("Sting")
 		.addAction({ name: "Sting", effect: stingEffect, selector: selectRandomFoe, next: mechabeePattern })
 		.addAction({ name: "Evade", effect: evadeEffect, selector: selectSelf, next: mechabeePattern })
 		.addAction({ name: "Call for Help", effect: summonEffect, selector: selectNone, next: mechabeePattern })
 		.addAction({ name: "Self-Destruct", effect: selfDestructEffect, selector: selectAllFoes, next: mechabeePattern })
-		.setBounty(25);
+		.setBounty(25)
+		.setHp(200)
+		.setSpeed(100)
+		.setElement("Darkness")
+		.setStaggerThreshold(3);
 }
 
 const PATTERN = {
