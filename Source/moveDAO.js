@@ -23,7 +23,7 @@ exports.resolveMove = async function (move, adventure) {
 					targetAll = getWeaponProperty(move.name, "targetingTags").target === "all"
 					if (move.name !== "Punch") {
 						let weapon = user.weapons.find(weapon => weapon.name === move.name);
-						weapon.uses--; //TODO #192 don't decrement durability when move fizzles because all targets are already dead
+						weapon.uses--;
 						if (weapon.uses === 0) {
 							breakText = ` The ${move.name} broke!`;
 						}
