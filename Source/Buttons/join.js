@@ -50,7 +50,12 @@ module.exports.execute = async (interaction, [guildId, adventureId]) => {
 						components = [];
 					}
 					recruitMessage.edit({ embeds, components });
-					interaction.update({ components: [] })
+					let isInteractionInsideThread = interaction.message.flags.has("EPHEMERAL");
+					if (isInteractionInsideThread) {
+						interaction.update({ components: [] })
+					} else {
+						interaction.update({ content: "\u200B" })
+					}
 				} else {
 					interaction.reply({ content: "You are already part of this adventure!", ephemeral: true })
 						.catch(console.error);
