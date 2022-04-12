@@ -62,7 +62,9 @@ exports.injectConfig = function (isProduction) {
 	return this;
 }
 
-const filePath = "./Saves/adventures.json";
+const dirPath = "./Saves";
+const fileName = "adventures.json";
+const filePath = `${dirPath}/${fileName}`;
 const requirePath = "./../Saves/adventures.json";
 const adventureDictionary = new Map();
 
@@ -110,14 +112,7 @@ exports.loadAdventures = async function () {
 		})
 		return `${loaded} adventures loaded`;
 	} else {
-		if (!fs.existsSync("./Saves")) {
-			fs.mkdirSync("./Saves", { recursive: true });
-		}
-		fs.writeFile(filePath, "[]", "utf8", error => {
-			if (error) {
-				console.error(error);
-			}
-		})
+		ensuredPathSave(dirPath,fileName,"[]");
 		return "adventures regenerated";
 	}
 }
