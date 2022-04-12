@@ -72,9 +72,7 @@ exports.ensuredPathSave = async function (dirPath, fileName, data) {
 		.then(() => fs.promises.rename(filePath, backupFilePath)) // save previous file as backup
 		.catch((err) => err.code === 'ENOENT' ? undefined : Promise.reject(err)) // ignore ENOENT (file not found) for rename if save didn't already exist
 		.then(() => fs.promises.writeFile(filePath, data, { encoding: "utf8" })
-		.catch((err) => Promise.reject(new Error("writeFile failed", { cause: err })))) // promote errors (including ENOENT) for writeFile)
-		.then(() => fs.promises.rm(backupFilePath)) // remove backup only if previous steps did not fatally fail
-		.catch((err) => err.code === 'ENOENT' ? undefined : Promise.reject(err)) // ignore ENOENT (file not found) for rm if save didn't already exist to be backed-up
+			.catch((err) => Promise.reject(new Error("writeFile failed", { cause: err })))) // promote errors (including ENOENT) for writeFile)
 		.catch(console.error) // log error, and avoid fatally crashing
 }
 
