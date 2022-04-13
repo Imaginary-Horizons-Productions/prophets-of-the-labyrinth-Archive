@@ -14,6 +14,12 @@
 - Fixed several multiplayer bugs
 - Culled some unnecessary bot output
 - Other stuff
+### Known Issues
+- Ready message is output twice if the last two players select their archetypes at similar times
+- /ping returns false positives
+- Interacting with archived threads sometimes causes crashes
+- Poison damage procs Curse of Midas
+- Using a join button in a /invite clears the original join button on the adventure
 #### Prophets of the Labyrinth Version 0.6.0:
 - New artifact: Negative-One Leaf Clover
 - New weapons: Ice Ward, Heavy Ice Ward, Sweeping Ice Ward, Reinforcing Inspiration
