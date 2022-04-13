@@ -22,16 +22,16 @@ module.exports.injectConfig = function (isProduction) {
 	({ addBlock, dealDamage, addModifier, removeModifier } = require("../combatantDAO.js").injectConfig(isProduction));
 	({ isBuff } = require("../Modifiers/_modifierDictionary.js").injectConfig(isProduction));
 	return new Enemy("Elkemist")
-		.setHp(2000)
-		.setSpeed(100)
-		.setElement("Water")
-		.setStaggerThreshold(4)
 		.setFirstAction("Toil")
 		.addAction({ name: "Toil", effect: toilEffect, selector: selectSelf, next: nextRandom })
 		.addAction({ name: "Trouble", effect: troubleEffect, selector: selectRandomFoe, next: nextRandom })
 		.addAction({ name: "Boil", effect: boilEffect, selector: selectAllFoes, next: nextRandom })
 		.addAction({ name: "Bubble", effect: bubbleEffect, selector: selectAllFoes, next: nextRandom })
-		.setBounty(0);
+		.setBounty(0)
+		.setHp(2000)
+		.setSpeed(100)
+		.setElement("Water")
+		.setStaggerThreshold(4);
 }
 
 function toilEffect(target, user, isCrit, adventure) {

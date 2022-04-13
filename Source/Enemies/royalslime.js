@@ -8,16 +8,16 @@ module.exports.injectConfig = function (isProduction) {
 	({ generateRandomNumber } = require("../../helpers.js").injectConfig(isProduction));
 	({ addModifier, dealDamage, removeModifier } = require("../combatantDAO.js").injectConfig(isProduction));
 	return new Enemy("Royal Slime")
-		.setHp(600)
-		.setSpeed(90)
-		.setElement("@{adventure}")
-		.setStaggerThreshold(5)
 		.setFirstAction("Element Shift")
 		.addAction({ name: "Element Shift", effect: elementShift, selector: selectSelf, next: nextRandom })
 		.addAction({ name: "Rolling Tackle", effect: rollingTackleEffect, selector: selectAllFoes, next: nextRandom })
 		.addAction({ name: "Goop Deluge", effect: goopDelugeEffect, selector: selectAllFoes, next: nextRandom })
 		.addAction({ name: "Toxic Spike Shot", effect: toxicSpikeShotEffect, selector: selectRandomFoe, next: nextRandom })
-		.setBounty(100);
+		.setBounty(100)
+		.setHp(600)
+		.setSpeed(90)
+		.setElement("@{adventure}")
+		.setStaggerThreshold(5);
 }
 
 function elementShift(target, user, isCrit, adventure) {
