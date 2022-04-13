@@ -19,7 +19,7 @@ Lets the adventure leader end the adventure
 ## Informational Commands
 Use these commands to look up information about Prophets of the Labyrinth!
 ### /manual
-Get information about Prophets of the Labyrinth (v0.6.0)
+Get information about Prophets of the Labyrinth (v0.7.0)
 #### topic
 The topic/page of information
 ### /commands
@@ -41,4 +41,4 @@ List ways to support PotL
 ## Configuration Commands
 These commands change how the bot operates on your server. They require bot management permission (a role above the bot's roles).
 ### /reset
-Recreate the PotL category and central text channel and reset player scores
+(Manager) Reset player scores for this server
