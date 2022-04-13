@@ -112,7 +112,7 @@ exports.loadAdventures = async function () {
 		})
 		return `${loaded} adventures loaded`;
 	} else {
-		ensuredPathSave(dirPath,fileName,"[]");
+		ensuredPathSave(dirPath, fileName, "[]");
 		return "adventures regenerated";
 	}
 }
