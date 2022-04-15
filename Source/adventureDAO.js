@@ -579,7 +579,7 @@ exports.endRound = async function (adventure, thread) {
 				if (adventure.challenges[challengeName].duration) {
 					adventure.challenges[challengeName].duration--;
 					if (adventure.challenges[challengeName].duration < 1) {
-						getChallenge(challengeName).reward(adventure);
+						getChallenge(challengeName).complete(adventure);
 					}
 				}
 			}
