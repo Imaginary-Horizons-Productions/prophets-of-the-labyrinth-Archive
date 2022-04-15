@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { addBlock, removeModifier } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Urgent Barrier", 2, "*Grant an ally @{block} block (+@{speedBonus} speed)*\nCritical Hit: Block x@{critBonus}", "Light", effect, ["Purifiying Barrier", "Thick Barrier"])
+module.exports = new Weapon("Urgent Barrier", 2, "*Grant an ally @{block} block (+@{speedBonus} speed bonus)*\nCritical Hit: Block x@{critBonus}", "Light", effect, ["Purifiying Barrier", "Thick Barrier"])
 	.setTargetingTags({ target: "single", team: "delver" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(350)

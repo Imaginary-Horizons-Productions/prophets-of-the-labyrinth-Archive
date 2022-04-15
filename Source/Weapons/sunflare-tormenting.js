@@ -2,7 +2,7 @@ const Weapon = require('../../Classes/Weapon.js');
 const { addModifier } = require('../combatantDAO.js');
 const { isDebuff } = require('../Modifiers/_modifierDictionary.js');
 
-module.exports = new Weapon("Spell: Tormenting Sun Flare", 2, "*Inflict @{mod1Stacks} @{mod1} and 1 of each of a foe's debuffs on that foe (+@{speedBonus} speed)*\nCritical Hit: Inflict @{mod2Stacks} @{mod2} as well", "Fire", effect, ["Spell: Evasive Sun Flare", "Spell: Swift Sun Flare"])
+module.exports = new Weapon("Spell: Tormenting Sun Flare", 2, "*Inflict @{mod1Stacks} @{mod1} and 1 of each of a foe's debuffs on that foe (+@{speedBonus} speed bonus)*\nCritical Hit: Inflict @{mod2Stacks} @{mod2} as well", "Fire", effect, ["Spell: Evasive Sun Flare", "Spell: Swift Sun Flare"])
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Stagger", stacks: 1 }, { name: "Slow", stacks: 2 }])
 	.setCost(350)
