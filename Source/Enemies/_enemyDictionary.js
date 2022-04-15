@@ -1,8 +1,9 @@
 const enemyWhitelist = [
+	"bloodtailhawk.js",
 	"clone.js",
 	"elkemist.js",
+	"firearrowfrog.js",
 	"geodetortoise.js",
-	"hawk.js",
 	"mechabee.js",
 	"ooze.js",
 	"royalslime.js",

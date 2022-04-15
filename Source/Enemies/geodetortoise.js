@@ -7,14 +7,14 @@ module.exports.injectConfig = function (isProduction) {
 	({ addBlock, addModifier, removeModifier, dealDamage } = require("../combatantDAO.js").injectConfig(isProduction));
 
 	return new Enemy("Geode Tortoise")
-		.setHp(350)
-		.setSpeed(85)
-		.setElement("Earth")
-		.setStaggerThreshold(5)
 		.setFirstAction("random")
 		.addAction({ name: "Bite", effect: biteEffect, selector: selectRandomFoe, next: nextRandom })
 		.addAction({ name: "Crystallize", effect: crystallizeEffect, selector: selectSelf, next: nextRandom })
-		.setBounty(40);
+		.setBounty(40)
+		.setHp(350)
+		.setSpeed(85)
+		.setElement("Earth")
+		.setStaggerThreshold(5);
 }
 
 function biteEffect(target, user, isCrit, adventure) {

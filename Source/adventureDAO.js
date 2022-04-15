@@ -287,6 +287,23 @@ exports.endRoom = function (roomType, thread) {
 	exports.nextRoom(roomType, thread);
 }
 
+exports.cleanUpRoom = function (roomType, thread) {
+	let adventure = exports.getAdventure(thread.id);
+	adventure.depth++;
+	adventure.room = {};
+	adventure.roomCandidates = {};
+
+	for (const challengeName in adventure.challenges) {
+		if (adventure.challenges[challengeName].duration) {
+			adventure.challenges[challengeName].duration--;
+			if (adventure.challenges[challengeName].duration < 1) {
+				getChallenge(challengeName).complete(adventure, thread);
+			}
+		}
+	}
+	exports.nextRoom(roomType, thread);
+}
+
 exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 	// Increment round and clear last round's components
 	adventure.room.round++;
@@ -307,8 +324,8 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 			combatant.roundSpeed = Math.floor(combatant.speed * percentBonus);
 
 			// Roll Critical Hit
-			let critRoll = generateRandomNumber(adventure, 4, "Battle");
-			combatant.crit = critRoll > 2;
+			let critRoll = generateRandomNumber(adventure, combatant.getCritDenominator(adventure.getArtifactCount("Hawk Tailfeather")), "Battle");
+			combatant.crit = critRoll < combatant.getCritNumerator(adventure.getArtifactCount("Hawk Tailfeather"));
 
 			// Roll Enemy Moves and Generate Dummy Moves
 			let move = new Move()
@@ -562,7 +579,7 @@ exports.endRound = async function (adventure, thread) {
 				if (adventure.challenges[challengeName].duration) {
 					adventure.challenges[challengeName].duration--;
 					if (adventure.challenges[challengeName].duration < 1) {
-						getChallenge(challengeName).reward(adventure);
+						getChallenge(challengeName).complete(adventure);
 					}
 				}
 			}
