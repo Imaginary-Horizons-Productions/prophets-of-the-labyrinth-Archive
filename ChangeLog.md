@@ -1,10 +1,11 @@
 # Prophets of the Labyrinth Change Log
-#### Prophets of the Labyrinth Version 0.8.0:
+#### Prophets of the Labyrinth Version 0.7.1:
 - New artifacts: Hawk Tail Feather
 - New enemy: Fire-Arrow Frog
 - Enemy balance:
    - Bloodtail Hawk critical hit rate increased from 1/4 to 1/3 and now scale in count with party size
    - Slimes and Oozes now scale in count less with party size
+- Fixed crash on completing a challenge
 - Other stuff
 #### Prophets of the Labyrinth Version 0.7.0:
 - Added challenges
