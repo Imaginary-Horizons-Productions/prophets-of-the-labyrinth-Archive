@@ -192,7 +192,7 @@ Bonus speed
 
 #### Avaialble on
 - all Bows (Wind)
-- all Sun Flare (Light)
+- all Sun Flare (Fire)
 - Barrier (Light)
 - Buckler (Earth)
 - Life Drain (Darkness)
