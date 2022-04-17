@@ -1,9 +1,10 @@
-const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
+const { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } = require('discord.js');
 const { SAFE_DELIMITER } = require('../../helpers.js');
 const Adventure = require('../../Classes/Adventure.js');
 const Command = require('../../Classes/Command.js');
 const Delver = require('../../Classes/Delver.js');
 const { elementsList, getColor } = require('../elementHelpers.js');
+const { getChallenge } = require('../Challenges/_challengeDictionary.js');
 
 const options = [
 	{ type: "String", name: "seed", description: "The value to base the run's random events on", required: false, choices: {} }
@@ -60,13 +61,22 @@ module.exports.execute = (interaction) => {
 				adventure.delvers.push(new Delver(interaction.user.id, interaction.member.displayName, thread.id));
 				guildProfile.adventuring.add(interaction.user.id);
 
+				let options = [{ label: "None", description: "Deselect previously selected challenges", value: "None" }];
+				["Can't Hold All this Value", "Restless"].forEach(challengeName => {
+					const challenge = getChallenge(challengeName);
+					options.push({ label: challengeName, description: challenge.dynamicDescription(challenge.intensity, challenge.duration), value: challengeName });
+				})
+				let components = [new MessageActionRow().addComponents(
+					new MessageSelectMenu().setCustomId("startingchallenges")
+						.setPlaceholder("Select challenge(s)...")
+						.setMinValues(1)
+						.setMaxValues(options.length)
+						.addOptions(options)
+				)];
+
 				thread.send({
-					content: `${interaction.user} Here's the channel for your new adventure. As adventure leader you're responsible for inputing the group's decisions (like challenges or indicating when everyone's ready).`,
-					components: [new MessageActionRow().addComponents(
-						new MessageButton().setCustomId("startingchallenges")
-							.setLabel("Set Challenges")
-							.setStyle("DANGER")
-					)]
+					content: `${interaction.user} Here's the channel for your new adventure. As adventure leader you're responsible for inputting the group's decisions (like challenges or indicating when everyone's ready).`,
+					components
 				}).then(leaderMessage => {
 					let ready = new MessageActionRow().addComponents(
 						new MessageButton().setCustomId("deploy")
