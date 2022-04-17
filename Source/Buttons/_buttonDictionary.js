@@ -20,7 +20,6 @@ var buttonWhitelist = [
 	"rest.js",
 	"routevote.js",
 	"startingartifact.js",
-	"startingchallenges.js",
 	"takegold.js",
 	"upgrade.js"
 ];
