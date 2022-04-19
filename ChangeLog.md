@@ -2,7 +2,7 @@
 #### Prophets of the Labyrinth Version 0.8.0:
 - Added "Data Policy" page to manual
 - Enemy hp now scales with party size
-- Weapon Durability Tweaks:
+- Weapon durability tweaks:
    - Thick Battleaxe: 15 -> 20 durability
    - Cloaks (Base, Long, Swift): 5 -> 10 durability
    - Thick Cloak: 10 -> 20 durability
