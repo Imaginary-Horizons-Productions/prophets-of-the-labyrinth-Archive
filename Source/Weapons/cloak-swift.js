@@ -5,7 +5,7 @@ module.exports = new Weapon("Swift Cloak", 2, "*Gain @{mod1Stacks} @{mod1} and @
 	.setTargetingTags({ target: "self", team: "self" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Evade", stacks: 2 }, { name: "Quicken", stacks: 1 }, { name: "Evade", stacks: 3 }, { name: "Quicken", stacks: 2 }])
 	.setCost(350)
-	.setUses(5);
+	.setUses(10);
 
 function effect(target, user, isCrit, adventure) {
 	let { element: weaponElement, modifiers: [elementStagger, evade, quicken, critEvade, critQuicken] } = module.exports;

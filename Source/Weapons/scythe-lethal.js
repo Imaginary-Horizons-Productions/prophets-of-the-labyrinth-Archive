@@ -5,7 +5,7 @@ module.exports = new Weapon("Lethal Scythe", 2, "*Strike a foe for @{damage} @{e
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(350)
-	.setUses(15)
+	.setUses(10)
 	.setDamage(75)
 	.setBonusDamage(99)
 	.setCritBonus(3);
