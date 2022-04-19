@@ -1,6 +1,7 @@
 # Prophets of the Labyrinth Change Log
 #### Prophets of the Labyrinth Version 0.8.0:
 - Added "Data Policy" page to manual
+- Enemy hp now scales with party size
 #### Prophets of the Labyrinth Version 0.7.1:
 - New artifacts: Hawk Tail Feather
 - New enemy: Fire-Arrow Frog
