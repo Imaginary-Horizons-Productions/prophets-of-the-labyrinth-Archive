@@ -31,6 +31,7 @@ module.exports.execute = (interaction) => {
 				.setDescription(`A roguelike dungeon crawl in Discord to play with other server members.`)
 				.addField(`Design & Engineering`, `Nathaniel Tseng ( <@106122478715150336> | [GitHub](https://github.com/ntseng) )`)
 				.addField(`Dev & Review`, `Henry Hu ( <@113108081990176768> | [Twitter](https://twitter.com/hdoubledh) )`)
+				.addField(`Boba Dev`, `Vivian Thach ( <@334803621827051534> | [Instagram](https://www.instagram.com/bobaguardian/) )`)
 				.addField("Random Number Generator", "Alex Frank")
 				.addField("Room Loader", "Michel Momeyer")
 				.addField("Predict Balance", "Lucas Ensign")
