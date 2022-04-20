@@ -1,4 +1,4 @@
-name: Generate Sponsors README
+name: On Update to Main
 on:
   push:
     branches:
@@ -30,7 +30,7 @@ jobs:
         run: node .github/workflows/updateCommands.js
 
       - name: Push Changes to Repo
-        run: git add .; git commit -m "updated commands page on wiki"; git push origin main
+        run: git add .; git commit -m "updated commands page on wiki" && git push origin main || true
 
       - name: Push Wiki Changes
         uses: Andrew-Chen-Wang/github-wiki-action@v2
