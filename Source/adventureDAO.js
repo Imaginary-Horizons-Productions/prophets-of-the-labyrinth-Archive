@@ -124,7 +124,7 @@ exports.getAdventure = function (id) {
 
 exports.setAdventure = function (adventure) {
 	adventureDictionary.set(adventure.id, adventure);
-	saveAdventures();
+	ensuredPathSave("./Saves", "adventures.json", JSON.stringify(Array.from(adventureDictionary.values())));
 }
 
 /**
@@ -650,8 +650,4 @@ exports.completeAdventure = function (adventure, thread, { isSuccess, descriptio
 	adventure.state = "completed";
 	exports.setAdventure(adventure);
 	return scoreEmbed;
-}
-
-function saveAdventures() {
-	ensuredPathSave("./Saves", "adventures.json", JSON.stringify(Array.from(adventureDictionary.values())));
 }
