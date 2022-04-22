@@ -3,7 +3,7 @@ const Button = require('../../Classes/Button.js');
 const { getAdventure } = require('../adventureDAO.js');
 const { getChallenge } = require('../Challenges/_challengeDictionary.js');
 
-module.exports = new Button("challenge");
+module.exports = new Button("viewchallenges");
 
 module.exports.execute = (interaction, args) => {
 	// Roll challenge options for party to select
