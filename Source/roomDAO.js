@@ -39,7 +39,7 @@ exports.decrementForgeSupplies = async function (interaction, roomMessageId, adv
 	adventure.room.resources.forgeSupplies.count--;
 	const roomMessage = await interaction.channel.messages.fetch(roomMessageId)
 	let { embeds } = roomMessage;
-	embeds[0].spliceFields(roomEmbed.fields.findIndex(field => field.name === "Remaining Forge Supplies"), 1, { name: "Remaining Forge Supplies", value: adventure.room.resources.forgeSupplies.count.toString() })
+	embeds[0].spliceFields(embeds[0].fields.findIndex(field => field.name === "Remaining Forge Supplies"), 1, { name: "Remaining Forge Supplies", value: adventure.room.resources.forgeSupplies.count.toString() })
 	if (adventure.room.resources.forgeSupplies.count === 0) {
 		return roomMessage.edit({
 			embeds,
