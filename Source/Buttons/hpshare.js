@@ -1,7 +1,7 @@
 const Button = require('../../Classes/Button.js');
 const { getAdventure, completeAdventure, updateRoomHeader } = require('../adventureDAO.js');
 const { gainHealth, dealDamage } = require("../combatantDAO.js");
-const { editButton } = require('../roomDAO.js');
+const { editButtons } = require('../roomDAO.js');
 
 module.exports = new Button("hpshare");
 
@@ -24,7 +24,7 @@ module.exports.execute = (interaction, args) => {
 				if (adventure.lives < 1) {
 					interaction.reply({ embeds: [completeAdventure(adventure, interaction.channel, { isSuccess: false, description: null })] });
 				} else {
-					interaction.update({ components: editButton(interaction.message, "hpshare", true, "✔️", `${interaction.user} shared HP.`) });
+					interaction.update({ components: editButtons(interaction.message.components, { "hpshare": { preventUse: true, label: `${interaction.user} shared HP.`, emoji: "✔️" } }) });
 				}
 			})
 		} else {
