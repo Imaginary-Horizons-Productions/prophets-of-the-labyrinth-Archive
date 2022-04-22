@@ -22,7 +22,7 @@ module.exports.injectConfig = function (isProduction) {
 	({ addBlock, dealDamage, addModifier, removeModifier } = require("../combatantDAO.js").injectConfig(isProduction));
 	({ isBuff } = require("../Modifiers/_modifierDictionary.js").injectConfig(isProduction));
 	return new Enemy("Elkemist")
-		.setFirstAction("Toil")
+		.setFirstAction("random")
 		.addAction({ name: "Toil", effect: toilEffect, selector: selectSelf, next: nextRandom })
 		.addAction({ name: "Trouble", effect: troubleEffect, selector: selectRandomFoe, next: nextRandom })
 		.addAction({ name: "Boil", effect: boilEffect, selector: selectAllFoes, next: nextRandom })
@@ -80,5 +80,5 @@ function bubbleEffect(target, user, isCrit, adventure) {
 			delete target.modifiers[modifier];
 		}
 	}
-	return `The Elkemist cackles as ${target}'s buffs are nullified.`;
+	return `The Elkemist cackles as ${target.name}'s buffs are nullified.`;
 }
