@@ -41,7 +41,6 @@ let
 	buildWeaponDescription,
 	//artifactDictionary
 	rollArtifact,
-	getArtifactDescription,
 	//enemyDictionary
 	getEnemy,
 	//challengeDictionary
@@ -252,7 +251,7 @@ exports.nextRoom = async function (roomType, thread) {
 					.setUIGroup("scouting");
 			}
 		}
-		if (adventure.depth < 11) {
+		if (adventure.depth < 10) {
 			let roomMessage = await thread.send({
 				embeds: [embed.addField("Decide the next room", "Each delver can pick or change their pick for the next room. The party will move on when the decision is unanimous.")],
 				components: [...roomTemplate.uiRows, ...exports.generateMerchantRows(adventure), exports.generateRoutingRow(adventure)]
@@ -581,7 +580,7 @@ exports.endRound = async function (adventure, thread) {
 			// Finalize UI
 			embed = embed.setTitle("Victory!").setDescription(lastRoundText)
 				.setColor(getColor(adventure.room.element));
-			if (adventure.depth < 11) {
+			if (adventure.depth < 10) {
 				return thread.send({
 					embeds: [embed.addField("Decide the next room", "Each delver can pick or change their pick for the next room. The party will move on when the decision is unanimous.")],
 					components: [exports.generateLootRow(adventure), exports.generateRoutingRow(adventure)]
