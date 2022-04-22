@@ -1,6 +1,6 @@
 const Button = require('../../Classes/Button.js');
 const { getAdventure, updateRoomHeader, setAdventure } = require('../adventureDAO.js');
-const { editButton } = require('../roomDAO.js');
+const { editButtons } = require('../roomDAO.js');
 
 module.exports = new Button("buylife");
 
@@ -11,7 +11,7 @@ module.exports.execute = (interaction, args) => {
 		adventure.lives++;
 		adventure.accumulatedScore -= 50;
 		updateRoomHeader(adventure, interaction.message);
-		let updatedUI = editButton(interaction.message, "buylife", true, "✔️", "-50 score, +1 life");
+		let updatedUI = editButtons(interaction.message.components, { "buylife": { preventUse: true, label: "-50 score, +1 life", emoji: "✔️" } });
 		interaction.update({ components: updatedUI }).then(() => {
 			setAdventure(adventure);
 		});
