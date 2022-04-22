@@ -10,7 +10,7 @@ exports.injectConfig = function (isProduction) {
 module.exports.spawnEnemy = function (adventure, enemyTemplate, randomizeHp) {
 	let enemy = Object.assign(new Enemy(), enemyTemplate);
 	enemy.modifiers = { ...enemyTemplate.startingModifiers }; // breaks shared reference to modifiers object by enemies of same name
-	let hpPercent = 100 + 15 * adventure.delvers.length;
+	let hpPercent = 85 + 15 * adventure.delvers.length;
 	if (randomizeHp) {
 		hpPercent += 10 * (2 - generateRandomNumber(adventure, 5, "Battle"));
 	}
