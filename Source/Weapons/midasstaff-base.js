@@ -5,7 +5,7 @@ module.exports = new Weapon("Midas Staff", 1, "*Apply @{mod1Stacks} @{mod1} to a
 	.setTargetingTags({ target: "single", team: "any" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Curse of Midas", stacks: 1 }, { name: "Curse of Midas", stacks: 2 }])
 	.setCost(200)
-	.setUses(10);
+	.setUses(5);
 
 function effect(target, user, isCrit, adventure) {
 	let { element: weaponElement, modifiers: [elementStagger, curse, critCurse] } = module.exports;

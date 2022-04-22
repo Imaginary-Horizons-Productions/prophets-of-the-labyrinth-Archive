@@ -5,7 +5,7 @@ module.exports = new Weapon("Unfinished Potion", 1, "*Apply @{mod1Stacks} @{mod1
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Poison", stacks: 4 }, { name: "Poison", stacks: 8 }])
 	.setCost(200)
-	.setUses(5);
+	.setUses(10);
 
 function effect(target, user, isCrit, adventure) {
 	let { element: weaponElement, modifiers: [elementStagger, poison, critPoison] } = module.exports;

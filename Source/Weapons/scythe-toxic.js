@@ -5,7 +5,7 @@ module.exports = new Weapon("Toxic Scythe", 2, "*Strike a foe applying 3 Poison 
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Poison", stacks: 3 }])
 	.setCost(350)
-	.setUses(15)
+	.setUses(10)
 	.setDamage(75)
 	.setBonusDamage(99);
 

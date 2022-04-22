@@ -5,7 +5,7 @@ module.exports = new Weapon("Sword", 1, "*Strike a foe for @{damage} @{element} 
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Power Up", stacks: 25 }])
 	.setCost(200)
-	.setUses(5)
+	.setUses(10)
 	.setDamage(75);
 
 function effect(target, user, isCrit, adventure) {

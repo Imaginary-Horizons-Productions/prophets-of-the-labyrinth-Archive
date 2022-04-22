@@ -2,6 +2,14 @@
 #### Prophets of the Labyrinth Version 0.8.0:
 - Added "Data Policy" page to manual
 - Enemy hp now scales with party size
+- Weapon durability tweaks:
+   - Thick Battleaxe: 15 -> 20 durability
+   - Cloaks (Base, Long, Swift): 5 -> 10 durability
+   - Thick Cloak: 10 -> 20 durability
+   - Midas Staves: 10 -> 5 durability
+   - Potions: 5 -> 10 durability
+   - Scythes: 15 -> 10 durability
+   - Base Sword: 5 -> 10 durability
 #### Prophets of the Labyrinth Version 0.7.1:
 - New artifacts: Hawk Tail Feather
 - New enemy: Fire-Arrow Frog
