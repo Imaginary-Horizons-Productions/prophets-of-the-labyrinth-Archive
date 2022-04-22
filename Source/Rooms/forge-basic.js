@@ -11,7 +11,7 @@ module.exports.uiRows.push(new MessageActionRow().addComponents(
 	new MessageButton().setCustomId("upgrade")
 		.setLabel("Pick a weapon to randomly upgrade")
 		.setStyle("SUCCESS"),
-	new MessageButton().setCustomId("repair")
+	new MessageButton().setCustomId("viewrepairs")
 		.setLabel("Repair a weapon")
 		.setStyle("PRIMARY")
 ))

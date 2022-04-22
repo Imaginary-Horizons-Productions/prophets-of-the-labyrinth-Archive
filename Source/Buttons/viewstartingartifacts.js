@@ -5,9 +5,9 @@ const { getPlayer } = require('../playerDAO.js');
 const { getAdventure } = require('../adventureDAO.js');
 const { getArtifact } = require('../Artifacts/_artifactDictionary.js');
 
-module.exports = new Button("startingartifact");
+module.exports = new Button("viewstartingartifacts");
 
-module.exports.execute = (interaction, _args) => {
+module.exports.execute = (interaction, args) => {
 	// Send the player a message with a select a starting artifact
 	let adventure = getAdventure(interaction.channel.id);
 	let playerProfile = getPlayer(interaction.user.id, interaction.guild.id);

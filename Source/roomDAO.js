@@ -45,7 +45,7 @@ exports.decrementForgeSupplies = async function (interaction, roomMessageId, adv
 			embeds,
 			components: [...roomMessage.components.map(row => {
 				return new MessageActionRow().addComponents(...row.components.map(component => {
-					if (component.customId === "upgrade" || component.customId === "repair") {
+					if (component.customId === "upgrade" || component.customId === "viewrepairs") {
 						let editedButton = component.setDisabled(true)
 							.setEmoji("✔️");
 						return editedButton;
