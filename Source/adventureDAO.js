@@ -357,6 +357,7 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 				.setLabel("Inspect Self")
 				.setStyle("SECONDARY"),
 			new MessageButton().setCustomId("predict")
+				.setEmoji("🔮")
 				.setLabel("Predict")
 				.setStyle("SECONDARY"),
 			new MessageButton().setCustomId("readymove")
@@ -388,6 +389,7 @@ exports.generateRoutingRow = function (adventure) {
 	} else {
 		return new MessageActionRow().addComponents(
 			new MessageButton().setCustomId("continue")
+				.setEmoji("👑")
 				.setLabel(`Continue to the ${candidateKeys[0].split(SAFE_DELIMITER)[0]}`)
 				.setStyle("SECONDARY")
 		);

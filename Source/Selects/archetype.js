@@ -40,6 +40,7 @@ module.exports.execute = (interaction, args) => {
 					let readyButton = [
 						new MessageActionRow().addComponents(
 							new MessageButton().setCustomId("ready")
+								.setEmoji("👑")
 								.setLabel("Ready!")
 								.setStyle("SUCCESS")
 						)
