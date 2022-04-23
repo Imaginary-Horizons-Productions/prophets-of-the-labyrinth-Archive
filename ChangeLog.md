@@ -10,6 +10,7 @@
    - Potions: 5 -> 10 durability
    - Scythes: 15 -> 10 durability
    - Base Sword: 5 -> 10 durability
+- Artifact performance stats can now be viewed in `/party-stats`
 #### Prophets of the Labyrinth Version 0.7.1:
 - New artifacts: Hawk Tail Feather
 - New enemy: Fire-Arrow Frog
