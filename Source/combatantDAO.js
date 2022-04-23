@@ -144,21 +144,24 @@ exports.dealDamage = async function (target, user, damage, isUnblockable, elemen
 	}
 }
 
-exports.gainHealth = function (combatant, healing, { room: { enemyTitles }, artifacts: { "Bloodshield Sword": bloodshieldSwordCount } }, inCombat = true) {
+exports.gainHealth = function (combatant, healing, adventure, inCombat = true) {
 	combatant.hp += healing;
 	let excessHealing = 0;
+	let bloodshieldSwordCount = adventure.artifacts["Bloodshield Sword"].count;
 	if (combatant.hp > combatant.maxHp) {
 		excessHealing = combatant.hp - combatant.maxHp;
 		combatant.hp = combatant.maxHp;
 		if (combatant instanceof Delver && bloodshieldSwordCount > 0 && inCombat) {
-			exports.addBlock(combatant, excessHealing * bloodshieldSwordCount);
+			let convertedBlock = excessHealing * bloodshieldSwordCount;
+			exports.addBlock(combatant, convertedBlock);
+			adventure.updateArtifactStat("Bloodshield Sword", "Block Gained", convertedBlock);
 		}
 	}
 
 	if (combatant.hp === combatant.maxHp) {
-		return `${exports.getFullName(combatant, enemyTitles)} was fully healed${excessHealing && inCombat && bloodshieldSwordCount > 0 ? ` (and gained block)` : ""}!`;
+		return `${exports.getFullName(combatant, adventure.room.enemyTitles)} was fully healed${excessHealing && inCombat && bloodshieldSwordCount > 0 ? ` (and gained block)` : ""}!`;
 	} else {
-		return `${exports.getFullName(combatant, enemyTitles)} *gained ${healing} hp*.`
+		return `${exports.getFullName(combatant, adventure.room.enemyTitles)} *gained ${healing} hp*.`
 	}
 }
 
