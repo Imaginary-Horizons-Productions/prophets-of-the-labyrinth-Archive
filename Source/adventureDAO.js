@@ -117,18 +117,23 @@ exports.loadAdventures = async function () {
 	}
 }
 
+/** Get the adventure object associated with the given id
+ * @param {string} id
+ * @returns {Adventure}
+ */
 exports.getAdventure = function (id) {
 	return adventureDictionary.get(id);
 }
 
+/** Save the given adventure
+ * @param {Adventure} adventure
+ */
 exports.setAdventure = function (adventure) {
 	adventureDictionary.set(adventure.id, adventure);
 	ensuredPathSave("./Saves", "adventures.json", JSON.stringify(Array.from(adventureDictionary.values())));
 }
 
-/**
- * A room embed's author field contains the most important or commonly viewed party resources and stats
- *
+/** A room embed's author field contains the most important or commonly viewed party resources and stats
  * @param {Adventure} adventure
  * @returns {string} text to put in the author name field of a room embed
  */
@@ -146,10 +151,14 @@ exports.nextRoom = async function (roomType, thread) {
 	let roomTypes = ["Battle", "Event", "Forge", "Rest Site", "Artifact Guardian", "Merchant"]; //TODO #126 add weights to room types
 	let finalBossDepths = [10];
 	if (!finalBossDepths.includes(adventure.depth + 1)) {
-		let numCandidates = 2 + adventure.getArtifactCount("Enchanted Map");
+		let mapCount = adventure.getArtifactCount("Enchanted Map");
+		let numCandidates = 2 + mapCount;
+		if (mapCount) {
+			adventure.updateArtifactStat("Enchanted Map", "Extra Rooms Rolled", mapCount);
+		}
 		for (let i = 0; i < numCandidates; i++) {
 			const candidateTag = `${roomTypes[generateRandomNumber(adventure, roomTypes.length, "general")]}${SAFE_DELIMITER}${adventure.depth}`;
-			if (!adventure.roomCandidates[candidateTag]) {
+			if (!(candidateTag in adventure.roomCandidates)) {
 				adventure.roomCandidates[candidateTag] = [];
 				if (Object.keys(adventure.roomCandidates).length === 5) {
 					// Should not execed 5, as only 5 buttons can be in a MessageActionRow
@@ -220,6 +229,7 @@ exports.nextRoom = async function (roomType, thread) {
 					if (tier === "?") {
 						let threshold = 1 + cloverCount;
 						let max = 8 + cloverCount;
+						adventure.updateArtifactStat("Negative-One Leaf Clover", "Expected Extra Rare Weapons", (threshold / max) - (1 / 8));
 						if (generateRandomNumber(adventure, max, "general") < threshold) {
 							parsedTier = "2";
 						} else {
@@ -261,6 +271,11 @@ exports.nextRoom = async function (roomType, thread) {
 	exports.setAdventure(adventure);
 }
 
+/** Calculates a scouting cost
+ * @param {number} count - count of Amethyst Spyglasses in party possesion
+ * @param {string} type - enum: "Final Battle", "Artifact Guardian"
+ * @returns {number}
+ */
 function calculateScoutingCost(count, type) {
 	switch (type) {
 		case "Final Battle":
@@ -307,8 +322,13 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 			combatant.roundSpeed = Math.floor(combatant.speed * percentBonus);
 
 			// Roll Critical Hit
-			let critRoll = generateRandomNumber(adventure, combatant.getCritDenominator(adventure.getArtifactCount("Hawk Tailfeather")), "Battle");
-			combatant.crit = critRoll < combatant.getCritNumerator(adventure.getArtifactCount("Hawk Tailfeather"));
+			let threshold = combatant.getCritNumerator(adventure.getArtifactCount("Hawk Tailfeather"));
+			let max = combatant.getCritDenominator(adventure.getArtifactCount("Hawk Tailfeather"));
+			let critRoll = generateRandomNumber(adventure, max, "Battle");
+			combatant.crit = critRoll < threshold;
+			if (combatant instanceof Delver) {
+				adventure.updateArtifactStat("Hawk Tailfeather", "Expected Extra Critical Hits", (threshold / max) - (1 / 4));
+			}
 
 			// Roll Enemy Moves and Generate Dummy Moves
 			let move = new Move()
