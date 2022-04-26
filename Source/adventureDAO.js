@@ -229,7 +229,7 @@ exports.nextRoom = async function (roomType, thread) {
 					if (tier === "?") {
 						let threshold = 1 + cloverCount;
 						let max = 8 + cloverCount;
-						adventure.updateArtifactStat("Negative-One Leaf Clover", "Extra Rare Weapons", (threshold / max) - (1 / 8));
+						adventure.updateArtifactStat("Negative-One Leaf Clover", "Expected Extra Rare Weapons", (threshold / max) - (1 / 8));
 						if (generateRandomNumber(adventure, max, "general") < threshold) {
 							parsedTier = "2";
 						} else {
@@ -327,7 +327,7 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 			let critRoll = generateRandomNumber(adventure, max, "Battle");
 			combatant.crit = critRoll < threshold;
 			if (combatant instanceof Delver) {
-				adventure.updateArtifactStat("Hawk Tailfeather", "Extra Critical Hits", (threshold / max) - (1 / 4));
+				adventure.updateArtifactStat("Hawk Tailfeather", "Expected Extra Critical Hits", (threshold / max) - (1 / 4));
 			}
 
 			// Roll Enemy Moves and Generate Dummy Moves
