@@ -65,14 +65,14 @@ module.exports.execute = (interaction) => {
 					})
 					let components = [new MessageActionRow().addComponents(
 						new MessageSelectMenu().setCustomId("startingchallenges")
-							.setPlaceholder("Select challenge(s)...")
+							.setPlaceholder("👑 Select challenge(s)...")
 							.setMinValues(1)
 							.setMaxValues(options.length)
 							.addOptions(options)
 					)];
 
 					thread.send({
-						content: `${interaction.user} Here's the channel for your new adventure. As adventure leader you're responsible for inputting the group's decisions (like challenges or indicating when everyone's ready).`,
+						content: `${interaction.user} Here's the channel for your new adventure. As adventure leader you're responsible for inputting the group's decisions (indicated with a 👑).`,
 						components
 					}).then(leaderMessage => {
 						let ready = new MessageActionRow().addComponents(

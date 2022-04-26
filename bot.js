@@ -1,6 +1,6 @@
 //#region Imports
 const { Client } = require("discord.js");
-const fsa = require("fs").promises;
+const { readFile, writeFile } = require("fs").promises;
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
 
@@ -49,7 +49,7 @@ client.on("ready", () => {
 	injectConfigCommands(isProduction);
 	// Post version notes
 	if (versionData.announcementsChannelId) {
-		fsa.readFile('./ChangeLog.md', { encoding: 'utf8' }).then(data => {
+		readFile('./ChangeLog.md', { encoding: 'utf8' }).then(data => {
 			let [currentFull, currentMajor, currentMinor, currentPatch] = data.match(/(\d+)\.(\d+)\.(\d+)/);
 			let [_lastFull, lastMajor, lastMinor, lastPatch] = versionData.lastPostedVersion.match(/(\d+)\.(\d+)\.(\d+)/);
 
@@ -67,7 +67,7 @@ client.on("ready", () => {
 						annoucnementsChannel.send({ embeds: [embed] }).then(message => {
 							message.crosspost();
 							versionData.lastPostedVersion = currentFull;
-							fsa.writeFile('./Config/versionData.json', JSON.stringify(versionData), "utf-8");
+							writeFile('./Config/versionData.json', JSON.stringify(versionData), "utf-8");
 						});
 					})
 				})

@@ -1,7 +1,7 @@
 const Button = require('../../Classes/Button.js');
 const { setAdventure, getAdventure } = require('../adventureDAO.js');
 const { gainHealth } = require('../combatantDAO.js');
-const { editButton } = require('../roomDAO.js');
+const { editButtons } = require('../roomDAO.js');
 
 module.exports = new Button("rest");
 
@@ -13,7 +13,10 @@ module.exports.execute = (interaction, args) => {
 		for (let delver of adventure.delvers) {
 			healText.push(gainHealth(delver, delver.maxHp * 0.30 * (1 - adventure.getChallengeIntensity("Restless")), adventure, 0));
 		}
-		let updatedUI = editButton(interaction.message, "rest", true, "✔️", "The party rested")
+		let updatedUI = editButtons(interaction.message.components, {
+			"rest": { preventUse: true, label: "The party rested", emoji: "✔️" },
+			"challenge": { preventUse: true, label: "The challenger is gone", emoji: "✖️" }
+		});
 		interaction.update({ components: updatedUI }).then(() => {
 			interaction.followUp(healText.join(" "));
 			setAdventure(adventure);

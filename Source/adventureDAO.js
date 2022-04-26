@@ -41,7 +41,6 @@ let
 	buildWeaponDescription,
 	//artifactDictionary
 	rollArtifact,
-	getArtifactDescription,
 	//enemyDictionary
 	getEnemy,
 	//challengeDictionary
@@ -242,7 +241,7 @@ exports.nextRoom = async function (roomType, thread) {
 					.setUIGroup("scouting");
 			}
 		}
-		if (adventure.depth < 11) {
+		if (adventure.depth < 10) {
 			let roomMessage = await thread.send({
 				embeds: [embed.addField("Decide the next room", "Each delver can pick or change their pick for the next room. The party will move on when the decision is unanimous.")],
 				components: [...roomTemplate.uiRows, ...exports.generateMerchantRows(adventure), exports.generateRoutingRow(adventure)]
@@ -357,6 +356,7 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 				.setLabel("Inspect Self")
 				.setStyle("SECONDARY"),
 			new MessageButton().setCustomId("predict")
+				.setEmoji("🔮")
 				.setLabel("Predict")
 				.setStyle("SECONDARY"),
 			new MessageButton().setCustomId("readymove")
@@ -388,6 +388,7 @@ exports.generateRoutingRow = function (adventure) {
 	} else {
 		return new MessageActionRow().addComponents(
 			new MessageButton().setCustomId("continue")
+				.setEmoji("👑")
 				.setLabel(`Continue to the ${candidateKeys[0].split(SAFE_DELIMITER)[0]}`)
 				.setStyle("SECONDARY")
 		);
@@ -561,7 +562,7 @@ exports.endRound = async function (adventure, thread) {
 			// Finalize UI
 			embed = embed.setTitle("Victory!").setDescription(lastRoundText)
 				.setColor(getColor(adventure.room.element));
-			if (adventure.depth < 11) {
+			if (adventure.depth < 10) {
 				return thread.send({
 					embeds: [embed.addField("Decide the next room", "Each delver can pick or change their pick for the next room. The party will move on when the decision is unanimous.")],
 					components: [exports.generateLootRow(adventure), exports.generateRoutingRow(adventure)]
