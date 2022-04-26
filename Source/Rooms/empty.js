@@ -9,6 +9,7 @@ module.exports = new RoomTemplate()
 
 module.exports.uiRows.push(new MessageActionRow().addComponents(
 	new MessageButton().setCustomId("continue")
+		.setEmoji("👑")
 		.setLabel("Move on")
 		.setStyle("SECONDARY")
 ))
