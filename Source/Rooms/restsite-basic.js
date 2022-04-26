@@ -11,7 +11,7 @@ module.exports.uiRows.push(new MessageActionRow().addComponents(
 	new MessageButton().setCustomId("rest")
 		.setLabel("Rest [30% hp]")
 		.setStyle("PRIMARY"),
-	new MessageButton().setCustomId("challenge")
+	new MessageButton().setCustomId("viewchallenges")
 		.setLabel("Take a challenge")
 		.setStyle("DANGER")
 ))

@@ -79,7 +79,7 @@ module.exports.execute = (interaction) => {
 							new MessageButton().setCustomId("deploy")
 								.setLabel("Pick Archetype")
 								.setStyle("PRIMARY"),
-							new MessageButton().setCustomId("startingartifact")
+							new MessageButton().setCustomId("viewstartingartifacts")
 								.setLabel("Pick Starting Artifact")
 								.setStyle("SECONDARY")
 						)
