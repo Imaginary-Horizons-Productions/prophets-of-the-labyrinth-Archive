@@ -9,11 +9,12 @@ const options = [
 			"Tutorial": "Tutorial",
 			"Elements": "Elements",
 			"Stagger": "Stagger",
-			"Damage Cap": "Damage Cap"
+			"Damage Cap": "Damage Cap",
+			"Data Policy": "Data Policy"
 		}
 	}
 ];
-module.exports = new Command("manual", "Get information about Prophets of the Labyrinth v0.7.1", false, false, options);
+module.exports = new Command("manual", "Get information about Prophets of the Labyrinth v0.8.0", false, false, options);
 
 // imports from files that depend on /Config
 // let ;
@@ -26,11 +27,12 @@ module.exports.execute = (interaction) => {
 	let response = { ephemeral: true };
 	switch (interaction.options.getString("topic")) {
 		case "Credits":
-			response.embeds = [embedTemplate(interaction.client.user.displayAvatarURL()).setTitle("Prophets of the Labyrinth v0.7.1")
+			response.embeds = [embedTemplate(interaction.client.user.displayAvatarURL()).setTitle("Prophets of the Labyrinth v0.8.0")
 				.setThumbnail(interaction.client.user.displayAvatarURL())
 				.setDescription(`A roguelike dungeon crawl in Discord to play with other server members.`)
 				.addField(`Design & Engineering`, `Nathaniel Tseng ( <@106122478715150336> | [GitHub](https://github.com/ntseng) )`)
 				.addField(`Dev & Review`, `Henry Hu ( <@113108081990176768> | [Twitter](https://twitter.com/hdoubledh) )`)
+				.addField(`Boba Dev`, `Vivian Thach ( <@334803621827051534> | [Instagram](https://www.instagram.com/bobaguardian/) )`)
 				.addField("Random Number Generator", "Alex Frank")
 				.addField("Room Loader", "Michel Momeyer")
 				.addField("Predict Balance", "Lucas Ensign")
@@ -68,6 +70,12 @@ module.exports.execute = (interaction) => {
 			response.embeds = [
 				embedTemplate(interaction.client.user.displayAvatarURL()).setTitle("Damage Cap")
 					.setDescription("The maximum amount of damage that can be done in one shot after block is 500. This cap is raised for each stack of Power Up a user has.")
+			];
+			break;
+		case "Data Policy":
+			response.embeds = [
+				embedTemplate(interaction.client.user.displayAvatarURL()).setTitle("Data Policy")
+					.setDescription("*Prophets of the Labyrinth* uses the following user data:\n- Discord account for associating with player progression and scores\n- Guild membership to associate players with adventures")
 			];
 			break;
 	}

@@ -5,7 +5,7 @@ module.exports = new Weapon("Thick Battleaxe", 2, "Strike a foe for @{damage} (+
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(350)
-	.setUses(15)
+	.setUses(20)
 	.setDamage(75)
 	.setBonusDamage(75);
 

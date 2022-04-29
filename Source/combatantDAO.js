@@ -88,7 +88,6 @@ exports.dealDamage = async function (target, user, damage, isUnblockable, elemen
 	if (!targetModifiers.includes(`${element} Absorb`)) {
 		if (!targetModifiers.includes("Evade") || isUnblockable) {
 			let limitBreak = user?.modifiers["Power Up"] || 0;
-			let damageCap = 500 + limitBreak;
 			let pendingDamage = damage + limitBreak;
 			if (targetModifiers.includes("Exposed")) {
 				pendingDamage *= 1.5;
@@ -114,12 +113,12 @@ exports.dealDamage = async function (target, user, damage, isUnblockable, elemen
 					pendingDamage = 0;
 				}
 			}
+			let damageCap = 500 + limitBreak;
 			pendingDamage = Math.min(pendingDamage, damageCap);
 			target.hp -= pendingDamage;
 			let damageText = ` ${targetName} takes *${pendingDamage} damage*${blockedDamage > 0 ? ` (${blockedDamage} blocked)` : ""}${element === "Poison" ? " from Poison" : ""}${isWeakness ? "!!!" : isResistance ? "." : "!"}`;
-			if (targetModifiers.includes("Curse of Midas")) {
-				let midasGold = Math.floor(pendingDamage / 10);
-				adventure.room.resources.gold.count += midasGold;
+			if (element !== "Poison" && targetModifiers.includes("Curse of Midas")) {
+				adventure.room.resources.gold.count += Math.floor(pendingDamage / 10);
 				damageText += ` Gold scatters about the room.`;
 			}
 			if (target.hp <= 0) {
@@ -145,21 +144,24 @@ exports.dealDamage = async function (target, user, damage, isUnblockable, elemen
 	}
 }
 
-exports.gainHealth = function (combatant, healing, { room: { enemyTitles }, artifacts: { "Bloodshield Sword": bloodshieldSwordCount } }, inCombat = true) {
+exports.gainHealth = function (combatant, healing, adventure, inCombat = true) {
 	combatant.hp += healing;
 	let excessHealing = 0;
+	let bloodshieldSwordCount = adventure.artifacts["Bloodshield Sword"].count;
 	if (combatant.hp > combatant.maxHp) {
 		excessHealing = combatant.hp - combatant.maxHp;
 		combatant.hp = combatant.maxHp;
 		if (combatant instanceof Delver && bloodshieldSwordCount > 0 && inCombat) {
-			exports.addBlock(combatant, excessHealing * bloodshieldSwordCount);
+			let convertedBlock = excessHealing * bloodshieldSwordCount;
+			exports.addBlock(combatant, convertedBlock);
+			adventure.updateArtifactStat("Bloodshield Sword", "Block Gained", convertedBlock);
 		}
 	}
 
 	if (combatant.hp === combatant.maxHp) {
-		return `${exports.getFullName(combatant, enemyTitles)} was fully healed${excessHealing && inCombat && bloodshieldSwordCount > 0 ? ` (and gained block)` : ""}!`;
+		return `${exports.getFullName(combatant, adventure.room.enemyTitles)} was fully healed${excessHealing && inCombat && bloodshieldSwordCount > 0 ? ` (and gained block)` : ""}!`;
 	} else {
-		return `${exports.getFullName(combatant, enemyTitles)} *gained ${healing} hp*.`
+		return `${exports.getFullName(combatant, adventure.room.enemyTitles)} *gained ${healing} hp*.`
 	}
 }
 

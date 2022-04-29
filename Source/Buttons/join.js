@@ -6,7 +6,7 @@ const { getAdventure, setAdventure } = require("./../adventureDAO.js").injectCon
 
 module.exports = new Button("join");
 
-module.exports.execute = async (interaction, [guildId, adventureId]) => {
+module.exports.execute = async (interaction, [guildId, adventureId, context]) => {
 	// Join an existing adventure
 	let guildProfile = getGuild(interaction.guildId);
 	if (isSponsor(interaction.user.id) || !guildProfile.adventuring.has(interaction.user.id)) {
@@ -51,8 +51,7 @@ module.exports.execute = async (interaction, [guildId, adventureId]) => {
 							components = [];
 						}
 						recruitMessage.edit({ embeds, components });
-						let isInteractionInsideThread = interaction.message.flags.has("EPHEMERAL");
-						if (isInteractionInsideThread) {
+						if (context === "aux") {
 							interaction.update({ components: [] })
 						} else {
 							interaction.update({ content: "\u200B" })

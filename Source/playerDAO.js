@@ -40,7 +40,7 @@ exports.getPlayer = function (playerId, guildId) {
 
 exports.setPlayer = function (player) {
 	playerDictionary.set(player.id, player);
-	exports.savePlayers();
+	ensuredPathSave("./Saves", "players.json", JSON.stringify(Array.from((playerDictionary.values()))));
 }
 
 exports.resetScores = function (userIds, guildId) {
@@ -49,8 +49,4 @@ exports.resetScores = function (userIds, guildId) {
 		player.scores[guildId] = 0;
 		exports.setPlayer(player);
 	})
-}
-
-exports.savePlayers = function () {
-	ensuredPathSave("./Saves", "players.json", JSON.stringify(Array.from((playerDictionary.values()))));
 }

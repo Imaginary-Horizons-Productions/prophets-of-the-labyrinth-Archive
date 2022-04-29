@@ -18,7 +18,7 @@ module.exports.execute = (interaction, args) => {
 		if (!delver.modifiers.Stun) { // Early out if stunned
 			let embed = new MessageEmbed().setColor(getColor(adventure.room.element))
 				.setTitle("Readying a Move")
-				.setDescription(`When using ${delver.element} ${getEmoji(delver.element)} weapons, add 1 Stagger to enemies or remove 1 Stagger from allies.\n\nPick one weapon from below as your move for this round:`)
+				.setDescription(`Your ${getEmoji(delver.element)} moves add 1 Stagger to enemies and remove 1 Stagger from allies.\n\nPick one weapon from below as your move for this round:`)
 				.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
 			let enemyOptions = [];
 			for (let i = 0; i < adventure.room.enemies.length; i++) {

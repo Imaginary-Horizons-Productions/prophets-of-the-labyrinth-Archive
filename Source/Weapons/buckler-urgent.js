@@ -1,7 +1,7 @@
 const Weapon = require('../../Classes/Weapon.js');
 const { addBlock, removeModifier } = require('../combatantDAO.js');
 
-module.exports = new Weapon("Urgent Buckler", 2, "*Grant an ally @{block} block (+@{speedBonus} speed)*\nCritical Hit: Block x@{critBonus}", "Earth", effect, ["Guarding Buckler", "Heavy Buckler"])
+module.exports = new Weapon("Urgent Buckler", 2, "*Grant an ally @{block} block (+@{speedBonus} speed bonus)*\nCritical Hit: Block x@{critBonus}", "Earth", effect, ["Guarding Buckler", "Heavy Buckler"])
 	.setTargetingTags({ target: "single", team: "delver" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(350)

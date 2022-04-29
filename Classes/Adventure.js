@@ -34,7 +34,7 @@ module.exports = class Adventure {
 	lives = 2;
 	gold = 100;
 	peakGold = 100;
-	artifacts = {}; // current: {artifactName: count} //TODO #217 artifact performance stats on artifact, show as field in artifact details embed // planned: {artifactName: {count, staistic1, statistic2...}}
+	artifacts = {}; // {artifactName: {count, staistic1, statistic2...}}
 	rnIndices = {
 		general: 0,
 		battle: 0
@@ -72,7 +72,7 @@ module.exports = class Adventure {
 	}
 
 	getArtifactCount(artifactName) {
-		return this.artifacts[artifactName] || 0;
+		return this.artifacts[artifactName]?.count || 0;
 	}
 
 	getChallengeIntensity(challengeName) {
@@ -100,14 +100,28 @@ module.exports = class Adventure {
 
 	gainArtifact(artifact, count) {
 		if (artifact === "Oil Painting") {
-			this.gold += 500 * count;
+			this.gainGold(500 * count);
+			this.updateArtifactStat(artifact, "Gold Gained", 500 * count);
 		} else if (artifact === "Phoenix Fruit Blossom") {
-			this.lives++;
+			this.lives += count;
+			this.updateArtifactStat(artifact, "Lives Gained", count);
+		} else if (artifact === "Hammerspace Holster") {
+			this.updateArtifactStat(artifact, "Extra Weapon Capacity", count);
 		}
-		if (this.artifacts[artifact]) {
-			this.artifacts[artifact] += count;
+		if (artifact in this.artifacts) {
+			this.artifacts[artifact].count += count;
 		} else {
-			this.artifacts[artifact] = count;
+			this.artifacts[artifact].count = count;
+		}
+	}
+
+	updateArtifactStat(artifactName, statName, stat) {
+		if (this.artifacts[artifactName]) {
+			if (statName in this.artifacts[artifactName]) {
+				this.artifacts[artifactName][statName] += stat;
+			} else {
+				this.artifacts[artifactName][statName] = stat;
+			}
 		}
 	}
 }

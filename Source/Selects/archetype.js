@@ -40,6 +40,7 @@ module.exports.execute = (interaction, args) => {
 					let readyButton = [
 						new MessageActionRow().addComponents(
 							new MessageButton().setCustomId("ready")
+								.setEmoji("👑")
 								.setLabel("Ready!")
 								.setStyle("SUCCESS")
 						)
@@ -60,7 +61,7 @@ module.exports.execute = (interaction, args) => {
 			})
 		} else {
 			let join = new MessageActionRow().addComponents(
-				new MessageButton().setCustomId(`join${SAFE_DELIMITER}${interaction.guildId}${SAFE_DELIMITER}${interaction.channelId}`)
+				new MessageButton().setCustomId(`join${SAFE_DELIMITER}${interaction.guildId}${SAFE_DELIMITER}${interaction.channelId}${SAFE_DELIMITER}aux`)
 					.setLabel("Join")
 					.setStyle("SUCCESS"));
 			interaction.reply({ content: `You don't appear to be signed up for this adventure. You can join with the button below:`, components: [join], ephemeral: true });

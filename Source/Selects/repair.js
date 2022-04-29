@@ -12,7 +12,7 @@ module.exports.execute = (interaction, [roomMessageId]) => {
 		let user = adventure.delvers.find(delver => delver.id === interaction.user.id);
 		let [weaponName, weaponIndex, value] = interaction.values[0].split(SAFE_DELIMITER);
 		user.weapons[weaponIndex].uses += Number(value);
-		decrementForgeSupplies(interaction, roomMessageId, adventure).then(() => {
+		decrementForgeSupplies(interaction, roomMessageId, adventure.room).then(() => {
 			interaction.update({ components: [] });
 			interaction.channel.send({ content: `${interaction.user} repaired ${value} uses on their ${weaponName}.` });
 			setAdventure(adventure);

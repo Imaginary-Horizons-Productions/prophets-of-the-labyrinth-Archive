@@ -4,7 +4,7 @@ const { SAFE_DELIMITER } = require('../../helpers.js');
 const { getAdventure } = require("../adventureDAO.js").injectConfig(true);
 const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
 
-module.exports = new Button("repair");
+module.exports = new Button("viewrepairs");
 
 module.exports.execute = (interaction, args) => {
 	// All the user to select a weapon to regain uses on

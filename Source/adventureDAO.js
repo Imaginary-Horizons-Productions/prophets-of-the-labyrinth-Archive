@@ -117,18 +117,23 @@ exports.loadAdventures = async function () {
 	}
 }
 
+/** Get the adventure object associated with the given id
+ * @param {string} id
+ * @returns {Adventure}
+ */
 exports.getAdventure = function (id) {
 	return adventureDictionary.get(id);
 }
 
+/** Save the given adventure
+ * @param {Adventure} adventure
+ */
 exports.setAdventure = function (adventure) {
 	adventureDictionary.set(adventure.id, adventure);
-	saveAdventures();
+	ensuredPathSave("./Saves", "adventures.json", JSON.stringify(Array.from(adventureDictionary.values())));
 }
 
-/**
- * A room embed's author field contains the most important or commonly viewed party resources and stats
- *
+/** A room embed's author field contains the most important or commonly viewed party resources and stats
  * @param {Adventure} adventure
  * @returns {string} text to put in the author name field of a room embed
  */
@@ -146,10 +151,14 @@ exports.nextRoom = async function (roomType, thread) {
 	let roomTypes = ["Battle", "Event", "Forge", "Rest Site", "Artifact Guardian", "Merchant"]; //TODO #126 add weights to room types
 	let finalBossDepths = [10];
 	if (!finalBossDepths.includes(adventure.depth + 1)) {
-		let numCandidates = 2 + adventure.getArtifactCount("Enchanted Map");
+		let mapCount = adventure.getArtifactCount("Enchanted Map");
+		let numCandidates = 2 + mapCount;
+		if (mapCount) {
+			adventure.updateArtifactStat("Enchanted Map", "Extra Rooms Rolled", mapCount);
+		}
 		for (let i = 0; i < numCandidates; i++) {
 			const candidateTag = `${roomTypes[generateRandomNumber(adventure, roomTypes.length, "general")]}${SAFE_DELIMITER}${adventure.depth}`;
-			if (!adventure.roomCandidates[candidateTag]) {
+			if (!(candidateTag in adventure.roomCandidates)) {
 				adventure.roomCandidates[candidateTag] = [];
 				if (Object.keys(adventure.roomCandidates).length === 5) {
 					// Should not execed 5, as only 5 buttons can be in a MessageActionRow
@@ -220,6 +229,7 @@ exports.nextRoom = async function (roomType, thread) {
 					if (tier === "?") {
 						let threshold = 1 + cloverCount;
 						let max = 8 + cloverCount;
+						adventure.updateArtifactStat("Negative-One Leaf Clover", "Expected Extra Rare Weapons", (threshold / max) - (1 / 8));
 						if (generateRandomNumber(adventure, max, "general") < threshold) {
 							parsedTier = "2";
 						} else {
@@ -241,7 +251,7 @@ exports.nextRoom = async function (roomType, thread) {
 					.setUIGroup("scouting");
 			}
 		}
-		if (adventure.depth < 11) {
+		if (adventure.depth < 10) {
 			let roomMessage = await thread.send({
 				embeds: [embed.addField("Decide the next room", "Each delver can pick or change their pick for the next room. The party will move on when the decision is unanimous.")],
 				components: [...roomTemplate.uiRows, ...exports.generateMerchantRows(adventure), exports.generateRoutingRow(adventure)]
@@ -261,6 +271,11 @@ exports.nextRoom = async function (roomType, thread) {
 	exports.setAdventure(adventure);
 }
 
+/** Calculates a scouting cost
+ * @param {number} count - count of Amethyst Spyglasses in party possesion
+ * @param {string} type - enum: "Final Battle", "Artifact Guardian"
+ * @returns {number}
+ */
 function calculateScoutingCost(count, type) {
 	switch (type) {
 		case "Final Battle":
@@ -271,23 +286,6 @@ function calculateScoutingCost(count, type) {
 }
 
 exports.endRoom = function (roomType, thread) {
-	let adventure = exports.getAdventure(thread.id);
-	adventure.depth++;
-	adventure.room = {};
-	adventure.roomCandidates = {};
-
-	for (const challengeName in adventure.challenges) {
-		if (adventure.challenges[challengeName].duration) {
-			adventure.challenges[challengeName].duration--;
-			if (adventure.challenges[challengeName].duration < 1) {
-				getChallenge(challengeName).complete(adventure, thread);
-			}
-		}
-	}
-	exports.nextRoom(roomType, thread);
-}
-
-exports.cleanUpRoom = function (roomType, thread) {
 	let adventure = exports.getAdventure(thread.id);
 	adventure.depth++;
 	adventure.room = {};
@@ -324,8 +322,13 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 			combatant.roundSpeed = Math.floor(combatant.speed * percentBonus);
 
 			// Roll Critical Hit
-			let critRoll = generateRandomNumber(adventure, combatant.getCritDenominator(adventure.getArtifactCount("Hawk Tailfeather")), "Battle");
-			combatant.crit = critRoll < combatant.getCritNumerator(adventure.getArtifactCount("Hawk Tailfeather"));
+			let threshold = combatant.getCritNumerator(adventure.getArtifactCount("Hawk Tailfeather"));
+			let max = combatant.getCritDenominator(adventure.getArtifactCount("Hawk Tailfeather"));
+			let critRoll = generateRandomNumber(adventure, max, "Battle");
+			combatant.crit = critRoll < threshold;
+			if (combatant instanceof Delver) {
+				adventure.updateArtifactStat("Hawk Tailfeather", "Expected Extra Critical Hits", (threshold / max) - (1 / 4));
+			}
 
 			// Roll Enemy Moves and Generate Dummy Moves
 			let move = new Move()
@@ -373,6 +376,7 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 				.setLabel("Inspect Self")
 				.setStyle("SECONDARY"),
 			new MessageButton().setCustomId("predict")
+				.setEmoji("🔮")
 				.setLabel("Predict")
 				.setStyle("SECONDARY"),
 			new MessageButton().setCustomId("readymove")
@@ -404,6 +408,7 @@ exports.generateRoutingRow = function (adventure) {
 	} else {
 		return new MessageActionRow().addComponents(
 			new MessageButton().setCustomId("continue")
+				.setEmoji("👑")
 				.setLabel(`Continue to the ${candidateKeys[0].split(SAFE_DELIMITER)[0]}`)
 				.setStyle("SECONDARY")
 		);
@@ -574,19 +579,10 @@ exports.endRound = async function (adventure, thread) {
 				}
 			}
 
-			// Decrement Challenge Duration
-			for (const challengeName in adventure.challenges) {
-				if (adventure.challenges[challengeName].duration) {
-					adventure.challenges[challengeName].duration--;
-					if (adventure.challenges[challengeName].duration < 1) {
-						getChallenge(challengeName).complete(adventure);
-					}
-				}
-			}
-
 			// Finalize UI
-			embed = embed.setTitle("Victory!").setDescription(lastRoundText);
-			if (adventure.depth < 11) {
+			embed = embed.setTitle("Victory!").setDescription(lastRoundText)
+				.setColor(getColor(adventure.room.element));
+			if (adventure.depth < 10) {
 				return thread.send({
 					embeds: [embed.addField("Decide the next room", "Each delver can pick or change their pick for the next room. The party will move on when the decision is unanimous.")],
 					components: [exports.generateLootRow(adventure), exports.generateRoutingRow(adventure)]
@@ -675,8 +671,4 @@ exports.completeAdventure = function (adventure, thread, { isSuccess, descriptio
 	adventure.state = "completed";
 	exports.setAdventure(adventure);
 	return scoreEmbed;
-}
-
-function saveAdventures() {
-	ensuredPathSave("./Saves", "adventures.json", JSON.stringify(Array.from(adventureDictionary.values())));
 }

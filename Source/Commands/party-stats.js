@@ -35,14 +35,14 @@ module.exports.execute = (interaction) => {
 		}
 		let artifactOptions = Object.keys(adventure.artifacts).map(artifact => {
 			return {
-				label: `${artifact} x ${adventure.artifacts[artifact]}`,
+				label: `${artifact} x ${adventure.artifacts[artifact].count}`,
 				description: "",
-				value: `${artifact}${SAFE_DELIMITER}${adventure.artifacts[artifact]}`
+				value: `${artifact}${SAFE_DELIMITER}${adventure.artifacts[artifact].count}`
 			}
 		})
 		let artifactSelect;
 		if (artifactOptions.length > 0) {
-			embed.addField("Artifacts", Object.entries(adventure.artifacts).map(entry => `${entry[0]} x ${entry[1]}`).join(", "))
+			embed.addField("Artifacts", Object.entries(adventure.artifacts).map(entry => `${entry[0]} x ${entry[1].count}`).join(", "))
 			artifactSelect = [
 				new MessageActionRow().addComponents(
 					new MessageSelectMenu().setCustomId(`artifact`)

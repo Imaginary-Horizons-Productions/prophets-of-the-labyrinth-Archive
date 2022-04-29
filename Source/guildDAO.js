@@ -37,9 +37,5 @@ exports.getGuild = function (guildId) {
 
 exports.setGuild = function (guildProfile) {
 	guildDictionary.set(guildProfile.id, guildProfile);
-	saveGuilds();
-}
-
-function saveGuilds() {
 	ensuredPathSave("./Saves", "guilds.json", JSON.stringify(Array.from((guildDictionary.values()))));
 }

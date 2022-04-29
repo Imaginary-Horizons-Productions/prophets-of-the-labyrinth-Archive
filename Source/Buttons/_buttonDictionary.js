@@ -1,7 +1,6 @@
 var buttonWhitelist = [
 	"buylife.js",
 	"buyscouting.js",
-	"challenge.js",
 	"collectartifact.js",
 	"continue.js",
 	"deploy.js",
@@ -15,14 +14,14 @@ var buttonWhitelist = [
 	"predict.js",
 	"ready.js",
 	"readymove.js",
-	"repair.js",
 	"replaceweapon.js",
 	"rest.js",
 	"routevote.js",
-	"startingartifact.js",
-	"startingchallenges.js",
 	"takegold.js",
-	"upgrade.js"
+	"upgrade.js",
+	"viewchallenges.js",
+	"viewrepairs.js",
+	"viewstartingartifacts.js"
 ];
 
 const buttonDictionary = {};

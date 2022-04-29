@@ -37,12 +37,9 @@ module.exports.execute = (interaction, args) => {
 				if (count && count > 0) { // Prevents double message if multiple players take near same time
 					if (delver.weapons.length < adventure.getWeaponCapacity()) {
 						delver.weapons.push({ name, uses: getWeaponProperty(name, "maxUses") });
-						let updatedCount = --adventure.room.resources[name].count;
-						if (adventure.room.resources[name].count < 1) {
-							adventure.room.resources[name] = 0;
-						}
+						adventure.room.resources[name].count = Math.max(count - 1, 0);
 						result = {
-							content: `${interaction.member.displayName} takes a ${name}. There are ${updatedCount} remaining.`
+							content: `${interaction.member.displayName} takes a ${name}. There are ${count - 1} remaining.`
 						}
 					} else {
 						result = {
@@ -60,8 +57,7 @@ module.exports.execute = (interaction, args) => {
 		}
 		if (result) {
 			interaction.reply(result).then(() => {
-				let roomUI = [generateLootRow(adventure), generateRoutingRow(adventure)];
-				interaction.message.edit({ components: roomUI });
+				interaction.message.edit({ components: [generateLootRow(adventure), generateRoutingRow(adventure)] });
 				updateRoomHeader(adventure, interaction.message);
 				setAdventure(adventure);
 			});
