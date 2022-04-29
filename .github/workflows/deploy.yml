@@ -41,4 +41,3 @@ jobs:
           GH_TOKEN: ${{ secrets.WIKI }}
           GH_MAIL: ${{ secrets.WIKI_EMAIL }}
           GH_NAME: ${{ github.repository_owner }}
-          EXCLUDED_FILES: "a/ b.md"
