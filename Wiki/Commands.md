@@ -19,7 +19,7 @@ Lets the adventure leader end the adventure
 ## Informational Commands
 Use these commands to look up information about Prophets of the Labyrinth!
 ### /manual
-Get information about Prophets of the Labyrinth v0.7.1
+Get information about Prophets of the Labyrinth v0.8.0
 #### topic
 The topic/page of information
 ### /commands
