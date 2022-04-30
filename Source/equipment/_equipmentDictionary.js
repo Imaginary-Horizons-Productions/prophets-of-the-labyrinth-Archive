@@ -131,34 +131,49 @@ for (const file of equipmentWhitelist) {
 	equipmentDrops[equip.element][equip.tier.toString()].push(equip.name);
 }
 
+/** Checks if a type of equipment with the given name exists
+ * @param {string} equipmentName
+ * @returns {boolean}
+ */
+exports.equipmentExists = function (equipmentName) {
+	return equipmentName in allEquipment;
+}
+
+/** Fetch a single default property from an existing type of equipment
+ * @param {string} equipmentName
+ * @param {string} propertyName
+ * @returns
+ */
 exports.getEquipmentProperty = function (equipmentName, propertyName) {
-	if (!allEquipment[equipmentName]) {
-		console.error("Fetching property from illegal equipment: " + equipmentName);
-	} else {
+	if (exports.equipmentExists(equipmentName)) {
 		return allEquipment[equipmentName][propertyName];
+	} else {
+		console.error("Fetching property from illegal weapon: " + equipmentName);
 	}
 }
 
 exports.buildEquipmentDescription = function (equipmentName, buildFullDescription) {
-	let description = exports.getEquipmentProperty(equipmentName, "description").replace("@{element}", getEmoji(exports.getEquipmentProperty(equipmentName, "element")))
-		.replace("@{critBonus}", exports.getEquipmentProperty(equipmentName, "critBonus"))
-		.replace("@{damage}", exports.getEquipmentProperty(equipmentName, "damage"))
-		.replace("@{bonusDamage}", exports.getEquipmentProperty(equipmentName, "bonusDamage"))
-		.replace("@{block}", exports.getEquipmentProperty(equipmentName, "block"))
-		.replace("@{hpCost}", exports.getEquipmentProperty(equipmentName, "hpCost"))
-		.replace("@{healing}", exports.getEquipmentProperty(equipmentName, "healing"))
-		.replace("@{speedBonus}", exports.getEquipmentProperty(equipmentName, "speedBonus"));
-	exports.getEquipmentProperty(equipmentName, "modifiers").forEach((modifier, index) => {
-		description = description.replace(new RegExp(`@{mod${index}}`, "g"), modifier.name)
-			.replace(new RegExp(`@{mod${index}Stacks}`, "g"), modifier.stacks);
-	})
+	if (exports.equipmentExists(equipmentName)) {
+		let description = exports.getEquipmentProperty(equipmentName, "description").replace("@{element}", getEmoji(exports.getEquipmentProperty(equipmentName, "element")))
+			.replace("@{critBonus}", exports.getEquipmentProperty(equipmentName, "critBonus"))
+			.replace("@{damage}", exports.getEquipmentProperty(equipmentName, "damage"))
+			.replace("@{bonusDamage}", exports.getEquipmentProperty(equipmentName, "bonusDamage"))
+			.replace("@{block}", exports.getEquipmentProperty(equipmentName, "block"))
+			.replace("@{hpCost}", exports.getEquipmentProperty(equipmentName, "hpCost"))
+			.replace("@{healing}", exports.getEquipmentProperty(equipmentName, "healing"))
+			.replace("@{speedBonus}", exports.getEquipmentProperty(equipmentName, "speedBonus"));
+		exports.getEquipmentProperty(equipmentName, "modifiers").forEach((modifier, index) => {
+			description = description.replace(new RegExp(`@{mod${index}}`, "g"), modifier.name)
+				.replace(new RegExp(`@{mod${index}Stacks}`, "g"), modifier.stacks);
+		})
 
-	if (buildFullDescription) {
-		// return the base and crit effects of the equipment with the base italicized
-		return description;
-	} else {
-		// return the base effect of the equipment unitalicized
-		return description.split("\n")[0].replace(/\*/g, "");
+		if (buildFullDescription) {
+			// return the base and crit effects of the equipment with the base italicized
+			return description;
+		} else {
+			// return the base effect of the equipment unitalicized
+			return description.split("\n")[0].replace(/\*/g, "");
+		}
 	}
 }
 
