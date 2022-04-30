@@ -15,9 +15,7 @@ exports.SAFE_DELIMITER = "→";
 
 exports.maxDelverCount = 8;
 
-/**
- * Check if the given `id` belongs to a sponsor of the project
- *
+/** Check if the given `id` belongs to a sponsor of the project
  * @param {string} id
  * @returns {boolean} if the id belongs to a sponsor
  */
