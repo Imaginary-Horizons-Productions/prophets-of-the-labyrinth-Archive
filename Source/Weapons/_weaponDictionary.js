@@ -131,34 +131,49 @@ for (const file of weaponWhitelist) {
 	weaponDrops[weapon.element][weapon.tier.toString()].push(weapon.name);
 }
 
+/** Checks if the weapon with the given name exists
+ * @param {string} weaponName
+ * @returns {boolean}
+ */
+exports.weaponExists = function (weaponName) {
+	return weaponName in allWeapons;
+}
+
+/** Fetch a single default property from an existing weapon
+ * @param {string} weaponName
+ * @param {string} propertyName
+ * @returns
+ */
 exports.getWeaponProperty = function (weaponName, propertyName) {
-	if (!allWeapons[weaponName]) {
-		console.error("Fetching property from illegal weapon: " + weaponName);
-	} else {
+	if (exports.weaponExists(weaponName)) {
 		return allWeapons[weaponName][propertyName];
+	} else {
+		console.error("Fetching property from illegal weapon: " + weaponName);
 	}
 }
 
 exports.buildWeaponDescription = function (weaponName, buildFullDescription) {
-	let description = exports.getWeaponProperty(weaponName, "description").replace("@{element}", getEmoji(exports.getWeaponProperty(weaponName, "element")))
-		.replace("@{critBonus}", exports.getWeaponProperty(weaponName, "critBonus"))
-		.replace("@{damage}", exports.getWeaponProperty(weaponName, "damage"))
-		.replace("@{bonusDamage}", exports.getWeaponProperty(weaponName, "bonusDamage"))
-		.replace("@{block}", exports.getWeaponProperty(weaponName, "block"))
-		.replace("@{hpCost}", exports.getWeaponProperty(weaponName, "hpCost"))
-		.replace("@{healing}", exports.getWeaponProperty(weaponName, "healing"))
-		.replace("@{speedBonus}", exports.getWeaponProperty(weaponName, "speedBonus"));
-	exports.getWeaponProperty(weaponName, "modifiers").forEach((modifier, index) => {
-		description = description.replace(new RegExp(`@{mod${index}}`, "g"), modifier.name)
-			.replace(new RegExp(`@{mod${index}Stacks}`, "g"), modifier.stacks);
-	})
+	if (exports.weaponExists(weaponName)) {
+		let description = exports.getWeaponProperty(weaponName, "description").replace("@{element}", getEmoji(exports.getWeaponProperty(weaponName, "element")))
+			.replace("@{critBonus}", exports.getWeaponProperty(weaponName, "critBonus"))
+			.replace("@{damage}", exports.getWeaponProperty(weaponName, "damage"))
+			.replace("@{bonusDamage}", exports.getWeaponProperty(weaponName, "bonusDamage"))
+			.replace("@{block}", exports.getWeaponProperty(weaponName, "block"))
+			.replace("@{hpCost}", exports.getWeaponProperty(weaponName, "hpCost"))
+			.replace("@{healing}", exports.getWeaponProperty(weaponName, "healing"))
+			.replace("@{speedBonus}", exports.getWeaponProperty(weaponName, "speedBonus"));
+		exports.getWeaponProperty(weaponName, "modifiers").forEach((modifier, index) => {
+			description = description.replace(new RegExp(`@{mod${index}}`, "g"), modifier.name)
+				.replace(new RegExp(`@{mod${index}Stacks}`, "g"), modifier.stacks);
+		})
 
-	if (buildFullDescription) {
-		// return the base and crit effects of the weapon with the base italicized
-		return description;
-	} else {
-		// return the base effect of the weapon unitalicized
-		return description.split("\n")[0].replace(/\*/g, "");
+		if (buildFullDescription) {
+			// return the base and crit effects of the weapon with the base italicized
+			return description;
+		} else {
+			// return the base effect of the weapon unitalicized
+			return description.split("\n")[0].replace(/\*/g, "");
+		}
 	}
 }
 
