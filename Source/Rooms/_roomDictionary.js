@@ -14,7 +14,7 @@ let roomWhitelist = [
 	"battle-tortoises.js",
 	"empty.js",
 	"event-elementswap.js",
-  "event-freegoldonfire.js",
+	"event-freegoldonfire.js",
 	"event-hpshare.js",
 	"event-scorebeggar.js",
 	"finalBattle-elkemist.js",
