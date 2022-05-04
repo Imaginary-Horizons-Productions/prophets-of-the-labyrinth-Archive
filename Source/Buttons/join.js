@@ -1,6 +1,6 @@
 const Button = require('../../Classes/Button.js');
 const Delver = require('../../Classes/Delver.js');
-const { isSponsor } = require('../../helpers.js');
+const { isSponsor, maxDelverCount } = require('../../helpers.js');
 const { getGuild } = require('../guildDAO.js');
 const { getAdventure, setAdventure } = require("./../adventureDAO.js").injectConfig(true);
 
@@ -17,7 +17,7 @@ module.exports.execute = async (interaction, [guildId, adventureId, context]) =>
 				if (!recruitMessage.hasThread) {
 					recruitMessage = await interaction.channel.fetchStarterMessage();
 				}
-				if (adventure.delvers.length < 12) {
+				if (adventure.delvers.length < maxDelverCount) {
 					if (!adventure.delvers.some(delver => delver.id == interaction.user.id)) {
 						// Update game logic
 						adventure.delvers.push(new Delver(interaction.user.id, interaction.member.displayName, adventureId));
@@ -47,7 +47,7 @@ module.exports.execute = async (interaction, [guildId, adventureId, context]) =>
 							embeds = [recruitMessage.embeds[0].spliceFields(0, 1, { name: `${adventure.delvers.length} Party Member${adventure.delvers.length == 1 ? "" : "s"}`, value: partyList })];
 						}
 						let components = recruitMessage.components;
-						if (adventure.delvers.length > 11) {
+						if (adventure.delvers.length === maxDelverCount) {
 							components = [];
 						}
 						recruitMessage.edit({ embeds, components });
