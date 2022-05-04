@@ -11,6 +11,8 @@ exports.injectConfig = function (isProduction) {
 	return this;
 }
 
+exports.maxDelverCount = 8;
+
 /**
  * Check if the given `id` belongs to a sponsor of the project
  *
