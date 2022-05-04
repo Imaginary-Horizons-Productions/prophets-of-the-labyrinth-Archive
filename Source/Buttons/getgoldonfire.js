@@ -19,19 +19,16 @@ module.exports.execute = (interaction, args) => {
 				updateRoomHeader(adventure, interaction.message);
 				if (adventure.lives < 1) {
 					interaction.reply({ embeds: [completeAdventure(adventure, interaction.channel, { isSuccess: false, description: null })] });
-
 				} else {
 					interaction.update({ components: editButtons(interaction.message.components, { "getgoldonfire": { preventUse: true, label: `+${goldCount} gold`, emoji: "✔️" } }) })
 					interaction.channel.send(`${interaction.user} reaches in to grab some coin. Oh no! The gold burst into flames ${damageText}`);
 					setAdventure(adventure);
 				}
 			});
-
 		} else { // just take the gold
 			interaction.update({ components: editButtons(interaction.message.components, { "getgoldonfire": { preventUse: true, label: `+${goldCount} gold`, emoji: "✔️" } }) })
 			setAdventure(adventure);
 		}
-
 	} else {
 		interaction.reply({ content: "Please burn yourself on gold in adventures you've joined.", ephemeral: true });
 	}
