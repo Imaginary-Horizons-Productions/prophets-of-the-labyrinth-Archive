@@ -13,7 +13,11 @@ exports.injectConfig = function (isProduction) {
 
 exports.SAFE_DELIMITER = "→";
 
-/** Check if the given `id` belongs to a sponsor of the project
+exports.maxDelverCount = 8;
+
+/**
+ * Check if the given `id` belongs to a sponsor of the project
+ *
  * @param {string} id
  * @returns {boolean} if the id belongs to a sponsor
  */
