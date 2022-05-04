@@ -1,4 +1,5 @@
 const Button = require('../../Classes/Button.js');
+const { generateRandomNumber } = require('../../helpers.js');
 const { getAdventure, completeAdventure, updateRoomHeader, setAdventure } = require('../adventureDAO.js');
 const { dealDamage } = require("../combatantDAO.js");
 const { editButtons } = require('../roomDAO.js');
@@ -10,10 +11,10 @@ module.exports.execute = (interaction, args) => {
 	let adventure = getAdventure(interaction.channel.id);
 	let delver = adventure.delvers.find(delver => delver.id == interaction.user.id);
 	let goldCount = adventure.room.resources.gold.count;
-  const damageChance = 0.5;
+  const damageChance = 50;
   if (delver) {
 		adventure.gainGold(goldCount);
-    if (Math.random() > damageChance) { // deal damage on chance 50%
+    if (generateRandomNumber(adventure, 101, "general") > damageChance) { // deal damage on chance 50%
       dealDamage(delver, null, 100, true, "Untyped", adventure).then(damageText => {
         updateRoomHeader(adventure, interaction.message);
         if (adventure.lives < 1) {
