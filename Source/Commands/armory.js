@@ -9,13 +9,13 @@ module.exports = new Command("armory", "Look up the stats on a weapon", false, f
 
 let // imports from files that depend on /Config
 	// weapon_Dictionary
-	weaponExists,
+	equipmentExists,
 	buildWeaponDescription,
 	getWeaponProperty,
 	// helpers
 	embedTemplate;
 module.exports.injectConfig = function (isProduction) {
-	({ weaponExists, buildWeaponDescription, getWeaponProperty } = require('../Weapons/_weaponDictionary.js').injectConfig(isProduction));
+	({ equipmentExists, buildWeaponDescription, getWeaponProperty } = require('../Weapons/_weaponDictionary.js').injectConfig(isProduction));
 	({ embedTemplate } = require('../../helpers.js').injectConfig(isProduction));
 	return this;
 }
@@ -23,7 +23,7 @@ module.exports.injectConfig = function (isProduction) {
 module.exports.execute = (interaction) => {
 	// Command specifications go here
 	const weaponName = interaction.options.getString("weapon-name");
-	if (weaponExists(weaponName)) {
+	if (equipmentExists(weaponName)) {
 		const upgrades = getWeaponProperty(weaponName, "upgrades");
 		let embed = embedTemplate(interaction.client.user.displayAvatarURL()).setColor(getColor(getWeaponProperty(weaponName, "element")))
 			.setTitle(weaponName)

@@ -148,7 +148,7 @@ exports.getEquipmentProperty = function (equipmentName, propertyName) {
 	if (exports.equipmentExists(equipmentName)) {
 		return allEquipment[equipmentName][propertyName];
 	} else {
-		console.error("Fetching property from illegal weapon: " + equipmentName);
+		console.error("Fetching property from illegal equipment: " + equipmentName);
 	}
 }
 
