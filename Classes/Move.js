@@ -22,8 +22,8 @@ module.exports = class Move {
 		return this;
 	}
 
-	setMoveName(weaponNameInput) {
-		this.name = weaponNameInput;
+	setMoveName(moveName) {
+		this.name = moveName;
 		return this;
 	}
 

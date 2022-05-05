@@ -10,13 +10,13 @@ let
 	getModifierDescription,
 	isBuff,
 	isDebuff,
-	// weaponDAO
-	weaponToEmbedField,
+	// equipmentDAO
+	equipmentToEmbedField,
 	// helpers
 	SAFE_DELIMITER;
 exports.injectConfig = function (isProduction) {
 	({ getInverse, isNonStacking, getModifierDescription, isBuff, isDebuff } = require("./Modifiers/_modifierDictionary.js").injectConfig(isProduction));
-	({ weaponToEmbedField } = require("./weaponDAO.js").injectConfig(isProduction));
+	({ equipmentToEmbedField } = require("./equipmentDAO.js").injectConfig(isProduction));
 	({ SAFE_DELIMITER } = require("../helpers.js").injectConfig(isProduction));
 	return this;
 }
@@ -47,10 +47,10 @@ exports.calculateTotalSpeed = function (combatant) {
 exports.delverStatsPayload = function (delver) {
 	let embed = new MessageEmbed()
 		.setTitle(exports.getFullName(delver, {}))
-		.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nPredicts: ${delver.predict}\nWhen using ${delver.element} ${getEmoji(delver.element)} weapons, add 1 Stagger to enemies or remove 1 Stagger from allies`)
+		.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nPredicts: ${delver.predict}\nWhen using ${delver.element} ${getEmoji(delver.element)} equipment, add 1 Stagger to enemies or remove 1 Stagger from allies`)
 		.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
-	for (let weapon of delver.weapons) {
-		embed.addField(...weaponToEmbedField(weapon.name, weapon.uses));
+	for (let equip of delver.equipment) {
+		embed.addField(...equipmentToEmbedField(equip.name, equip.uses));
 	}
 	let components = [];
 	if (Object.keys(delver.modifiers).length) {

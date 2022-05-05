@@ -83,7 +83,7 @@ module.exports = class Adventure {
 		return this.challenges[challengeName]?.duration || 0;
 	}
 
-	getWeaponCapacity() {
+	getEquipmentCapacity() {
 		let count = 4 + this.getArtifactCount("Hammerspace Holster") - this.getChallengeIntensity("Can't Hold All this Value");
 		count = Math.min(5, count);
 		count = Math.max(1, count);
@@ -106,7 +106,7 @@ module.exports = class Adventure {
 			this.lives += count;
 			this.updateArtifactStat(artifact, "Lives Gained", count);
 		} else if (artifact === "Hammerspace Holster") {
-			this.updateArtifactStat(artifact, "Extra Weapon Capacity", count);
+			this.updateArtifactStat(artifact, "Extra Equipment Capacity", count);
 		}
 		if (artifact in this.artifacts) {
 			this.artifacts[artifact].count += count;

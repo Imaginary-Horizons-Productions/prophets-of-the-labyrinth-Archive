@@ -4,7 +4,7 @@ const Archetype = require('../../Classes/Archetype.js');
 const Select = require('../../Classes/Select.js');
 const { getAdventure, setAdventure } = require('../adventureDAO');
 const { getArchetype } = require('../Archetypes/_archetypeDictionary.js');
-const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
+const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
 
 module.exports = new Select("archetype");
 
@@ -18,8 +18,8 @@ module.exports.execute = (interaction, args) => {
 			let archetype = interaction.values[0];
 			let isSwitching = adventure.delvers[userIndex].title !== "";
 			let archetypeTemplate = Object.assign(new Archetype(), getArchetype(archetype));
-			adventure.delvers[userIndex].weapons = archetypeTemplate.signatureWeapons.map(signatureWeapon => {
-				return { name: signatureWeapon, uses: getWeaponProperty(signatureWeapon, "maxUses") }
+			adventure.delvers[userIndex].equipment = archetypeTemplate.signatureEquipment.map(equipmentName => {
+				return { name: equipmentName, uses: getEquipmentProperty(equipmentName, "maxUses") }
 			});
 			adventure.delvers[userIndex].setTitle(archetypeTemplate.title)
 				.setHp(archetypeTemplate.maxHp)

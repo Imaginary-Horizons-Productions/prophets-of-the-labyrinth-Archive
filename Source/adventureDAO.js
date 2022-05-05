@@ -35,10 +35,10 @@ let
 	prerollBoss,
 	//modifierDictionary
 	getTurnDecrement,
-	//weaponDictionary
-	rollWeaponDrop,
-	getWeaponProperty,
-	buildWeaponDescription,
+	//equipmentDictionary
+	rollEquipmentDrop,
+	getEquipmentProperty,
+	buildEquipmentDescription,
 	//artifactDictionary
 	rollArtifact,
 	//enemyDictionary
@@ -55,7 +55,7 @@ exports.injectConfig = function (isProduction) {
 	({ clearBlock, removeModifier } = require("./combatantDAO.js").injectConfig(isProduction));
 	({ manufactureRoomTemplate, prerollBoss } = require("./Rooms/_roomDictionary.js").injectConfig(isProduction));
 	({ getTurnDecrement } = require("./Modifiers/_modifierDictionary.js").injectConfig(isProduction));
-	({ rollWeaponDrop, getWeaponProperty, buildWeaponDescription } = require("./Weapons/_weaponDictionary.js").injectConfig(isProduction));
+	({ rollEquipmentDrop, getEquipmentProperty, buildEquipmentDescription } = require("./equipment/_equipmentDictionary.js").injectConfig(isProduction));
 	({ getArtifact, rollArtifact } = require("./Artifacts/_artifactDictionary.js").injectConfigArtifacts(isProduction));
 	({ getEnemy } = require("./Enemies/_enemyDictionary").injectConfigEnemies(isProduction));
 	({ getChallenge, rollChallenges } = require("./Challenges/_challengeDictionary.js").injectConfigChallenges(isProduction));
@@ -221,7 +221,7 @@ exports.nextRoom = async function (roomType, thread) {
 		// Generate non-combat room
 		const cloverCount = adventure.getArtifactCount("Negative-One Leaf Clover");
 		for (let category in roomTemplate.saleList) {
-			if (category.startsWith("weapon")) {
+			if (category.startsWith("equipment")) {
 				let [type, tier] = category.split(SAFE_DELIMITER);
 				let parsedTier = tier;
 				let count = Math.min(25, parseCount(roomTemplate.saleList[category], adventure.delvers.length));
@@ -229,18 +229,18 @@ exports.nextRoom = async function (roomType, thread) {
 					if (tier === "?") {
 						let threshold = 1 + cloverCount;
 						let max = 8 + cloverCount;
-						adventure.updateArtifactStat("Negative-One Leaf Clover", "Expected Extra Rare Weapons", (threshold / max) - (1 / 8));
+						adventure.updateArtifactStat("Negative-One Leaf Clover", "Expected Extra Rare Equipment", (threshold / max) - (1 / 8));
 						if (generateRandomNumber(adventure, max, "general") < threshold) {
 							parsedTier = "2";
 						} else {
 							parsedTier = "1";
 						}
 					}
-					let weaponName = rollWeaponDrop(parsedTier, adventure);
-					if (adventure.room.resources[weaponName]?.resourceType === "weapon") {
-						adventure.room.resources[weaponName].count++;
+					let equipName = rollEquipmentDrop(parsedTier, adventure);
+					if (adventure.room.resources[equipName]?.resourceType === "equipment") {
+						adventure.room.resources[equipName].count++;
 					} else {
-						adventure.room.resources[weaponName] = new Resource(weaponName, "weapon", 1, "merchant", getWeaponProperty(weaponName, "cost"))
+						adventure.room.resources[equipName] = new Resource(equipName, "equipment", 1, "merchant", getEquipmentProperty(equipName, "cost"))
 							.setUIGroup(category);
 					}
 				}
@@ -428,8 +428,8 @@ exports.generateLootRow = function (adventure) {
 				option.label = `${name} x ${count}`;
 			}
 
-			if (type === "weapon") {
-				option.description = buildWeaponDescription(name, false);
+			if (type === "equipment") {
+				option.description = buildEquipmentDescription(name, false);
 			} else if (type === "artifact") {
 				option.description = getArtifact(name).dynamicDescription(count);
 			} else {
@@ -468,15 +468,15 @@ exports.generateMerchantRows = function (adventure) {
 
 	let rows = [];
 	for (const groupName in categorizedResources) {
-		if (groupName.startsWith("weapon")) {
+		if (groupName.startsWith("equipment")) {
 			const [type, tier] = groupName.split(SAFE_DELIMITER);
 			let options = [];
 			categorizedResources[groupName].forEach((resource, i) => {
 				if (adventure.room.resources[resource].count > 0) {
-					const cost = getWeaponProperty(resource, "cost");
+					const cost = getEquipmentProperty(resource, "cost");
 					options.push({
 						label: `${cost}g: ${resource}`,
-						description: buildWeaponDescription(resource, false),
+						description: buildEquipmentDescription(resource, false),
 						value: `${resource}${SAFE_DELIMITER}${i}`
 					})
 				}
@@ -484,13 +484,13 @@ exports.generateMerchantRows = function (adventure) {
 			if (options.length) {
 				rows.push(new MessageActionRow().addComponents(
 					new MessageSelectMenu().setCustomId(`buy${groupName}`)
-						.setPlaceholder(`Check a ${tier === "2" ? "rare " : ""}weapon...`)
+						.setPlaceholder(`Check a ${tier === "2" ? "rare " : ""}piece of equipment...`)
 						.setOptions(options)));
 			} else {
 				rows.push(new MessageActionRow().addComponents(
 					new MessageSelectMenu().setCustomId(`buy${groupName}`)
 						.setPlaceholder("SOLD OUT")
-						.setOptions([{ label: "If the menu is stuck, close and reopen the thread.", description: "This usually happens when two players try to buy the last weapon at the same time.", value: "placeholder" }])
+						.setOptions([{ label: "If the menu is stuck, close and reopen the thread.", description: "This usually happens when two players try to buy the last item at the same time.", value: "placeholder" }])
 						.setDisabled(true)));
 			}
 		} else if (groupName === "scouting") {
@@ -560,7 +560,7 @@ exports.endRound = async function (adventure, thread) {
 			totalBounty *= (90 + generateRandomNumber(adventure, 21, "general")) / 100;
 			adventure.room.resources.gold.count = Math.ceil(totalBounty);
 
-			// Weapon drops
+			// Equipment drops
 			let dropThreshold = 1;
 			let dropMax = 8;
 			if (generateRandomNumber(adventure, dropMax, "general") < dropThreshold) {
@@ -571,11 +571,11 @@ exports.endRound = async function (adventure, thread) {
 				if (generateRandomNumber(adventure, upgradeMax, "general") < upgradeThreshold) {
 					tier = 2;
 				}
-				let droppedWeapon = rollWeaponDrop(tier, adventure);
-				if (adventure.room.resources[droppedWeapon]) {
-					adventure.room.resources[droppedWeapon].count++;
+				let droppedEquip = rollEquipmentDrop(tier, adventure);
+				if (adventure.room.resources[droppedEquip]) {
+					adventure.room.resources[droppedEquip].count++;
 				} else {
-					adventure.room.resources[droppedWeapon] = new Resource(droppedWeapon, "weapon", 1, "loot", 0);
+					adventure.room.resources[droppedEquip] = new Resource(droppedEquip, "equipment", 1, "loot", 0);
 				}
 			}
 
