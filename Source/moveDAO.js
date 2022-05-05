@@ -1,10 +1,10 @@
 const { getFullName, dealDamage, gainHealth, removeModifier } = require("./combatantDAO.js");
 
-let getEnemy, selectAllFoes, getWeaponProperty;
+let getEnemy, selectAllFoes, getEquipmentProperty;
 exports.injectConfig = function (isProduction) {
 	({ getEnemy } = require("./Enemies/_enemyDictionary.js").injectConfigEnemies(isProduction));
 	({ selectAllFoes } = require("./enemyDAO.js").injectConfig(isProduction));
-	({ getWeaponProperty } = require("./Weapons/_weaponDictionary.js").injectConfig(isProduction));
+	({ getEquipmentProperty } = require("./equipment/_equipmentDictionary.js").injectConfig(isProduction));
 	return this;
 }
 
@@ -18,13 +18,13 @@ exports.resolveMove = async function (move, adventure) {
 			let targetAll = false;
 			let breakText = "";
 			if (move.userTeam === "delver" || move.userTeam === "clone") {
-				effect = getWeaponProperty(move.name, "effect");
+				effect = getEquipmentProperty(move.name, "effect");
 				if (move.userTeam !== "clone") {
-					targetAll = getWeaponProperty(move.name, "targetingTags").target === "all"
+					targetAll = getEquipmentProperty(move.name, "targetingTags").target === "all"
 					if (move.name !== "Punch") {
-						let weapon = user.weapons.find(weapon => weapon.name === move.name);
-						weapon.uses--;
-						if (weapon.uses === 0) {
+						let equip = user.equipment.find(equip => equip.name === move.name);
+						equip.uses--;
+						if (equip.uses === 0) {
 							breakText = ` The ${move.name} broke!`;
 						}
 					}
