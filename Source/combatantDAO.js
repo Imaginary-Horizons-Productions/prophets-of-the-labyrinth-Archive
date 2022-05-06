@@ -175,52 +175,79 @@ exports.clearBlock = function (combatant) {
 	return combatant;
 }
 
-exports.addModifier = function (combatant, { name: modifier, stacks }) {
-	let pendingStacks = stacks;
-	let inverse = getInverse(modifier);
-	let inverseStacks = combatant.modifiers[inverse];
-	if (inverseStacks) {
-		exports.removeModifier(combatant, inverse, pendingStacks);
-		if (inverseStacks < pendingStacks) {
-			combatant.modifiers[modifier] = pendingStacks - inverseStacks;
-		}
-	} else {
-		if (combatant.modifiers[modifier]) {
-			combatant.modifiers[modifier] += pendingStacks;
+/** Checks if adding the modifier inverts exisiting modifiers, increments the (remaining) stacks, then checks if stacks exceed a trigger threshold
+ * @param {Combatant} combatant
+ * @param {object} modifierData
+ * @param {string} modifierData.name
+ * @param {number} modifierData.stacks removes all if not parsable to an integer
+ * @param {boolean} modifierData.force whether to ignore the Oblivious check
+ * @returns {boolean} if the modifier was added (as opposed to being prevented by Oblivious)
+ */
+ exports.addModifier = function (combatant, { name: modifier, stacks: pendingStacks, force = false }) {
+	// Oblivious only blocks buffs and debuffs
+	if (!("Oblivious" in combatant.modifiers && (isBuff(modifier) || isDebuff(modifier))) || force) {
+		let inverse = getInverse(modifier);
+		let inverseStacks = combatant.modifiers[inverse];
+		if (inverseStacks) {
+			exports.removeModifier(combatant, { name: inverse, stacks: pendingStacks, force: true });
+			if (inverseStacks < pendingStacks) {
+				combatant.modifiers[modifier] = pendingStacks - inverseStacks;
+			}
 		} else {
-			combatant.modifiers[modifier] = pendingStacks;
+			if (combatant.modifiers[modifier]) {
+				combatant.modifiers[modifier] += pendingStacks;
+			} else {
+				combatant.modifiers[modifier] = pendingStacks;
+			}
 		}
-	}
 
-	// Check if Stagger becomes Stun
-	if (combatant.modifiers?.Stagger >= combatant.staggerThreshold) {
-		combatant.modifiers.Stagger -= combatant.staggerThreshold;
-		combatant.modifiers.Stun = 1;
-		if (combatant.modifiers.Progress) {
-			combatant.modifiers.Progress = Math.ceil(combatant.modifiers.Progress * 0.8);
+		// Trigger threshold: Stagger to Stun
+		if (combatant.modifiers?.Stagger >= combatant.staggerThreshold) {
+			combatant.modifiers.Stagger -= combatant.staggerThreshold;
+			combatant.modifiers.Stun = 1;
+			if ("Progress" in combatant.modifiers) {
+				combatant.modifiers.Progress = Math.ceil(combatant.modifiers.Progress * 0.8);
+			}
 		}
-	}
 
-	// Check if Progress yields results
-	if (combatant.modifiers?.Progress >= 100) {
-		combatant.modifiers.Progress -= 100;
-		exports.addModifier(combatant, { name: "Power Up", stacks: 100 });
+		// Trigger threshold: Progress
+		if (combatant.modifiers?.Progress >= 100) {
+			combatant.modifiers.Progress -= 100;
+			exports.addModifier(combatant, { name: "Power Up", stacks: 100, force: true });
+			if ("Stasis" in combatant.modifiers) {
+				combatant.modifiers.Stasis++;
+			} else {
+				combatant.modifiers.Stasis = 1;
+			}
+		}
+		return true;
+	} else {
+		exports.removeModifier(combatant, { name: "Oblivious", stacks: 1, force: true });
+		return false;
 	}
-	return combatant;
 }
 
-exports.removeModifier = function (combatant, { name: modifier, stacks }) {
-	let all = isNaN(parseInt(stacks));
-	if (!all && modifier in combatant.modifiers) {
-		combatant.modifiers[modifier] -= stacks;
-		if (combatant.modifiers[modifier] <= 0) {
-			all = true;
+/** After decrementing a modifier's stacks, delete the modifier's entry in the object
+ * @param {Combatant} combatant
+ * @param {object} modifierData
+ * @param {string} modifierData.name
+ * @param {number} modifierData.stacks removes all if not parsable to an integer
+ * @param {boolean} modifierData.force whether to ignore the Stasis check (eg buffs/debuffs consuming themselves)
+ * @returns {boolean} if the modifier was decremented (as opposed to being prevented by Stasis)
+ */
+exports.removeModifier = function (combatant, { name: modifier, stacks, force = false }) {
+	// Stasis only protects buffs and debuffs
+	if (!("Stasis" in combatant.modifiers && (isBuff(modifier) || isDebuff(modifier))) || force) {
+		if (isNaN(parseInt(stacks)) || stacks >= combatant.modifiers[modifier]) {
+			delete combatant.modifiers[modifier];
+		} else if (modifier in combatant.modifiers) {
+			combatant.modifiers[modifier] -= stacks;
 		}
+		return true;
+	} else {
+		exports.removeModifier(combatant, { name: "Stasis", stacks: 1, force: true });
+		return false;
 	}
-	if (all) {
-		delete combatant.modifiers[modifier];
-	}
-	return combatant;
 }
 
 exports.modifiersToString = function (combatant) {

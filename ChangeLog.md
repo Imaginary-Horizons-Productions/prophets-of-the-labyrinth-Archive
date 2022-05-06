@@ -2,6 +2,10 @@
 #### Prophets of the Labyrinth Version 0.9.0:
 - New slash command: `/armory` that allows checking stats on a weapon given by name
 - The changelog no longer offers "premimum features" for sponsoring on GitHub
+- Max delvers per adventure reduced to 8 (UI constraint)
+- New modifier: Stasis
+- New modifier: Oblivious
+- Other bug fixes, optimizations, and improvements
 #### Prophets of the Labyrinth Version 0.8.0:
 - Added "Data Policy" page to manual
 - Enemy hp now scales with party size
