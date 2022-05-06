@@ -10,7 +10,7 @@ module.exports = new Weapon("Thick Cloak", 2, "*Gain @{mod1Stacks} @{mod1}*\nCri
 function effect(target, user, isCrit, adventure) {
 	let { element: weaponElement, modifiers: [elementStagger, evade, critEvade] } = module.exports;
 	if (user.element === weaponElement) {
-		removeModifier(user, elementStagger.name, elementStagger.stacks);
+		removeModifier(user, elementStagger);
 	}
 	if (isCrit) {
 		addModifier(user, critEvade);

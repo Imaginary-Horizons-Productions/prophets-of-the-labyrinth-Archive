@@ -12,8 +12,8 @@ module.exports = class Move {
 
 	setSpeed(combatant) {
 		this.speed = calculateTotalSpeed(combatant);
-		removeModifier(combatant, { name: "Slow", stacks: 1 });
-		removeModifier(combatant, { name: "Quicken", stacks: 1 });
+		removeModifier(combatant, { name: "Slow", stacks: 1, force: true });
+		removeModifier(combatant, { name: "Quicken", stacks: 1, force: true });
 		return this;
 	}
 
