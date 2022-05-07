@@ -1,5 +1,4 @@
 const Command = require('../../Classes/Command.js');
-const { MessageEmbed } = require("discord.js");
 const { getEmoji, getWeaknesses, getResistances, getColor } = require('../elementHelpers.js');
 
 const options = [
@@ -16,9 +15,11 @@ const options = [
 ];
 module.exports = new Command("manual", "Get information about Prophets of the Labyrinth v0.8.0", false, false, options);
 
-// imports from files that depend on /Config
-// let ;
+
+let // imports from files that depend on /Config
+	embedTemplate;
 module.exports.injectConfig = function (isProduction) {
+	({ embedTemplate } = require('../../helpers.js').injectConfig(isProduction));
 	return this;
 }
 
@@ -81,11 +82,4 @@ module.exports.execute = (interaction) => {
 	}
 	interaction.reply(response)
 		.catch(console.error)
-}
-
-function embedTemplate(iconURL) {
-	return new MessageEmbed().setColor('6b81eb')
-		.setAuthor({ name: "Click here to vist the PotL GitHub", iconURL, url: "https://github.com/Imaginary-Horizons-Productions/prophets-of-the-labyrinth" })
-		.setURL("https://discord.com/api/oauth2/authorize?client_id=950469509628702740&permissions=397284665360&scope=applications.commands%20bot")
-		.setFooter({ text: "Click the title link to add PotL to your server", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" })
 }
