@@ -14,6 +14,7 @@ var modifierWhitelist = [
 	"curse-of-midas.js",
 	"evade.js",
 	"exposed.js",
+	"oblivious.js",
 	"poison.js",
 	"power-down.js",
 	"power-up.js",
@@ -22,6 +23,7 @@ var modifierWhitelist = [
 	"regen.js",
 	"slow.js",
 	"stagger.js",
+	"stasis.js",
 	"stun.js"
 ];
 

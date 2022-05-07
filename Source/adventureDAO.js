@@ -363,7 +363,7 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 
 			// Decrement Modifiers
 			for (const modifier in combatant.modifiers) {
-				removeModifier(combatant, { name: modifier, stacks: getTurnDecrement(modifier) })
+				removeModifier(combatant, { name: modifier, stacks: getTurnDecrement(modifier), force: true })
 			}
 		})
 	}
