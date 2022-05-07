@@ -24,7 +24,7 @@ function elementShift(target, user, isCrit, adventure) {
 	user.element = elementsList()[generateRandomNumber(adventure, elementsList().length, "battle")];
 	if (isCrit) {
 		addModifier(user, { name: `${user.element} Absorb`, stacks: 5 });
-		removeModifier(user, "Stagger", 1);
+		removeModifier(user, { name: "Stagger", stacks: 1 });
 	} else {
 		addModifier(user, { name: `${user.element} Absorb`, stacks: 3 });
 	}

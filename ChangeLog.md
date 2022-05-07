@@ -1,4 +1,9 @@
 # Prophets of the Labyrinth Change Log
+#### Prophets of the Labyrinth Version 0.9.0:
+- Max delvers per adventure reduced to 8 (UI constraint)
+- New modifier: Stasis
+- New modifier: Oblivious
+- Other bug fixes, optimizations, and improvements
 #### Prophets of the Labyrinth Version 0.8.0:
 - Added "Data Policy" page to manual
 - Enemy hp now scales with party size
