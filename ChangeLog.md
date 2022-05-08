@@ -1,5 +1,6 @@
 # Prophets of the Labyrinth Change Log
 #### Prophets of the Labyrinth Version 0.9.0:
+- Fixed `/invite`
 - New slash command: `/armory` that allows checking stats on a weapon given by name
 - The changelog no longer offers "premimum features" for sponsoring on GitHub
 - Max delvers per adventure reduced to 8 (UI constraint)

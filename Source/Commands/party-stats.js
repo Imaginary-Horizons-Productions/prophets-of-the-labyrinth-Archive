@@ -14,7 +14,7 @@ module.exports.injectConfig = function (isProduction) {
 
 module.exports.execute = (interaction) => {
 	// Show user the party stats
-	const adventure = getAdventure(interaction.channel.id);
+	const adventure = getAdventure(interaction.channelId);
 	if (adventure) {
 		let embed = new MessageEmbed()
 			.setTitle("Party Stats")

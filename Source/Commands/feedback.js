@@ -31,6 +31,6 @@ module.exports.execute = (interaction) => {
 			interaction.reply({ content: "The test server is not yet configured to receive feedback, thanks for your patience.", ephemeral: true });
 		}
 	} else {
-		interaction.reply({ content: `That message won't fit in our feedback tickets (${ticketSpace} characters max).`, ephemeral: true });
+		interaction.reply({ content: `That message won't fit in a feedback ticket (${ticketSpace} characters max).`, ephemeral: true });
 	}
 }

@@ -16,14 +16,14 @@ module.exports.injectConfig = function (isProduction) {
 
 module.exports.execute = (interaction) => {
 	// Invite a friend to an adventure
-	const adventure = getAdventure(interaction.channel.id);
+	const adventure = getAdventure(interaction.channelId);
 	if (adventure) {
 		if (adventure.state === "config") {
 			const invitee = interaction.options.getUser("invitee");
 			invitee.send({
 				content: `${interaction.member} has invited you to join *${adventure.name}* in ${interaction.guild}!`,
 				components: [new MessageActionRow().addComponents(
-					new MessageButton().setCustomId(`join${SAFE_DELIMITER}${interaction.guildId}${SAFE_DELIMITER}${interaction.channelId}${SAFE_DELIMITER}aux`)
+					new MessageButton().setCustomId(`join${SAFE_DELIMITER}${interaction.guildId}${SAFE_DELIMITER}${interaction.channelId}${SAFE_DELIMITER}invite`)
 						.setLabel("Join")
 						.setStyle("SUCCESS")
 				)]
