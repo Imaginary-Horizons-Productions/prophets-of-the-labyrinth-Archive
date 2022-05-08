@@ -89,30 +89,26 @@ client.on("ready", () => {
 })
 
 client.on("interactionCreate", interaction => {
-	if (interaction.inGuild()) {
-		if (interaction.isCommand()) {
-			let command = getCommand(interaction.commandName);
-			if (!command.premiumCommand || !getPremiumUsers().includes(interaction.user.id)) {
-				if (!command.managerCommand || !interaction.member.manageable) {
-					command.execute(interaction);
-				} else {
-					interaction.reply(`The \`/${interaction.commandName}\` command is restricted to bot managers (users with permissions above the bot).`)
-						.catch(console.error);
-				}
+	if (interaction.isCommand()) {
+		const { premiumCommand, managerCommand, execute } = getCommand(interaction.commandName);
+		if (!premiumCommand || !getPremiumUsers().includes(interaction.user.id)) {
+			if (!managerCommand || !interaction.member?.manageable) {
+				execute(interaction);
 			} else {
-				interaction.reply(`The \`/${interaction.commandName}\` command is a premium command. Use \`/support\` for more information.`)
+				interaction.reply({ content: `The \`/${interaction.commandName}\` command is restricted to bot managers (users with permissions above the bot).`, ephemeral: true })
 					.catch(console.error);
 			}
-		} else if (interaction.isButton()) {
-			const [customId, ...args] = interaction.customId.split(SAFE_DELIMITER);
-			getButton(customId).execute(interaction, args);
-		} else if (interaction.isSelectMenu()) {
-			const [customId, ...args] = interaction.customId.split(SAFE_DELIMITER);
-			getSelect(customId).execute(interaction, args);
+		} else {
+			interaction.reply({ content: `The \`/${interaction.commandName}\` command is a premium command. Use \`/support\` for more information.`, ephemeral: true })
+				.catch(console.error);
 		}
 	} else {
-		interaction.reply({ content: "Direct message commands are not supported at this time.", ephemeral: true })
-			.catch(console.error);
+		const [mainId, ...args] = interaction.customId.split(SAFE_DELIMITER);
+		if (interaction.isButton()) {
+			getButton(mainId).execute(interaction, args);
+		} else if (interaction.isSelectMenu()) {
+			getSelect(mainId).execute(interaction, args);
+		}
 	}
 })
 

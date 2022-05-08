@@ -14,8 +14,12 @@ module.exports.execute = async (interaction, [guildId, adventureId, context]) =>
 		if (adventure) {
 			if (adventure.state === "config") {
 				let recruitMessage = interaction.message;
-				if (!recruitMessage.hasThread) {
+				if (context === "aux") {
 					recruitMessage = await interaction.channel.fetchStarterMessage();
+				} else if (context === "invite") {
+					const guild = await interaction.client.guilds.fetch(guildId);
+					const thread = await guild.channels.fetch(adventureId);
+					recruitMessage = await thread.fetchStarterMessage();
 				}
 				if (adventure.delvers.length < maxDelverCount) {
 					if (!adventure.delvers.some(delver => delver.id == interaction.user.id)) {
@@ -51,7 +55,7 @@ module.exports.execute = async (interaction, [guildId, adventureId, context]) =>
 							components = [];
 						}
 						recruitMessage.edit({ embeds, components });
-						if (context === "aux") {
+						if (["aux", "invite"].includes(context)) {
 							interaction.update({ components: [] })
 						} else {
 							interaction.update({ content: "\u200B" })

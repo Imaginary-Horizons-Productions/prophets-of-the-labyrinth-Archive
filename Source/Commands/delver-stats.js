@@ -17,7 +17,7 @@ module.exports.injectConfig = function (isProduction) {
 
 module.exports.execute = (interaction) => {
 	// Show the delver stats of the user
-	const adventure = getAdventure(interaction.channel.id);
+	const adventure = getAdventure(interaction.channelId);
 	if (adventure) {
 		let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 		if (delver) {
