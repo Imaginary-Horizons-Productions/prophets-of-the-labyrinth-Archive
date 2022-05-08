@@ -11,17 +11,17 @@ module.exports = new Select("archetype");
 module.exports.execute = (interaction, args) => {
 	// Add the player's delver object to the adventure
 	let adventure = getAdventure(interaction.channel.id);
-	if (adventure && !adventure.messageIds.utility) {
+	if (adventure?.state === "config") {
 		// Add delver to list (or overwrite)
-		let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
-		if (userIndex !== -1) {
+		let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
+		if (delver) {
 			let archetype = interaction.values[0];
-			let isSwitching = adventure.delvers[userIndex].title !== "";
+			let isSwitching = delver.title !== "";
 			let archetypeTemplate = Object.assign(new Archetype(), getArchetype(archetype));
-			adventure.delvers[userIndex].equipment = archetypeTemplate.signatureEquipment.map(equipmentName => {
+			delver.equipment = archetypeTemplate.signatureEquipment.map(equipmentName => {
 				return { name: equipmentName, uses: getEquipmentProperty(equipmentName, "maxUses") }
 			});
-			adventure.delvers[userIndex].setTitle(archetypeTemplate.title)
+			delver.setTitle(archetypeTemplate.title)
 				.setHp(archetypeTemplate.maxHp)
 				.setSpeed(archetypeTemplate.speed)
 				.setElement(archetypeTemplate.element)
