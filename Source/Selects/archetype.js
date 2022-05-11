@@ -21,6 +21,7 @@ module.exports.execute = (interaction, args) => {
 			adventure.delvers[userIndex].weapons = archetypeTemplate.signatureWeapons.map(signatureWeapon => {
 				return { name: signatureWeapon, uses: getWeaponProperty(signatureWeapon, "maxUses") }
 			});
+			const wasReady = adventure.delvers.every(delver => delver.title);
 			adventure.delvers[userIndex].setTitle(archetypeTemplate.title)
 				.setHp(archetypeTemplate.maxHp)
 				.setSpeed(archetypeTemplate.speed)
@@ -36,7 +37,7 @@ module.exports.execute = (interaction, args) => {
 			});
 			interaction.channel.send(`${interaction.user} ${isSwitching ? "has switched to" : "will be playing as"} ${archetype}.`).then(() => {
 				// Check if all ready
-				if (adventure.delvers.every(delver => delver.title)) {
+				if (adventure.delvers.every(delver => delver.title) && !wasReady) {
 					let readyButton = [
 						new MessageActionRow().addComponents(
 							new MessageButton().setCustomId("ready")
@@ -46,7 +47,7 @@ module.exports.execute = (interaction, args) => {
 						)
 					];
 
-					// if startMessageId already exists, player has changed class, so delete extra start message
+					// if adventure.messageIds.start already exists, player has changed class, so delete extra start message
 					if (adventure.messageIds.start) {
 						interaction.channel.messages.delete(adventure.messageIds.start);
 						delete adventure.messageIds.start;
