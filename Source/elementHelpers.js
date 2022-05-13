@@ -50,7 +50,7 @@ const ELEMENTS = {
 	}
 }
 exports.getResistances = function (element) {
-	if (exports.elementsList().includes(element)) {
+	if (element in ELEMENTS) {
 		return ELEMENTS[element].resistances;
 	} else {
 		return ["none"];
@@ -58,7 +58,7 @@ exports.getResistances = function (element) {
 }
 
 exports.getWeaknesses = function (element) {
-	if (exports.elementsList().includes(element)) {
+	if (element in ELEMENTS) {
 		return ELEMENTS[element].weaknesses;
 	} else {
 		return ["none"];
