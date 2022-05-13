@@ -1,13 +1,16 @@
 const Command = require('../../Classes/Command.js');
-const { getGuild } = require('../guildDAO.js');
 
 const options = [];
 module.exports = new Command("reset", "(Manager) Reset player scores for this server", true, false, options);
 
-// imports from files that depend on /Config
-let resetScores;
+let // imports from files that depend on /Config
+	// playerDAO
+	resetScores,
+	//guildDAO
+	getGuild;
 module.exports.injectConfig = function (isProduction) {
 	({ resetScores } = require('../playerDAO.js').injectConfig(isProduction));
+	({ getGuild } = require('../guildDAO.js').injectConfig(isProduction));
 	return this;
 }
 
