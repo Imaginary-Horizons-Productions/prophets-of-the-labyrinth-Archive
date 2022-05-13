@@ -157,7 +157,7 @@ exports.dealDamage = async function (target, user, damage, isUnblockable, elemen
 exports.gainHealth = function (combatant, healing, adventure, inCombat = true) {
 	combatant.hp += healing;
 	let excessHealing = 0;
-	let bloodshieldSwordCount = adventure.artifacts["Bloodshield Sword"].count;
+	let bloodshieldSwordCount = adventure.getArtifactCount("Bloodshield Sword");
 	if (combatant.hp > combatant.maxHp) {
 		excessHealing = combatant.hp - combatant.maxHp;
 		combatant.hp = combatant.maxHp;
