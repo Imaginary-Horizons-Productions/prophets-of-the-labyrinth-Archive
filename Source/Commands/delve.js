@@ -23,7 +23,7 @@ let // imports from files that depend on /Config
 	// challengeDictionary
 	getChallenge;
 module.exports.injectConfig = function (isProduction) {
-	({ isSponsor, generateRandomNumber } = require("./../../helpers.js").injectConfig(isProduction));
+	({ SAFE_DELIMITER, isSponsor, generateRandomNumber } = require("./../../helpers.js").injectConfig(isProduction));
 	({ setAdventure } = require("../adventureDAO.js").injectConfig(isProduction));
 	({ prerollBoss } = require('../Rooms/_roomDictionary.js').injectConfig(isProduction));
 	({ getGuild } = require("../guildDAO.js").injectConfig(isProduction));
