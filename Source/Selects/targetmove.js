@@ -7,20 +7,20 @@ const { getFullName } = require("../combatantDAO.js");
 
 module.exports = new Select("targetmove");
 
-module.exports.execute = async function (interaction, [weaponName, round, _weaponIndex]) {
+module.exports.execute = async function (interaction, [equipmentName, round, _equipmentIndex]) {
 	// Add move object to adventure
 	let adventure = getAdventure(interaction.channel.id);
 	if (adventure.room.round === Number(round)) {
 		let user = adventure.delvers.find(delver => delver.id === interaction.user.id);
-		if (weaponName === "Punch" || user.weapons.some(weapon => weapon.name === weaponName && weapon.uses > 0)) {
+		if (equipmentName === "Punch" || user.equipment.some(equipment => equipment.name === equipmentName && equipment.uses > 0)) {
 			// Add move to round list (overwrite exisiting readied move)
 			let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
 			let [targetTeam, targetIndex] = interaction.values[0].split(SAFE_DELIMITER);
-			user.actionSpeed = getEquipmentProperty(weaponName, "speedBonus") || 0;
+			user.actionSpeed = getEquipmentProperty(equipmentName, "speedBonus") || 0;
 			let newMove = new Move()
 				.setSpeed(user)
 				.setIsCrit(user.crit)
-				.setMoveName(weaponName)
+				.setMoveName(equipmentName)
 				.setUser(user.team, userIndex)
 				.addTarget(targetTeam, targetIndex);
 
@@ -45,15 +45,15 @@ module.exports.execute = async function (interaction, [weaponName, round, _weapo
 				target = adventure.room.enemies[targetIndex];
 			}
 			interaction.update({ components: [] });
-			interaction.channel.send(`${interaction.user} ${overwritten ? "switches to ready" : "readies"} **${weaponName}** to use on **${getFullName(target, adventure.room.enemyTitles)}**.`).then(() => {
+			interaction.channel.send(`${interaction.user} ${overwritten ? "switches to ready" : "readies"} **${equipmentName}** to use on **${getFullName(target, adventure.room.enemyTitles)}**.`).then(() => {
 				setAdventure(adventure);
 				if (checkNextRound(adventure)) {
 					endRound(adventure, interaction.channel);
 				}
 			}).catch(console.error);
 		} else {
-			// Needed to prevent crashes in case users keep weapon menus around and uses one with a broken weapon
-			interaction.update({ content: `You don't have a ${weaponName} with uses remaining.`, components: [], ephemeral: true })
+			// Needed to prevent crashes in case users keep equipment menus around and uses one with a broken equipment
+			interaction.update({ content: `You don't have a ${equipmentName} with uses remaining.`, components: [], ephemeral: true })
 				.catch(console.error);
 		}
 	} else {
