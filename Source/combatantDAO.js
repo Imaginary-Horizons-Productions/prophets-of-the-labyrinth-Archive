@@ -47,7 +47,7 @@ exports.calculateTotalSpeed = function (combatant) {
 exports.delverStatsPayload = function (delver) {
 	let embed = new MessageEmbed()
 		.setTitle(exports.getFullName(delver, {}))
-		.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nPredicts: ${delver.predict}\nWhen using ${delver.element} ${getEmoji(delver.element)} equipment, add 1 Stagger to enemies or remove 1 Stagger from allies`)
+		.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nPredicts: ${delver.predict}\nYour ${getEmoji(delver.element)} moves add 1 Stagger to enemies and remove 1 Stagger from allies.`)
 		.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
 	for (let equip of delver.equipment) {
 		embed.addField(...equipmentToEmbedField(equip.name, equip.uses));
