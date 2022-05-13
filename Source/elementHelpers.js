@@ -74,13 +74,13 @@ exports.elementsList = function (includeUntyped = false) {
 }
 
 exports.getColor = function (element) {
-	return ELEMENTS[element].color;
+	return ELEMENTS[element]?.color || "n/a";
 }
 
 exports.getEmoji = function (element) {
-	return ELEMENTS[element].emoji;
+	return ELEMENTS[element]?.emoji || "n/a";
 }
 
 exports.getOpposite = function (element) {
-	return ELEMENTS[element].opposite;
+	return ELEMENTS[element]?.opposite || "n/a";
 }
