@@ -85,7 +85,7 @@ exports.delverStatsPayload = function (delver, equipmentCapacity) {
 			actionRow.push(new MessageButton().setCustomId(`modifier${SAFE_DELIMITER}MORE`)
 				.setLabel(`${modifiers.length - 4} more...`)
 				.setStyle("SECONDARY")
-				.setDisabled(delver.predict !== "Modifiers"))
+				.setDisabled(delver.predict !== "Health"))
 		}
 		components.push(new MessageActionRow().addComponents(...actionRow));
 	}
