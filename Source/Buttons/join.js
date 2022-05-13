@@ -24,7 +24,7 @@ module.exports.execute = async (interaction, [guildId, adventureId, context]) =>
 				if (adventure.delvers.length < maxDelverCount) {
 					if (!adventure.delvers.some(delver => delver.id == interaction.user.id)) {
 						// Update game logic
-						adventure.delvers.push(new Delver(interaction.user.id, interaction.member.displayName, adventureId));
+						adventure.delvers.push(new Delver(interaction.user.id, interaction.user.username, adventureId));
 						adventure.lives++;
 						adventure.gainGold(50);
 						setAdventure(adventure);
@@ -32,7 +32,7 @@ module.exports.execute = async (interaction, [guildId, adventureId, context]) =>
 
 						// Welcome player to thread
 						let thread = interaction.client.guilds.resolve(guildId).channels.resolve(adventureId);
-						thread.send(`${interaction.member} joined the adventure.`).then(_message => {
+						thread.send(`<@${interaction.user.id}> joined the adventure.`).then(_message => {
 							if (adventure.messageIds.start) {
 								thread.messages.delete(adventure.messageIds.start);
 								adventure.messageIds.start = "";
