@@ -10,7 +10,7 @@ module.exports.execute = (interaction, args) => {
 	if (adventure) {
 		let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 		if (delver) {
-			interaction.reply(delverStatsPayload(delver))
+			interaction.reply(delverStatsPayload(delver, adventure.getEquipmentCapacity()))
 				.catch(console.error);
 		} else {
 			interaction.reply({ content: "You are not a part of this adventure.", ephemeral: true });

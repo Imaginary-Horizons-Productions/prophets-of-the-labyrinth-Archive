@@ -1,6 +1,6 @@
 const Enemy = require("../Classes/Enemy.js");
 const Delver = require("../Classes/Delver.js");
-const { getWeaknesses, getResistances, getEmoji } = require("./elementHelpers.js");
+const { getWeaknesses, getResistances, getEmoji, getColor } = require("./elementHelpers.js");
 const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
 
 let
@@ -13,11 +13,12 @@ let
 	// equipmentDAO
 	equipmentToEmbedField,
 	// helpers
-	SAFE_DELIMITER;
+	SAFE_DELIMITER,
+	ordinalSuffixEN;
 exports.injectConfig = function (isProduction) {
 	({ getInverse, isNonStacking, getModifierDescription, isBuff, isDebuff } = require("./Modifiers/_modifierDictionary.js").injectConfig(isProduction));
 	({ equipmentToEmbedField } = require("./equipmentDAO.js").injectConfig(isProduction));
-	({ SAFE_DELIMITER } = require("../helpers.js").injectConfig(isProduction));
+	({ SAFE_DELIMITER, ordinalSuffixEN } = require("../helpers.js").injectConfig(isProduction));
 	return this;
 }
 
@@ -44,13 +45,22 @@ exports.calculateTotalSpeed = function (combatant) {
 	return Math.ceil(totalSpeed);
 }
 
-exports.delverStatsPayload = function (delver) {
-	let embed = new MessageEmbed()
+/** Generates an object to Discord.js's specification that corresponds with a delver's in-adventure stats
+ * @param {Delver} delver
+ * @param {number} equipmentCapacity
+ * @returns {MessageOptions}
+ */
+exports.delverStatsPayload = function (delver, equipmentCapacity) {
+	let embed = new MessageEmbed().setColor(getColor(delver.element))
 		.setTitle(exports.getFullName(delver, {}))
 		.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nPredicts: ${delver.predict}\nWhen using ${delver.element} ${getEmoji(delver.element)} equipment, add 1 Stagger to enemies or remove 1 Stagger from allies`)
 		.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
-	for (let equip of delver.equipment) {
-		embed.addField(...equipmentToEmbedField(equip.name, equip.uses));
+	for (let index = 0; index < equipmentCapacity; index++) {
+		if (delver.equipment[index]) {
+			embed.addField(...equipmentToEmbedField(delver.equipment[index].name, delver.equipment[index].uses));
+		} else {
+			embed.addField(`${ordinalSuffixEN(index + 1)} Equipment Slot`, "No equipment yet...")
+		}
 	}
 	let components = [];
 	if (Object.keys(delver.modifiers).length) {
@@ -183,7 +193,7 @@ exports.clearBlock = function (combatant) {
  * @param {boolean} modifierData.force whether to ignore the Oblivious check
  * @returns {boolean} if the modifier was added (as opposed to being prevented by Oblivious)
  */
- exports.addModifier = function (combatant, { name: modifier, stacks: pendingStacks, force = false }) {
+exports.addModifier = function (combatant, { name: modifier, stacks: pendingStacks, force = false }) {
 	// Oblivious only blocks buffs and debuffs
 	if (!("Oblivious" in combatant.modifiers && (isBuff(modifier) || isDebuff(modifier))) || force) {
 		let inverse = getInverse(modifier);
