@@ -26,11 +26,11 @@ module.exports.injectConfig = function (isProduction) {
 
 module.exports.execute = (interaction) => {
 	// Get the stats on a user
-	let availability = getGuild(interaction.guildId).adventuring.has(interaction.user.id) ? "❌ Out on adventure" : "🟢 Available for adventure";
+	let availability = getGuild(interaction.guildId)?.adventuring.has(interaction.user.id) ? "❌ Out on adventure" : "🟢 Available for adventure";
 	if (isSponsor(interaction.user.id)) {
 		availability = "💎 Premium (available for adventure)";
 	}
-	let player = getPlayer(interaction.user.id, interaction.guild.id);
+	let player = getPlayer(interaction.user.id, interaction.guildId);
 	let totalArtifacts = getArtifactCounts();
 	let embed = new MessageEmbed().setAuthor({ name: availability })
 		.setTitle("Player Stats")

@@ -50,7 +50,7 @@ const ELEMENTS = {
 	}
 }
 exports.getResistances = function (element) {
-	if (exports.elementsList().includes(element)) {
+	if (element in ELEMENTS) {
 		return ELEMENTS[element].resistances;
 	} else {
 		return ["none"];
@@ -58,7 +58,7 @@ exports.getResistances = function (element) {
 }
 
 exports.getWeaknesses = function (element) {
-	if (exports.elementsList().includes(element)) {
+	if (element in ELEMENTS) {
 		return ELEMENTS[element].weaknesses;
 	} else {
 		return ["none"];
@@ -74,13 +74,13 @@ exports.elementsList = function (includeUntyped = false) {
 }
 
 exports.getColor = function (element) {
-	return ELEMENTS[element].color;
+	return ELEMENTS[element]?.color || "n/a";
 }
 
 exports.getEmoji = function (element) {
-	return ELEMENTS[element].emoji;
+	return ELEMENTS[element]?.emoji || "n/a";
 }
 
 exports.getOpposite = function (element) {
-	return ELEMENTS[element].opposite;
+	return ELEMENTS[element]?.opposite || "n/a";
 }

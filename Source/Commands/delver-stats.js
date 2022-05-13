@@ -3,8 +3,7 @@ const Command = require('../../Classes/Command.js');
 const options = [];
 module.exports = new Command("delver-stats", "Get your adventure-specific stats for the thread's adventure", false, false, options);
 
-// imports from files that depend on /Config
-let
+let // imports from files that depend on /Config
 	// adventureDAO
 	getAdventure,
 	// combatantDAO
@@ -17,7 +16,7 @@ module.exports.injectConfig = function (isProduction) {
 
 module.exports.execute = (interaction) => {
 	// Show the delver stats of the user
-	const adventure = getAdventure(interaction.channel.id);
+	const adventure = getAdventure(interaction.channelId);
 	if (adventure) {
 		let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 		if (delver) {

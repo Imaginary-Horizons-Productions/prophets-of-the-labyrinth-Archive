@@ -13,7 +13,7 @@ module.exports.injectConfig = function (isProduction) {
 module.exports.execute = (interaction) => {
 	// Remind delvers to input their vote or move
 	const adventure = getAdventure(interaction.channelId);
-	if (adventure?.state !== "completed") {
+	if (adventure && adventure.state !== "completed") {
 		let mentions = adventure.delvers.reduce((ids, delver) => ids.add(delver.id), new Set());
 		let inCombat = adventure.room.enemies && !adventure.room.enemies.every(enemy => enemy.hp === 0);
 		if (inCombat) {
