@@ -3,8 +3,7 @@ const Command = require('../../Classes/Command.js');
 const options = [];
 module.exports = new Command("delver-stats", "Get your adventure-specific stats for the thread's adventure", false, false, options);
 
-// imports from files that depend on /Config
-let
+let // imports from files that depend on /Config
 	// adventureDAO
 	getAdventure,
 	// combatantDAO
