@@ -28,7 +28,7 @@ module.exports.execute = (interaction, args) => {
 	let infoForNextRound = true;
 	let descriptionText = "";
 	switch (delver.predict) {
-		case "Movements": //TODONOW finish
+		case "Movements": // Shows speed, stagger and poise of all combatants
 			let combatants = adventure.room.enemies.filter(combatant => combatant.hp > 0)
 				.concat(adventure.delvers)
 				.sort((first, second) => {
@@ -48,7 +48,7 @@ module.exports.execute = (interaction, args) => {
 			}
 			descriptionText += "\nCombatants tied in speed may act in any order.";
 			break;
-		case "Vulnerabilities":
+		case "Vulnerabilities": // Shows elemental affinities and if critically hitting this turn for all combatants
 			infoForNextRound = false;
 			adventure.room.enemies.filter(combatant => combatant.hp > 0).concat(adventure.delvers).forEach(combatant => {
 				descriptionText += `\n__${getFullName(combatant, adventure.room.enemyTitles)}__ ${getEmoji(combatant.element)}\nCritical Hit: ${combatant.crit}\nWeaknesses: ${getWeaknesses(combatant.element).map(element => getEmoji(element)).join(" ")}\nResistances: ${getResistances(combatant.element).map(element => getEmoji(element)).join(" ")}\n`;
@@ -65,10 +65,10 @@ module.exports.execute = (interaction, args) => {
 				}
 			})
 			break;
-		case "Health":
+		case "Health": // Shows hp and modifiers for all combatants
 			infoForNextRound = false;
 			adventure.room.enemies.concat(adventure.delvers).filter(combatant => combatant.hp > 0).forEach(combatant => {
-				let modifiersText = modifiersToString(combatant);
+				let modifiersText = modifiersToString(combatant, false);
 				descriptionText += `\n__${getFullName(combatant, adventure.room.enemyTitles)}__\n${combatant.hp}/${combatant.maxHp} HP${combatant.block ? `, ${combatant.block} Block` : ""}\n${modifiersText ? `${modifiersText}` : "No modifiers\n"}`;
 			})
 			break;

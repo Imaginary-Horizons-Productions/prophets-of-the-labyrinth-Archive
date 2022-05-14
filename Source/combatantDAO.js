@@ -260,10 +260,17 @@ exports.removeModifier = function (combatant, { name: modifier, stacks, force = 
 	}
 }
 
-exports.modifiersToString = function (combatant) {
+/** Create a string containing the combatant's current modifiers
+ * @param {Combatant} combatant
+ * @param {boolean} includeStagger
+ * @returns {string}
+ */
+exports.modifiersToString = function (combatant, includeStagger) {
 	let modifiersText = "";
 	for (let modifier in combatant.modifiers) {
-		modifiersText += `*${modifier}${isNonStacking(modifier) ? "" : ` x ${combatant.modifiers[modifier]}`}* - ${getModifierDescription(modifier, combatant)}\n`;
+		if (includeStagger || modifier !== "Stagger") {
+			modifiersText += `*${modifier}${isNonStacking(modifier) ? "" : ` x ${combatant.modifiers[modifier]}`}* - ${getModifierDescription(modifier, combatant)}\n`;
+		}
 	}
 	return modifiersText;
 }
