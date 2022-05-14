@@ -30,9 +30,7 @@ jobs:
         run: node .github/workflows/updateCommands.js
 
       - name: Push Changes to Repo
-        run: git config --global init.defaultBranch main
-        run: git config --global --add safe.directory /github/workspace
-        run: git add .; git commit -m "updated commands page on wiki" && git push origin main || true
+        run: git config --global init.defaultBranch main; git config --global --add safe.directory /github/workspace; git add .; git commit -m "updated commands page on wiki" && git push origin main || true
 
       - name: Push Wiki Changes
         uses: Andrew-Chen-Wang/github-wiki-action@v2
