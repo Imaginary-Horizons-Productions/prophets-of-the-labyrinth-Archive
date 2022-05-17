@@ -1,10 +1,6 @@
-let SAFE_DELIMITER, generateRandomNumber;
-exports.injectConfig = function (isProduction) {
-	({ SAFE_DELIMITER, generateRandomNumber } = require("../../helpers.js").injectConfig(isProduction));
-	return this;
-}
+const { SAFE_DELIMITER, generateRandomNumber } = require("../../helpers.js");
 
-let roomWhitelist = [
+const roomWhitelist = [
 	"artifactguardian-royalslime.js",
 	"artifactguardian-treasureelemental.js",
 	"battle-bloodtailhawks.js",

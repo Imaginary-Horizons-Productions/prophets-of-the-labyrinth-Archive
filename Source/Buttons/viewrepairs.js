@@ -1,7 +1,7 @@
 const { MessageActionRow, MessageSelectMenu } = require('discord.js');
 const Button = require('../../Classes/Button.js');
 const { SAFE_DELIMITER } = require('../../helpers.js');
-const { getAdventure } = require("../adventureDAO.js").injectConfig(true);
+const { getAdventure } = require("../adventureDAO.js");
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
 
 module.exports = new Button("viewrepairs");

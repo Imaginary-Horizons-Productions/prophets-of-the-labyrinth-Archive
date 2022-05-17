@@ -13,12 +13,9 @@ const enemyWhitelist = [
 
 const enemyDictionary = {};
 
-exports.injectConfigEnemies = function (isProduction) {
-	for (const file of enemyWhitelist) {
-		const enemy = require(`./${file}`).injectConfig(isProduction);
-		enemyDictionary[enemy.name] = enemy;
-	}
-	return this;
+for (const file of enemyWhitelist) {
+	const enemy = require(`./${file}`);
+	enemyDictionary[enemy.name] = enemy;
 }
 
 exports.getEnemy = function (enemyName) {

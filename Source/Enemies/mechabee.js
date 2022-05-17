@@ -1,22 +1,18 @@
 const Enemy = require("../../Classes/Enemy.js");
+const { dealDamage, addModifier, removeModifier } = require("../combatantDAO.js");
+const { selectRandomFoe, selectSelf, selectNone, selectAllFoes, spawnEnemy } = require("../enemyDAO.js");
 
-// import from modules that depend on /Config
-let selectRandomFoe, selectSelf, selectNone, selectAllFoes, spawnEnemy, dealDamage, addModifier, removeModifier;
-module.exports.injectConfig = function (isProduction) {
-	({ selectRandomFoe, selectSelf, selectNone, selectAllFoes, spawnEnemy } = require("../enemyDAO.js").injectConfig(isProduction));
-	({ dealDamage, addModifier, removeModifier } = require("../combatantDAO.js").injectConfig(isProduction));
-	return new Enemy("Mechabee")
-		.setFirstAction("Sting")
-		.addAction({ name: "Sting", effect: stingEffect, selector: selectRandomFoe, next: mechabeePattern })
-		.addAction({ name: "Evade", effect: evadeEffect, selector: selectSelf, next: mechabeePattern })
-		.addAction({ name: "Call for Help", effect: summonEffect, selector: selectNone, next: mechabeePattern })
-		.addAction({ name: "Self-Destruct", effect: selfDestructEffect, selector: selectAllFoes, next: mechabeePattern })
-		.setBounty(25)
-		.setHp(200)
-		.setSpeed(100)
-		.setElement("Darkness")
-		.setStaggerThreshold(3);
-}
+module.exports = new Enemy("Mechabee")
+	.setFirstAction("Sting")
+	.addAction({ name: "Sting", effect: stingEffect, selector: selectRandomFoe, next: mechabeePattern })
+	.addAction({ name: "Evade", effect: evadeEffect, selector: selectSelf, next: mechabeePattern })
+	.addAction({ name: "Call for Help", effect: summonEffect, selector: selectNone, next: mechabeePattern })
+	.addAction({ name: "Self-Destruct", effect: selfDestructEffect, selector: selectAllFoes, next: mechabeePattern })
+	.setBounty(25)
+	.setHp(200)
+	.setSpeed(100)
+	.setElement("Darkness")
+	.setStaggerThreshold(3);
 
 const PATTERN = {
 	"Sting": "Evade",
@@ -49,7 +45,7 @@ function evadeEffect(target, user, isCrit, adventure) {
 }
 
 function summonEffect(target, user, isCrit, adventure) {
-	spawnEnemy(adventure, module.exports.injectConfig(true), true);
+	spawnEnemy(adventure, module.exports, true);
 	return "Another mechabee arrives.";
 }
 

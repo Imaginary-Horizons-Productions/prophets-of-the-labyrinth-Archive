@@ -1,28 +1,17 @@
 const Enemy = require("../../Classes/Enemy.js");
+const { addModifier, removeModifier, getFullName, dealDamage } = require("../combatantDAO.js");
+const { selectRandomFoe, selectSelf } = require("../enemyDAO.js");
 
-let // import from modules that depend on /Config
-	// combatantDAO
-	addModifier,
-	removeModifier,
-	getFullName,
-	dealDamage,
-	// enemyDAO
-	selectRandomFoe,
-	selectSelf;
-module.exports.injectConfig = function (isProduction) {
-	({ addModifier, removeModifier, getFullName, dealDamage } = require("../combatantDAO.js").injectConfig(isProduction));
-	({ selectRandomFoe, selectSelf } = require("../enemyDAO.js").injectConfig(isProduction));
-	return new Enemy("Fire-Arrow Frog")
-		.setFirstAction("random")
-		.addAction({ name: "Venom Cannon", effect: venomCannonEffect, selector: selectRandomFoe, next: firearrowFrogPattern })
-		.addAction({ name: "Evade", effect: evadeEffect, selector: selectSelf, next: firearrowFrogPattern })
-		.addAction({ name: "Goop Spray", effect: goopSprayEffect, selector: selectRandomFoe, next: firearrowFrogPattern })
-		.setBounty(25)
-		.setHp(250)
-		.setSpeed(100)
-		.setElement("Fire")
-		.setStaggerThreshold(2);
-}
+module.exports = new Enemy("Fire-Arrow Frog")
+	.setFirstAction("random")
+	.addAction({ name: "Venom Cannon", effect: venomCannonEffect, selector: selectRandomFoe, next: firearrowFrogPattern })
+	.addAction({ name: "Evade", effect: evadeEffect, selector: selectSelf, next: firearrowFrogPattern })
+	.addAction({ name: "Goop Spray", effect: goopSprayEffect, selector: selectRandomFoe, next: firearrowFrogPattern })
+	.setBounty(25)
+	.setHp(250)
+	.setSpeed(100)
+	.setElement("Fire")
+	.setStaggerThreshold(2);
 
 const PATTERN = {
 	"Venom Cannon": "random",

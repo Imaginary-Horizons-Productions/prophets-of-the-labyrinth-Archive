@@ -1,21 +1,12 @@
 const { MessageActionRow, MessageButton } = require('discord.js');
 const Command = require('../../Classes/Command.js');
+const { SAFE_DELIMITER } = require('../../helpers.js');
+const { getAdventure } = require('../adventureDAO.js');
 
 const options = [
 	{ type: "User", name: "invitee", description: "The user's mention", required: true, choices: {} }
 ];
 module.exports = new Command("invite", "Invite a friend to an adventure", false, false, options);
-
-let // imports from files that depend on /Config
-	// helpers
-	SAFE_DELIMITER,
-	// adventureDAO
-	getAdventure;
-module.exports.injectConfig = function (isProduction) {
-	({ SAFE_DELIMITER } = require('../../helpers.js').injectConfig(isProduction));
-	({ getAdventure } = require('../adventureDAO.js').injectConfig(isProduction));
-	return this;
-}
 
 module.exports.execute = (interaction) => {
 	// Invite a friend to an adventure

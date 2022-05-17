@@ -1,10 +1,6 @@
-let parseCount;
-exports.injectConfig = function (isProduction) {
-	({ parseCount } = require("../../helpers").injectConfig(isProduction));
-	return this;
-}
+const { parseCount } = require("../../helpers");
 
-var modifierWhitelist = [
+const modifierWhitelist = [
 	"absorb-darkness.js",
 	"absorb-earth.js",
 	"absorb-fire.js",

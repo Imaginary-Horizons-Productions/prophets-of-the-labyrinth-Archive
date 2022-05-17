@@ -2,35 +2,17 @@ const { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } = req
 const Adventure = require('../../Classes/Adventure.js');
 const Command = require('../../Classes/Command.js');
 const Delver = require('../../Classes/Delver.js');
+const { setAdventure } = require('../adventureDAO.js');
+const { getChallenge } = require('../Challenges/_challengeDictionary.js');
 const { elementsList, getColor } = require('../elementHelpers.js');
+const { getGuild } = require('../guildDAO.js');
+const { prerollBoss } = require('../Rooms/_roomDictionary.js');
+const { SAFE_DELIMITER, isSponsor, generateRandomNumber } = require('./../../helpers.js');
 
 const options = [
 	{ type: "String", name: "seed", description: "The value to base the run's random events on", required: false, choices: {} }
 ];
 module.exports = new Command("delve", "Start a new adventure", false, false, options);
-
-let // imports from files that depend on /Config
-	// helpers
-	SAFE_DELIMITER,
-	isSponsor,
-	generateRandomNumber,
-	// adventureDAO
-	setAdventure,
-	// roomDictionary
-	prerollBoss,
-	// guildDAO
-	getGuild,
-	// challengeDictionary
-	getChallenge;
-module.exports.injectConfig = function (isProduction) {
-	({ SAFE_DELIMITER, isSponsor, generateRandomNumber } = require("./../../helpers.js").injectConfig(isProduction));
-	({ setAdventure } = require("../adventureDAO.js").injectConfig(isProduction));
-	({ prerollBoss } = require('../Rooms/_roomDictionary.js').injectConfig(isProduction));
-	({ getGuild } = require("../guildDAO.js").injectConfig(isProduction));
-	({ getChallenge } = require('../Challenges/_challengeDictionary.js').injectConfigChallenges(isProduction));
-	return this;
-}
-
 
 let DESCRIPTORS = ["Shining", "New", "Dusty", "Old", "Floating", "Undersea", "Future", "Intense"];
 let LOCATIONS = ["Adventure", "Castle", "Labyrinth", "Ruins", "Plateau", "Dungeon", "Maze", "Fortress", "Dream"];

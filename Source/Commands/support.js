@@ -4,12 +4,6 @@ const Command = require('../../Classes/Command.js');
 const options = [];
 module.exports = new Command("support", "List ways to support PotL", false, false, options);
 
-// imports from files that depend on /Config
-// let ;
-module.exports.injectConfig = function (isProduction) {
-	return this;
-}
-
 module.exports.execute = (interaction) => {
 	interaction.reply({
 		embeds: [

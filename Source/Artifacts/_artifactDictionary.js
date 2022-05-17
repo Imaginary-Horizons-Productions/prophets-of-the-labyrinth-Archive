@@ -1,10 +1,6 @@
-let generateRandomNumber, parseCount;
-exports.injectConfigArtifacts = function (isProduction) {
-	({ generateRandomNumber, parseCount } = require("../../helpers.js").injectConfig(isProduction));
-	return this;
-}
+const { generateRandomNumber } = require("../../helpers.js");
 
-let artifactWhitelist = [
+const artifactWhitelist = [
 	"amethystspyglass.js",
 	"bloodshieldsword.js",
 	"enchantedmap.js",

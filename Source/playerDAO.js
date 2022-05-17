@@ -1,12 +1,7 @@
 const Player = require("../Classes/Player.js");
 const fs = require("fs");
-
-let ensuredPathSave, getGuild, setGuild;
-exports.injectConfig = function (isProduction) {
-	({ getGuild, setGuild } = require("./guildDAO.js").injectConfig(isProduction));
-	({ ensuredPathSave } = require("../helpers.js").injectConfig(isProduction));
-	return this;
-}
+const { ensuredPathSave } = require("../helpers.js");
+const { getGuild, setGuild } = require("./guildDAO.js");
 
 const dirPath = "./Saves"
 const fileName = "players.json";

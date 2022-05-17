@@ -1,19 +1,10 @@
 const Command = require('../../Classes/Command.js');
 const { MessageEmbed, MessageActionRow, MessageSelectMenu } = require('discord.js');
+const { SAFE_DELIMITER } = require('../../helpers.js');
+const { getAdventure } = require('../adventureDAO.js');
 
 const options = [];
 module.exports = new Command("party-stats", "Get info about the current adventure", false, false, options);
-
-let // imports from files that depend on /Config
-	// helpers
-	SAFE_DELIMITER,
-	// adventureDAO
-	getAdventure;
-module.exports.injectConfig = function (isProduction) {
-	({ SAFE_DELIMITER } = require('../../helpers.js').injectConfig(isProduction));
-	({ getAdventure } = require('../adventureDAO.js').injectConfig(isProduction));
-	return this;
-}
 
 module.exports.execute = (interaction) => {
 	// Show user the party stats
