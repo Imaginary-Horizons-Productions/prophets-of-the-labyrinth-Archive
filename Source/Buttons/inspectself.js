@@ -1,6 +1,6 @@
 const Button = require('../../Classes/Button.js');
 const { getAdventure } = require('../adventureDAO.js');
-const { delverStatsPayload } = require('../combatantDAO.js');
+const { delverStatsPayload } = require('../equipmentDAO.js');
 
 module.exports = new Button("inspectself");
 

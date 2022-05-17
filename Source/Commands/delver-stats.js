@@ -1,6 +1,6 @@
 const Command = require('../../Classes/Command.js');
 const { getAdventure } = require('../adventureDAO.js');
-const { delverStatsPayload } = require('../combatantDAO.js');
+const { delverStatsPayload } = require('../equipmentDAO.js');
 
 const options = [];
 module.exports = new Command("delver-stats", "Get your adventure-specific stats for the thread's adventure", false, false, options);
