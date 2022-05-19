@@ -26,53 +26,6 @@ exports.calculateTotalSpeed = function (combatant) {
 	return Math.ceil(totalSpeed);
 }
 
-/** Generates an object to Discord.js's specification that corresponds with a delver's in-adventure stats
- * @param {Delver} delver
- * @param {number} equipmentCapacity
- * @returns {MessageOptions}
- */
-exports.delverStatsPayload = function (delver, equipmentCapacity) {
-	let embed = new MessageEmbed().setColor(getColor(delver.element))
-		.setTitle(exports.getFullName(delver, {}))
-		.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nPredicts: ${delver.predict}\nYour ${getEmoji(delver.element)} moves add 1 Stagger to enemies and remove 1 Stagger from allies.`)
-		.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
-	for (let index = 0; index < equipmentCapacity; index++) {
-		if (delver.equipment[index]) {
-			embed.addField(...equipmentToEmbedField(delver.equipment[index].name, delver.equipment[index].uses));
-		} else {
-			embed.addField(`${ordinalSuffixEN(index + 1)} Equipment Slot`, "No equipment yet...")
-		}
-	}
-	let components = [];
-	if (Object.keys(delver.modifiers).length) {
-		let actionRow = [];
-		let modifiers = Object.keys(delver.modifiers);
-		let buttonCount = Math.min(modifiers.length, 4); // 5 buttons per row, save 1 spot for "and X more..." button
-		for (let i = 0; i < buttonCount; i++) {
-			let modifierName = modifiers[i];
-			let style;
-			if (isBuff(modifierName)) {
-				style = "PRIMARY";
-			} else if (isDebuff(modifierName)) {
-				style = "DANGER";
-			} else {
-				style = "SECONDARY";
-			}
-			actionRow.push(new MessageButton().setCustomId(`modifier${SAFE_DELIMITER}${modifierName}${SAFE_DELIMITER}${i}`)
-				.setLabel(`${modifierName}${isNonStacking(modifierName) ? "" : ` x ${delver.modifiers[modifierName]}`}`)
-				.setStyle(style))
-		}
-		if (modifiers.length > 4) {
-			actionRow.push(new MessageButton().setCustomId(`modifier${SAFE_DELIMITER}MORE`)
-				.setLabel(`${modifiers.length - 4} more...`)
-				.setStyle("SECONDARY")
-				.setDisabled(delver.predict !== "Health"))
-		}
-		components.push(new MessageActionRow().addComponents(...actionRow));
-	}
-	return { embeds: [embed], components, ephemeral: true };
-}
-
 exports.dealDamage = async function (target, user, damage, isUnblockable, element, adventure) {
 	let targetName = exports.getFullName(target, adventure.room.enemyTitles);
 	let targetModifiers = Object.keys(target.modifiers);
