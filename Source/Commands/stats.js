@@ -1,28 +1,14 @@
 const { MessageEmbed } = require('discord.js');
 const Command = require('../../Classes/Command.js');
+const { isSponsor } = require('../../helpers.js');
+const { getArtifactCounts } = require('../Artifacts/_artifactDictionary.js');
+const { getGuild } = require('../guildDAO.js');
+const { getPlayer } = require('../playerDAO.js');
 
 const options = [
 	{ type: "User", name: "user", description: "The user's mention", required: false, choices: {} }
 ];
 module.exports = new Command("stats", "Get the stats for a user (default: yourself)", false, false, options);
-
-// imports from files that depend on /Config
-let
-	// artifactDictionary
-	getArtifactCounts,
-	// playerDAO
-	getPlayer,
-	// helpers
-	isSponsor,
-	// guildDAO
-	getGuild;
-module.exports.injectConfig = function (isProduction) {
-	({ getArtifactCounts } = require('../Artifacts/_artifactDictionary.js').injectConfigArtifacts(isProduction));
-	({ getPlayer } = require('../playerDAO.js').injectConfig(isProduction));
-	({ isSponsor } = require('../../helpers.js').injectConfig(isProduction));
-	({ getGuild } = require('../guildDAO.js').injectConfig(isProduction));
-	return this;
-}
 
 module.exports.execute = (interaction) => {
 	// Get the stats on a user

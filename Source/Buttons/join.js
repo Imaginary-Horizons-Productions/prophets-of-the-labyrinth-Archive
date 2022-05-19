@@ -2,7 +2,7 @@ const Button = require('../../Classes/Button.js');
 const Delver = require('../../Classes/Delver.js');
 const { isSponsor, maxDelverCount } = require('../../helpers.js');
 const { getGuild } = require('../guildDAO.js');
-const { getAdventure, setAdventure } = require("./../adventureDAO.js").injectConfig(true);
+const { getAdventure, setAdventure } = require("./../adventureDAO.js");
 
 module.exports = new Button("join");
 

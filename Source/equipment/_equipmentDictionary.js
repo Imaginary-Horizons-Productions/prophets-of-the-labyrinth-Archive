@@ -1,8 +1,4 @@
-let generateRandomNumber;
-exports.injectConfig = function (isProduction) {
-	({ generateRandomNumber } = require("../../helpers.js").injectConfig(isProduction));
-	return this;
-}
+const { generateRandomNumber } = require("../../helpers.js");
 const { getEmoji } = require("../elementHelpers.js");
 
 const equipmentWhitelist = [

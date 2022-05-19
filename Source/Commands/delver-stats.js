@@ -1,18 +1,9 @@
 const Command = require('../../Classes/Command.js');
+const { getAdventure } = require('../adventureDAO.js');
+const { delverStatsPayload } = require('../equipmentDAO.js');
 
 const options = [];
 module.exports = new Command("delver-stats", "Get your adventure-specific stats for the thread's adventure", false, false, options);
-
-let // imports from files that depend on /Config
-	// adventureDAO
-	getAdventure,
-	// combatantDAO
-	delverStatsPayload;
-module.exports.injectConfig = function (isProduction) {
-	({ getAdventure } = require('../adventureDAO.js').injectConfig(isProduction));
-	({ delverStatsPayload } = require('../combatantDAO.js').injectConfig(isProduction));
-	return this;
-}
 
 module.exports.execute = (interaction) => {
 	// Show the delver stats of the user

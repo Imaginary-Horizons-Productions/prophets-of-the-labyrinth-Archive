@@ -7,12 +7,11 @@ const { Routes } = require("discord-api-types/v9");
 const GuildProfile = require("./Classes/GuildProfile");
 const versionData = require('./Config/versionData.json');
 
-const isProduction = true;
 const { SAFE_DELIMITER } = require('./helpers.js');
-const { loadAdventures } = require("./Source/adventureDAO.js").injectConfig(isProduction);
-const { loadGuilds, setGuild } = require("./Source/guildDAO.js").injectConfig(isProduction);
-const { loadPlayers } = require("./Source/playerDAO.js").injectConfig(isProduction);
-const { getCommand, injectConfigCommands, slashData } = require(`./Source/Commands/_commandDictionary.js`);
+const { loadAdventures } = require("./Source/adventureDAO.js");
+const { loadGuilds, setGuild } = require("./Source/guildDAO.js");
+const { loadPlayers } = require("./Source/playerDAO.js");
+const { getCommand, slashData } = require(`./Source/Commands/_commandDictionary.js`);
 const { getSelect } = require("./Source/Selects/_selectDictionary.js");
 const { getButton } = require("./Source/Buttons/_buttonDictionary.js");
 const { getPremiumUsers, getVersionEmbed } = require("./helpers.js");
@@ -46,7 +45,6 @@ const client = new Client({
 client.on("ready", () => {
 	console.log(`Connected as ${client.user.tag}`);
 
-	injectConfigCommands(isProduction);
 	// Post version notes
 	if (versionData.announcementsChannelId) {
 		readFile('./ChangeLog.md', { encoding: 'utf8' }).then(data => {

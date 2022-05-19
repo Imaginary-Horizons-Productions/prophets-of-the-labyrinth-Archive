@@ -8,59 +8,18 @@ const Delver = require("../Classes/Delver.js");
 const Room = require("../Classes/Room.js");
 const Resource = require("../Classes/Resource.js");
 const { getWeaknesses, getColor } = require("./elementHelpers.js");
-
-// define injectable vars
-let
-	//helpers
-	ensuredPathSave,
-	parseCount,
-	generateRandomNumber,
-	clearComponents,
-	ordinalSuffixEN,
-	SAFE_DELIMITER,
-	//guildDAO
-	getGuild,
-	//playerDAO
-	setPlayer,
-	getPlayer,
-	//enemyDAO
-	spawnEnemy,
-	// moveDAO
-	resolveMove,
-	//combatantDAO
-	clearBlock,
-	removeModifier,
-	//roomDictionary
-	manufactureRoomTemplate,
-	prerollBoss,
-	//modifierDictionary
-	getTurnDecrement,
-	//equipmentDictionary
-	rollEquipmentDrop,
-	getEquipmentProperty,
-	buildEquipmentDescription,
-	//artifactDictionary
-	rollArtifact,
-	//enemyDictionary
-	getEnemy,
-	//challengeDictionary
-	getChallenge,
-	rollChallenges;
-exports.injectConfig = function (isProduction) {
-	({ ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordinalSuffixEN, SAFE_DELIMITER } = require("../helpers.js").injectConfig(isProduction));
-	({ getGuild } = require("./guildDAO.js").injectConfig(isProduction));
-	({ setPlayer, getPlayer } = require("./playerDAO.js").injectConfig(isProduction));
-	({ spawnEnemy } = require("./enemyDAO.js").injectConfig(isProduction));
-	({ resolveMove } = require("./moveDAO.js").injectConfig(isProduction));
-	({ clearBlock, removeModifier } = require("./combatantDAO.js").injectConfig(isProduction));
-	({ manufactureRoomTemplate, prerollBoss } = require("./Rooms/_roomDictionary.js").injectConfig(isProduction));
-	({ getTurnDecrement } = require("./Modifiers/_modifierDictionary.js").injectConfig(isProduction));
-	({ rollEquipmentDrop, getEquipmentProperty, buildEquipmentDescription } = require("./equipment/_equipmentDictionary.js").injectConfig(isProduction));
-	({ getArtifact, rollArtifact } = require("./Artifacts/_artifactDictionary.js").injectConfigArtifacts(isProduction));
-	({ getEnemy } = require("./Enemies/_enemyDictionary").injectConfigEnemies(isProduction));
-	({ getChallenge, rollChallenges } = require("./Challenges/_challengeDictionary.js").injectConfigChallenges(isProduction));
-	return this;
-}
+const { ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordinalSuffixEN, SAFE_DELIMITER } = require("../helpers.js");
+const { getGuild } = require("./guildDAO.js");
+const { setPlayer, getPlayer } = require("./playerDAO.js");
+const { spawnEnemy } = require("./enemyDAO.js");
+const { resolveMove } = require("./moveDAO.js");
+const { clearBlock, removeModifier } = require("./combatantDAO.js");
+const { manufactureRoomTemplate, prerollBoss } = require("./Rooms/_roomDictionary.js");
+const { getTurnDecrement } = require("./Modifiers/_modifierDictionary.js");
+const { rollEquipmentDrop, getEquipmentProperty, buildEquipmentDescription } = require("./equipment/_equipmentDictionary.js");
+const { rollArtifact } = require("./Artifacts/_artifactDictionary.js");
+const { getEnemy } = require("./Enemies/_enemyDictionary");
+const { getChallenge, rollChallenges } = require("./Challenges/_challengeDictionary.js");
 
 const dirPath = "./Saves";
 const fileName = "adventures.json";

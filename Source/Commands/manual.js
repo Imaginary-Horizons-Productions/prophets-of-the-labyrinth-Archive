@@ -1,4 +1,5 @@
 const Command = require('../../Classes/Command.js');
+const { embedTemplate } = require('../../helpers.js');
 const { getEmoji, getWeaknesses, getResistances, getColor } = require('../elementHelpers.js');
 
 const options = [
@@ -14,14 +15,6 @@ const options = [
 	}
 ];
 module.exports = new Command("manual", "Get information about Prophets of the Labyrinth v0.8.0", false, false, options);
-
-
-let // imports from files that depend on /Config
-	embedTemplate;
-module.exports.injectConfig = function (isProduction) {
-	({ embedTemplate } = require('../../helpers.js').injectConfig(isProduction));
-	return this;
-}
 
 module.exports.execute = (interaction) => {
 	// Give information about the game

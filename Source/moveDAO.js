@@ -1,12 +1,7 @@
 const { getFullName, dealDamage, gainHealth, removeModifier } = require("./combatantDAO.js");
-
-let getEnemy, selectAllFoes, getEquipmentProperty;
-exports.injectConfig = function (isProduction) {
-	({ getEnemy } = require("./Enemies/_enemyDictionary.js").injectConfigEnemies(isProduction));
-	({ selectAllFoes } = require("./enemyDAO.js").injectConfig(isProduction));
-	({ getEquipmentProperty } = require("./equipment/_equipmentDictionary.js").injectConfig(isProduction));
-	return this;
-}
+const { getEnemy } = require("./Enemies/_enemyDictionary.js");
+const { selectAllFoes } = require("./enemyDAO.js");
+const { getEquipmentProperty } = require("./equipment/_equipmentDictionary.js");
 
 exports.resolveMove = async function (move, adventure) {
 	let userTeam = move.userTeam === "delver" ? adventure.delvers : adventure.room.enemies;
