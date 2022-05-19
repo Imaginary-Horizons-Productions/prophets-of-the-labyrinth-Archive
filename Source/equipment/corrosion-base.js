@@ -1,7 +1,7 @@
 const Equipment = require('../../Classes/Equipment.js');
 const { addModifier } = require('../combatantDAO.js');
 
-module.exports = new Equipment("Disarm", 1, "*Inflict @{mod1Stacks} @{mod1} on a foe*\nCritical Hit: Inflict @{mod2Stacks} @{mod2} as well", "Light", effect, ["Flanking Disarm"])
+module.exports = new Equipment("Corrosion", 1, "*Inflict @{mod1Stacks} @{mod1} on a foe*\nCritical Hit: Inflict @{mod2Stacks} @{mod2} as well", "Fire", effect, ["Flanking Corrosion"])
 	.setCategory("Spell")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Power Down", stacks: 40 }, { name: "Stagger", stacks: 1 }])

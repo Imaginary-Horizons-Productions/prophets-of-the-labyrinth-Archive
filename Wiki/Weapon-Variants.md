@@ -29,7 +29,7 @@ Applies Exposed to target
 
 #### Avaialble on
 - Life Drain (Darkness)
-- Disarm (Light)
+- Corrosion (Fire)
 
 ### Guarding
 Adds block on the user
@@ -192,7 +192,7 @@ Bonus speed
 
 #### Avaialble on
 - all Bows (Wind)
-- all Sun Flare (Fire)
+- all Sun Flare (Light)
 - Barrier (Light)
 - Buckler (Earth)
 - Life Drain (Darkness)
@@ -215,6 +215,6 @@ Increased damage against enemies with 0 block
 - Life Drain (attack a foe and gain hp)
 - Warhammer (bonus damage on stunned enemy)
 - Inspire (power up to ally)
-- Disarm (power down to enemy)
+- Corrosion (power down to enemy)
 - Midas Staff (apply Curse of Midas)
 - Pact of Healing (pay hp to apply regen)

@@ -2,7 +2,7 @@ const Button = require('../../Classes/Button.js');
 const { MessageEmbed, MessageActionRow, MessageSelectMenu, MessageButton } = require('discord.js');
 const Delver = require('../../Classes/Delver.js');
 const { SAFE_DELIMITER } = require('../../helpers.js');
-const { getEmoji, getResistances, getWeaknesses, getColor } = require('../elementHelpers.js');
+const { getEmoji, getWeaknesses, getColor } = require('../elementHelpers.js');
 const { getAdventure } = require('../adventureDAO.js');
 const { getFullName } = require("../combatantDAO.js");
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
@@ -93,15 +93,7 @@ module.exports.execute = (interaction, args) => {
 
 function miniPredict(predictType, combatant) {
 	switch (predictType) {
-		case "Targets":
-			return `Resistances: ${getResistances(combatant.element).map(element => getEmoji(element)).join(" ")}`;
-		case "Critical Hits":
-			return `Weaknesses: ${getWeaknesses(combatant.element).map(element => getEmoji(element)).join(" ")}`;
-		case "Health":
-			return `HP: ${combatant.hp}/${combatant.maxHp}`;
-		case "Move Order":
-			return `Speed Bonus: ${combatant.roundSpeed >= 0 ? "+" : ""}${combatant.roundSpeed + combatant.actionSpeed}`;
-		case "Modifiers":
+		case "Movements":
 			let staggerCount = combatant.modifiers.Stagger || 0;
 			let bar = "";
 			for (let i = 0; i < combatant.staggerThreshold; i++) {
@@ -112,11 +104,15 @@ function miniPredict(predictType, combatant) {
 				}
 			}
 			return `Stagger: ${bar}`;
-		case "Enemy Moves":
+		case "Vulnerabilities":
+			return `Weaknesses: ${getWeaknesses(combatant.element).map(element => getEmoji(element)).join(" ")}`;
+		case "Intents":
 			if (combatant instanceof Delver) {
 				return "Move in 2 rounds: Ask them";
 			} else {
 				return `Move in 2 rounds: ${combatant.nextAction}`;
 			}
+		case "Health":
+			return `HP: ${combatant.hp}/${combatant.maxHp}`;
 	}
 }

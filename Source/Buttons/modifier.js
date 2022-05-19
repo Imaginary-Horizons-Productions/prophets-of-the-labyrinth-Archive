@@ -29,7 +29,7 @@ module.exports.execute = (interaction, [modifierName]) => {
 	} else {
 		let embed = new MessageEmbed().setColor("GREY")
 			.setTitle("All Modifiers")
-			.setDescription(modifiersToString(delver))
+			.setDescription(modifiersToString(delver, true))
 		interaction.reply({ embeds: [embed], ephemeral: true });
 	}
 }
