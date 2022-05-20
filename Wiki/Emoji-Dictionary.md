@@ -3,10 +3,9 @@ Here is a list of reserved emoji and their meanings:
 ## Elements
 * 🌿 Earth
 * 🔥 Fire
-* ✨ Light
 * 💦 Water
 * 💨 Wind
-* ♟️ Darkness
+* 🌐 Untyped
 
 ## UI
 * ✔️ Party took this option/path

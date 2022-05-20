@@ -6,5 +6,5 @@ module.exports = new Enemy("name")
 	.setBounty()
 	.setHp()
 	.setSpeed()
-	.setElement() // enum: "Fire", "Water", "Earth", "Wind", "Light", "Darkness", "@{adventure}", "@{adventureOpposite}"
+	.setElement() // enum: "Fire", "Water", "Earth", "Wind", "@{adventure}", "@{adventureOpposite}"
 	.setStaggerThreshold();

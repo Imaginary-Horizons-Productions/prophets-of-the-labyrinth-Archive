@@ -55,8 +55,8 @@ const equipmentWhitelist = [
 	"midasstaff-swift.js",
 	"potion-base.js",
 	"potion-earthen.js",
-	"potion-inky.js",
 	"potion-watery.js",
+	"potion-windy.js",
 	"scythe-base.js",
 	"scythe-lethal.js",
 	"scythe-piercing.js",
@@ -99,16 +99,6 @@ const equipmentDrops = {
 		"2": []
 	},
 	Fire: {
-		"0": [],
-		"1": [],
-		"2": []
-	},
-	Light: {
-		"0": [],
-		"1": [],
-		"2": []
-	},
-	Darkness: {
 		"0": [],
 		"1": [],
 		"2": []

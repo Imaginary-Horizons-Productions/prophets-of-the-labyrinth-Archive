@@ -5,7 +5,7 @@ module.exports = new RoomTemplate()
 	.setTypes("Event")
 	.setTitle("Free Gold?")
 	.setDescription("A large pile of gold sits quietly in the middle of the room, seemingly alone.")
-	.setElement("Light");
+	.setElement("Earth");
 
 module.exports.uiRows.push(new MessageActionRow().addComponents(
 	new MessageButton().setCustomId("takegold")

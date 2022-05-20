@@ -3,7 +3,7 @@ const Button = require('../../Classes/Button.js');
 const { getAdventure, updateRoomHeader, setAdventure } = require('../adventureDAO.js');
 const { getTargetList } = require('../moveDAO.js');
 const { getFullName, calculateTotalSpeed, modifiersToString } = require("../combatantDAO.js");
-const { getResistances, getWeaknesses, getColor, getEmoji } = require('../elementHelpers.js');
+const { getWeakness, getColor, getEmoji } = require('../elementHelpers.js');
 
 module.exports = new Button("predict");
 
@@ -51,7 +51,7 @@ module.exports.execute = (interaction, args) => {
 		case "Vulnerabilities": // Shows elemental affinities and if critically hitting this turn for all combatants
 			infoForNextRound = false;
 			adventure.room.enemies.filter(combatant => combatant.hp > 0).concat(adventure.delvers).forEach(combatant => {
-				descriptionText += `\n__${getFullName(combatant, adventure.room.enemyTitles)}__ ${getEmoji(combatant.element)}\nCritical Hit: ${combatant.crit}\nWeaknesses: ${getWeaknesses(combatant.element).map(element => getEmoji(element)).join(" ")}\nResistances: ${getResistances(combatant.element).map(element => getEmoji(element)).join(" ")}\n`;
+				descriptionText += `\n__${getFullName(combatant, adventure.room.enemyTitles)}__ ${getEmoji(combatant.element)}\nCritical Hit: ${combatant.crit}\nWeakness: ${getEmoji(getWeakness(combatant.element))}\nResistance: ${getEmoji(combatant.element)}\n`;
 			});
 			break;
 		case "Intents": // Shows each enemy's target(s) in the next round and the names of the next two moves

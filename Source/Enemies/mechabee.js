@@ -11,7 +11,7 @@ module.exports = new Enemy("Mechabee")
 	.setBounty(25)
 	.setHp(200)
 	.setSpeed(100)
-	.setElement("Darkness")
+	.setElement("Earth")
 	.setStaggerThreshold(3);
 
 const PATTERN = {

@@ -7,7 +7,7 @@ const Enemy = require("../Classes/Enemy.js");
 const Delver = require("../Classes/Delver.js");
 const Room = require("../Classes/Room.js");
 const Resource = require("../Classes/Resource.js");
-const { getWeaknesses, getColor } = require("./elementHelpers.js");
+const { getWeakness, getColor } = require("./elementHelpers.js");
 const { ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordinalSuffixEN, SAFE_DELIMITER } = require("../helpers.js");
 const { getGuild } = require("./guildDAO.js");
 const { setPlayer, getPlayer } = require("./playerDAO.js");
@@ -135,8 +135,7 @@ exports.nextRoom = async function (roomType, thread) {
 	if (adventure.room.element === "@{adventure}") {
 		adventure.room.element = adventure.element;
 	} else if (adventure.room.element === "@{adventureWeakness}") {
-		let weaknesses = getWeaknesses(adventure.element);
-		adventure.room.element = weaknesses[generateRandomNumber(adventure, weaknesses.length, "general")];
+		adventure.room.element = getWeakness(adventure.element);
 	}
 	let embed = new MessageEmbed().setColor(getColor(adventure.room.element))
 		.setAuthor({ name: roomHeaderString(adventure), iconURL: thread.client.user.displayAvatarURL() })

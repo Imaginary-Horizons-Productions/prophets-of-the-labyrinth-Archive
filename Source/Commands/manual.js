@@ -1,6 +1,6 @@
 const Command = require('../../Classes/Command.js');
 const { embedTemplate } = require('../../helpers.js');
-const { getEmoji, getWeaknesses, getResistances, getColor } = require('../elementHelpers.js');
+const { getEmoji, getWeakness, getColor } = require('../elementHelpers.js');
 
 const options = [
 	{
@@ -44,13 +44,11 @@ module.exports.execute = (interaction) => {
 			break;
 		case "Elements":
 			response.embeds = [embedTemplate(interaction.client.user.displayAvatarURL()).setTitle("Elements")
-				.setDescription("Each combatant is associated with one of the following elements: Fire, Wind, Light, Water, Earth, Darkness. Based on this element, damage they receive may be increased, decreased, or not changed based on the element of the received damage (damage can be \"Untyped\"). This change is calculated before block.")
-				.addField(`Fire ${getEmoji("Fire")}`, `Weaknesses (2x damage from): ${getWeaknesses("Fire").map(element => getEmoji(element)).join(", ")}\nResistances (1/2 damage from): ${getResistances("Fire").map(element => getEmoji(element)).join(", ")}\nColor: ${getColor("Fire")}`)
-				.addField(`Wind ${getEmoji("Wind")}`, `Weaknesses (2x damage from): ${getWeaknesses("Wind").map(element => getEmoji(element)).join(", ")}\nResistances (1/2 damage from): ${getResistances("Wind").map(element => getEmoji(element)).join(", ")}\nColor: ${getColor("Wind")}`)
-				.addField(`Light ${getEmoji("Light")}`, `Weaknesses (2x damage from): ${getWeaknesses("Light").map(element => getEmoji(element)).join(", ")}\nResistances (1/2 damage from): ${getResistances("Light").map(element => getEmoji(element)).join(", ")}\nColor: ${getColor("Light")}`)
-				.addField(`Water ${getEmoji("Water")}`, `Weaknesses (2x damage from): ${getWeaknesses("Water").map(element => getEmoji(element)).join(", ")}\nResistances (1/2 damage from): ${getResistances("Water").map(element => getEmoji(element)).join(", ")}\nColor: ${getColor("Water")}`)
-				.addField(`Earth ${getEmoji("Earth")}`, `Weaknesses (2x damage from): ${getWeaknesses("Earth").map(element => getEmoji(element)).join(", ")}\nResistances (1/2 damage from): ${getResistances("Earth").map(element => getEmoji(element)).join(", ")}\nColor: ${getColor("Earth")}`)
-				.addField(`Darkness ${getEmoji("Darkness")}`, `Weaknesses (2x damage from): ${getWeaknesses("Darkness").map(element => getEmoji(element)).join(", ")}\nResistances (1/2 damage from): ${getResistances("Darkness").map(element => getEmoji(element)).join(", ")}\nColor: ${getColor("Darkness")}`)
+				.setDescription("Each combatant is associated with one of the following elements: Fire, Wind, Water, Earth. Based on this element, damage they receive may be increased, decreased, or not changed based on the element of the received damage (damage can be \"Untyped\"). This change is calculated before block.")
+				.addField(`Fire ${getEmoji("Fire")}`, `Weakness (2x damage from): ${getEmoji(getWeakness("Fire"))}\nResistance (1/2 damage from): ${getEmoji("Fire")}\nColor: ${getColor("Fire")}`)
+				.addField(`Wind ${getEmoji("Wind")}`, `Weakness (2x damage from): ${getEmoji(getWeakness("Wind"))}\nResistance (1/2 damage from): ${getEmoji("Wind")}\nColor: ${getColor("Wind")}`)
+				.addField(`Water ${getEmoji("Water")}`, `Weakness (2x damage from): ${getEmoji(getWeakness("Water"))}\nResistance (1/2 damage from): ${getEmoji("Water")}\nColor: ${getColor("Water")}`)
+				.addField(`Earth ${getEmoji("Earth")}`, `Weakness (2x damage from): ${getEmoji(getWeakness("Earth"))}\nResistance (1/2 damage from): ${getEmoji("Earth")}\nColor: ${getColor("Earth")}`)
 				.addField("Matching Element Stagger", "When a combatant makes a move that matches their element, their target gets a bonus effect. If the target is an ally, they are relieved of 1 Stagger. If the target is an enemy, they suffer 1 additional Stagger. Check the page on Stagger to learn more about Stagger and Stun.")
 			];
 			break;

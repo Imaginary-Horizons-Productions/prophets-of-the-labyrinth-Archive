@@ -18,8 +18,6 @@ const ROLL_TABLE = {
 	Wind: [],
 	Water: [],
 	Fire: [],
-	Light: [],
-	Darkness: [],
 	Untyped: []
 }
 
