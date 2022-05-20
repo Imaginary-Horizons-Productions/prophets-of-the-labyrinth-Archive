@@ -4,7 +4,7 @@ const { getColor } = require('../elementHelpers.js');
 const { equipmentExists, buildEquipmentDescription, getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
 
 const options = [
-	{ type: "String", name: "equipment-name", description: "The name of the equipment (case-sensitive)", required: true, choices: {} }
+	{ type: "String", name: "equipment-name", description: "The name of the equipment (case-sensitive)", required: true, choices: [] }
 ];
 module.exports = new Command("armory", "Look up the stats on a type of equipment", false, false, options);
 

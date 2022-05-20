@@ -2,7 +2,7 @@ const Command = require('../../Classes/Command.js');
 const { versionData: { guildId, feedbackChannel } } = require("./../../helpers.js");
 
 const options = [
-	{ type: "String", name: "feedback", description: "Please describe the bug or feature request as clearly as possible", required: true, choices: {} }
+	{ type: "String", name: "feedback", description: "Please describe the bug or feature request as clearly as possible", required: true, choices: [] }
 ];
 module.exports = new Command("feedback", "Send PotL feedback to the test server and get an invite", false, false, options);
 
