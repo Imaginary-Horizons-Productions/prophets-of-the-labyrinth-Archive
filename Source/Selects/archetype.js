@@ -21,6 +21,7 @@ module.exports.execute = (interaction, args) => {
 			delver.equipment = archetypeTemplate.signatureEquipment.map(equipmentName => {
 				return { name: equipmentName, uses: getEquipmentProperty(equipmentName, "maxUses") }
 			});
+			const wasReady = adventure.delvers.every(delver => delver.title); 
 			delver.setTitle(archetypeTemplate.title)
 				.setHp(archetypeTemplate.maxHp)
 				.setSpeed(archetypeTemplate.speed)
@@ -35,8 +36,8 @@ module.exports.execute = (interaction, args) => {
 				)]
 			});
 			interaction.channel.send(`${interaction.user} ${isSwitching ? "has switched to" : "will be playing as"} ${archetype}.`).then(() => {
-				// Check if all ready
-				if (adventure.delvers.every(delver => delver.title)) {
+				// Check if all ready... wasReady is used to guarantee only one ready-button in a racecondition
+				if (adventure.delvers.every(delver => delver.title) && !wasReady) {
 					let readyButton = [
 						new MessageActionRow().addComponents(
 							new MessageButton().setCustomId("ready")
@@ -46,7 +47,7 @@ module.exports.execute = (interaction, args) => {
 						)
 					];
 
-					// if startMessageId already exists, player has changed class, so delete extra start message
+					// if adventure.messageIds.start already exists, player has changed class, so delete extra start message
 					if (adventure.messageIds.start) {
 						interaction.channel.messages.delete(adventure.messageIds.start);
 						delete adventure.messageIds.start;
