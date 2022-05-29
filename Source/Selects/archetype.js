@@ -21,7 +21,7 @@ module.exports.execute = (interaction, args) => {
 			delver.equipment = archetypeTemplate.signatureEquipment.map(equipmentName => {
 				return { name: equipmentName, uses: getEquipmentProperty(equipmentName, "maxUses") }
 			});
-			const wasReady = adventure.delvers.every(delver => delver.title);
+			const wasReady = adventure.delvers.every(delver => delver.title); 
 			delver.setTitle(archetypeTemplate.title)
 				.setHp(archetypeTemplate.maxHp)
 				.setSpeed(archetypeTemplate.speed)
@@ -36,7 +36,7 @@ module.exports.execute = (interaction, args) => {
 				)]
 			});
 			interaction.channel.send(`${interaction.user} ${isSwitching ? "has switched to" : "will be playing as"} ${archetype}.`).then(() => {
-				// Check if all ready
+				// Check if all ready... wasReady is used to guarantee only one ready-button in a racecondition
 				if (adventure.delvers.every(delver => delver.title) && !wasReady) {
 					let readyButton = [
 						new MessageActionRow().addComponents(
