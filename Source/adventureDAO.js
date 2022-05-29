@@ -247,7 +247,8 @@ exports.endRoom = function (roomType, thread) {
 	let adventure = exports.getAdventure(thread.id);
 	adventure.depth++;
 	adventure.room = {};
-	adventure.roomCandidates = {};
+	// reset roomCandidates early enough (before being deferred to the callback stack) to prevent routevote racecondition
+	adventure.roomCandidates = {}; 
 
 	for (const challengeName in adventure.challenges) {
 		if (adventure.challenges[challengeName].duration) {
