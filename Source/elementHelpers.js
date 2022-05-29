@@ -15,7 +15,7 @@ const ELEMENTS = {
 		color: "BLUE",
 		emoji: "💦",
 		opposite: "Fire",
-		weakness: "Earth"
+		weakness: "Wind"
 	},
 	"Wind": {
 		color: "YELLOW",
