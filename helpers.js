@@ -3,13 +3,8 @@ const fs = require("fs");
 
 exports.versionData = {};
 exports.sponsors = {};
-exports.injectConfig = function (isProduction) {
-	if (isProduction) {
-		exports.versionData = require('./Config/versionData.json');
-		exports.sponsors = require("./Config/sponsors.json");
-	}
-	return this;
-}
+exports.versionData = require('./Config/versionData.json');
+exports.sponsors = require("./Config/sponsors.json");
 
 exports.SAFE_DELIMITER = "→";
 

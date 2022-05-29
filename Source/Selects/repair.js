@@ -6,15 +6,15 @@ const { decrementForgeSupplies } = require('../roomDAO.js');
 module.exports = new Select("repair");
 
 module.exports.execute = (interaction, [roomMessageId]) => {
-	// Grant half the selected weapon's max uses
+	// Grant half the selected equipment's max uses
 	let adventure = getAdventure(interaction.channel.id);
 	if (adventure.room.resources.forgeSupplies.count > 0) {
 		let user = adventure.delvers.find(delver => delver.id === interaction.user.id);
-		let [weaponName, weaponIndex, value] = interaction.values[0].split(SAFE_DELIMITER);
-		user.weapons[weaponIndex].uses += Number(value);
+		let [equipmentName, index, value] = interaction.values[0].split(SAFE_DELIMITER);
+		user.equipment[index].uses += Number(value);
 		decrementForgeSupplies(interaction, roomMessageId, adventure.room).then(() => {
 			interaction.update({ components: [] });
-			interaction.channel.send({ content: `${interaction.user} repaired ${value} uses on their ${weaponName}.` });
+			interaction.channel.send({ content: `${interaction.user} repaired ${value} uses on their ${equipmentName}.` });
 			setAdventure(adventure);
 		});
 	} else {

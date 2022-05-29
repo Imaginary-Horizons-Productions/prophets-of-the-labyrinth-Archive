@@ -1,19 +1,13 @@
 const Command = require('../../Classes/Command.js');
+const { getAdventure } = require('../adventureDAO.js');
 
 const options = [];
 module.exports = new Command("ping", "Remind delvers to input their vote or move", false, false, options);
 
-// imports from files that depend on /Config
-let getAdventure;
-module.exports.injectConfig = function (isProduction) {
-	({ getAdventure } = require('../adventureDAO.js').injectConfig(isProduction));
-	return this;
-}
-
 module.exports.execute = (interaction) => {
 	// Remind delvers to input their vote or move
 	const adventure = getAdventure(interaction.channelId);
-	if (adventure?.state !== "completed") {
+	if (adventure && adventure.state !== "completed") {
 		let mentions = adventure.delvers.reduce((ids, delver) => ids.add(delver.id), new Set());
 		let inCombat = adventure.room.enemies && !adventure.room.enemies.every(enemy => enemy.hp === 0);
 		if (inCombat) {

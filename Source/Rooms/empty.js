@@ -5,7 +5,7 @@ module.exports = new RoomTemplate()
 	.setTypes("Empty")
 	.setTitle("Empty Room")
 	.setDescription("This room is empty. Lucky you?")
-	.setElement("Darkness");
+	.setElement("Untyped");
 
 module.exports.uiRows.push(new MessageActionRow().addComponents(
 	new MessageButton().setCustomId("continue")

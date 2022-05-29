@@ -1,38 +1,20 @@
 const Enemy = require("../../Classes/Enemy.js");
+const { generateRandomNumber } = require("../../helpers.js");
+const { addBlock, dealDamage, addModifier, removeModifier } = require("../combatantDAO.js");
+const { selectRandomFoe, selectSelf, selectAllFoes, nextRandom } = require("../enemyDAO.js");
+const { isBuff } = require("../Modifiers/_modifierDictionary.js");
 
-// import from modules that depend on /Config
-let
-	// helpers
-	generateRandomNumber,
-	// enemyDAO
-	selectRandomFoe,
-	selectSelf,
-	selectAllFoes,
-	nextRandom,
-	// combatantDAO
-	addBlock,
-	dealDamage,
-	addModifier,
-	removeModifier,
-	// modifierDictionary
-	isBuff;
-module.exports.injectConfig = function (isProduction) {
-	({ generateRandomNumber } = require("../../helpers.js").injectConfig(isProduction));
-	({ selectRandomFoe, selectSelf, selectAllFoes, nextRandom } = require("../enemyDAO.js").injectConfig(isProduction));
-	({ addBlock, dealDamage, addModifier, removeModifier } = require("../combatantDAO.js").injectConfig(isProduction));
-	({ isBuff } = require("../Modifiers/_modifierDictionary.js").injectConfig(isProduction));
-	return new Enemy("Elkemist")
-		.setFirstAction("random")
-		.addAction({ name: "Toil", effect: toilEffect, selector: selectSelf, next: nextRandom })
-		.addAction({ name: "Trouble", effect: troubleEffect, selector: selectRandomFoe, next: nextRandom })
-		.addAction({ name: "Boil", effect: boilEffect, selector: selectAllFoes, next: nextRandom })
-		.addAction({ name: "Bubble", effect: bubbleEffect, selector: selectAllFoes, next: nextRandom })
-		.setBounty(0)
-		.setHp(2000)
-		.setSpeed(100)
-		.setElement("Water")
-		.setStaggerThreshold(4);
-}
+module.exports = new Enemy("Elkemist")
+	.setFirstAction("random")
+	.addAction({ name: "Toil", effect: toilEffect, selector: selectSelf, next: nextRandom })
+	.addAction({ name: "Trouble", effect: troubleEffect, selector: selectRandomFoe, next: nextRandom })
+	.addAction({ name: "Boil", effect: boilEffect, selector: selectAllFoes, next: nextRandom })
+	.addAction({ name: "Bubble", effect: bubbleEffect, selector: selectAllFoes, next: nextRandom })
+	.setBounty(0)
+	.setHp(2000)
+	.setSpeed(100)
+	.setElement("Water")
+	.setStaggerThreshold(4);
 
 function toilEffect(target, user, isCrit, adventure) {
 	// Gain block and medium progress

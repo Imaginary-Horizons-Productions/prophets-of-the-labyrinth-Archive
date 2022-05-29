@@ -7,60 +7,19 @@ const Enemy = require("../Classes/Enemy.js");
 const Delver = require("../Classes/Delver.js");
 const Room = require("../Classes/Room.js");
 const Resource = require("../Classes/Resource.js");
-const { getWeaknesses, getColor } = require("./elementHelpers.js");
-
-// define injectable vars
-let
-	//helpers
-	ensuredPathSave,
-	parseCount,
-	generateRandomNumber,
-	clearComponents,
-	ordinalSuffixEN,
-	SAFE_DELIMITER,
-	//guildDAO
-	getGuild,
-	//playerDAO
-	setPlayer,
-	getPlayer,
-	//enemyDAO
-	spawnEnemy,
-	// moveDAO
-	resolveMove,
-	//combatantDAO
-	clearBlock,
-	removeModifier,
-	//roomDictionary
-	manufactureRoomTemplate,
-	prerollBoss,
-	//modifierDictionary
-	getTurnDecrement,
-	//weaponDictionary
-	rollWeaponDrop,
-	getWeaponProperty,
-	buildWeaponDescription,
-	//artifactDictionary
-	rollArtifact,
-	//enemyDictionary
-	getEnemy,
-	//challengeDictionary
-	getChallenge,
-	rollChallenges;
-exports.injectConfig = function (isProduction) {
-	({ ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordinalSuffixEN, SAFE_DELIMITER } = require("../helpers.js").injectConfig(isProduction));
-	({ getGuild } = require("./guildDAO.js").injectConfig(isProduction));
-	({ setPlayer, getPlayer } = require("./playerDAO.js").injectConfig(isProduction));
-	({ spawnEnemy } = require("./enemyDAO.js").injectConfig(isProduction));
-	({ resolveMove } = require("./moveDAO.js").injectConfig(isProduction));
-	({ clearBlock, removeModifier } = require("./combatantDAO.js").injectConfig(isProduction));
-	({ manufactureRoomTemplate, prerollBoss } = require("./Rooms/_roomDictionary.js").injectConfig(isProduction));
-	({ getTurnDecrement } = require("./Modifiers/_modifierDictionary.js").injectConfig(isProduction));
-	({ rollWeaponDrop, getWeaponProperty, buildWeaponDescription } = require("./Weapons/_weaponDictionary.js").injectConfig(isProduction));
-	({ getArtifact, rollArtifact } = require("./Artifacts/_artifactDictionary.js").injectConfigArtifacts(isProduction));
-	({ getEnemy } = require("./Enemies/_enemyDictionary").injectConfigEnemies(isProduction));
-	({ getChallenge, rollChallenges } = require("./Challenges/_challengeDictionary.js").injectConfigChallenges(isProduction));
-	return this;
-}
+const { getWeakness, getColor } = require("./elementHelpers.js");
+const { ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordinalSuffixEN, SAFE_DELIMITER } = require("../helpers.js");
+const { getGuild } = require("./guildDAO.js");
+const { setPlayer, getPlayer } = require("./playerDAO.js");
+const { spawnEnemy } = require("./enemyDAO.js");
+const { resolveMove } = require("./moveDAO.js");
+const { clearBlock, removeModifier } = require("./combatantDAO.js");
+const { manufactureRoomTemplate, prerollBoss } = require("./Rooms/_roomDictionary.js");
+const { getTurnDecrement } = require("./Modifiers/_modifierDictionary.js");
+const { rollEquipmentDrop, getEquipmentProperty, buildEquipmentDescription } = require("./equipment/_equipmentDictionary.js");
+const { rollArtifact } = require("./Artifacts/_artifactDictionary.js");
+const { getEnemy } = require("./Enemies/_enemyDictionary");
+const { getChallenge, rollChallenges } = require("./Challenges/_challengeDictionary.js");
 
 const dirPath = "./Saves";
 const fileName = "adventures.json";
@@ -176,8 +135,7 @@ exports.nextRoom = async function (roomType, thread) {
 	if (adventure.room.element === "@{adventure}") {
 		adventure.room.element = adventure.element;
 	} else if (adventure.room.element === "@{adventureWeakness}") {
-		let weaknesses = getWeaknesses(adventure.element);
-		adventure.room.element = weaknesses[generateRandomNumber(adventure, weaknesses.length, "general")];
+		adventure.room.element = getWeakness(adventure.element);
 	}
 	let embed = new MessageEmbed().setColor(getColor(adventure.room.element))
 		.setAuthor({ name: roomHeaderString(adventure), iconURL: thread.client.user.displayAvatarURL() })
@@ -221,7 +179,7 @@ exports.nextRoom = async function (roomType, thread) {
 		// Generate non-combat room
 		const cloverCount = adventure.getArtifactCount("Negative-One Leaf Clover");
 		for (let category in roomTemplate.saleList) {
-			if (category.startsWith("weapon")) {
+			if (category.startsWith("equipment")) {
 				let [type, tier] = category.split(SAFE_DELIMITER);
 				let parsedTier = tier;
 				let count = Math.min(25, parseCount(roomTemplate.saleList[category], adventure.delvers.length));
@@ -229,18 +187,18 @@ exports.nextRoom = async function (roomType, thread) {
 					if (tier === "?") {
 						let threshold = 1 + cloverCount;
 						let max = 8 + cloverCount;
-						adventure.updateArtifactStat("Negative-One Leaf Clover", "Expected Extra Rare Weapons", (threshold / max) - (1 / 8));
+						adventure.updateArtifactStat("Negative-One Leaf Clover", "Expected Extra Rare Equipment", (threshold / max) - (1 / 8));
 						if (generateRandomNumber(adventure, max, "general") < threshold) {
 							parsedTier = "2";
 						} else {
 							parsedTier = "1";
 						}
 					}
-					let weaponName = rollWeaponDrop(parsedTier, adventure);
-					if (adventure.room.resources[weaponName]?.resourceType === "weapon") {
-						adventure.room.resources[weaponName].count++;
+					let equipName = rollEquipmentDrop(parsedTier, adventure);
+					if (adventure.room.resources[equipName]?.resourceType === "equipment") {
+						adventure.room.resources[equipName].count++;
 					} else {
-						adventure.room.resources[weaponName] = new Resource(weaponName, "weapon", 1, "merchant", getWeaponProperty(weaponName, "cost"))
+						adventure.room.resources[equipName] = new Resource(equipName, "equipment", 1, "merchant", getEquipmentProperty(equipName, "cost"))
 							.setUIGroup(category);
 					}
 				}
@@ -428,8 +386,8 @@ exports.generateLootRow = function (adventure) {
 				option.label = `${name} x ${count}`;
 			}
 
-			if (type === "weapon") {
-				option.description = buildWeaponDescription(name, false);
+			if (type === "equipment") {
+				option.description = buildEquipmentDescription(name, false);
 			} else if (type === "artifact") {
 				option.description = getArtifact(name).dynamicDescription(count);
 			} else {
@@ -468,15 +426,15 @@ exports.generateMerchantRows = function (adventure) {
 
 	let rows = [];
 	for (const groupName in categorizedResources) {
-		if (groupName.startsWith("weapon")) {
+		if (groupName.startsWith("equipment")) {
 			const [type, tier] = groupName.split(SAFE_DELIMITER);
 			let options = [];
 			categorizedResources[groupName].forEach((resource, i) => {
 				if (adventure.room.resources[resource].count > 0) {
-					const cost = getWeaponProperty(resource, "cost");
+					const cost = getEquipmentProperty(resource, "cost");
 					options.push({
 						label: `${cost}g: ${resource}`,
-						description: buildWeaponDescription(resource, false),
+						description: buildEquipmentDescription(resource, false),
 						value: `${resource}${SAFE_DELIMITER}${i}`
 					})
 				}
@@ -484,13 +442,13 @@ exports.generateMerchantRows = function (adventure) {
 			if (options.length) {
 				rows.push(new MessageActionRow().addComponents(
 					new MessageSelectMenu().setCustomId(`buy${groupName}`)
-						.setPlaceholder(`Check a ${tier === "2" ? "rare " : ""}weapon...`)
+						.setPlaceholder(`Check a ${tier === "2" ? "rare " : ""}piece of equipment...`)
 						.setOptions(options)));
 			} else {
 				rows.push(new MessageActionRow().addComponents(
 					new MessageSelectMenu().setCustomId(`buy${groupName}`)
 						.setPlaceholder("SOLD OUT")
-						.setOptions([{ label: "If the menu is stuck, close and reopen the thread.", description: "This usually happens when two players try to buy the last weapon at the same time.", value: "placeholder" }])
+						.setOptions([{ label: "If the menu is stuck, close and reopen the thread.", description: "This usually happens when two players try to buy the last item at the same time.", value: "placeholder" }])
 						.setDisabled(true)));
 			}
 		} else if (groupName === "scouting") {
@@ -560,7 +518,7 @@ exports.endRound = async function (adventure, thread) {
 			totalBounty *= (90 + generateRandomNumber(adventure, 21, "general")) / 100;
 			adventure.room.resources.gold.count = Math.ceil(totalBounty);
 
-			// Weapon drops
+			// Equipment drops
 			let dropThreshold = 1;
 			let dropMax = 8;
 			if (generateRandomNumber(adventure, dropMax, "general") < dropThreshold) {
@@ -571,11 +529,11 @@ exports.endRound = async function (adventure, thread) {
 				if (generateRandomNumber(adventure, upgradeMax, "general") < upgradeThreshold) {
 					tier = 2;
 				}
-				let droppedWeapon = rollWeaponDrop(tier, adventure);
-				if (adventure.room.resources[droppedWeapon]) {
-					adventure.room.resources[droppedWeapon].count++;
+				let droppedEquip = rollEquipmentDrop(tier, adventure);
+				if (adventure.room.resources[droppedEquip]) {
+					adventure.room.resources[droppedEquip].count++;
 				} else {
-					adventure.room.resources[droppedWeapon] = new Resource(droppedWeapon, "weapon", 1, "loot", 0);
+					adventure.room.resources[droppedEquip] = new Resource(droppedEquip, "equipment", 1, "loot", 0);
 				}
 			}
 

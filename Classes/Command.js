@@ -16,9 +16,8 @@ module.exports = class Command {
 				if (option.choices === null || option.choices === undefined) {
 					throw `Error: ${this.nameInput} (${descriptionInput}) ${option.type} Option was nullish.`;
 				}
-				let choiceEntries = Object.entries(option.choices);
-				if (choiceEntries.length) {
-					built.addChoices(Object.entries(option.choices));
+				if (option.choices.length) {
+					built.addChoices(...option.choices);
 				}
 				return built;
 			})

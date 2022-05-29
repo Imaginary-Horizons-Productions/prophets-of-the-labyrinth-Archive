@@ -1,12 +1,7 @@
 const Player = require("../Classes/Player.js");
 const fs = require("fs");
-
-let ensuredPathSave, getGuild, setGuild;
-exports.injectConfig = function (isProduction) {
-	({ getGuild, setGuild } = require("./guildDAO.js").injectConfig(isProduction));
-	({ ensuredPathSave } = require("../helpers.js").injectConfig(isProduction));
-	return this;
-}
+const { ensuredPathSave } = require("../helpers.js");
+const { getGuild, setGuild } = require("./guildDAO.js");
 
 const dirPath = "./Saves"
 const fileName = "players.json";
@@ -45,7 +40,7 @@ exports.setPlayer = function (player) {
 
 exports.resetScores = function (userIds, guildId) {
 	userIds.forEach(id => {
-		let player = playerDictionary[id];
+		let player = playerDictionary.get(id);
 		player.scores[guildId] = 0;
 		exports.setPlayer(player);
 	})

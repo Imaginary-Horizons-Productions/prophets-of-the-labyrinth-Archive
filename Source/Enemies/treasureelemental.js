@@ -1,24 +1,20 @@
 const Enemy = require("../../Classes/Enemy.js");
+const { addModifier, addBlock, removeModifier, dealDamage } = require("../combatantDAO.js");
+const { selectSelf, selectNone, selectAllFoes, selectRandomFoe } = require("../enemyDAO.js");
 
-// import from modules that depend on /Config
-let selectSelf, selectNone, selectAllFoes, selectRandomFoe, addModifier, addBlock, removeModifier, dealDamage;
-module.exports.injectConfig = function (isProduction) {
-	({ selectSelf, selectNone, selectAllFoes, selectRandomFoe } = require("../enemyDAO.js").injectConfig(isProduction));
-	({ addModifier, addBlock, removeModifier, dealDamage } = require("../combatantDAO.js").injectConfig(isProduction));
-	return new Enemy("Treasure Elemental")
-		.setFirstAction("Guarding Slam")
-		.addAction({ name: "Guarding Slam", effect: guardingSlamEffect, selector: selectRandomFoe, next: treasureElementalPattern })
-		.addAction({ name: "Evade", effect: evadeEffect, selector: selectSelf, next: treasureElementalPattern })
-		.addAction({ name: "Eyes of Greed", effect: eyesOfGreedEffect, selector: selectAllFoes, next: treasureElementalPattern })
-		.addAction({ name: "Heavy Pockets", effect: heavyPocketsEffect, selector: selectAllFoes, next: treasureElementalPattern })
-		.addAction({ name: "Escape", effect: escapeEffect, selector: selectNone, next: treasureElementalPattern })
-		.addStartingModifier("Curse of Midas", 1)
-		.setBounty(0)
-		.setHp(99999)
-		.setSpeed(100)
-		.setElement("Earth")
-		.setStaggerThreshold(3);
-}
+module.exports = new Enemy("Treasure Elemental")
+	.setFirstAction("Guarding Slam")
+	.addAction({ name: "Guarding Slam", effect: guardingSlamEffect, selector: selectRandomFoe, next: treasureElementalPattern })
+	.addAction({ name: "Evade", effect: evadeEffect, selector: selectSelf, next: treasureElementalPattern })
+	.addAction({ name: "Eyes of Greed", effect: eyesOfGreedEffect, selector: selectAllFoes, next: treasureElementalPattern })
+	.addAction({ name: "Heavy Pockets", effect: heavyPocketsEffect, selector: selectAllFoes, next: treasureElementalPattern })
+	.addAction({ name: "Escape", effect: escapeEffect, selector: selectNone, next: treasureElementalPattern })
+	.addStartingModifier("Curse of Midas", 1)
+	.setBounty(0)
+	.setHp(99999)
+	.setSpeed(100)
+	.setElement("Earth")
+	.setStaggerThreshold(3);
 
 const PATTERN = {
 	"Guarding Slam": "Evade",

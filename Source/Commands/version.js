@@ -1,16 +1,10 @@
 const Command = require('../../Classes/Command.js');
+const { getVersionEmbed } = require('./../../helpers.js');
 
 const options = [
-	{ type: "Boolean", name: "full-notes", description: "Get the file with the full version notes?", required: true, choices: {} }
+	{ type: "Boolean", name: "full-notes", description: "Get the file with the full version notes?", required: true, choices: [] }
 ];
 module.exports = new Command("version", "Get HorizonsBot's version notes", false, false, options);
-
-// imports from files that depend on /Config
-let getVersionEmbed;
-module.exports.injectConfig = function (isProduction) {
-	({ getVersionEmbed } = require("./../../helpers.js").injectConfig(isProduction));
-	return this;
-}
 
 module.exports.execute = (interaction) => {
 	// Send version information

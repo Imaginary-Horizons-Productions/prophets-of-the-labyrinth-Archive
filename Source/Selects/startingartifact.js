@@ -6,20 +6,26 @@ const { getArtifact } = require('../Artifacts/_artifactDictionary.js');
 
 module.exports = new Select("startingartifact");
 
-module.exports.execute = (interaction, _args) => {
+module.exports.execute = (interaction, args) => {
 	// Set the player's starting artifact
 	let adventure = getAdventure(interaction.channel.id);
-	if (adventure && !adventure.messageIds.utility) {
+	if (adventure?.state === "config") {
 		// Add delver to list (or overwrite)
-		let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
-		if (userIndex !== -1) {
+		let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
+		if (delver) {
 			let [artifactName] = interaction.values;
 			if (artifactName === "None") {
-				adventure.delvers[userIndex].startingArtifact = "";
+				delver.startingArtifact = "";
 				interaction.channel.send(`${interaction.user} is not planning to bring a starting artifact.`);
+				interaction.update({
+					content: "Forgoing a starting artifact will increase your end of adventure score multiplier (up to 2x if no one takes a starting artifact).",
+					components: [new MessageActionRow().addComponents(
+						interaction.component.setPlaceholder("Pick an artifact after all...")
+					)]
+				});
 			} else {
-				let isSwitching = adventure.delvers[userIndex].startingArtifact !== "";
-				adventure.delvers[userIndex].startingArtifact = artifactName;
+				let isSwitching = delver.startingArtifact !== "";
+				delver.startingArtifact = artifactName;
 
 				// Send confirmation text
 				interaction.update({

@@ -1,10 +1,6 @@
 const { generateRandomNumber } = require("../../helpers");
 
-exports.injectConfigChallenges = function (isProduction) {
-	return this;
-}
-
-let challengeWhitelist = [
+const challengeWhitelist = [
 	"blindavarice.js",
 	"cantholdallthisvalue.js",
 	"restless.js"

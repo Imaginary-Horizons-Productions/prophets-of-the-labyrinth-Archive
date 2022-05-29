@@ -2,11 +2,11 @@ const Button = require('../../Classes/Button.js');
 const { MessageEmbed, MessageActionRow, MessageSelectMenu, MessageButton } = require('discord.js');
 const Delver = require('../../Classes/Delver.js');
 const { SAFE_DELIMITER } = require('../../helpers.js');
-const { getEmoji, getResistances, getWeaknesses, getColor } = require('../elementHelpers.js');
+const { getEmoji, getWeakness, getColor } = require('../elementHelpers.js');
 const { getAdventure } = require('../adventureDAO.js');
 const { getFullName } = require("../combatantDAO.js");
-const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
-const { weaponToEmbedField } = require('../weaponDAO.js');
+const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
+const { equipmentToEmbedField } = require('../equipmentDAO.js');
 
 module.exports = new Button("readymove");
 
@@ -18,7 +18,7 @@ module.exports.execute = (interaction, args) => {
 		if (!delver.modifiers.Stun) { // Early out if stunned
 			let embed = new MessageEmbed().setColor(getColor(adventure.room.element))
 				.setTitle("Readying a Move")
-				.setDescription(`Your ${getEmoji(delver.element)} moves add 1 Stagger to enemies and remove 1 Stagger from allies.\n\nPick one weapon from below as your move for this round:`)
+				.setDescription(`Your ${getEmoji(delver.element)} moves add 1 Stagger to enemies and remove 1 Stagger from allies.\n\nPick one option from below as your move for this round:`)
 				.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
 			let enemyOptions = [];
 			for (let i = 0; i < adventure.room.enemies.length; i++) {
@@ -39,13 +39,13 @@ module.exports.execute = (interaction, args) => {
 				}
 			})
 			let moveMenu = [];
-			let usableWeapons = delver.weapons.filter(weapon => weapon.uses > 0);
-			if (usableWeapons.length > 0) {
-				for (let i = 0; i < usableWeapons.length; i++) {
-					const weapon = usableWeapons[i];
-					let elementEmoji = getEmoji(getWeaponProperty(weapon.name, "element"));
-					embed.addField(...weaponToEmbedField(weapon.name, weapon.uses));
-					let { target, team } = getWeaponProperty(weapon.name, "targetingTags");
+			let usableMoves = delver.equipment.filter(equip => equip.uses > 0);
+			if (usableMoves.length > 0) {
+				for (let i = 0; i < usableMoves.length; i++) {
+					const equip = usableMoves[i];
+					let elementEmoji = getEmoji(getEquipmentProperty(equip.name, "element"));
+					embed.addField(...equipmentToEmbedField(equip.name, equip.uses));
+					let { target, team } = getEquipmentProperty(equip.name, "targetingTags");
 					if (target === "single") {
 						// Select Menu
 						let targetOptions = [];
@@ -57,15 +57,15 @@ module.exports.execute = (interaction, args) => {
 							targetOptions = targetOptions.concat(delverOptions);
 						}
 						moveMenu.push(new MessageActionRow().addComponents(
-							new MessageSelectMenu().setCustomId(`weapon${SAFE_DELIMITER}${weapon.name}${SAFE_DELIMITER}${adventure.room.round}${SAFE_DELIMITER}${i}`)
-								.setPlaceholder(`${elementEmoji} Use ${weapon.name} on...`)
+							new MessageSelectMenu().setCustomId(`targetmove${SAFE_DELIMITER}${equip.name}${SAFE_DELIMITER}${adventure.room.round}${SAFE_DELIMITER}${i}`)
+								.setPlaceholder(`${elementEmoji} Use ${equip.name} on...`)
 								.addOptions(targetOptions)
 						));
 					} else {
 						// Button
 						moveMenu.push(new MessageActionRow().addComponents(
-							new MessageButton().setCustomId(`nontargetweapon${SAFE_DELIMITER}${weapon.name}${SAFE_DELIMITER}${adventure.room.round}${SAFE_DELIMITER}${i}`)
-								.setLabel(`Use ${weapon.name}`)
+							new MessageButton().setCustomId(`nontargetmove${SAFE_DELIMITER}${equip.name}${SAFE_DELIMITER}${adventure.room.round}${SAFE_DELIMITER}${i}`)
+								.setLabel(`Use ${equip.name}`)
 								.setEmoji(elementEmoji)
 								.setStyle("SECONDARY")
 						))
@@ -76,7 +76,7 @@ module.exports.execute = (interaction, args) => {
 				moveMenu.push(new MessageActionRow()
 					.addComponents(
 						new MessageSelectMenu()
-							.setCustomId(`weapon${SAFE_DELIMITER}Punch${SAFE_DELIMITER}${adventure.room.round}${SAFE_DELIMITER}`)
+							.setCustomId(`targetmove${SAFE_DELIMITER}Punch${SAFE_DELIMITER}${adventure.room.round}${SAFE_DELIMITER}`)
 							.setPlaceholder(`Use Punch on...`)
 							.addOptions(enemyOptions)
 					));
@@ -84,7 +84,7 @@ module.exports.execute = (interaction, args) => {
 			interaction.reply({ embeds: [embed], components: moveMenu, ephemeral: true })
 				.catch(console.error);
 		} else {
-			interaction.reply({ content: "You cannot pick a weapon because you are stunned this round.", ephemeral: true });
+			interaction.reply({ content: "You cannot pick a move because you are stunned this round.", ephemeral: true });
 		}
 	} else {
 		interaction.reply({ content: "Please participate in combat in adventures you've joined.", ephemeral: true });
@@ -93,15 +93,7 @@ module.exports.execute = (interaction, args) => {
 
 function miniPredict(predictType, combatant) {
 	switch (predictType) {
-		case "Targets":
-			return `Resistances: ${getResistances(combatant.element).map(element => getEmoji(element)).join(" ")}`;
-		case "Critical Hits":
-			return `Weaknesses: ${getWeaknesses(combatant.element).map(element => getEmoji(element)).join(" ")}`;
-		case "Health":
-			return `HP: ${combatant.hp}/${combatant.maxHp}`;
-		case "Move Order":
-			return `Speed Bonus: ${combatant.roundSpeed >= 0 ? "+" : ""}${combatant.roundSpeed + combatant.actionSpeed}`;
-		case "Modifiers":
+		case "Movements":
 			let staggerCount = combatant.modifiers.Stagger || 0;
 			let bar = "";
 			for (let i = 0; i < combatant.staggerThreshold; i++) {
@@ -112,11 +104,15 @@ function miniPredict(predictType, combatant) {
 				}
 			}
 			return `Stagger: ${bar}`;
-		case "Enemy Moves":
+		case "Vulnerabilities":
+			return `Weakness: ${getEmoji(getWeakness(combatant.element))}`;
+		case "Intents":
 			if (combatant instanceof Delver) {
 				return "Move in 2 rounds: Ask them";
 			} else {
 				return `Move in 2 rounds: ${combatant.nextAction}`;
 			}
+		case "Health":
+			return `HP: ${combatant.hp}/${combatant.maxHp}`;
 	}
 }
