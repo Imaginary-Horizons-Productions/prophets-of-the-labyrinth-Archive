@@ -12,10 +12,10 @@ module.exports.execute = (interaction) => {
 		let inCombat = adventure.room.enemies && !adventure.room.enemies.every(enemy => enemy.hp === 0);
 		if (inCombat) {
 			adventure.room.moves.forEach(move => {
-				if (move.userTeam === "delvers") {
+				if (move.userTeam === "delver") {
 					let userId = adventure.delvers[move.userIndex].id;
 					if (mentions.has(userId)) {
-						mentions.remove(userId);
+						mentions.delete(userId);
 					}
 				}
 			})
@@ -23,7 +23,7 @@ module.exports.execute = (interaction) => {
 			Object.values(adventure.roomCandidates).forEach(voteArray => {
 				voteArray.forEach(id => {
 					if (mentions.has(id)) {
-						mentions.remove(id);
+						mentions.delete(id);
 					}
 				})
 			})
