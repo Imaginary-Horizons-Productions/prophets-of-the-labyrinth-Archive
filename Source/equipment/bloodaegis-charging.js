@@ -1,7 +1,7 @@
 const Equipment = require('../../Classes/Equipment.js');
 const { removeModifier, addBlock, addModifier, dealDamage } = require('../combatantDAO.js');
 
-module.exports = new Equipment("Charging Blood Aegis", 2, "*Pay @{hpCost} hp to grant an ally @{block} block, then gain @{mod1Stacks} @{mod1}*\nCritical Hit: Block x@{critBonus}", "Darkness", effect, ["Heavy Blood Aegis", "Sweeping Blood Aegis"])
+module.exports = new Equipment("Charging Blood Aegis", 2, "*Pay @{hpCost} hp to grant an ally @{block} block, then gain @{mod1Stacks} @{mod1}*\nCritical Hit: Block x@{critBonus}", "Water", effect, ["Heavy Blood Aegis", "Sweeping Blood Aegis"])
 	.setCategory("Pact")
 	.setTargetingTags({ target: "single", team: "delver" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Power Up", stacks: 25 }])

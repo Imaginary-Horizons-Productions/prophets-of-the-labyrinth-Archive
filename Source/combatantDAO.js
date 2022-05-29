@@ -1,7 +1,7 @@
 const Enemy = require("../Classes/Enemy.js");
 const Delver = require("../Classes/Delver.js");
 const { getInverse, isNonStacking, getModifierDescription, isBuff, isDebuff } = require("./Modifiers/_modifierDictionary.js");
-const { getWeaknesses, getResistances } = require("./elementHelpers.js");
+const { getWeakness } = require("./elementHelpers.js");
 
 exports.getFullName = function (combatant, titleObject) {
 	if (combatant instanceof Enemy) {
@@ -36,11 +36,11 @@ exports.dealDamage = async function (target, user, damage, isUnblockable, elemen
 			if (targetModifiers.includes("Exposed")) {
 				pendingDamage *= 1.5;
 			}
-			let isWeakness = getWeaknesses(target.element).includes(element);
+			let isWeakness = getWeakness(target.element) === element;
 			if (isWeakness) {
 				pendingDamage *= 2;
 			}
-			let isResistance = getResistances(target.element).includes(element);
+			let isResistance = target.element === element;
 			if (isResistance) {
 				pendingDamage = pendingDamage / 2;
 			}

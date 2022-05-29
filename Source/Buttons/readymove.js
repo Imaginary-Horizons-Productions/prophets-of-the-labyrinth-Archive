@@ -2,7 +2,7 @@ const Button = require('../../Classes/Button.js');
 const { MessageEmbed, MessageActionRow, MessageSelectMenu, MessageButton } = require('discord.js');
 const Delver = require('../../Classes/Delver.js');
 const { SAFE_DELIMITER } = require('../../helpers.js');
-const { getEmoji, getWeaknesses, getColor } = require('../elementHelpers.js');
+const { getEmoji, getWeakness, getColor } = require('../elementHelpers.js');
 const { getAdventure } = require('../adventureDAO.js');
 const { getFullName } = require("../combatantDAO.js");
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
@@ -105,7 +105,7 @@ function miniPredict(predictType, combatant) {
 			}
 			return `Stagger: ${bar}`;
 		case "Vulnerabilities":
-			return `Weaknesses: ${getWeaknesses(combatant.element).map(element => getEmoji(element)).join(" ")}`;
+			return `Weakness: ${getEmoji(getWeakness(combatant.element))}`;
 		case "Intents":
 			if (combatant instanceof Delver) {
 				return "Move in 2 rounds: Ask them";
