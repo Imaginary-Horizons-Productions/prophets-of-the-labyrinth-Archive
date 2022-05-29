@@ -13,6 +13,7 @@
 - Max delvers per adventure reduced to 8 (UI constraint)
 - New modifier: Stasis
 - New modifier: Oblivious
+- Fixed `/ping` incorrectly mentioning delvers who are ready
 - Other bug fixes, optimizations, and improvements
 #### Prophets of the Labyrinth Version 0.8.0:
 - Added "Data Policy" page to manual
