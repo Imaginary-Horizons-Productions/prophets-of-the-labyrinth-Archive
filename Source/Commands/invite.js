@@ -4,7 +4,7 @@ const { SAFE_DELIMITER } = require('../../helpers.js');
 const { getAdventure } = require('../adventureDAO.js');
 
 const options = [
-	{ type: "User", name: "invitee", description: "The user's mention", required: true, choices: {} }
+	{ type: "User", name: "invitee", description: "The user's mention", required: true, choices: [] }
 ];
 module.exports = new Command("invite", "Invite a friend to an adventure", false, false, options);
 

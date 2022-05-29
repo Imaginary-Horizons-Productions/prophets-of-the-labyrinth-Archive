@@ -4,14 +4,14 @@ const { getEmoji, getWeakness, getColor } = require('../elementHelpers.js');
 
 const options = [
 	{
-		type: "String", name: "topic", description: "The topic/page of information", required: true, choices: {
-			"Credits": "Credits",
-			"Tutorial": "Tutorial",
-			"Elements": "Elements",
-			"Stagger": "Stagger",
-			"Damage Cap": "Damage Cap",
-			"Data Policy": "Data Policy"
-		}
+		type: "String", name: "topic", description: "The topic/page of information", required: true, choices: [
+			{ name: "Credits", value: "Credits" },
+			{ name: "Tutorial", value: "Tutorial" },
+			{ name: "Elements", value: "Elements" },
+			{ name: "Stagger", value: "Stagger" },
+			{ name: "Damage Cap", value: "Damage Cap" },
+			{ name: "Data Policy", value: "Data Policy" }
+		]
 	}
 ];
 module.exports = new Command("manual", "Get information about Prophets of the Labyrinth v0.8.0", false, false, options);

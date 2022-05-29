@@ -10,7 +10,7 @@ const { prerollBoss } = require('../Rooms/_roomDictionary.js');
 const { SAFE_DELIMITER, isSponsor, generateRandomNumber } = require('./../../helpers.js');
 
 const options = [
-	{ type: "String", name: "seed", description: "The value to base the run's random events on", required: false, choices: {} }
+	{ type: "String", name: "seed", description: "The value to base the run's random events on", required: false, choices: [] }
 ];
 module.exports = new Command("delve", "Start a new adventure", false, false, options);
 
