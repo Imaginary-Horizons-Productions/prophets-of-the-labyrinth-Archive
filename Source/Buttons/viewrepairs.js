@@ -4,9 +4,8 @@ const { SAFE_DELIMITER } = require('../../helpers.js');
 const { getAdventure } = require("../adventureDAO.js");
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
 
-module.exports = new Button("viewrepairs");
-
-module.exports.execute = (interaction, args) => {
+const id = "viewrepairs";
+module.exports = new Button(id, (interaction, args) => {
 	// Allow the user to select a piece of equipment to regain uses on
 	let adventure = getAdventure(interaction.channel.id);
 	let user = adventure.delvers.find(delver => delver.id === interaction.user.id);
@@ -40,4 +39,4 @@ module.exports.execute = (interaction, args) => {
 	} else {
 		interaction.reply({ content: "Please repair equipment in adventures you've joined.", ephemeral: true });
 	}
-}
+});

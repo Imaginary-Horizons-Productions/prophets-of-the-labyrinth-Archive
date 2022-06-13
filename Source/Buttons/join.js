@@ -4,9 +4,8 @@ const { isSponsor, maxDelverCount } = require('../../helpers.js');
 const { getGuild } = require('../guildDAO.js');
 const { getAdventure, setAdventure } = require("./../adventureDAO.js");
 
-module.exports = new Button("join");
-
-module.exports.execute = async (interaction, [guildId, adventureId, context]) => {
+const id = "join";
+module.exports = new Button(id, async (interaction, [guildId, adventureId, context]) => {
 	// Join an existing adventure
 	let guildProfile = getGuild(interaction.guildId);
 	if (isSponsor(interaction.user.id) || !guildProfile.adventuring.has(interaction.user.id)) {
@@ -78,4 +77,4 @@ module.exports.execute = async (interaction, [guildId, adventureId, context]) =>
 	} else {
 		interaction.reply({ content: "Delving in more than one adventure per server is a premium perk. Use `/support` for more details.", ephemeral: true });
 	}
-}
+});

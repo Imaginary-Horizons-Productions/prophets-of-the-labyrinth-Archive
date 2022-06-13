@@ -1,14 +1,15 @@
 const Command = require('../../Classes/Command.js');
 const { versionData: { guildId, feedbackChannel } } = require("./../../helpers.js");
 
+const id = "feedback";
 const options = [
 	{ type: "String", name: "feedback", description: "Please describe the bug or feature request as clearly as possible", required: true, choices: [] }
 ];
-module.exports = new Command("feedback", "Send PotL feedback to the test server and get an invite", false, false, options);
+module.exports = new Command(id, "Send PotL feedback to the test server and get an invite", false, false, options);
 
 module.exports.execute = (interaction) => {
 	// Post feedback to the test server channel and provide the user an invite
-	let feedback = interaction.options.getString("feedback");
+	let feedback = interaction.options.getString(options[0].name);
 	let feedbackPreamble = `Feedback from <@${interaction.user.id}>:\n\t`;
 	let ticketSpace = 2000 - feedbackPreamble.length;
 	if (feedback.length < ticketSpace) {

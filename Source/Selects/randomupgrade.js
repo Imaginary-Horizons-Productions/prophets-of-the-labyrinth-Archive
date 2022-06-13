@@ -5,9 +5,8 @@ const { getAdventure, setAdventure } = require('../adventureDAO.js');
 const { decrementForgeSupplies } = require('../roomDAO.js');
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
 
-module.exports = new Select("randomupgrade");
-
-module.exports.execute = (interaction, [roomMessageId]) => {
+const id = "randomupgrade";
+module.exports = new Select(id, (interaction, [roomMessageId]) => {
 	// Randomly select an upgrade for a given piece of equipment
 	let adventure = getAdventure(interaction.channel.id);
 	if (adventure.room.resources.forgeSupplies.count > 0) {
@@ -29,4 +28,4 @@ module.exports.execute = (interaction, [roomMessageId]) => {
 	} else {
 		interaction.reply({ content: "The forge's supplies have been exhausted.", ephemeral: true });
 	}
-}
+});

@@ -1,8 +1,9 @@
 const Command = require('../../Classes/Command.js');
 const { getAdventure } = require('../adventureDAO.js');
 
+const id = "ping";
 const options = [];
-module.exports = new Command("ping", "Remind delvers to input their vote or move", false, false, options);
+module.exports = new Command(id, "Remind delvers to input their vote or move", false, false, options);
 
 module.exports.execute = (interaction) => {
 	// Remind delvers to input their vote or move

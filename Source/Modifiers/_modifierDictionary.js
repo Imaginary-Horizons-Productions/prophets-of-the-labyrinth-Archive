@@ -1,6 +1,8 @@
 const { parseCount } = require("../../helpers");
 
-const modifierWhitelist = [
+const modifierDictionary = {};
+
+for (const file of [
 	"absorb-earth.js",
 	"absorb-fire.js",
 	"absorb-water.js",
@@ -19,11 +21,7 @@ const modifierWhitelist = [
 	"stagger.js",
 	"stasis.js",
 	"stun.js"
-];
-
-const modifierDictionary = {};
-
-for (const file of modifierWhitelist) {
+]) {
 	const modifier = require(`./${file}`);
 	modifierDictionary[modifier.name] = modifier;
 }

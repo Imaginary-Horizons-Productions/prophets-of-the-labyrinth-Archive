@@ -9,10 +9,11 @@ const { getGuild } = require('../guildDAO.js');
 const { prerollBoss } = require('../Rooms/_roomDictionary.js');
 const { SAFE_DELIMITER, isSponsor, generateRandomNumber } = require('./../../helpers.js');
 
+const id = "delve";
 const options = [
 	{ type: "String", name: "seed", description: "The value to base the run's random events on", required: false, choices: [] }
 ];
-module.exports = new Command("delve", "Start a new adventure", false, false, options);
+module.exports = new Command(id, "Start a new adventure", false, false, options);
 
 let DESCRIPTORS = ["Shining", "New", "Dusty", "Old", "Floating", "Undersea", "Future", "Intense"];
 let LOCATIONS = ["Adventure", "Castle", "Labyrinth", "Ruins", "Plateau", "Dungeon", "Maze", "Fortress", "Dream"];
@@ -23,7 +24,7 @@ module.exports.execute = (interaction) => {
 		let guildProfile = getGuild(interaction.guildId);
 		if (isSponsor(interaction.user.id) || !guildProfile.adventuring.has(interaction.user.id)) {
 			if (interaction.channel.type === "GUILD_TEXT") {
-				let adventure = new Adventure(interaction.options.getString("seed"), interaction.guildId).generateRNTable();
+				let adventure = new Adventure(interaction.options.getString(options[0].name), interaction.guildId).generateRNTable();
 				// roll bosses
 				prerollBoss("Final Battle", adventure);
 				prerollBoss("Artifact Guardian", adventure);

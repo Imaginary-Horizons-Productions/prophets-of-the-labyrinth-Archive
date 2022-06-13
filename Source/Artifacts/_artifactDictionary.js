@@ -1,16 +1,5 @@
 const { generateRandomNumber } = require("../../helpers.js");
 
-const artifactWhitelist = [
-	"amethystspyglass.js",
-	"bloodshieldsword.js",
-	"enchantedmap.js",
-	"hammerspaceholster.js",
-	"hawktailfeather.js",
-	"negativeoneleafclover.js",
-	"oilpainting.js",
-	"phoenixfruitblossom.js"
-];
-
 const ARTIFACTS = {};
 
 const ROLL_TABLE = {
@@ -21,7 +10,16 @@ const ROLL_TABLE = {
 	Untyped: []
 }
 
-for (const file of artifactWhitelist) {
+for (const file of [
+	"amethystspyglass.js",
+	"bloodshieldsword.js",
+	"enchantedmap.js",
+	"hammerspaceholster.js",
+	"hawktailfeather.js",
+	"negativeoneleafclover.js",
+	"oilpainting.js",
+	"phoenixfruitblossom.js"
+]) {
 	const artifact = require(`./${file}`);
 	ARTIFACTS[artifact.name] = artifact;
 	ROLL_TABLE[artifact.element].push(artifact.name);

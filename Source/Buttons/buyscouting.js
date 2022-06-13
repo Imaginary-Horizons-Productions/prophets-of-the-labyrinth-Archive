@@ -4,9 +4,8 @@ const { getAdventure, setAdventure, updateRoomHeader } = require('../adventureDA
 const { editButtons } = require("../roomDAO.js");
 const { prerollBoss } = require('../Rooms/_roomDictionary.js');
 
-module.exports = new Button("buyscouting");
-
-module.exports.execute = (interaction, [type]) => {
+const id = "buyscouting";
+module.exports = new Button(id, (interaction, [type]) => {
 	// Set flags for party scouting and remove gold from party inventory
 	let adventure = getAdventure(interaction.channel.id);
 	let user = adventure.delvers.find(delver => delver.id == interaction.user.id);
@@ -34,4 +33,4 @@ module.exports.execute = (interaction, [type]) => {
 	} else {
 		interaction.reply({ content: "Plesae buy scouting in adventures you've joined.", ephemeral: true });
 	}
-}
+});

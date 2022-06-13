@@ -3,14 +3,15 @@ const { embedTemplate } = require('../../helpers.js');
 const { getColor } = require('../elementHelpers.js');
 const { equipmentExists, buildEquipmentDescription, getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
 
+const id = "armory";
 const options = [
 	{ type: "String", name: "equipment-name", description: "The name of the equipment (case-sensitive)", required: true, choices: [] }
 ];
-module.exports = new Command("armory", "Look up the stats on a type of equipment", false, false, options);
+module.exports = new Command(id, "Look up the stats on a type of equipment", false, false, options);
 
 module.exports.execute = (interaction) => {
 	// Command specifications go here
-	const equipmentName = interaction.options.getString("equipment-name");
+	const equipmentName = interaction.options.getString(options[0].name);
 	if (equipmentExists(equipmentName)) {
 		const upgrades = getEquipmentProperty(equipmentName, "upgrades");
 		let embed = embedTemplate(interaction.client.user.displayAvatarURL()).setColor(getColor(getEquipmentProperty(equipmentName, "element")))

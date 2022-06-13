@@ -1,12 +1,12 @@
 const { MessageActionRow, MessageButton } = require('discord.js');
 const Select = require('../../Classes/Select.js');
 const { SAFE_DELIMITER } = require('../../helpers.js');
-const { getAdventure, setAdventure, generateMerchantRows, generateRoutingRow } = require('../adventureDAO.js');
+const { getAdventure, setAdventure } = require('../adventureDAO.js');
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
+const { generateMerchantRows, generateRoutingRow } = require("../roomDAO.js");
 
-module.exports = new Select("buyequipment");
-
-module.exports.execute = (interaction, [tier]) => {
+const id = "buyequipment";
+module.exports = new Select(id, (interaction, [tier]) => {
 	// Create the equipment details embed so player can decide whether to make the purchase
 	let adventure = getAdventure(interaction.channel.id);
 	let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
@@ -42,4 +42,4 @@ module.exports.execute = (interaction, [tier]) => {
 	} else {
 		interaction.reply({ content: "Please purchase equipment in adventures you've joined.", ephemeral: true });
 	}
-}
+});

@@ -3,9 +3,8 @@ const Button = require('../../Classes/Button.js');
 const { MessageActionRow, MessageButton } = require('discord.js');
 const { SAFE_DELIMITER, clearComponents } = require('../../helpers.js');
 
-module.exports = new Button("routevote");
-
-module.exports.execute = (interaction, [candidate, depth]) => {
+const id = "routevote";
+module.exports = new Button(id, (interaction, [candidate, depth]) => {
 	// Tally votes for next room
 	let adventure = getAdventure(interaction.channel.id);
 	const candidateTag = `${candidate}${SAFE_DELIMITER}${depth}`;
@@ -48,4 +47,4 @@ module.exports.execute = (interaction, [candidate, depth]) => {
 	} else {
 		interaction.update({ content: "\u200B" });
 	}
-}
+});

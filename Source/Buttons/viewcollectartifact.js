@@ -4,9 +4,8 @@ const { getPlayer } = require('../playerDAO.js');
 const { getAdventure } = require('../adventureDAO.js');
 const { getArtifact } = require('../Artifacts/_artifactDictionary.js');
 
-module.exports = new Button("collectartifact");
-
-module.exports.execute = (interaction, _args) => {
+const id = "viewcollectartifact";
+module.exports = new Button(id, (interaction, args) => {
 	// Send the player a message with a select an artifact to collect
 	let adventure = getAdventure(interaction.channel.id);
 	let playerProfile = getPlayer(interaction.user.id, interaction.guild.id);
@@ -59,4 +58,4 @@ module.exports.execute = (interaction, _args) => {
 	} else {
 		interaction.reply({ content: "You don't appear to be signed up for this adventure.", ephemeral: true });
 	}
-}
+});

@@ -3,9 +3,8 @@ const { getAdventure, completeAdventure, updateRoomHeader } = require('../advent
 const { gainHealth, dealDamage } = require("../combatantDAO.js");
 const { editButtons } = require('../roomDAO.js');
 
-module.exports = new Button("hpshare");
-
-module.exports.execute = (interaction, args) => {
+const id = "hpshare";
+module.exports = new Button(id, (interaction, args) => {
 	// Take hp from user, give to party members
 	let adventure = getAdventure(interaction.channel.id);
 	let delver = adventure.delvers.find(delver => delver.id == interaction.user.id);
@@ -24,7 +23,7 @@ module.exports.execute = (interaction, args) => {
 				if (adventure.lives < 1) {
 					interaction.reply({ embeds: [completeAdventure(adventure, interaction.channel, { isSuccess: false, description: null })] });
 				} else {
-					interaction.update({ components: editButtons(interaction.message.components, { "hpshare": { preventUse: true, label: `${interaction.user} shared HP.`, emoji: "✔️" } }) });
+					interaction.update({ components: editButtons(interaction.message.components, { [id]: { preventUse: true, label: `${interaction.user} shared HP.`, emoji: "✔️" } }) });
 				}
 			})
 		} else {
@@ -33,4 +32,4 @@ module.exports.execute = (interaction, args) => {
 	} else {
 		interaction.reply({ content: "Please share hp in adventures you've joined.", ephemeral: true });
 	}
-}
+});

@@ -1,5 +1,5 @@
 const fs = require("fs");
-const { MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu } = require("discord.js");
+const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
 const Adventure = require("../Classes/Adventure.js");
 
 const Move = require("../Classes/Move.js");
@@ -8,7 +8,7 @@ const Delver = require("../Classes/Delver.js");
 const Room = require("../Classes/Room.js");
 const Resource = require("../Classes/Resource.js");
 const { getWeakness, getColor } = require("./elementHelpers.js");
-const { ensuredPathSave, parseCount, generateRandomNumber, clearComponents, ordinalSuffixEN, SAFE_DELIMITER } = require("../helpers.js");
+const { ensuredPathSave, parseCount, generateRandomNumber, clearComponents, SAFE_DELIMITER } = require("../helpers.js");
 const { getGuild } = require("./guildDAO.js");
 const { setPlayer, getPlayer } = require("./playerDAO.js");
 const { spawnEnemy } = require("./enemyDAO.js");
@@ -16,10 +16,11 @@ const { resolveMove } = require("./moveDAO.js");
 const { clearBlock, removeModifier } = require("./combatantDAO.js");
 const { manufactureRoomTemplate, prerollBoss } = require("./Rooms/_roomDictionary.js");
 const { getTurnDecrement } = require("./Modifiers/_modifierDictionary.js");
-const { rollEquipmentDrop, getEquipmentProperty, buildEquipmentDescription } = require("./equipment/_equipmentDictionary.js");
+const { rollEquipmentDrop, getEquipmentProperty } = require("./equipment/_equipmentDictionary.js");
 const { rollArtifact } = require("./Artifacts/_artifactDictionary.js");
 const { getEnemy } = require("./Enemies/_enemyDictionary");
 const { getChallenge, rollChallenges } = require("./Challenges/_challengeDictionary.js");
+const { generateRoutingRow, generateLootRow, generateMerchantRows } = require("./roomDAO.js");
 
 const dirPath = "./Saves";
 const fileName = "adventures.json";
@@ -203,23 +204,23 @@ exports.nextRoom = async function (roomType, thread) {
 					}
 				}
 			} else if (category === "scouting") {
-				adventure.room.resources["bossScouting"] = new Resource("bossScouting", "scouting", true, "merchant", calculateScoutingCost(adventure.getArtifactCount("Amethyst Spyglass"), "Final Battle"))
+				adventure.room.resources["bossScouting"] = new Resource("bossScouting", "scouting", true, "merchant", adventure.calculateScoutingCost("Final Battle"))
 					.setUIGroup("scouting");
-				adventure.room.resources["guardScouting"] = new Resource("guardScouting", "scouting", true, "merchant", calculateScoutingCost(adventure.getArtifactCount("Amethyst Spyglass"), "Artifact Guardian"))
+				adventure.room.resources["guardScouting"] = new Resource("guardScouting", "scouting", true, "merchant", adventure.calculateScoutingCost("Artifact Guardian"))
 					.setUIGroup("scouting");
 			}
 		}
 		if (adventure.depth < 10) {
 			let roomMessage = await thread.send({
 				embeds: [embed.addField("Decide the next room", "Each delver can pick or change their pick for the next room. The party will move on when the decision is unanimous.")],
-				components: [...roomTemplate.uiRows, ...exports.generateMerchantRows(adventure), exports.generateRoutingRow(adventure)]
+				components: [...roomTemplate.uiRows, ...generateMerchantRows(adventure), generateRoutingRow(adventure)]
 			});
 			adventure.messageIds.room = roomMessage.id;
 		} else {
 			thread.send({
 				embeds: [embed, exports.completeAdventure(adventure, thread, { isSuccess: true, description: null })],
 				components: [new MessageActionRow().addComponents(
-					new MessageButton().setCustomId("collectartifact")
+					new MessageButton().setCustomId("viewcollectartifact")
 						.setLabel("Collect Artifact")
 						.setStyle("SUCCESS")
 				)]
@@ -229,26 +230,12 @@ exports.nextRoom = async function (roomType, thread) {
 	exports.setAdventure(adventure);
 }
 
-/** Calculates a scouting cost
- * @param {number} count - count of Amethyst Spyglasses in party possesion
- * @param {string} type - enum: "Final Battle", "Artifact Guardian"
- * @returns {number}
- */
-function calculateScoutingCost(count, type) {
-	switch (type) {
-		case "Final Battle":
-			return 150 - (count * 5);
-		case "Artifact Guardian":
-			return 100 - (count * 5);
-	}
-}
-
 exports.endRoom = function (roomType, thread) {
 	let adventure = exports.getAdventure(thread.id);
 	adventure.depth++;
 	adventure.room = {};
 	// reset roomCandidates early enough (before being deferred to the callback stack) to prevent routevote racecondition
-	adventure.roomCandidates = {}; 
+	adventure.roomCandidates = {};
 
 	for (const challengeName in adventure.challenges) {
 		if (adventure.challenges[challengeName].duration) {
@@ -354,122 +341,6 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 	}
 }
 
-exports.generateRoutingRow = function (adventure) {
-	let candidateKeys = Object.keys(adventure.roomCandidates);
-	if (candidateKeys.length > 1) {
-		return new MessageActionRow().addComponents(
-			...candidateKeys.map(candidateTag => {
-				let [roomType, _depth] = candidateTag.split(SAFE_DELIMITER);
-				return new MessageButton().setCustomId(`routevote${SAFE_DELIMITER}${candidateTag}`)
-					.setLabel(`Next room: ${roomType}`)
-					.setStyle("SECONDARY")
-			}));
-	} else {
-		return new MessageActionRow().addComponents(
-			new MessageButton().setCustomId("continue")
-				.setEmoji("👑")
-				.setLabel(`Continue to the ${candidateKeys[0].split(SAFE_DELIMITER)[0]}`)
-				.setStyle("SECONDARY")
-		);
-	}
-}
-
-exports.generateLootRow = function (adventure) {
-	let options = [];
-	for (const resource of Object.values(adventure.room.resources)) {
-		if (resource.uiType === "loot") {
-			const { name, resourceType: type, count } = resource;
-			let option = { value: `${name}${SAFE_DELIMITER}${options.length}` };
-
-			if (name == "gold") {
-				option.label = `${count} Gold`;
-			} else {
-				option.label = `${name} x ${count}`;
-			}
-
-			if (type === "equipment") {
-				option.description = buildEquipmentDescription(name, false);
-			} else if (type === "artifact") {
-				option.description = getArtifact(name).dynamicDescription(count);
-			} else {
-				option.description = "";
-			}
-			options.push(option)
-		}
-	}
-	if (options.length > 0) {
-		return new MessageActionRow().addComponents(
-			new MessageSelectMenu().setCustomId("loot")
-				.setPlaceholder("Take some of the spoils of combat...")
-				.setOptions(options))
-	} else {
-		return new MessageActionRow().addComponents(
-			new MessageSelectMenu().setCustomId("loot")
-				.setPlaceholder("No loot")
-				.setOptions([{ label: "If the menu is stuck, close and reopen the thread.", description: "This usually happens when two players try to take the last thing at the same time.", value: "placeholder" }])
-				.setDisabled(true)
-		)
-	}
-}
-
-exports.generateMerchantRows = function (adventure) {
-	let categorizedResources = {};
-	for (const resource of Object.values(adventure.room.resources)) {
-		if (resource.uiType === "merchant") {
-			let group = resource.uiGroup;
-			if (categorizedResources[group]) {
-				categorizedResources[group].push(resource.name);
-			} else {
-				categorizedResources[group] = [resource.name];
-			}
-		}
-	}
-
-	let rows = [];
-	for (const groupName in categorizedResources) {
-		if (groupName.startsWith("equipment")) {
-			const [type, tier] = groupName.split(SAFE_DELIMITER);
-			let options = [];
-			categorizedResources[groupName].forEach((resource, i) => {
-				if (adventure.room.resources[resource].count > 0) {
-					const cost = getEquipmentProperty(resource, "cost");
-					options.push({
-						label: `${cost}g: ${resource}`,
-						description: buildEquipmentDescription(resource, false),
-						value: `${resource}${SAFE_DELIMITER}${i}`
-					})
-				}
-			})
-			if (options.length) {
-				rows.push(new MessageActionRow().addComponents(
-					new MessageSelectMenu().setCustomId(`buy${groupName}`)
-						.setPlaceholder(`Check a ${tier === "2" ? "rare " : ""}piece of equipment...`)
-						.setOptions(options)));
-			} else {
-				rows.push(new MessageActionRow().addComponents(
-					new MessageSelectMenu().setCustomId(`buy${groupName}`)
-						.setPlaceholder("SOLD OUT")
-						.setOptions([{ label: "If the menu is stuck, close and reopen the thread.", description: "This usually happens when two players try to buy the last item at the same time.", value: "placeholder" }])
-						.setDisabled(true)));
-			}
-		} else if (groupName === "scouting") {
-			const bossScoutingCost = calculateScoutingCost(adventure.getArtifactCount("Amethyst Spyglass"), "Final Battle");
-			const guardScoutingCost = calculateScoutingCost(adventure.getArtifactCount("Amethyst Spyglass"), "Artifact Guardian");
-			rows.push(new MessageActionRow().addComponents(
-				new MessageButton().setCustomId(`buyscouting${SAFE_DELIMITER}Final Battle`)
-					.setLabel(`${adventure.scouting.finalBoss ? `Final Battle: ${adventure.finalBoss}` : `${bossScoutingCost}g: Scout the Final Battle`}`)
-					.setStyle("SECONDARY")
-					.setDisabled(adventure.scouting.finalBoss || adventure.gold < bossScoutingCost),
-				new MessageButton().setCustomId(`buyscouting${SAFE_DELIMITER}Artifact Guardian`)
-					.setLabel(`${guardScoutingCost}g: Scout the ${ordinalSuffixEN(adventure.scouting.artifactGuardians + 1)} Artifact Guardian`)
-					.setStyle("SECONDARY")
-					.setDisabled(adventure.gold < guardScoutingCost)
-			));
-		}
-	}
-	return rows;
-}
-
 exports.endRound = async function (adventure, thread) {
 	// Generate results embed
 	let embed = new MessageEmbed().setAuthor({ name: roomHeaderString(adventure), iconURL: thread.client.user.displayAvatarURL() })
@@ -544,7 +415,7 @@ exports.endRound = async function (adventure, thread) {
 			if (adventure.depth < 10) {
 				return thread.send({
 					embeds: [embed.addField("Decide the next room", "Each delver can pick or change their pick for the next room. The party will move on when the decision is unanimous.")],
-					components: [exports.generateLootRow(adventure), exports.generateRoutingRow(adventure)]
+					components: [generateLootRow(adventure), generateRoutingRow(adventure)]
 				}).then(message => {
 					adventure.messageIds.room = message.id;
 					adventure.room.moves = [];
@@ -559,7 +430,7 @@ exports.endRound = async function (adventure, thread) {
 				return thread.send({
 					embeds: [embed, exports.completeAdventure(adventure, thread, { isSuccess: true, description: null })],
 					components: [new MessageActionRow().addComponents(
-						new MessageButton().setCustomId("collectartifact")
+						new MessageButton().setCustomId("viewcollectartifact")
 							.setLabel("Collect Artifact")
 							.setStyle("SUCCESS")
 					)]

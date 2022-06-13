@@ -4,9 +4,8 @@ const { SAFE_DELIMITER, generateRandomNumber } = require('../../helpers.js');
 const { getAdventure, checkNextRound, endRound, setAdventure } = require('../adventureDAO');
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
 
-module.exports = new Button("nontargetmove");
-
-module.exports.execute = async function (interaction, [moveName, round, index]) {
+const id = "nontargetmove";
+module.exports = new Button(id, async (interaction, [moveName, round, index]) => {
 	// Add move object to adventure
 	let adventure = getAdventure(interaction.channel.id);
 	if (adventure.room.round === Number(round)) {
@@ -82,4 +81,4 @@ module.exports.execute = async function (interaction, [moveName, round, index]) 
 	} else {
 		interaction.update({ components: [] });
 	}
-}
+});

@@ -1,6 +1,17 @@
 const { SAFE_DELIMITER, generateRandomNumber } = require("../../helpers.js");
 
-const roomWhitelist = [
+const ROOMS = {
+	"Event": [],
+	"Battle": [],
+	"Merchant": [],
+	"Rest Site": [],
+	"Final Battle": [],
+	"Forge": [],
+	"Artifact Guardian": [],
+	"Empty": []
+};
+
+for (const file of [
 	"artifactguardian-royalslime.js",
 	"artifactguardian-treasureelemental.js",
 	"battle-bloodtailhawks.js",
@@ -18,20 +29,7 @@ const roomWhitelist = [
 	"forge-basic.js",
 	"merchant-basic.js",
 	"restsite-basic.js"
-];
-
-const ROOMS = {
-	"Event": [],
-	"Battle": [],
-	"Merchant": [],
-	"Rest Site": [],
-	"Final Battle": [],
-	"Forge": [],
-	"Artifact Guardian": [],
-	"Empty": []
-};
-
-for (const file of roomWhitelist) {
+]) {
 	const room = require(`./${file}`);
 	room.types.forEach(type => {
 		if (ROOMS[type]) {

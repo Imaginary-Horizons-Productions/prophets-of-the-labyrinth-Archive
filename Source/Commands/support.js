@@ -1,8 +1,9 @@
 const { MessageEmbed } = require('discord.js');
 const Command = require('../../Classes/Command.js');
 
+const id = "support";
 const options = [];
-module.exports = new Command("support", "List ways to support PotL", false, false, options);
+module.exports = new Command(id, "List ways to support PotL", false, false, options);
 
 module.exports.execute = (interaction) => {
 	interaction.reply({

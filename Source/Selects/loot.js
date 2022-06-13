@@ -1,12 +1,12 @@
 const { MessageActionRow, MessageButton } = require('discord.js');
 const Select = require('../../Classes/Select.js');
-const { getAdventure, updateRoomHeader, setAdventure, generateLootRow, generateRoutingRow } = require('../adventureDAO.js');
+const { getAdventure, updateRoomHeader, setAdventure } = require('../adventureDAO.js');
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
 const { SAFE_DELIMITER } = require('../../helpers.js');
+const { generateLootRow, generateRoutingRow } = require("../roomDAO.js");
 
-module.exports = new Select("loot");
-
-module.exports.execute = (interaction, args) => {
+const id = "loot";
+module.exports = new Select(id, (interaction, args) => {
 	// Move the selected loot into party/delver's inventory
 	let adventure = getAdventure(interaction.channel.id);
 	let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
@@ -67,4 +67,4 @@ module.exports.execute = (interaction, args) => {
 	} else {
 		interaction.reply({ content: "Please take loot in adventures you've joined.", ephemeral: true });
 	}
-}
+});

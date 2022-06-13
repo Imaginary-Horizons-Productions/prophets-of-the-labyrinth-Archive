@@ -4,9 +4,8 @@ const { getAdventure } = require('../adventureDAO.js');
 const { modifiersToString } = require('../combatantDAO.js');
 const { isBuff, isDebuff, getModifierDescription, isNonStacking } = require('../Modifiers/_modifierDictionary.js');
 
-module.exports = new Button("modifier");
-
-module.exports.execute = (interaction, [modifierName]) => {
+const id = "modifier";
+module.exports = new Button(id, (interaction, [modifierName]) => {
 	// Provide details about the given modifier
 	let adventure = getAdventure(interaction.channel.id);
 	let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
@@ -32,4 +31,4 @@ module.exports.execute = (interaction, [modifierName]) => {
 			.setDescription(modifiersToString(delver, true))
 		interaction.reply({ embeds: [embed], ephemeral: true });
 	}
-}
+});

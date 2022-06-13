@@ -1,10 +1,10 @@
 const Button = require('../../Classes/Button.js');
-const { getAdventure, setAdventure, generateRoutingRow, generateLootRow, generateMerchantRows } = require('../adventureDAO.js');
+const { getAdventure, setAdventure } = require('../adventureDAO.js');
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
+const { generateRoutingRow, generateLootRow, generateMerchantRows } = require("../roomDAO.js");
 
-module.exports = new Button("replaceequipment");
-
-module.exports.execute = (interaction, [name, index, atMerchant]) => {
+const id = "replaceequipment";
+module.exports = new Button(id, (interaction, [name, index, atMerchant]) => {
 	// Replace the delver's equipment at the given index with the given equipment
 	let adventure = getAdventure(interaction.channel.id);
 	const { count, cost } = adventure.room.resources[name];
@@ -31,4 +31,4 @@ module.exports.execute = (interaction, [name, index, atMerchant]) => {
 	} else {
 		interaction.update({ content: `There aren't any more ${name} to take.`, components: [] });
 	}
-}
+});

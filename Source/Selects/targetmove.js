@@ -5,9 +5,8 @@ const { getAdventure, checkNextRound, endRound, setAdventure } = require('../adv
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary');
 const { getFullName } = require("../combatantDAO.js");
 
-module.exports = new Select("targetmove");
-
-module.exports.execute = async function (interaction, [moveName, round, index]) {
+const id = "targetmove";
+module.exports = new Select(id, async (interaction, [moveName, round, index]) => {
 	// Add move object to adventure
 	let adventure = getAdventure(interaction.channel.id);
 	if (adventure.room.round === Number(round)) {
@@ -59,4 +58,4 @@ module.exports.execute = async function (interaction, [moveName, round, index]) 
 	} else {
 		interaction.update({ components: [] });
 	}
-}
+});

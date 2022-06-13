@@ -1,7 +1,37 @@
 const { generateRandomNumber } = require("../../helpers.js");
 const { getEmoji } = require("../elementHelpers.js");
 
-const equipmentWhitelist = [
+const allEquipment = {};
+const equipmentDrops = {
+	Earth: {
+		"0": [],
+		"1": [],
+		"2": []
+	},
+	Wind: {
+		"0": [],
+		"1": [],
+		"2": []
+	},
+	Water: {
+		"0": [],
+		"1": [],
+		"2": []
+	},
+	Fire: {
+		"0": [],
+		"1": [],
+		"2": []
+	},
+	Untyped: {
+		"-1": [],
+		"0": [],
+		"1": [],
+		"2": []
+	}
+};
+
+for (const file of [
 	"-punch.js",
 	"barrier-base.js",
 	"barrier-purifying.js",
@@ -79,39 +109,7 @@ const equipmentWhitelist = [
 	"sword-swift.js",
 	"warhammer-base.js",
 	"warhammer-piercing.js"
-];
-
-const allEquipment = {};
-const equipmentDrops = {
-	Earth: {
-		"0": [],
-		"1": [],
-		"2": []
-	},
-	Wind: {
-		"0": [],
-		"1": [],
-		"2": []
-	},
-	Water: {
-		"0": [],
-		"1": [],
-		"2": []
-	},
-	Fire: {
-		"0": [],
-		"1": [],
-		"2": []
-	},
-	Untyped: {
-		"-1": [],
-		"0": [],
-		"1": [],
-		"2": []
-	}
-};
-
-for (const file of equipmentWhitelist) {
+]) {
 	const equip = require(`./${file}`);
 	allEquipment[equip.name] = equip;
 	equipmentDrops[equip.element][equip.tier.toString()].push(equip.name);

@@ -3,9 +3,8 @@ const Button = require('../../Classes/Button.js');
 const { getAdventure } = require('../adventureDAO.js');
 const { getChallenge } = require('../Challenges/_challengeDictionary.js');
 
-module.exports = new Button("viewchallenges");
-
-module.exports.execute = (interaction, args) => {
+const id = "viewchallenges";
+module.exports = new Button(id, (interaction, args) => {
 	// Roll challenge options for party to select
 	let adventure = getAdventure(interaction.channel.id);
 	if (adventure.delvers.some(delver => delver.id === interaction.user.id)) {
@@ -30,4 +29,4 @@ module.exports.execute = (interaction, args) => {
 	} else {
 		interaction.reply({ content: "You don't appear to be signed up for this adventure.", ephemeral: true });
 	}
-}
+});

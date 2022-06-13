@@ -8,9 +8,8 @@ const { getFullName } = require("../combatantDAO.js");
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
 const { equipmentToEmbedField } = require('../equipmentDAO.js');
 
-module.exports = new Button("readymove");
-
-module.exports.execute = (interaction, args) => {
+const id = "readymove";
+module.exports = new Button(id, (interaction, args) => {
 	// Show the delver stats of the user and provide components to ready a move
 	let adventure = getAdventure(interaction.channel.id);
 	let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
@@ -89,7 +88,7 @@ module.exports.execute = (interaction, args) => {
 	} else {
 		interaction.reply({ content: "Please participate in combat in adventures you've joined.", ephemeral: true });
 	}
-}
+});
 
 function miniPredict(predictType, combatant) {
 	switch (predictType) {

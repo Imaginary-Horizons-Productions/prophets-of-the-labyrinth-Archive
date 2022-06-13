@@ -4,9 +4,8 @@ const { getAdventure, setAdventure } = require('../adventureDAO');
 const { MessageActionRow, MessageButton } = require('discord.js');
 const { getArtifact } = require('../Artifacts/_artifactDictionary.js');
 
-module.exports = new Select("startingartifact");
-
-module.exports.execute = (interaction, args) => {
+const id = "startingartifact";
+module.exports = new Select(id, (interaction, args) => {
 	// Set the player's starting artifact
 	let adventure = getAdventure(interaction.channel.id);
 	if (adventure?.state === "config") {
@@ -47,4 +46,4 @@ module.exports.execute = (interaction, args) => {
 	} else {
 		interaction.reply({ content: "A valid adventure could not be found.", ephemeral: true });
 	}
-}
+});

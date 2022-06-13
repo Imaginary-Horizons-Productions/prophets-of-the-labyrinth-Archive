@@ -6,9 +6,8 @@ const { getAdventure, setAdventure } = require('../adventureDAO');
 const { getArchetype } = require('../Archetypes/_archetypeDictionary.js');
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
 
-module.exports = new Select("archetype");
-
-module.exports.execute = (interaction, args) => {
+const id = "archetype";
+module.exports = new Select(id, (interaction, args) => {
 	// Add the player's delver object to the adventure
 	let adventure = getAdventure(interaction.channel.id);
 	if (adventure?.state === "config") {
@@ -21,7 +20,7 @@ module.exports.execute = (interaction, args) => {
 			delver.equipment = archetypeTemplate.signatureEquipment.map(equipmentName => {
 				return { name: equipmentName, uses: getEquipmentProperty(equipmentName, "maxUses") }
 			});
-			const wasReady = adventure.delvers.every(delver => delver.title); 
+			const wasReady = adventure.delvers.every(delver => delver.title);
 			delver.setTitle(archetypeTemplate.title)
 				.setHp(archetypeTemplate.maxHp)
 				.setSpeed(archetypeTemplate.speed)
@@ -70,4 +69,4 @@ module.exports.execute = (interaction, args) => {
 	} else {
 		interaction.reply({ content: "A valid adventure could not be found.", ephemeral: true });
 	}
-}
+});
