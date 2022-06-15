@@ -4,9 +4,8 @@ const Select = require('../../Classes/Select.js');
 const { getArtifact } = require('../Artifacts/_artifactDictionary.js');
 const { getAdventure } = require('../adventureDAO.js');
 
-module.exports = new Select("artifact");
-
-module.exports.execute = (interaction, args) => {
+const id = "artifact";
+module.exports = new Select(id, (interaction, args) => {
 	// Provide information about the selected artifact
 	const [artifactName, artifactCount] = interaction.values[0].split(SAFE_DELIMITER);
 	let artifact = getArtifact(artifactName);
@@ -25,4 +24,4 @@ module.exports.execute = (interaction, args) => {
 		embed.addField(entry[0], entry[1].toString());
 	})
 	interaction.reply({ embeds: [embed], ephemeral: true });
-}
+});

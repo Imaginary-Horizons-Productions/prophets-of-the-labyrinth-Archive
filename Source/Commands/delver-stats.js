@@ -2,8 +2,9 @@ const Command = require('../../Classes/Command.js');
 const { getAdventure } = require('../adventureDAO.js');
 const { delverStatsPayload } = require('../equipmentDAO.js');
 
+const id = "delver-stats";
 const options = [];
-module.exports = new Command("delver-stats", "Get your adventure-specific stats for the thread's adventure", false, false, options);
+module.exports = new Command(id, "Get your adventure-specific stats for the thread's adventure", false, false, options);
 
 module.exports.execute = (interaction) => {
 	// Show the delver stats of the user

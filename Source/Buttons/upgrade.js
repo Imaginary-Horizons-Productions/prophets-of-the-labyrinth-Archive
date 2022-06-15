@@ -4,9 +4,8 @@ const { SAFE_DELIMITER } = require('../../helpers.js');
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
 const { getAdventure } = require("./../adventureDAO.js");
 
-module.exports = new Button("upgrade");
-
-module.exports.execute = (interaction, args) => {
+const id = "upgrade";
+module.exports = new Button(id, (interaction, args) => {
 	// Present the user with an opportunity to upgrade a piece of equipment
 	let adventure = getAdventure(interaction.channel.id);
 	let user = adventure.delvers.find(delver => delver.id === interaction.user.id);
@@ -39,4 +38,4 @@ module.exports.execute = (interaction, args) => {
 	} else {
 		interaction.reply({ content: "Please tinker with equipment in adventures you've joined.", ephemeral: true });
 	}
-}
+});

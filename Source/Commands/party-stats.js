@@ -3,8 +3,9 @@ const { MessageEmbed, MessageActionRow, MessageSelectMenu } = require('discord.j
 const { SAFE_DELIMITER } = require('../../helpers.js');
 const { getAdventure } = require('../adventureDAO.js');
 
+const id = "party-stats";
 const options = [];
-module.exports = new Command("party-stats", "Get info about the current adventure", false, false, options);
+module.exports = new Command(id, "Get info about the current adventure", false, false, options);
 
 module.exports.execute = (interaction) => {
 	// Show user the party stats

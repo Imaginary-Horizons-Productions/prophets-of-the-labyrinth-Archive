@@ -1,14 +1,12 @@
 const { generateRandomNumber } = require("../../helpers");
 
-const challengeWhitelist = [
+const CHALLENGES = {};
+
+for (const file of [
 	"blindavarice.js",
 	"cantholdallthisvalue.js",
 	"restless.js"
-];
-
-const CHALLENGES = {};
-
-for (const file of challengeWhitelist) {
+]) {
 	const challenge = require(`./${file}`);
 	CHALLENGES[challenge.name] = challenge;
 }

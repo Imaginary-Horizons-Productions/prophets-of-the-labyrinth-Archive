@@ -12,8 +12,8 @@ const { loadAdventures } = require("./Source/adventureDAO.js");
 const { loadGuilds, setGuild } = require("./Source/guildDAO.js");
 const { loadPlayers } = require("./Source/playerDAO.js");
 const { getCommand, slashData } = require(`./Source/Commands/_commandDictionary.js`);
-const { getSelect } = require("./Source/Selects/_selectDictionary.js");
-const { getButton } = require("./Source/Buttons/_buttonDictionary.js");
+const { callSelect } = require("./Source/Selects/_selectDictionary.js");
+const { callButton } = require("./Source/Buttons/_buttonDictionary.js");
 const { getPremiumUsers, getVersionEmbed } = require("./helpers.js");
 //#endregion
 
@@ -103,9 +103,9 @@ client.on("interactionCreate", interaction => {
 	} else {
 		const [mainId, ...args] = interaction.customId.split(SAFE_DELIMITER);
 		if (interaction.isButton()) {
-			getButton(mainId).execute(interaction, args);
+			callButton(mainId, interaction, args);
 		} else if (interaction.isSelectMenu()) {
-			getSelect(mainId).execute(interaction, args);
+			callSelect(mainId, interaction, args);
 		}
 	}
 })

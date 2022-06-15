@@ -3,9 +3,8 @@ const { getAdventure, setAdventure } = require('../adventureDAO.js');
 const { getChallenge } = require('../Challenges/_challengeDictionary.js');
 const { editButtons } = require('../roomDAO.js');
 
-module.exports = new Select("challenge");
-
-module.exports.execute = (interaction, args) => {
+const id = "challenge";
+module.exports = new Select(id, (interaction, args) => {
 	let adventure = getAdventure(interaction.channelId);
 	if (adventure) {
 		const [challengeName] = interaction.values;
@@ -31,4 +30,4 @@ module.exports.execute = (interaction, args) => {
 	} else {
 		interaction.reply({ content: "This adventure seems to have already ended.", ephemeral: true });
 	}
-}
+});

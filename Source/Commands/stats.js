@@ -5,18 +5,21 @@ const { getArtifactCounts } = require('../Artifacts/_artifactDictionary.js');
 const { getGuild } = require('../guildDAO.js');
 const { getPlayer } = require('../playerDAO.js');
 
+const id = "stats";
 const options = [
 	{ type: "User", name: "user", description: "The user's mention", required: false, choices: [] }
 ];
-module.exports = new Command("stats", "Get the stats for a user (default: yourself)", false, false, options);
+module.exports = new Command(id, "Get the stats for a user (default: yourself)", false, false, options);
 
 module.exports.execute = (interaction) => {
 	// Get the stats on a user
-	let availability = getGuild(interaction.guildId)?.adventuring.has(interaction.user.id) ? "❌ Out on adventure" : "🟢 Available for adventure";
-	if (isSponsor(interaction.user.id)) {
+	const user = interaction.options.getUser(options[0].name) || interaction.user;
+	const { guildId } = interaction;
+	let availability = getGuild(guildId)?.adventuring.has(user.id) ? "❌ Out on adventure" : "🟢 Available for adventure";
+	if (isSponsor(user.id)) {
 		availability = "💎 Premium (available for adventure)";
 	}
-	let player = getPlayer(interaction.user.id, interaction.guildId);
+	let player = getPlayer(user.id, guildId);
 	let totalArtifacts = getArtifactCounts();
 	let embed = new MessageEmbed().setAuthor({ name: availability })
 		.setTitle("Player Stats")

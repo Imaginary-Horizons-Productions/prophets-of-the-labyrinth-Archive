@@ -1,7 +1,6 @@
 const Select = require('../../Classes/Select.js');
 
-module.exports = new Select("");
-
-module.exports.execute = (interaction, args) => {
+const id = "";
+module.exports = new Select(id, (interaction, args) => {
 	// Specs
-}
+});

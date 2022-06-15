@@ -2,6 +2,7 @@ const Command = require('../../Classes/Command.js');
 const { embedTemplate } = require('../../helpers.js');
 const { getEmoji, getWeakness, getColor } = require('../elementHelpers.js');
 
+const id = "manual";
 const options = [
 	{
 		type: "String", name: "topic", description: "The topic/page of information", required: true, choices: [
@@ -14,12 +15,12 @@ const options = [
 		]
 	}
 ];
-module.exports = new Command("manual", "Get information about Prophets of the Labyrinth v0.8.0", false, false, options);
+module.exports = new Command(id, "Get information about Prophets of the Labyrinth v0.8.0", false, false, options);
 
 module.exports.execute = (interaction) => {
 	// Give information about the game
 	let response = { ephemeral: true };
-	switch (interaction.options.getString("topic")) {
+	switch (interaction.options.getString(options[0].name)) {
 		case "Credits":
 			response.embeds = [embedTemplate(interaction.client.user.displayAvatarURL()).setTitle("Prophets of the Labyrinth v0.8.0")
 				.setThumbnail(interaction.client.user.displayAvatarURL())

@@ -6,9 +6,8 @@ const { getArchetype } = require('../Archetypes/_archetypeDictionary.js');
 const { getAdventure } = require('../adventureDAO.js');
 const { getEmoji } = require('../elementHelpers');
 
-module.exports = new Button("deploy");
-
-module.exports.execute = (interaction, args) => {
+const id = "deploy";
+module.exports = new Button(id, (interaction, args) => {
 	// Send the player a message with a select to pick an archetype
 	let adventure = getAdventure(interaction.channel.id);
 	let playerProfile = getPlayer(interaction.user.id, interaction.guild.id);
@@ -39,4 +38,4 @@ module.exports.execute = (interaction, args) => {
 				.setStyle("SUCCESS"));
 		interaction.reply({ content: `You don't appear to be signed up for this adventure. You can join with the button below:`, components: [join], ephemeral: true });
 	}
-}
+});

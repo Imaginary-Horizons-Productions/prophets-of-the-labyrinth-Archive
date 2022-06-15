@@ -5,9 +5,8 @@ const { getTargetList } = require('../moveDAO.js');
 const { getFullName, calculateTotalSpeed, modifiersToString } = require("../combatantDAO.js");
 const { getWeakness, getColor, getEmoji } = require('../elementHelpers.js');
 
-module.exports = new Button("predict");
-
-module.exports.execute = (interaction, args) => {
+const id = "predict";
+module.exports = new Button(id, (interaction, args) => {
 	// Based on type, show the user information on the next battle round in an ephemeral message
 	let adventure = getAdventure(interaction.channel.id);
 	if (adventure.getChallengeDuration("Blind Avarice") > 0) {
@@ -77,4 +76,4 @@ module.exports.execute = (interaction, args) => {
 		.setDescription(descriptionText);
 	interaction.reply({ embeds: [embed], ephemeral: true })
 		.catch(console.error);
-}
+});

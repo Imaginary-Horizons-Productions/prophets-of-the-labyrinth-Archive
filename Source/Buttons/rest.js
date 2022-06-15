@@ -3,9 +3,8 @@ const { setAdventure, getAdventure } = require('../adventureDAO.js');
 const { gainHealth } = require('../combatantDAO.js');
 const { editButtons } = require('../roomDAO.js');
 
-module.exports = new Button("rest");
-
-module.exports.execute = (interaction, args) => {
+const id = "rest";
+module.exports = new Button(id, (interaction, args) => {
 	// Restore 15% max hp each member of the party
 	let adventure = getAdventure(interaction.channel.id);
 	if (adventure.delvers.map(delver => delver.id).includes(interaction.user.id)) {
@@ -14,7 +13,7 @@ module.exports.execute = (interaction, args) => {
 			healText.push(gainHealth(delver, delver.maxHp * 0.30 * (1 - adventure.getChallengeIntensity("Restless")), adventure, 0));
 		}
 		let updatedUI = editButtons(interaction.message.components, {
-			"rest": { preventUse: true, label: "The party rested", emoji: "✔️" },
+			[id]: { preventUse: true, label: "The party rested", emoji: "✔️" },
 			"challenge": { preventUse: true, label: "The challenger is gone", emoji: "✖️" }
 		});
 		interaction.update({ components: updatedUI }).then(() => {
@@ -24,4 +23,4 @@ module.exports.execute = (interaction, args) => {
 	} else {
 		interaction.reply({ content: "Please buy lives in adventures you've joined.", ephemeral: true });
 	}
-}
+});

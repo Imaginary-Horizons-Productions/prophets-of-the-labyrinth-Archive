@@ -1,9 +1,8 @@
 const { getAdventure, nextRoom } = require('../adventureDAO.js');
 const Button = require('../../Classes/Button.js');
 
-module.exports = new Button("ready");
-
-module.exports.execute = (interaction, _args) => {
+const id = "ready";
+module.exports = new Button(id, (interaction, args) => {
 	// Start an adventure if clicked by adventure leader
 	let adventure = getAdventure(interaction.channel.id);
 	if (interaction.user.id === adventure.leaderId) {
@@ -37,4 +36,4 @@ module.exports.execute = (interaction, _args) => {
 	} else {
 		interaction.reply({ content: "Please wait for the leader to start the adventure.", ephemeral: true });
 	}
-}
+});

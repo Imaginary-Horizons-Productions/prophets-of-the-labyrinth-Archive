@@ -2,9 +2,8 @@ const Select = require('../../Classes/Select.js');
 const { getAdventure, setAdventure } = require('../adventureDAO.js');
 const { getChallenge } = require('../Challenges/_challengeDictionary.js');
 
-module.exports = new Select("startingchallenges");
-
-module.exports.execute = (interaction, args) => {
+const id = "startingchallenges";
+module.exports = new Select(id, (interaction, args) => {
 	let adventure = getAdventure(interaction.channelId);
 	if (adventure) {
 		if (interaction.user.id === adventure.leaderId) {
@@ -46,4 +45,4 @@ module.exports.execute = (interaction, args) => {
 	} else {
 		interaction.reply({ content: "This adventure seems to have already ended.", ephemeral: true });
 	}
-}
+});

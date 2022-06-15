@@ -2,8 +2,9 @@ const { MessageEmbed } = require("discord.js");
 const fs = require("fs");
 const Command = require('../../Classes/Command.js');
 
-let options = [];
-module.exports = new Command("commands", "List PotL's slash commands", false, false, options);
+const id = "commands";
+const options = [];
+module.exports = new Command(id, "List PotL's slash commands", false, false, options);
 
 let wikiPage;
 fs.readFile("Wiki/Commands.md", { encoding: "utf-8" }, (error, data) => {

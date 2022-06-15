@@ -1,7 +1,6 @@
 module.exports = class Button {
-    constructor(nameInput) {
-        this.name = nameInput;
-    }
-
-    execute(interaction, args) { };
+	constructor(nameInput, executeFunction) {
+		this.name = nameInput;
+		this.execute = executeFunction;
+	}
 }

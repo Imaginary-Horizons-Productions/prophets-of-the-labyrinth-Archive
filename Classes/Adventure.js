@@ -124,4 +124,18 @@ module.exports = class Adventure {
 			}
 		}
 	}
+
+	/** Calculates a scouting cost
+	 * @param {string} type - enum: "Final Battle", "Artifact Guardian"
+	 * @returns {number}
+	 */
+	calculateScoutingCost(type) {
+		const count = this.getArtifactCount("Amethyst Spyglass");
+		switch (type) {
+			case "Final Battle":
+				return 150 - (count * 5);
+			case "Artifact Guardian":
+				return 100 - (count * 5);
+		}
+	}
 }
