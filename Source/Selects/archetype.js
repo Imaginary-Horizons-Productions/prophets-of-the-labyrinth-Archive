@@ -39,7 +39,7 @@ module.exports = new Select(id, (interaction, args) => {
 				if (adventure.delvers.every(delver => delver.title) && !wasReady) {
 					let readyButton = [
 						new MessageActionRow().addComponents(
-							new MessageButton().setCustomId("ready")
+							new MessageButton().setCustomId("startadventure")
 								.setEmoji("👑")
 								.setLabel("Ready!")
 								.setStyle("SUCCESS")

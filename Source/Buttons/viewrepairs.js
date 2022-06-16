@@ -13,7 +13,7 @@ module.exports = new Button(id, (interaction, args) => {
 		let options = [];
 		user.equipment.forEach((equip, index) => {
 			let maxUses = getEquipmentProperty(equip.name, "maxUses");
-			if (equip.uses < maxUses) {
+			if (maxUses > 0 && equip.uses < maxUses) {
 				let value = Math.min(Math.ceil(maxUses / 2), maxUses - equip.uses);
 				options.push({
 					label: equip.name,

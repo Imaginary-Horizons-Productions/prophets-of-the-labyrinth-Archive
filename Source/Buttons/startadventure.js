@@ -1,7 +1,7 @@
 const { getAdventure, nextRoom } = require('../adventureDAO.js');
 const Button = require('../../Classes/Button.js');
 
-const id = "ready";
+const id = "startadventure";
 module.exports = new Button(id, (interaction, args) => {
 	// Start an adventure if clicked by adventure leader
 	let adventure = getAdventure(interaction.channel.id);
