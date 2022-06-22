@@ -28,7 +28,7 @@ module.exports = new Button(id, (interaction, args) => {
 						.setPlaceholder("Pick a piece of equipment to randomly tinker with...")
 						.setOptions(options)
 				)
-				interaction.reply({ content: `You can pick a piece of equipment to tinker with, but you're not sure what you'll get:`, components: [upgradeSelect], ephemeral: true });
+				interaction.reply({ content: `You can pick a piece of equipment and consume 1 set of forge supplies to tinker with that piece of equipment. It'll upgrade if it hasn't already or change form if it has.`, components: [upgradeSelect], ephemeral: true });
 			} else {
 				interaction.reply({ content: "You don't have any equipment that can be tinkered with.", ephemeral: true });
 			}

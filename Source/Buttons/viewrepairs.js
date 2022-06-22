@@ -29,7 +29,7 @@ module.exports = new Button(id, (interaction, args) => {
 						.setPlaceholder("Pick a piece of equipment to repair...")
 						.setOptions(options)
 				)
-				interaction.reply({ content: "When you repair your equipment, it'll regain half its max uses.", components: [upgradeSelect], ephemeral: true });
+				interaction.reply({ content: "You can consume 1 set of forge supplies to repair your equipment. That piece of equipment will regain half its max uses.", components: [upgradeSelect], ephemeral: true });
 			} else {
 				interaction.reply({ content: "None of your equipment need repair.", ephemeral: true });
 			}
