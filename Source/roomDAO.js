@@ -1,5 +1,5 @@
 const { MessageActionRow, MessageButton, MessageSelectMenu } = require("discord.js");
-const { SAFE_DELIMITER, ordinalSuffixEN } = require("../helpers");
+const { SAFE_DELIMITER, ordinalSuffixEN, getNumberEmoji } = require("../helpers");
 const { getArtifact } = require("./Artifacts/_artifactDictionary");
 const { buildEquipmentDescription, getEquipmentProperty } = require("./equipment/_equipmentDictionary");
 
@@ -159,10 +159,16 @@ exports.decrementForgeSupplies = async function (interaction, roomMessageId, roo
 			embeds,
 			components: exports.editButtons(roomMessage.components, {
 				"upgrade": { preventUse: true, label: "Forge supplies exhausted", emoji: "✔️" },
-				"repair": { preventUse: true, label: "Forge supplies exhausted", emoji: "✔️" }
+				"viewrepairs": { preventUse: true, label: "Forge supplies exhausted", emoji: "✔️" }
 			})
 		})
 	} else {
-		return roomMessage.edit({ embeds });
+		return roomMessage.edit({
+			embeds,
+			components: exports.editButtons(roomMessage.components, {
+				"upgrade": { preventUse: false, label: "Consider equipment upgrades", emoji: getNumberEmoji(room.resources.forgeSupplies.count) },
+				"viewrepairs": { preventUse: false, label: "Plan equipment repairs", emoji: getNumberEmoji(room.resources.forgeSupplies.count) }
+			})
+		});
 	}
 }
