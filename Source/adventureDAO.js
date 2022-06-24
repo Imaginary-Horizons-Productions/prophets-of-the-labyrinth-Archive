@@ -260,9 +260,10 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 	}
 	for (let teamName in teams) {
 		teams[teamName].forEach((combatant, i) => {
-			// Clear Excess Block
-			clearBlock(combatant);
-
+			// Clear Excess Block if doesn't have vigilance
+			if (combatant.modifiers.Vigilance <= 0){
+				clearBlock(combatant);
+			}
 			// Roll Round Speed
 			let percentBonus = (generateRandomNumber(adventure, 21, "Battle") - 10) / 100;
 			combatant.roundSpeed = Math.floor(combatant.speed * percentBonus);

@@ -1,5 +1,6 @@
 const { getEmoji, getColor } = require("./elementHelpers.js");
 const { getEquipmentProperty, buildEquipmentDescription } = require("./equipment/_equipmentDictionary");
+const { isBuff, isDebuff, isNonStacking } = require("./Modifiers/_modifierDictionary");
 const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
 const { SAFE_DELIMITER, ordinalSuffixEN } = require("../helpers.js");
 const { getFullName } = require("./combatantDAO.js");
