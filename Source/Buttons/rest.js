@@ -14,7 +14,7 @@ module.exports = new Button(id, (interaction, args) => {
 		}
 		let updatedUI = editButtons(interaction.message.components, {
 			[id]: { preventUse: true, label: "The party rested", emoji: "✔️" },
-			"challenge": { preventUse: true, label: "The challenger is gone", emoji: "✖️" }
+			"viewchallenges": { preventUse: true, label: "The challenger is gone", emoji: "✖️" }
 		});
 		interaction.update({ components: updatedUI }).then(() => {
 			interaction.followUp(healText.join(" "));

@@ -20,7 +20,7 @@ module.exports = new Select(id, (interaction, args) => {
 		interaction.channel.messages.fetch(adventure.messageIds.room).then(roomMessage => {
 			roomMessage.edit({
 				components: editButtons(roomMessage.components, {
-					"challenge": { preventUse: true, label: challengeName, emoji: "✔️" },
+					"viewchallenges": { preventUse: true, label: challengeName, emoji: "✔️" },
 					"rest": { preventUse: true, label: "The fire has burned out", emoji: "✖️" }
 				})
 			});

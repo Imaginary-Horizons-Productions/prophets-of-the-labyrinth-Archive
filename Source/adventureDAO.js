@@ -261,7 +261,7 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 	for (let teamName in teams) {
 		teams[teamName].forEach((combatant, i) => {
 			// Clear Excess Block if doesn't have vigilance
-			if (combatant.modifiers.Vigilance <= 0){
+			if (combatant.getModifierStacks("Vigilance") == 0){
 				clearBlock(combatant);
 			}
 			// Roll Round Speed

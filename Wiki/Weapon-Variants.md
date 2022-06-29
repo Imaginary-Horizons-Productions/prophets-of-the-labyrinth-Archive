@@ -11,6 +11,12 @@ User pays hp to use
 #### Available on
 - all Blood Aegis (Water)
 
+### Devoted
+Can target allies (beyond self)
+
+#### Available on
+- Vigilance Charm (Earth)
+
 ### Earthen
 Affects Earth element combatants
 
@@ -38,6 +44,7 @@ Adds block on the user
 - Buckler (Earth)
 - Sword (Earth)
 - all Ice Ward (Water)
+- Vigilance Charm (Earth)
 
 ### Heavy
 Increased base block
@@ -54,12 +61,6 @@ Gain gold on kill
 - Sickle (Water)
 - Bow (Wind)
 
-### Inky
-Affects Dark element combatants
-
-#### Available on
-- Potion (Water)
-
 ### Lethal
 Increased crit damage
 
@@ -73,6 +74,7 @@ Increased stack count of buff/debuff applied
 
 #### Available on
 - Cloak (Wind)
+- Vigilance Charm (Earth)
 
 ### Mercurial
 Damage type matches user
@@ -209,9 +211,15 @@ Increased damage against enemies with 0 block
 #### Available on
 - Dagger (Wind)
 
+### Windy
+Affects Wind element combatants
+
+#### Available on
+- Potion (Water)
+
 ## Unnamed
 - Spear (add stagger on crit)
-- Sickle (10% max hp bonus damage)
+- Sickle (5% max hp bonus damage)
 - Life Drain (attack a foe and gain hp)
 - Warhammer (bonus damage on stunned enemy)
 - Inspire (power up to ally)
