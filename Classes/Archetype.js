@@ -6,7 +6,7 @@ module.exports = class Archetype {
 	speed = 100;
 	element = "Untyped";
 	predict = "";
-	signatureWeapons = [];
+	signatureEquipment = [];
 
 	setHp(integer) {
 		this.maxHp = integer;
@@ -33,8 +33,12 @@ module.exports = class Archetype {
 		return this;
 	}
 
-	setSignatureWeapons(weaponArray) {
-		this.signatureWeapons = weaponArray;
+	/** Set athe archetype's signature equipment by name then return the archetype via builder pattern
+	 * @param {string[]} equipmentNames
+	 * @returns
+	 */
+	setSignatureEquipment(equipmentNames) {
+		this.signatureEquipment = equipmentNames;
 		return this;
 	}
 }

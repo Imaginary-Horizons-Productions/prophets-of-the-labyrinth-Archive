@@ -1,19 +1,16 @@
-let parseCount;
-exports.injectConfig = function (isProduction) {
-	({ parseCount } = require("../../helpers").injectConfig(isProduction));
-	return this;
-}
+const { parseCount } = require("../../helpers");
 
-var modifierWhitelist = [
-	"absorb-darkness.js",
+const modifierDictionary = {};
+
+for (const file of [
 	"absorb-earth.js",
 	"absorb-fire.js",
-	"absorb-light.js",
 	"absorb-water.js",
 	"absorb-wind.js",
 	"curse-of-midas.js",
 	"evade.js",
 	"exposed.js",
+	"oblivious.js",
 	"poison.js",
 	"power-down.js",
 	"power-up.js",
@@ -22,12 +19,10 @@ var modifierWhitelist = [
 	"regen.js",
 	"slow.js",
 	"stagger.js",
+	"stasis.js",
+	"vigilance.js",
 	"stun.js"
-];
-
-const modifierDictionary = {};
-
-for (const file of modifierWhitelist) {
+]) {
 	const modifier = require(`./${file}`);
 	modifierDictionary[modifier.name] = modifier;
 }

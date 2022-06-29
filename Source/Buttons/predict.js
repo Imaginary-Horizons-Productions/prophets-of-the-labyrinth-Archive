@@ -3,12 +3,10 @@ const Button = require('../../Classes/Button.js');
 const { getAdventure, updateRoomHeader, setAdventure } = require('../adventureDAO.js');
 const { getTargetList } = require('../moveDAO.js');
 const { getFullName, calculateTotalSpeed, modifiersToString } = require("../combatantDAO.js");
-const { getResistances, getWeaknesses, getColor, getEmoji } = require('../elementHelpers.js');
-const { ordinalSuffixEN } = require('../../helpers.js');
+const { getWeakness, getColor, getEmoji } = require('../elementHelpers.js');
 
-module.exports = new Button("predict");
-
-module.exports.execute = (interaction, args) => {
+const id = "predict";
+module.exports = new Button(id, (interaction, args) => {
 	// Based on type, show the user information on the next battle round in an ephemeral message
 	let adventure = getAdventure(interaction.channel.id);
 	if (adventure.getChallengeDuration("Blind Avarice") > 0) {
@@ -29,51 +27,13 @@ module.exports.execute = (interaction, args) => {
 	let infoForNextRound = true;
 	let descriptionText = "";
 	switch (delver.predict) {
-		case "Targets": // Shows who the enemies are targeting next round and elemental resistances
-			adventure.room.moves.forEach(move => {
-				let team = move.userTeam === "delver" ? adventure.delvers : adventure.room.enemies;
-				let user = team[move.userIndex];
-				if (user.hp > 0) {
-					let targets = getTargetList(move.targets, adventure);
-					descriptionText += `\n__${getFullName(user, adventure.room.enemyTitles)}__\nTargeting: **${targets.length ? targets.join(", ") : "???"}**\nResistances: ${getResistances(user.element).map(element => getEmoji(element)).join(" ")}\n`;
-				}
-			})
-			break;
-		case "Critical Hits": // Shows which combatants are going to critically hit next round and elemental weakness
-			adventure.room.enemies.concat(adventure.delvers).filter(combatant => combatant.hp > 0).forEach(combatant => {
-				descriptionText += `\n__${getFullName(combatant, adventure.room.enemyTitles)}__\nCritical Hit: ${combatant.crit}\nWeaknesses: ${getWeaknesses(combatant.element).map(element => getEmoji(element)).join(" ")}\n`;
-			});
-			break;
-		case "Health": // Shows current HP, max HP, block, and element of all combatants
-			infoForNextRound = false;
-			adventure.room.enemies.concat(adventure.delvers).filter(combatant => combatant.hp > 0).forEach(combatant => {
-				descriptionText += `\n__${getFullName(combatant, adventure.room.enemyTitles)}__ ${getEmoji(combatant.element)}\n${combatant.hp}/${combatant.maxHp} HP${combatant.block ? `, ${combatant.block} Block` : ""}\n`;
-			})
-			break;
-		case "Move Order": // Shows roundly random speed bonuses and order of move resolution
-			let combatants = adventure.room.enemies.concat(adventure.delvers)
-				.filter(combatant => combatant.hp > 0)
+		case "Movements": // Shows speed, stagger and poise of all combatants
+			let combatants = adventure.room.enemies.filter(combatant => combatant.hp > 0)
+				.concat(adventure.delvers)
 				.sort((first, second) => {
 					return calculateTotalSpeed(second) - calculateTotalSpeed(first);
 				});
-			let numeral = 0;
-			let tempSpeed;
 			for (const combatant of combatants) {
-				let speed = calculateTotalSpeed(combatant);
-				if (speed !== tempSpeed) {
-					tempSpeed = speed;
-					numeral++;
-					descriptionText += `\n__**${ordinalSuffixEN(numeral)}** - ${speed} speed__ ${getFullName(combatant, adventure.room.enemyTitles)}`;
-				} else {
-					descriptionText += `, ${getFullName(combatant, adventure.room.enemyTitles)}`;
-				}
-			}
-			descriptionText += "\n\nCombatants tied in speed may act in any order.";
-			break;
-		case "Modifiers": // Shows modifiers and stagger thresholds for all combatants
-			infoForNextRound = false;
-			adventure.room.enemies.concat(adventure.delvers).filter(combatant => combatant.hp > 0).forEach(combatant => {
-				let modifiersText = modifiersToString(combatant);
 				let staggerCount = combatant.modifiers.Stagger || 0;
 				let bar = "";
 				for (let i = 0; i < combatant.staggerThreshold; i++) {
@@ -83,17 +43,32 @@ module.exports.execute = (interaction, args) => {
 						bar += "▱";
 					}
 				}
-				descriptionText += `\n__${getFullName(combatant, adventure.room.enemyTitles)}__\nStagger: ${bar}\n${modifiersText ? `${modifiersText}` : "No modifiers\n"}`;
-			})
+				descriptionText += `\n__${getFullName(combatant, adventure.room.enemyTitles)}__\nStagger: ${bar}\nSpeed: ${calculateTotalSpeed(combatant)}\n`;
+			}
+			descriptionText += "\nCombatants tied in speed may act in any order.";
 			break;
-		case "Enemy Moves": // Shows name of enemy next two round's move
+		case "Vulnerabilities": // Shows elemental affinities and if critically hitting this turn for all combatants
+			infoForNextRound = false;
+			adventure.room.enemies.filter(combatant => combatant.hp > 0).concat(adventure.delvers).forEach(combatant => {
+				descriptionText += `\n__${getFullName(combatant, adventure.room.enemyTitles)}__ ${getEmoji(combatant.element)}\nCritical Hit: ${combatant.crit}\nWeakness: ${getEmoji(getWeakness(combatant.element))}\nResistance: ${getEmoji(combatant.element)}\n`;
+			});
+			break;
+		case "Intents": // Shows each enemy's target(s) in the next round and the names of the next two moves
 			adventure.room.moves.forEach(move => {
 				if (move.userTeam === "enemy") {
 					let enemy = adventure.room.enemies[move.userIndex];
 					if (enemy.hp > 0) {
-						descriptionText += `\n__${getFullName(enemy, adventure.room.enemyTitles)}__\nRound ${adventure.room.round + 1}: ${move.name}\nRound ${adventure.room.round + 2}: ${enemy.nextAction}\n`;
+						let targets = getTargetList(move.targets, adventure);
+						descriptionText += `\n__${getFullName(enemy, adventure.room.enemyTitles)}__\nRound ${adventure.room.round + 1}: ${move.name} (Targets: ${targets.length ? targets.join(", ") : "???"})\nRound ${adventure.room.round + 2}: ${enemy.nextAction}\n`;
 					}
 				}
+			})
+			break;
+		case "Health": // Shows hp and modifiers for all combatants
+			infoForNextRound = false;
+			adventure.room.enemies.concat(adventure.delvers).filter(combatant => combatant.hp > 0).forEach(combatant => {
+				let modifiersText = modifiersToString(combatant, false);
+				descriptionText += `\n__${getFullName(combatant, adventure.room.enemyTitles)}__\n${combatant.hp}/${combatant.maxHp} HP${combatant.block ? `, ${combatant.block} Block` : ""}\n${modifiersText ? `${modifiersText}` : "No modifiers\n"}`;
 			})
 			break;
 	}
@@ -101,4 +76,4 @@ module.exports.execute = (interaction, args) => {
 		.setDescription(descriptionText);
 	interaction.reply({ embeds: [embed], ephemeral: true })
 		.catch(console.error);
-}
+});

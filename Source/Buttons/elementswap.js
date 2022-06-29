@@ -1,9 +1,8 @@
 const Button = require('../../Classes/Button.js');
 const { getAdventure, setAdventure } = require('../adventureDAO.js');
 
-module.exports = new Button("elementswap");
-
-module.exports.execute = (interaction, args) => {
+const id = "elementswap";
+module.exports = new Button(id, (interaction, args) => {
 	// Switch the adventurer's element to the given element
 	let adventure = getAdventure(interaction.channel.id);
 	let delver = adventure.delvers.find(delver => delver.id == interaction.user.id);
@@ -20,4 +19,4 @@ module.exports.execute = (interaction, args) => {
 	} else {
 		interaction.reply({ content: "Please swap elements in adventures you've joined.", ephemeral: true });
 	}
-}
+});

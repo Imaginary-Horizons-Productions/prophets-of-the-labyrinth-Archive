@@ -3,9 +3,8 @@ const Button = require('../../Classes/Button.js');
 const { MessageActionRow, MessageButton } = require('discord.js');
 const { SAFE_DELIMITER } = require('../../helpers.js');
 
-module.exports = new Button("continue");
-
-module.exports.execute = (interaction, args) => {
+const id = "continue";
+module.exports = new Button(id, (interaction, args) => {
 	// Generate the next room of an adventure
 	let adventure = getAdventure(interaction.channel.id);
 	if (interaction.user.id === adventure.leaderId) {
@@ -13,7 +12,7 @@ module.exports.execute = (interaction, args) => {
 		interaction.update({
 			components: [...interaction.message.components.map(row => {
 				return new MessageActionRow().addComponents(...row.components.map(component => {
-					if (component.customId !== "continue") {
+					if (component.customId !== id) {
 						let editedComponent = component.setDisabled(true);
 						if (component instanceof MessageButton && !component.emoji) {
 							editedComponent.setEmoji("✖️");
@@ -34,4 +33,4 @@ module.exports.execute = (interaction, args) => {
 	} else {
 		interaction.reply({ content: "Please wait for the leader to move to the next room.", ephemeral: true });
 	}
-}
+});

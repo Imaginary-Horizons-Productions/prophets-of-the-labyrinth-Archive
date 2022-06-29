@@ -1,7 +1,7 @@
 const Archetype = require("../../Classes/Archetype.js");
 
 module.exports = new Archetype("Martial Artist")
-	.setElement("Light")
-	.setPredictType("Modifiers")
-	.setDescription("Able to assess combatant Stun thresholds and modifiers, the Martial Artist excels at stunning foes.")
-	.setSignatureWeapons(["Spear", "Disarm"]);
+	.setElement("Fire")
+	.setPredictType("Movements")
+	.setDescription("Able to assess combatant Stun thresholds and speed, the Martial Artist excels at stunning foes.")
+	.setSignatureEquipment(["Spear", "Sun Flare"]);

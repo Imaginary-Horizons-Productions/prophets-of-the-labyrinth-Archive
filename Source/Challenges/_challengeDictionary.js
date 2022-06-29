@@ -1,18 +1,12 @@
 const { generateRandomNumber } = require("../../helpers");
 
-exports.injectConfigChallenges = function (isProduction) {
-	return this;
-}
+const CHALLENGES = {};
 
-let challengeWhitelist = [
+for (const file of [
 	"blindavarice.js",
 	"cantholdallthisvalue.js",
 	"restless.js"
-];
-
-const CHALLENGES = {};
-
-for (const file of challengeWhitelist) {
+]) {
 	const challenge = require(`./${file}`);
 	CHALLENGES[challenge.name] = challenge;
 }

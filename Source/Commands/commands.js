@@ -2,23 +2,18 @@ const { MessageEmbed } = require("discord.js");
 const fs = require("fs");
 const Command = require('../../Classes/Command.js');
 
-let options = [];
-module.exports = new Command("commands", "List PotL's slash commands", false, false, options);
+const id = "commands";
+const options = [];
+module.exports = new Command(id, "List PotL's slash commands", false, false, options);
 
-// imports from files that depend on /Config
 let wikiPage;
-module.exports.injectConfig = function (isProduction) {
-	if (isProduction) {
-		fs.readFile("Wiki/Commands.md", { encoding: "utf-8" }, (error, data) => {
-			if (error) {
-				console.error(error);
-			} else {
-				wikiPage = data;
-			}
-		})
+fs.readFile("Wiki/Commands.md", { encoding: "utf-8" }, (error, data) => {
+	if (error) {
+		console.error(error);
+	} else {
+		wikiPage = data;
 	}
-	return this;
-}
+})
 
 module.exports.execute = (interaction) => {
 	let embed = new MessageEmbed().setColor("#6b81eb")

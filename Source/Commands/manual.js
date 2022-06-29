@@ -1,31 +1,26 @@
 const Command = require('../../Classes/Command.js');
-const { MessageEmbed } = require("discord.js");
-const { getEmoji, getWeaknesses, getResistances, getColor } = require('../elementHelpers.js');
+const { embedTemplate } = require('../../helpers.js');
+const { getEmoji, getWeakness, getColor } = require('../elementHelpers.js');
 
+const id = "manual";
 const options = [
 	{
-		type: "String", name: "topic", description: "The topic/page of information", required: true, choices: {
-			"Credits": "Credits",
-			"Tutorial": "Tutorial",
-			"Elements": "Elements",
-			"Stagger": "Stagger",
-			"Damage Cap": "Damage Cap",
-			"Data Policy": "Data Policy"
-		}
+		type: "String", name: "topic", description: "The topic/page of information", required: true, choices: [
+			{ name: "Credits", value: "Credits" },
+			{ name: "Tutorial", value: "Tutorial" },
+			{ name: "Elements", value: "Elements" },
+			{ name: "Stagger", value: "Stagger" },
+			{ name: "Damage Cap", value: "Damage Cap" },
+			{ name: "Data Policy", value: "Data Policy" }
+		]
 	}
 ];
-module.exports = new Command("manual", "Get information about Prophets of the Labyrinth v0.8.0", false, false, options);
-
-// imports from files that depend on /Config
-// let ;
-module.exports.injectConfig = function (isProduction) {
-	return this;
-}
+module.exports = new Command(id, "Get information about Prophets of the Labyrinth v0.8.0", false, false, options);
 
 module.exports.execute = (interaction) => {
 	// Give information about the game
 	let response = { ephemeral: true };
-	switch (interaction.options.getString("topic")) {
+	switch (interaction.options.getString(options[0].name)) {
 		case "Credits":
 			response.embeds = [embedTemplate(interaction.client.user.displayAvatarURL()).setTitle("Prophets of the Labyrinth v0.8.0")
 				.setThumbnail(interaction.client.user.displayAvatarURL())
@@ -44,19 +39,17 @@ module.exports.execute = (interaction) => {
 			response.embeds = [embedTemplate(interaction.client.user.displayAvatarURL()).setTitle("Prophets of the Labyrinth Tutorial")
 				.setDescription("Prophets of the Labyrinth (or PotL) is a multiplayer roguelike dungeon crawl played directly on Discord. Each dungeon delve will start a new thread where players can discuss their strategies and votes.")
 				.addField("Voting", "During a delve, your team will explore various rooms. At the end of exploring each room, the party will vote on which room to explore next. The party must reach a consensus to continue, and you are encouraged to talk your reasoning in the thread.")
-				.addField("Combat", "If you encounter enemies (such as during the Final Battle in the last room), each player will be prompted to pick a move to do during the next turn. When everyone has selected their move, the game will report the results. Each character archetype starts with different weapons and, importantly, predicts different information about the upcoming round. Make sure to share your info with your party!")
+				.addField("Combat", "If you encounter enemies (such as during the Final Battle in the last room), each player will be prompted to pick a move to do during the next turn. When everyone has selected their move, the game will report the results. Each character archetype starts with different equipment and, importantly, predicts different information about the upcoming round. Make sure to share your info with your party!")
 				.addField("Suggested Party Size", "Though the game has player count scaling, it is balanced primarily for groups of 3-6. Due to UI limitations, the max party size is 12. ***It is highly recommended to avoid playing by yourself.***")
 			];
 			break;
 		case "Elements":
 			response.embeds = [embedTemplate(interaction.client.user.displayAvatarURL()).setTitle("Elements")
-				.setDescription("Each combatant is associated with one of the following elements: Fire, Wind, Light, Water, Earth, Darkness. Based on this element, damage they receive may be increased, decreased, or not changed based on the element of the received damage (damage can be \"Untyped\"). This change is calculated before block.")
-				.addField(`Fire ${getEmoji("Fire")}`, `Weaknesses (2x damage from): ${getWeaknesses("Fire").map(element => getEmoji(element)).join(", ")}\nResistances (1/2 damage from): ${getResistances("Fire").map(element => getEmoji(element)).join(", ")}\nColor: ${getColor("Fire")}`)
-				.addField(`Wind ${getEmoji("Wind")}`, `Weaknesses (2x damage from): ${getWeaknesses("Wind").map(element => getEmoji(element)).join(", ")}\nResistances (1/2 damage from): ${getResistances("Wind").map(element => getEmoji(element)).join(", ")}\nColor: ${getColor("Wind")}`)
-				.addField(`Light ${getEmoji("Light")}`, `Weaknesses (2x damage from): ${getWeaknesses("Light").map(element => getEmoji(element)).join(", ")}\nResistances (1/2 damage from): ${getResistances("Light").map(element => getEmoji(element)).join(", ")}\nColor: ${getColor("Light")}`)
-				.addField(`Water ${getEmoji("Water")}`, `Weaknesses (2x damage from): ${getWeaknesses("Water").map(element => getEmoji(element)).join(", ")}\nResistances (1/2 damage from): ${getResistances("Water").map(element => getEmoji(element)).join(", ")}\nColor: ${getColor("Water")}`)
-				.addField(`Earth ${getEmoji("Earth")}`, `Weaknesses (2x damage from): ${getWeaknesses("Earth").map(element => getEmoji(element)).join(", ")}\nResistances (1/2 damage from): ${getResistances("Earth").map(element => getEmoji(element)).join(", ")}\nColor: ${getColor("Earth")}`)
-				.addField(`Darkness ${getEmoji("Darkness")}`, `Weaknesses (2x damage from): ${getWeaknesses("Darkness").map(element => getEmoji(element)).join(", ")}\nResistances (1/2 damage from): ${getResistances("Darkness").map(element => getEmoji(element)).join(", ")}\nColor: ${getColor("Darkness")}`)
+				.setDescription("Each combatant is associated with one of the following elements: Fire, Wind, Water, Earth. Based on this element, damage they receive may be increased, decreased, or not changed based on the element of the received damage (damage can be \"Untyped\"). This change is calculated before block.")
+				.addField(`Fire ${getEmoji("Fire")}`, `Weakness (2x damage from): ${getEmoji(getWeakness("Fire"))}\nResistance (1/2 damage from): ${getEmoji("Fire")}\nColor: ${getColor("Fire")}`)
+				.addField(`Wind ${getEmoji("Wind")}`, `Weakness (2x damage from): ${getEmoji(getWeakness("Wind"))}\nResistance (1/2 damage from): ${getEmoji("Wind")}\nColor: ${getColor("Wind")}`)
+				.addField(`Water ${getEmoji("Water")}`, `Weakness (2x damage from): ${getEmoji(getWeakness("Water"))}\nResistance (1/2 damage from): ${getEmoji("Water")}\nColor: ${getColor("Water")}`)
+				.addField(`Earth ${getEmoji("Earth")}`, `Weakness (2x damage from): ${getEmoji(getWeakness("Earth"))}\nResistance (1/2 damage from): ${getEmoji("Earth")}\nColor: ${getColor("Earth")}`)
 				.addField("Matching Element Stagger", "When a combatant makes a move that matches their element, their target gets a bonus effect. If the target is an ally, they are relieved of 1 Stagger. If the target is an enemy, they suffer 1 additional Stagger. Check the page on Stagger to learn more about Stagger and Stun.")
 			];
 			break;
@@ -81,11 +74,4 @@ module.exports.execute = (interaction) => {
 	}
 	interaction.reply(response)
 		.catch(console.error)
-}
-
-function embedTemplate(iconURL) {
-	return new MessageEmbed().setColor('6b81eb')
-		.setAuthor({ name: "Click here to vist the PotL GitHub", iconURL, url: "https://github.com/Imaginary-Horizons-Productions/prophets-of-the-labyrinth" })
-		.setURL("https://discord.com/api/oauth2/authorize?client_id=950469509628702740&permissions=397284665360&scope=applications.commands%20bot")
-		.setFooter({ text: "Click the title link to add PotL to your server", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" })
 }

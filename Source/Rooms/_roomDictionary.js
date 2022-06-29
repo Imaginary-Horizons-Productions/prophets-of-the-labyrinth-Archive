@@ -1,29 +1,4 @@
-let SAFE_DELIMITER, generateRandomNumber;
-exports.injectConfig = function (isProduction) {
-	({ SAFE_DELIMITER, generateRandomNumber } = require("../../helpers.js").injectConfig(isProduction));
-	return this;
-}
-
-let roomWhitelist = [
-	"artifactguardian-royalslime.js",
-	"artifactguardian-treasureelemental.js",
-	"battle-bloodtailhawks.js",
-	"battle-firearrowfrogs.js",
-	"battle-mechabees.js",
-	"battle-slimes.js",
-	"battle-tortoises.js",
-	"empty.js",
-	"event-elementswap.js",
-	"event-freegold.js",
-	"event-goldonfire.js",
-	"event-hpshare.js",
-	"event-scorebeggar.js",
-	"finalBattle-elkemist.js",
-	"finalBattle-mirrors.js",
-	"forge-basic.js",
-	"merchant-basic.js",
-	"restsite-basic.js"
-];
+const { SAFE_DELIMITER, generateRandomNumber } = require("../../helpers.js");
 
 const ROOMS = {
 	"Event": [],
@@ -36,7 +11,25 @@ const ROOMS = {
 	"Empty": []
 };
 
-for (const file of roomWhitelist) {
+for (const file of [
+	"artifactguardian-royalslime.js",
+	"artifactguardian-treasureelemental.js",
+	"battle-bloodtailhawks.js",
+	"battle-firearrowfrogs.js",
+	"battle-mechabees.js",
+	"battle-slimes.js",
+	"battle-tortoises.js",
+	"empty.js",
+	"event-elementswap.js",
+	"event-freegoldonfire.js",
+	"event-hpshare.js",
+	"event-scorebeggar.js",
+	"finalBattle-elkemist.js",
+	"finalBattle-mirrors.js",
+	"forge-basic.js",
+	"merchant-basic.js",
+	"restsite-basic.js"
+]) {
 	const room = require(`./${file}`);
 	room.types.forEach(type => {
 		if (ROOMS[type]) {

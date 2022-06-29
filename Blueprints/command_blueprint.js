@@ -1,16 +1,10 @@
 const Command = require('../../Classes/Command.js');
 
+const id = "name";
 const options = [
-	{ type: "", name: "", description: "", required: false, choices: {} }
+	{ type: "", name: "", description: "", required: false, choices: [] }
 ];
-module.exports = new Command("name", "description", false, false, options);
-
-// imports from files that depend on /Config
-// let ;
-module.exports.injectConfigCommands = function (isProduction) {
-	({} = require("./../../helpers.js").injectConfig(isProduction));
-	return this;
-}
+module.exports = new Command(id, "description", false, false, options);
 
 module.exports.execute = (interaction) => {
 	// Command specifications go here

@@ -1,20 +1,16 @@
 const Enemy = require("../../Classes/Enemy.js");
+const { addModifier, getFullName, dealDamage } = require("../combatantDAO.js");
+const { selectRandomFoe, nextRandom } = require("../enemyDAO.js");
 
-// import from modules that depend on /Config
-let selectRandomFoe, nextRandom, addModifier, getFullName, dealDamage;
-module.exports.injectConfig = function (isProduction) {
-	({ selectRandomFoe, nextRandom } = require("../enemyDAO.js").injectConfig(isProduction));
-	({ addModifier, getFullName, dealDamage } = require("../combatantDAO.js").injectConfig(isProduction));
-	return new Enemy("@{adventure} Slime")
-		.setFirstAction("Tackle")
-		.addAction({ name: "Tackle", effect: tackleEffect, selector: selectRandomFoe, next: nextRandom })
-		.addAction({ name: "Goop Spray", effect: goopSprayEffect, selector: selectRandomFoe, next: nextRandom })
-		.setBounty(25)
-		.setHp(200)
-		.setSpeed(90)
-		.setElement("@{adventure}")
-		.setStaggerThreshold(5);
-}
+module.exports = new Enemy("@{adventure} Slime")
+	.setFirstAction("Tackle")
+	.addAction({ name: "Tackle", effect: tackleEffect, selector: selectRandomFoe, next: nextRandom })
+	.addAction({ name: "Goop Spray", effect: goopSprayEffect, selector: selectRandomFoe, next: nextRandom })
+	.setBounty(25)
+	.setHp(200)
+	.setSpeed(90)
+	.setElement("@{adventure}")
+	.setStaggerThreshold(5);
 
 function tackleEffect(target, user, isCrit, adventure) {
 	let damage = 25;

@@ -1,19 +1,4 @@
-let generateRandomNumber, parseCount;
-exports.injectConfigArtifacts = function (isProduction) {
-	({ generateRandomNumber, parseCount } = require("../../helpers.js").injectConfig(isProduction));
-	return this;
-}
-
-let artifactWhitelist = [
-	"amethystspyglass.js",
-	"bloodshieldsword.js",
-	"enchantedmap.js",
-	"hammerspaceholster.js",
-	"hawktailfeather.js",
-	"negativeoneleafclover.js",
-	"oilpainting.js",
-	"phoenixfruitblossom.js"
-];
+const { generateRandomNumber } = require("../../helpers.js");
 
 const ARTIFACTS = {};
 
@@ -22,12 +7,19 @@ const ROLL_TABLE = {
 	Wind: [],
 	Water: [],
 	Fire: [],
-	Light: [],
-	Darkness: [],
 	Untyped: []
 }
 
-for (const file of artifactWhitelist) {
+for (const file of [
+	"amethystspyglass.js",
+	"bloodshieldsword.js",
+	"enchantedmap.js",
+	"hammerspaceholster.js",
+	"hawktailfeather.js",
+	"negativeoneleafclover.js",
+	"oilpainting.js",
+	"phoenixfruitblossom.js"
+]) {
 	const artifact = require(`./${file}`);
 	ARTIFACTS[artifact.name] = artifact;
 	ROLL_TABLE[artifact.element].push(artifact.name);

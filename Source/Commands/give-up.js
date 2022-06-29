@@ -1,14 +1,9 @@
 const Command = require('../../Classes/Command.js');
+const { completeAdventure, getAdventure } = require('../adventureDAO.js');
 
+const id = "give-up";
 const options = [];
-module.exports = new Command("give-up", "Lets the adventure leader end the adventure", false, false, options);
-
-// imports from files that depend on /Config
-let completeAdventure, getAdventure;
-module.exports.injectConfig = function (isProduction) {
-	({ completeAdventure, getAdventure } = require('../adventureDAO.js').injectConfig(isProduction));
-	return this;
-}
+module.exports = new Command(id, "Lets the adventure leader end the adventure", false, false, options);
 
 module.exports.execute = (interaction) => {
 	// Give up on the current adventure

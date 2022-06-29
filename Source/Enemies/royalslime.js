@@ -1,30 +1,26 @@
 const Enemy = require("../../Classes/Enemy.js");
+const { generateRandomNumber } = require("../../helpers.js");
+const { addModifier, dealDamage, removeModifier } = require("../combatantDAO.js");
 const { elementsList } = require("../elementHelpers.js");
+const { nextRandom, selectSelf, selectAllFoes, selectRandomFoe } = require("../enemyDAO.js");
 
-// import from modules that depend on /Config
-let nextRandom, selectSelf, selectAllFoes, selectRandomFoe, generateRandomNumber, addModifier, dealDamage, removeModifier;
-module.exports.injectConfig = function (isProduction) {
-	({ nextRandom, selectSelf, selectAllFoes, selectRandomFoe } = require("../enemyDAO.js").injectConfig(isProduction));
-	({ generateRandomNumber } = require("../../helpers.js").injectConfig(isProduction));
-	({ addModifier, dealDamage, removeModifier } = require("../combatantDAO.js").injectConfig(isProduction));
-	return new Enemy("Royal Slime")
-		.setFirstAction("Element Shift")
-		.addAction({ name: "Element Shift", effect: elementShift, selector: selectSelf, next: nextRandom })
-		.addAction({ name: "Rolling Tackle", effect: rollingTackleEffect, selector: selectAllFoes, next: nextRandom })
-		.addAction({ name: "Goop Deluge", effect: goopDelugeEffect, selector: selectAllFoes, next: nextRandom })
-		.addAction({ name: "Toxic Spike Shot", effect: toxicSpikeShotEffect, selector: selectRandomFoe, next: nextRandom })
-		.setBounty(100)
-		.setHp(600)
-		.setSpeed(90)
-		.setElement("@{adventure}")
-		.setStaggerThreshold(5);
-}
+module.exports = new Enemy("Royal Slime")
+	.setFirstAction("Element Shift")
+	.addAction({ name: "Element Shift", effect: elementShift, selector: selectSelf, next: nextRandom })
+	.addAction({ name: "Rolling Tackle", effect: rollingTackleEffect, selector: selectAllFoes, next: nextRandom })
+	.addAction({ name: "Goop Deluge", effect: goopDelugeEffect, selector: selectAllFoes, next: nextRandom })
+	.addAction({ name: "Toxic Spike Shot", effect: toxicSpikeShotEffect, selector: selectRandomFoe, next: nextRandom })
+	.setBounty(100)
+	.setHp(600)
+	.setSpeed(90)
+	.setElement("@{adventure}")
+	.setStaggerThreshold(5);
 
 function elementShift(target, user, isCrit, adventure) {
 	user.element = elementsList()[generateRandomNumber(adventure, elementsList().length, "battle")];
 	if (isCrit) {
 		addModifier(user, { name: `${user.element} Absorb`, stacks: 5 });
-		removeModifier(user, "Stagger", 1);
+		removeModifier(user, { name: "Stagger", stacks: 1 });
 	} else {
 		addModifier(user, { name: `${user.element} Absorb`, stacks: 3 });
 	}

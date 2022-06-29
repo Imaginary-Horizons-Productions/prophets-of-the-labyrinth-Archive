@@ -7,14 +7,13 @@ const { Routes } = require("discord-api-types/v9");
 const GuildProfile = require("./Classes/GuildProfile");
 const versionData = require('./Config/versionData.json');
 
-const isProduction = true;
 const { SAFE_DELIMITER } = require('./helpers.js');
-const { loadAdventures } = require("./Source/adventureDAO.js").injectConfig(isProduction);
-const { loadGuilds, setGuild } = require("./Source/guildDAO.js").injectConfig(isProduction);
-const { loadPlayers } = require("./Source/playerDAO.js").injectConfig(isProduction);
-const { getCommand, injectConfigCommands, slashData } = require(`./Source/Commands/_commandDictionary.js`);
-const { getSelect } = require("./Source/Selects/_selectDictionary.js");
-const { getButton } = require("./Source/Buttons/_buttonDictionary.js");
+const { loadAdventures } = require("./Source/adventureDAO.js");
+const { loadGuilds, setGuild } = require("./Source/guildDAO.js");
+const { loadPlayers } = require("./Source/playerDAO.js");
+const { getCommand, slashData } = require(`./Source/Commands/_commandDictionary.js`);
+const { callSelect } = require("./Source/Selects/_selectDictionary.js");
+const { callButton } = require("./Source/Buttons/_buttonDictionary.js");
 const { getPremiumUsers, getVersionEmbed } = require("./helpers.js");
 //#endregion
 
@@ -46,7 +45,6 @@ const client = new Client({
 client.on("ready", () => {
 	console.log(`Connected as ${client.user.tag}`);
 
-	injectConfigCommands(isProduction);
 	// Post version notes
 	if (versionData.announcementsChannelId) {
 		readFile('./ChangeLog.md', { encoding: 'utf8' }).then(data => {
@@ -89,30 +87,26 @@ client.on("ready", () => {
 })
 
 client.on("interactionCreate", interaction => {
-	if (interaction.inGuild()) {
-		if (interaction.isCommand()) {
-			let command = getCommand(interaction.commandName);
-			if (!command.premiumCommand || !getPremiumUsers().includes(interaction.user.id)) {
-				if (!command.managerCommand || !interaction.member.manageable) {
-					command.execute(interaction);
-				} else {
-					interaction.reply(`The \`/${interaction.commandName}\` command is restricted to bot managers (users with permissions above the bot).`)
-						.catch(console.error);
-				}
+	if (interaction.isCommand()) {
+		const { premiumCommand, managerCommand, execute } = getCommand(interaction.commandName);
+		if (!premiumCommand || !getPremiumUsers().includes(interaction.user.id)) {
+			if (!managerCommand || !interaction.member?.manageable) {
+				execute(interaction);
 			} else {
-				interaction.reply(`The \`/${interaction.commandName}\` command is a premium command. Use \`/support\` for more information.`)
+				interaction.reply({ content: `The \`/${interaction.commandName}\` command is restricted to bot managers (users with permissions above the bot).`, ephemeral: true })
 					.catch(console.error);
 			}
-		} else if (interaction.isButton()) {
-			const [customId, ...args] = interaction.customId.split(SAFE_DELIMITER);
-			getButton(customId).execute(interaction, args);
-		} else if (interaction.isSelectMenu()) {
-			const [customId, ...args] = interaction.customId.split(SAFE_DELIMITER);
-			getSelect(customId).execute(interaction, args);
+		} else {
+			interaction.reply({ content: `The \`/${interaction.commandName}\` command is a premium command. Use \`/support\` for more information.`, ephemeral: true })
+				.catch(console.error);
 		}
 	} else {
-		interaction.reply({ content: "Direct message commands are not supported at this time.", ephemeral: true })
-			.catch(console.error);
+		const [mainId, ...args] = interaction.customId.split(SAFE_DELIMITER);
+		if (interaction.isButton()) {
+			callButton(mainId, interaction, args);
+		} else if (interaction.isSelectMenu()) {
+			callSelect(mainId, interaction, args);
+		}
 	}
 })
 

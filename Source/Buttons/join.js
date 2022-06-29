@@ -1,12 +1,11 @@
 const Button = require('../../Classes/Button.js');
 const Delver = require('../../Classes/Delver.js');
-const { isSponsor } = require('../../helpers.js');
+const { isSponsor, maxDelverCount } = require('../../helpers.js');
 const { getGuild } = require('../guildDAO.js');
-const { getAdventure, setAdventure } = require("./../adventureDAO.js").injectConfig(true);
+const { getAdventure, setAdventure } = require("./../adventureDAO.js");
 
-module.exports = new Button("join");
-
-module.exports.execute = async (interaction, [guildId, adventureId, context]) => {
+const id = "join";
+module.exports = new Button(id, async (interaction, [guildId, adventureId, context]) => {
 	// Join an existing adventure
 	let guildProfile = getGuild(interaction.guildId);
 	if (isSponsor(interaction.user.id) || !guildProfile.adventuring.has(interaction.user.id)) {
@@ -14,13 +13,17 @@ module.exports.execute = async (interaction, [guildId, adventureId, context]) =>
 		if (adventure) {
 			if (adventure.state === "config") {
 				let recruitMessage = interaction.message;
-				if (!recruitMessage.hasThread) {
+				if (context === "aux") {
 					recruitMessage = await interaction.channel.fetchStarterMessage();
+				} else if (context === "invite") {
+					const guild = await interaction.client.guilds.fetch(guildId);
+					const thread = await guild.channels.fetch(adventureId);
+					recruitMessage = await thread.fetchStarterMessage();
 				}
-				if (adventure.delvers.length < 12) {
+				if (adventure.delvers.length < maxDelverCount) {
 					if (!adventure.delvers.some(delver => delver.id == interaction.user.id)) {
 						// Update game logic
-						adventure.delvers.push(new Delver(interaction.user.id, interaction.member.displayName, adventureId));
+						adventure.delvers.push(new Delver(interaction.user.id, interaction.user.username, adventureId));
 						adventure.lives++;
 						adventure.gainGold(50);
 						setAdventure(adventure);
@@ -28,7 +31,7 @@ module.exports.execute = async (interaction, [guildId, adventureId, context]) =>
 
 						// Welcome player to thread
 						let thread = interaction.client.guilds.resolve(guildId).channels.resolve(adventureId);
-						thread.send(`${interaction.member} joined the adventure.`).then(_message => {
+						thread.send(`<@${interaction.user.id}> joined the adventure.`).then(_message => {
 							if (adventure.messageIds.start) {
 								thread.messages.delete(adventure.messageIds.start);
 								adventure.messageIds.start = "";
@@ -47,11 +50,11 @@ module.exports.execute = async (interaction, [guildId, adventureId, context]) =>
 							embeds = [recruitMessage.embeds[0].spliceFields(0, 1, { name: `${adventure.delvers.length} Party Member${adventure.delvers.length == 1 ? "" : "s"}`, value: partyList })];
 						}
 						let components = recruitMessage.components;
-						if (adventure.delvers.length > 11) {
+						if (adventure.delvers.length === maxDelverCount) {
 							components = [];
 						}
 						recruitMessage.edit({ embeds, components });
-						if (context === "aux") {
+						if (["aux", "invite"].includes(context)) {
 							interaction.update({ components: [] })
 						} else {
 							interaction.update({ content: "\u200B" })
@@ -74,4 +77,4 @@ module.exports.execute = async (interaction, [guildId, adventureId, context]) =>
 	} else {
 		interaction.reply({ content: "Delving in more than one adventure per server is a premium perk. Use `/support` for more details.", ephemeral: true });
 	}
-}
+});

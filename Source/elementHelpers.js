@@ -3,68 +3,38 @@ const ELEMENTS = {
 		color: "RED",
 		emoji: "🔥",
 		opposite: "Water",
-		weaknesses: ["Earth", "Darkness"],
-		resistances: ["Light", "Wind"]
+		weakness: "Earth"
 	},
 	"Earth": {
-		color: "ORANGE",
+		color: "GREEN",
 		emoji: "🌿",
 		opposite: "Wind",
-		weaknesses: ["Water", "Darkness"],
-		resistances: ["Fire", "Light"]
-	},
-	"Light": {
-		color: "YELLOW",
-		emoji: "✨",
-		opposite: "Darkness",
-		weaknesses: ["Fire", "Earth"],
-		resistances: ["Wind", "Water"]
+		weakness: "Water"
 	},
 	"Water": {
 		color: "BLUE",
 		emoji: "💦",
 		opposite: "Fire",
-		weaknesses: ["Wind", "Light"],
-		resistances: ["Darkness", "Earth"]
+		weakness: "Wind"
 	},
 	"Wind": {
-		color: "GREEN",
+		color: "YELLOW",
 		emoji: "💨",
 		opposite: "Earth",
-		weaknesses: ["Light", "Fire"],
-		resistances: ["Water", "Darkness"]
-	},
-	"Darkness": {
-		color: "PURPLE",
-		emoji: "♟️",
-		opposite: "Light",
-		weaknesses: ["Wind", "Water"],
-		resistances: ["Earth", "Fire"]
+		weakness: "Fire"
 	},
 	"Untyped": {
-		color: "",
-		emoji: "",
-		opposite: "",
-		weaknesses: [],
-		resistances: []
-	}
-}
-exports.getResistances = function (element) {
-	if (exports.elementsList().includes(element)) {
-		return ELEMENTS[element].resistances;
-	} else {
-		return ["none"];
+		color: "GREY",
+		emoji: "🌐",
+		opposite: "Untyped",
+		weakness: "none"
 	}
 }
 
-exports.getWeaknesses = function (element) {
-	if (exports.elementsList().includes(element)) {
-		return ELEMENTS[element].weaknesses;
-	} else {
-		return ["none"];
-	}
-}
-
+/** Get a list of all possible elements
+ * @param {boolean} includeUntyped
+ * @returns {string[]}
+ */
 exports.elementsList = function (includeUntyped = false) {
 	if (includeUntyped) {
 		return Object.keys(ELEMENTS);
@@ -73,14 +43,30 @@ exports.elementsList = function (includeUntyped = false) {
 	}
 }
 
+/** Get the element that deals increased damage to the given element
+ * @param {string} element enumeration: "Fire", "Earth", "Water", "Wind", "Untyped"
+ * @returns {string}
+ */
+exports.getWeakness = function (element) {
+	if (element in ELEMENTS) {
+		return ELEMENTS[element].weakness;
+	} else {
+		return "none";
+	}
+}
+
+/** Each element has an assigned Discord parseable color
+ * @param {string} element
+ * @returns {string}
+ */
 exports.getColor = function (element) {
-	return ELEMENTS[element].color;
+	return ELEMENTS[element]?.color || "n/a";
 }
 
 exports.getEmoji = function (element) {
-	return ELEMENTS[element].emoji;
+	return ELEMENTS[element]?.emoji || "n/a";
 }
 
 exports.getOpposite = function (element) {
-	return ELEMENTS[element].opposite;
+	return ELEMENTS[element]?.opposite || "n/a";
 }

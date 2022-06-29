@@ -1,4 +1,6 @@
-const enemyWhitelist = [
+const enemyDictionary = {};
+
+for (const file of [
 	"bloodtailhawk.js",
 	"clone.js",
 	"elkemist.js",
@@ -9,16 +11,9 @@ const enemyWhitelist = [
 	"royalslime.js",
 	"slime.js",
 	"treasureelemental.js"
-];
-
-const enemyDictionary = {};
-
-exports.injectConfigEnemies = function (isProduction) {
-	for (const file of enemyWhitelist) {
-		const enemy = require(`./${file}`).injectConfig(isProduction);
-		enemyDictionary[enemy.name] = enemy;
-	}
-	return this;
+]) {
+	const enemy = require(`./${file}`);
+	enemyDictionary[enemy.name] = enemy;
 }
 
 exports.getEnemy = function (enemyName) {

@@ -4,24 +4,24 @@ const Archetype = require('../../Classes/Archetype.js');
 const Select = require('../../Classes/Select.js');
 const { getAdventure, setAdventure } = require('../adventureDAO');
 const { getArchetype } = require('../Archetypes/_archetypeDictionary.js');
-const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
+const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
 
-module.exports = new Select("archetype");
-
-module.exports.execute = (interaction, args) => {
+const id = "archetype";
+module.exports = new Select(id, (interaction, args) => {
 	// Add the player's delver object to the adventure
 	let adventure = getAdventure(interaction.channel.id);
-	if (adventure && !adventure.messageIds.utility) {
+	if (adventure?.state === "config") {
 		// Add delver to list (or overwrite)
-		let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
-		if (userIndex !== -1) {
+		let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
+		if (delver) {
 			let archetype = interaction.values[0];
-			let isSwitching = adventure.delvers[userIndex].title !== "";
+			let isSwitching = delver.title !== "";
 			let archetypeTemplate = Object.assign(new Archetype(), getArchetype(archetype));
-			adventure.delvers[userIndex].weapons = archetypeTemplate.signatureWeapons.map(signatureWeapon => {
-				return { name: signatureWeapon, uses: getWeaponProperty(signatureWeapon, "maxUses") }
+			delver.equipment = archetypeTemplate.signatureEquipment.map(equipmentName => {
+				return { name: equipmentName, uses: getEquipmentProperty(equipmentName, "maxUses") }
 			});
-			adventure.delvers[userIndex].setTitle(archetypeTemplate.title)
+			const wasReady = adventure.delvers.every(delver => delver.title);
+			delver.setTitle(archetypeTemplate.title)
 				.setHp(archetypeTemplate.maxHp)
 				.setSpeed(archetypeTemplate.speed)
 				.setElement(archetypeTemplate.element)
@@ -35,18 +35,18 @@ module.exports.execute = (interaction, args) => {
 				)]
 			});
 			interaction.channel.send(`${interaction.user} ${isSwitching ? "has switched to" : "will be playing as"} ${archetype}.`).then(() => {
-				// Check if all ready
-				if (adventure.delvers.every(delver => delver.title)) {
+				// Check if all ready... wasReady is used to guarantee only one ready-button in a racecondition
+				if (adventure.delvers.every(delver => delver.title) && !wasReady) {
 					let readyButton = [
 						new MessageActionRow().addComponents(
-							new MessageButton().setCustomId("ready")
+							new MessageButton().setCustomId("startadventure")
 								.setEmoji("👑")
 								.setLabel("Ready!")
 								.setStyle("SUCCESS")
 						)
 					];
 
-					// if startMessageId already exists, player has changed class, so delete extra start message
+					// if adventure.messageIds.start already exists, player has changed class, so delete extra start message
 					if (adventure.messageIds.start) {
 						interaction.channel.messages.delete(adventure.messageIds.start);
 						delete adventure.messageIds.start;
@@ -69,4 +69,4 @@ module.exports.execute = (interaction, args) => {
 	} else {
 		interaction.reply({ content: "A valid adventure could not be found.", ephemeral: true });
 	}
-}
+});

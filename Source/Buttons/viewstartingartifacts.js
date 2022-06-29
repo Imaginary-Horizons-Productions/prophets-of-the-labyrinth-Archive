@@ -5,9 +5,8 @@ const { getPlayer } = require('../playerDAO.js');
 const { getAdventure } = require('../adventureDAO.js');
 const { getArtifact } = require('../Artifacts/_artifactDictionary.js');
 
-module.exports = new Button("viewstartingartifacts");
-
-module.exports.execute = (interaction, args) => {
+const id = "viewstartingartifacts";
+module.exports = new Button(id, (interaction, args) => {
 	// Send the player a message with a select a starting artifact
 	let adventure = getAdventure(interaction.channel.id);
 	let playerProfile = getPlayer(interaction.user.id, interaction.guild.id);
@@ -36,4 +35,4 @@ module.exports.execute = (interaction, args) => {
 				.setStyle("SUCCESS"));
 		interaction.reply({ content: `You don't appear to be signed up for this adventure. You can join with the button below:`, components: [join], ephemeral: true });
 	}
-}
+});

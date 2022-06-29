@@ -3,13 +3,19 @@ User gains Power Up modifier
 
 #### Available on
 - all Swords (Earth)
-- Blood Aegis (Darkness)
+- Blood Aegis (Water)
 
 ### Cursed
 User pays hp to use
 
 #### Available on
-- all Blood Aegis (Darkness)
+- all Blood Aegis (Water)
+
+### Devoted
+Can target allies (beyond self)
+
+#### Available on
+- Vigilance Charm (Earth)
 
 ### Earthen
 Affects Earth element combatants
@@ -21,15 +27,15 @@ Affects Earth element combatants
 User gains Evade
 
 #### Available on
-- Sun Flare (Light)
+- Sun Flare (Fire)
 - Bow (Wind)
 
 ### Flanking
 Applies Exposed to target
 
 #### Avaialble on
-- Life Drain (Darkness)
-- Disarm (Light)
+- Life Drain (Water)
+- Corrosion (Fire)
 
 ### Guarding
 Adds block on the user
@@ -38,13 +44,14 @@ Adds block on the user
 - Buckler (Earth)
 - Sword (Earth)
 - all Ice Ward (Water)
+- Vigilance Charm (Earth)
 
 ### Heavy
 Increased base block
 
 #### Available on
 - Buckler (Earth)
-- Blood Aegis (Darkness)
+- Blood Aegis (Water)
 - Ice Ward (Water)
 
 ### Hunter's
@@ -54,25 +61,20 @@ Gain gold on kill
 - Sickle (Water)
 - Bow (Wind)
 
-### Inky
-Affects Dark element combatants
-
-#### Available on
-- Potion (Water)
-
 ### Lethal
 Increased crit damage
 
 #### Avaialble on
 - all Daggers (Wind)
-- Spear (Light)
-- Scythe (Darkness)
+- Spear (Fire)
+- Scythe (Wind)
 
 ### Long
 Increased stack count of buff/debuff applied
 
 #### Available on
 - Cloak (Wind)
+- Vigilance Charm (Earth)
 
 ### Mercurial
 Damage type matches user
@@ -86,7 +88,7 @@ Deals unblockable damage
 
 #### Available on
 - Warhammer (Earth)
-- Scythe (Darkness)
+- Scythe (Wind)
 
 ### Prideful
 High value non-elemental damage
@@ -98,20 +100,20 @@ High value non-elemental damage
 Removes all debuffs on target
 
 #### Available on
-- Barrier (Light)
+- Barrier (Fire)
 
 ### Reactive
 Increased damage against a foe with higher speed
 
 #### Available on
-- Spear (Light)
-- Life Drain (Darkness)
+- Spear (Fire)
+- Life Drain (Water)
 
 ### Reaper's
 Instant death if target is below hp threshold
 
 #### Available on
-- all Scythes (Darkness)
+- all Scythes (Water)
 
 ### Reckless
 Increased damage if user has 0 block
@@ -124,7 +126,7 @@ Increased damage if user has 0 block
 Adds block to target
 
 #### Available on
-- Inspiration (Light)
+- Inspiration (Wind)
 
 ### Sharpened
 Increased base damage
@@ -138,23 +140,23 @@ Applies Regen
 
 #### Avaialble on
 - Midas Staff (Water)
-- Inspiration (Light)
+- Inspiration (Wind)
 
 ### Sweeping
 Hits all enemes/allies
 
 #### Available on
 - Dagger (Wind)
-- Spear (Light)
-- Blood Aegis (Darkness)
-- Inspiration (Light)
+- Spear (Fire)
+- Blood Aegis (Water)
+- Inspiration (Wind)
 - Ice Ward (Water)
 
 ### Swift
 Grants the user the Quicken modifier
 
 #### Available on
-- Sun Flare (Light)
+- Sun Flare (Fire)
 - Cloak (Wind)
 - Sword (Earth)
 - Midas Staff (Water)
@@ -163,7 +165,7 @@ Grants the user the Quicken modifier
 Increased durability, grants the differences in uses when upgraded.
 
 #### Available on
-- Barrier (Light)
+- Barrier (Fire)
 - Cloak (Wind)
 - Sickle (Water)
 - Battleaxe (Fire)
@@ -178,14 +180,14 @@ User regains hp on kill
 Adds stacks to debuffs
 
 #### Avaialble on
-- Sun Flare (Light)
+- Sun Flare (Fire)
 
 ### Toxic
 Applies Poison
 
 #### Avaialble on
 - Fire Cracker (Fire)
-- Scythe (Darkness)
+- Scythe (Wind)
 
 ### Urgent
 Bonus speed
@@ -193,9 +195,9 @@ Bonus speed
 #### Avaialble on
 - all Bows (Wind)
 - all Sun Flare (Fire)
-- Barrier (Light)
+- Barrier (Fire)
 - Buckler (Earth)
-- Life Drain (Darkness)
+- Life Drain (Water)
 
 ### Watery
 Affects Water element combatants
@@ -209,12 +211,18 @@ Increased damage against enemies with 0 block
 #### Available on
 - Dagger (Wind)
 
+### Windy
+Affects Wind element combatants
+
+#### Available on
+- Potion (Water)
+
 ## Unnamed
 - Spear (add stagger on crit)
-- Sickle (10% max hp bonus damage)
+- Sickle (5% max hp bonus damage)
 - Life Drain (attack a foe and gain hp)
 - Warhammer (bonus damage on stunned enemy)
 - Inspire (power up to ally)
-- Disarm (power down to enemy)
+- Corrosion (power down to enemy)
 - Midas Staff (apply Curse of Midas)
 - Pact of Healing (pay hp to apply regen)

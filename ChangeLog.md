@@ -1,4 +1,21 @@
 # Prophets of the Labyrinth Change Log
+#### Prophets of the Labyrinth Version 0.9.0:
+- Rebalanced predicts, they are now as follows
+   1. Movements - Speed, Stagger, and Poise for each combatant
+   2. Vulnerabilties - Critical Hits and Elements for each combatant
+   3. Intents - Targets and next two Move Names for enemies
+   4. Health - HP and Modifiers for each combatant
+- Removed Darkness and Light elements; enemies, weapons, and archetypes have been re-elemented
+- Added Equipment categories ("Weapons" are now one category among them)
+- New slash command: `/armory` that allows checking stats on a weapon given by name
+- New modifiers: Stasis, Oblivious, Vigilance
+- New Equipment: Vigilance Charm
+- Slash commands can now be used from DMs (as long as they make sense)
+- Max delvers per adventure reduced to 8 (UI constraint)
+- The changelog no longer offers "premimum features" for sponsoring on GitHub
+- Other bug fixes, optimizations, and improvements
+- Fixed `/invite`
+- Fixed `/ping` incorrectly mentioning delvers who are ready
 #### Prophets of the Labyrinth Version 0.8.0:
 - Added "Data Policy" page to manual
 - Enemy hp now scales with party size

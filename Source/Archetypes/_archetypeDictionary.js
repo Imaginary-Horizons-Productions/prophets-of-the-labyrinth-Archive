@@ -1,17 +1,15 @@
-var archetype = [
+const archetypeDictionary = {};
+
+for (const file of [
 	"assassin.js",
 	"chemist.js",
 	"hemomancer.js",
 	"knight.js",
 	"martialartist.js",
 	"ritualist.js"
-];
-
-const archetypeDictionary = {};
-
-for (const file of archetype) {
-    const archetype = require(`./${file}`);
-    archetypeDictionary[archetype.title] = archetype;
+]) {
+	const archetype = require(`./${file}`);
+	archetypeDictionary[archetype.title] = archetype;
 }
 
 exports.getArchetype = function (archetypeName) {

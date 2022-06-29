@@ -83,7 +83,7 @@ module.exports = class Adventure {
 		return this.challenges[challengeName]?.duration || 0;
 	}
 
-	getWeaponCapacity() {
+	getEquipmentCapacity() {
 		let count = 4 + this.getArtifactCount("Hammerspace Holster") - this.getChallengeIntensity("Can't Hold All this Value");
 		count = Math.min(5, count);
 		count = Math.max(1, count);
@@ -106,12 +106,12 @@ module.exports = class Adventure {
 			this.lives += count;
 			this.updateArtifactStat(artifact, "Lives Gained", count);
 		} else if (artifact === "Hammerspace Holster") {
-			this.updateArtifactStat(artifact, "Extra Weapon Capacity", count);
+			this.updateArtifactStat(artifact, "Extra Equipment Capacity", count);
 		}
 		if (artifact in this.artifacts) {
 			this.artifacts[artifact].count += count;
 		} else {
-			this.artifacts[artifact].count = count;
+			this.artifacts[artifact] = { count: count };
 		}
 	}
 
@@ -122,6 +122,20 @@ module.exports = class Adventure {
 			} else {
 				this.artifacts[artifactName][statName] = stat;
 			}
+		}
+	}
+
+	/** Calculates a scouting cost
+	 * @param {string} type - enum: "Final Battle", "Artifact Guardian"
+	 * @returns {number}
+	 */
+	calculateScoutingCost(type) {
+		const count = this.getArtifactCount("Amethyst Spyglass");
+		switch (type) {
+			case "Final Battle":
+				return 150 - (count * 5);
+			case "Artifact Guardian":
+				return 100 - (count * 5);
 		}
 	}
 }

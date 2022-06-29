@@ -1,12 +1,12 @@
 const { MessageActionRow, MessageButton } = require('discord.js');
 const Select = require('../../Classes/Select.js');
-const { getAdventure, updateRoomHeader, setAdventure, generateLootRow, generateRoutingRow } = require('../adventureDAO.js');
-const { getWeaponProperty } = require('../Weapons/_weaponDictionary.js');
+const { getAdventure, updateRoomHeader, setAdventure } = require('../adventureDAO.js');
+const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
 const { SAFE_DELIMITER } = require('../../helpers.js');
+const { generateLootRow, generateRoutingRow } = require("../roomDAO.js");
 
-module.exports = new Select("loot");
-
-module.exports.execute = (interaction, args) => {
+const id = "loot";
+module.exports = new Select(id, (interaction, args) => {
 	// Move the selected loot into party/delver's inventory
 	let adventure = getAdventure(interaction.channel.id);
 	let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
@@ -33,20 +33,20 @@ module.exports.execute = (interaction, args) => {
 					}
 				}
 				break;
-			case "weapon":
+			case "equipment":
 				if (count && count > 0) { // Prevents double message if multiple players take near same time
-					if (delver.weapons.length < adventure.getWeaponCapacity()) {
-						delver.weapons.push({ name, uses: getWeaponProperty(name, "maxUses") });
+					if (delver.equipment.length < adventure.getEquipmentCapacity()) {
+						delver.equipment.push({ name, uses: getEquipmentProperty(name, "maxUses") });
 						adventure.room.resources[name].count = Math.max(count - 1, 0);
 						result = {
 							content: `${interaction.member.displayName} takes a ${name}. There are ${count - 1} remaining.`
 						}
 					} else {
 						result = {
-							content: `You can only carry ${adventure.getWeaponCapacity()} weapons at a time. Pick one to replace with the ${name}:`,
-							components: [new MessageActionRow().addComponents(...delver.weapons.map((weapon, weaponIndex) => {
-								return new MessageButton().setCustomId(`replaceweapon${SAFE_DELIMITER}${name}${SAFE_DELIMITER}${weaponIndex}${SAFE_DELIMITER}false`)
-									.setLabel(`Discard ${weapon.name}`)
+							content: `You can only carry ${adventure.getEquipmentCapacity()} pieces of equipment at a time. Pick one to replace with the ${name}:`,
+							components: [new MessageActionRow().addComponents(...delver.equipment.map((equip, index) => {
+								return new MessageButton().setCustomId(`replaceequipment${SAFE_DELIMITER}${name}${SAFE_DELIMITER}${index}${SAFE_DELIMITER}false`)
+									.setLabel(`Discard ${equip.name}`)
 									.setStyle("SECONDARY")
 							}))],
 							ephemeral: true
@@ -67,4 +67,4 @@ module.exports.execute = (interaction, args) => {
 	} else {
 		interaction.reply({ content: "Please take loot in adventures you've joined.", ephemeral: true });
 	}
-}
+});

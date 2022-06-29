@@ -92,4 +92,8 @@ module.exports = class Combatant {
 	getCritDenominator(hawkTailfeatherCount) {
 		return this.critDenominator;
 	}
+
+	getModifierStacks(modifierName){
+		return this.modifiers[modifierName] ?? 0
+	}
 }

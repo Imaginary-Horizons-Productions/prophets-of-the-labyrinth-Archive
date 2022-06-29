@@ -2,3 +2,4 @@ node_modules
 Config
 !Blueprints/Config
 Saves
+.output

@@ -27,7 +27,7 @@ jobs:
         run: npm ci
 
       - name: Update Commands
-        run: node .github/workflows/updateCommands.js
+        run: cp -R ./Blueprints/Config ./Config; node .github/workflows/updateCommands.js
 
       - name: Push Changes to Repo
         run: git add .; git commit -m "updated commands page on wiki" && git push origin main || true

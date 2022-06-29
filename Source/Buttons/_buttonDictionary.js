@@ -1,7 +1,8 @@
-var buttonWhitelist = [
+const buttonDictionary = {};
+
+for (const file of [
 	"buylife.js",
 	"buyscouting.js",
-	"collectartifact.js",
 	"continue.js",
 	"deploy.js",
 	"elementswap.js",
@@ -10,27 +11,23 @@ var buttonWhitelist = [
 	"inspectself.js",
 	"join.js",
 	"modifier.js",
-	"nontargetweapon.js",
+	"nontargetmove.js",
 	"predict.js",
-	"ready.js",
 	"readymove.js",
-	"replaceweapon.js",
+	"replaceequipment.js",
 	"rest.js",
 	"routevote.js",
-	"takegold.js",
+	"startadventure.js",
 	"upgrade.js",
 	"viewchallenges.js",
+	"viewcollectartifact.js",
 	"viewrepairs.js",
 	"viewstartingartifacts.js"
-];
-
-const buttonDictionary = {};
-
-for (const file of buttonWhitelist) {
+]) {
 	const button = require(`./${file}`);
 	buttonDictionary[button.name] = button;
 }
 
-exports.getButton = (buttonName) => {
-	return buttonDictionary[buttonName];
+exports.callButton = function (mainId, interaction, args) {
+	buttonDictionary[mainId].execute(interaction, args);
 }

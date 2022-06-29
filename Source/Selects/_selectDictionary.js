@@ -1,7 +1,9 @@
-var selectWhitelist = [
+const selectDictionary = {};
+
+for (const file of [
 	"archetype.js",
 	"artifact.js",
-	"buyweapon.js",
+	"buyequipment.js",
 	"challenge.js",
 	"collectartifact.js",
 	"loot.js",
@@ -9,16 +11,12 @@ var selectWhitelist = [
 	"repair.js",
 	"startingartifact.js",
 	"startingchallenges.js",
-	"weapon.js"
-];
-
-const selectDictionary = {};
-
-for (const file of selectWhitelist) {
+	"targetmove.js"
+]) {
 	const select = require(`./${file}`);
 	selectDictionary[select.name] = select;
 }
 
-exports.getSelect = (selectName) => {
-	return selectDictionary[selectName];
+exports.callSelect = function (mainId, interaction, args) {
+	selectDictionary[mainId].execute(interaction, args);
 }

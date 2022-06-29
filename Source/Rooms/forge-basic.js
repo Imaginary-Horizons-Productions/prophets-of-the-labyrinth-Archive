@@ -9,10 +9,10 @@ module.exports = new RoomTemplate()
 
 module.exports.uiRows.push(new MessageActionRow().addComponents(
 	new MessageButton().setCustomId("upgrade")
-		.setLabel("Pick a weapon to randomly upgrade")
+		.setLabel("Consider equipment upgrades")
 		.setStyle("SUCCESS"),
 	new MessageButton().setCustomId("viewrepairs")
-		.setLabel("Repair a weapon")
+		.setLabel("Plan equipment repairs")
 		.setStyle("PRIMARY")
 ))
 

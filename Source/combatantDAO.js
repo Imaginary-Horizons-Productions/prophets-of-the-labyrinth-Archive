@@ -1,25 +1,7 @@
 const Enemy = require("../Classes/Enemy.js");
 const Delver = require("../Classes/Delver.js");
-const { getWeaknesses, getResistances, getEmoji } = require("./elementHelpers.js");
-const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
-
-let
-	// modifierDictionary
-	getInverse,
-	isNonStacking,
-	getModifierDescription,
-	isBuff,
-	isDebuff,
-	// weaponDAO
-	weaponToEmbedField,
-	// helpers
-	SAFE_DELIMITER;
-exports.injectConfig = function (isProduction) {
-	({ getInverse, isNonStacking, getModifierDescription, isBuff, isDebuff } = require("./Modifiers/_modifierDictionary.js").injectConfig(isProduction));
-	({ weaponToEmbedField } = require("./weaponDAO.js").injectConfig(isProduction));
-	({ SAFE_DELIMITER } = require("../helpers.js").injectConfig(isProduction));
-	return this;
-}
+const { getInverse, isNonStacking, getModifierDescription, isBuff, isDebuff } = require("./Modifiers/_modifierDictionary.js");
+const { getWeakness } = require("./elementHelpers.js");
 
 exports.getFullName = function (combatant, titleObject) {
 	if (combatant instanceof Enemy) {
@@ -44,44 +26,6 @@ exports.calculateTotalSpeed = function (combatant) {
 	return Math.ceil(totalSpeed);
 }
 
-exports.delverStatsPayload = function (delver) {
-	let embed = new MessageEmbed()
-		.setTitle(exports.getFullName(delver, {}))
-		.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nPredicts: ${delver.predict}\nWhen using ${delver.element} ${getEmoji(delver.element)} weapons, add 1 Stagger to enemies or remove 1 Stagger from allies`)
-		.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
-	for (let weapon of delver.weapons) {
-		embed.addField(...weaponToEmbedField(weapon.name, weapon.uses));
-	}
-	let components = [];
-	if (Object.keys(delver.modifiers).length) {
-		let actionRow = [];
-		let modifiers = Object.keys(delver.modifiers);
-		let buttonCount = Math.min(modifiers.length, 4); // 5 buttons per row, save 1 spot for "and X more..." button
-		for (let i = 0; i < buttonCount; i++) {
-			let modifierName = modifiers[i];
-			let style;
-			if (isBuff(modifierName)) {
-				style = "PRIMARY";
-			} else if (isDebuff(modifierName)) {
-				style = "DANGER";
-			} else {
-				style = "SECONDARY";
-			}
-			actionRow.push(new MessageButton().setCustomId(`modifier${SAFE_DELIMITER}${modifierName}${SAFE_DELIMITER}${i}`)
-				.setLabel(`${modifierName}${isNonStacking(modifierName) ? "" : ` x ${delver.modifiers[modifierName]}`}`)
-				.setStyle(style))
-		}
-		if (modifiers.length > 4) {
-			actionRow.push(new MessageButton().setCustomId(`modifier${SAFE_DELIMITER}MORE`)
-				.setLabel(`${modifiers.length - 4} more...`)
-				.setStyle("SECONDARY")
-				.setDisabled(delver.predict !== "Modifiers"))
-		}
-		components.push(new MessageActionRow().addComponents(...actionRow));
-	}
-	return { embeds: [embed], components, ephemeral: true };
-}
-
 exports.dealDamage = async function (target, user, damage, isUnblockable, element, adventure) {
 	let targetName = exports.getFullName(target, adventure.room.enemyTitles);
 	let targetModifiers = Object.keys(target.modifiers);
@@ -92,11 +36,11 @@ exports.dealDamage = async function (target, user, damage, isUnblockable, elemen
 			if (targetModifiers.includes("Exposed")) {
 				pendingDamage *= 1.5;
 			}
-			let isWeakness = getWeaknesses(target.element).includes(element);
+			let isWeakness = getWeakness(target.element) === element;
 			if (isWeakness) {
 				pendingDamage *= 2;
 			}
-			let isResistance = getResistances(target.element).includes(element);
+			let isResistance = target.element === element;
 			if (isResistance) {
 				pendingDamage = pendingDamage / 2;
 			}
@@ -147,7 +91,7 @@ exports.dealDamage = async function (target, user, damage, isUnblockable, elemen
 exports.gainHealth = function (combatant, healing, adventure, inCombat = true) {
 	combatant.hp += healing;
 	let excessHealing = 0;
-	let bloodshieldSwordCount = adventure.artifacts["Bloodshield Sword"].count;
+	let bloodshieldSwordCount = adventure.getArtifactCount("Bloodshield Sword");
 	if (combatant.hp > combatant.maxHp) {
 		excessHealing = combatant.hp - combatant.maxHp;
 		combatant.hp = combatant.maxHp;
@@ -166,7 +110,7 @@ exports.gainHealth = function (combatant, healing, adventure, inCombat = true) {
 }
 
 exports.addBlock = function (combatant, integer) {
-	combatant.block = integer;
+	combatant.block += integer;
 	return combatant;
 }
 
@@ -175,58 +119,92 @@ exports.clearBlock = function (combatant) {
 	return combatant;
 }
 
-exports.addModifier = function (combatant, { name: modifier, stacks }) {
-	let pendingStacks = stacks;
-	let inverse = getInverse(modifier);
-	let inverseStacks = combatant.modifiers[inverse];
-	if (inverseStacks) {
-		exports.removeModifier(combatant, inverse, pendingStacks);
-		if (inverseStacks < pendingStacks) {
-			combatant.modifiers[modifier] = pendingStacks - inverseStacks;
-		}
-	} else {
-		if (combatant.modifiers[modifier]) {
-			combatant.modifiers[modifier] += pendingStacks;
+/** Checks if adding the modifier inverts exisiting modifiers, increments the (remaining) stacks, then checks if stacks exceed a trigger threshold
+ * @param {Combatant} combatant
+ * @param {object} modifierData
+ * @param {string} modifierData.name
+ * @param {number} modifierData.stacks removes all if not parsable to an integer
+ * @param {boolean} modifierData.force whether to ignore the Oblivious check
+ * @returns {boolean} if the modifier was added (as opposed to being prevented by Oblivious)
+ */
+exports.addModifier = function (combatant, { name: modifier, stacks: pendingStacks, force = false }) {
+	// Oblivious only blocks buffs and debuffs
+	if (!("Oblivious" in combatant.modifiers && (isBuff(modifier) || isDebuff(modifier))) || force) {
+		let inverse = getInverse(modifier);
+		let inverseStacks = combatant.modifiers[inverse];
+		if (inverseStacks) {
+			exports.removeModifier(combatant, { name: inverse, stacks: pendingStacks, force: true });
+			if (inverseStacks < pendingStacks) {
+				combatant.modifiers[modifier] = pendingStacks - inverseStacks;
+			}
 		} else {
-			combatant.modifiers[modifier] = pendingStacks;
+			if (combatant.modifiers[modifier]) {
+				combatant.modifiers[modifier] += pendingStacks;
+			} else {
+				combatant.modifiers[modifier] = pendingStacks;
+			}
 		}
-	}
 
-	// Check if Stagger becomes Stun
-	if (combatant.modifiers?.Stagger >= combatant.staggerThreshold) {
-		combatant.modifiers.Stagger -= combatant.staggerThreshold;
-		combatant.modifiers.Stun = 1;
-		if (combatant.modifiers.Progress) {
-			combatant.modifiers.Progress = Math.ceil(combatant.modifiers.Progress * 0.8);
+		// Trigger threshold: Stagger to Stun
+		if (combatant.modifiers?.Stagger >= combatant.staggerThreshold) {
+			combatant.modifiers.Stagger -= combatant.staggerThreshold;
+			combatant.modifiers.Stun = 1;
+			if ("Progress" in combatant.modifiers) {
+				combatant.modifiers.Progress = Math.ceil(combatant.modifiers.Progress * 0.8);
+			}
 		}
-	}
 
-	// Check if Progress yields results
-	if (combatant.modifiers?.Progress >= 100) {
-		combatant.modifiers.Progress -= 100;
-		exports.addModifier(combatant, { name: "Power Up", stacks: 100 });
+		// Trigger threshold: Progress
+		if (combatant.modifiers?.Progress >= 100) {
+			combatant.modifiers.Progress -= 100;
+			exports.addModifier(combatant, { name: "Power Up", stacks: 100, force: true });
+			if ("Stasis" in combatant.modifiers) {
+				combatant.modifiers.Stasis++;
+			} else {
+				combatant.modifiers.Stasis = 1;
+			}
+		}
+		return true;
+	} else {
+		exports.removeModifier(combatant, { name: "Oblivious", stacks: 1, force: true });
+		return false;
 	}
-	return combatant;
 }
 
-exports.removeModifier = function (combatant, { name: modifier, stacks }) {
-	let all = isNaN(parseInt(stacks));
-	if (!all && modifier in combatant.modifiers) {
-		combatant.modifiers[modifier] -= stacks;
-		if (combatant.modifiers[modifier] <= 0) {
-			all = true;
+/** After decrementing a modifier's stacks, delete the modifier's entry in the object
+ * @param {Combatant} combatant
+ * @param {object} modifierData
+ * @param {string} modifierData.name
+ * @param {number} modifierData.stacks removes all if not parsable to an integer
+ * @param {boolean} modifierData.force whether to ignore the Stasis check (eg buffs/debuffs consuming themselves)
+ * @returns {boolean} if the modifier was decremented (as opposed to being prevented by Stasis)
+ */
+exports.removeModifier = function (combatant, { name: modifier, stacks, force = false }) {
+	// Stasis only protects buffs and debuffs
+	if (!("Stasis" in combatant.modifiers && (isBuff(modifier) || isDebuff(modifier))) || force) {
+		if (isNaN(parseInt(stacks)) || stacks >= combatant.modifiers[modifier]) {
+			delete combatant.modifiers[modifier];
+		} else if (modifier in combatant.modifiers) {
+			combatant.modifiers[modifier] -= stacks;
 		}
+		return true;
+	} else {
+		exports.removeModifier(combatant, { name: "Stasis", stacks: 1, force: true });
+		return false;
 	}
-	if (all) {
-		delete combatant.modifiers[modifier];
-	}
-	return combatant;
 }
 
-exports.modifiersToString = function (combatant) {
+/** Create a string containing the combatant's current modifiers
+ * @param {Combatant} combatant
+ * @param {boolean} includeStagger
+ * @returns {string}
+ */
+exports.modifiersToString = function (combatant, includeStagger) {
 	let modifiersText = "";
 	for (let modifier in combatant.modifiers) {
-		modifiersText += `*${modifier}${isNonStacking(modifier) ? "" : ` x ${combatant.modifiers[modifier]}`}* - ${getModifierDescription(modifier, combatant)}\n`;
+		if (includeStagger || modifier !== "Stagger") {
+			modifiersText += `*${modifier}${isNonStacking(modifier) ? "" : ` x ${combatant.modifiers[modifier]}`}* - ${getModifierDescription(modifier, combatant)}\n`;
+		}
 	}
 	return modifiersText;
 }

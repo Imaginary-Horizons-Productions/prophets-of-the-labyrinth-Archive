@@ -3,17 +3,43 @@ const fs = require("fs");
 
 exports.versionData = {};
 exports.sponsors = {};
-exports.injectConfig = function (isProduction) {
-	if (isProduction) {
-		exports.versionData = require('./Config/versionData.json');
-		exports.sponsors = require("./Config/sponsors.json");
+exports.versionData = require('./Config/versionData.json');
+exports.sponsors = require("./Config/sponsors.json");
+
+exports.SAFE_DELIMITER = "→";
+
+exports.getNumberEmoji = function (number) {
+	switch (number) {
+		case 0:
+			return '0️⃣';
+		case 1:
+			return '1️⃣';
+		case 2:
+			return '2️⃣';
+		case 3:
+			return '3️⃣';
+		case 4:
+			return '4️⃣';
+		case 5:
+			return '5️⃣';
+		case 6:
+			return '6️⃣';
+		case 7:
+			return '7️⃣';
+		case 8:
+			return '8️⃣';
+		case 9:
+			return '9️⃣';
+		case 10:
+			return '🔟';
+		default:
+			return '#️⃣';
 	}
-	return this;
 }
 
-/**
- * Check if the given `id` belongs to a sponsor of the project
- *
+exports.maxDelverCount = 8;
+
+/** Check if the given `id` belongs to a sponsor of the project
  * @param {string} id
  * @returns {boolean} if the id belongs to a sponsor
  */
@@ -30,9 +56,7 @@ exports.isSponsor = function (id) {
 }
 
 
-/**
- * Generate an integer between 0 and the given `exclusiveMax`
- *
+/** Generate an integer between 0 and the given `exclusiveMax`
  * @param {Adventure} adventure the adventure in which to roll
  * @param {number} exclusiveMax the integer after the max roll
  * @param {string} branch which rnTable branch to roll on ("general" or "battle")
@@ -54,9 +78,7 @@ exports.generateRandomNumber = function (adventure, exclusiveMax, branch) {
 	}
 }
 
-/**
- * Calculate the value represented by a mathematical expression (supported operations: multiplication)
- *
+/** Calculate the value represented by a mathematical expression (supported operations: multiplication)
  * @param {string} countExpression
  * @param {number} nValue - the value to replace "n" with
  * @returns {number} the calculated value
@@ -71,9 +93,19 @@ exports.parseCount = function (countExpression, nValue) {
 	}, 1));
 }
 
-/**
- * Remove components (buttons and selects) from a given message
- *
+/** Create a message embed with common settings
+ * @param {string} iconURL
+ * @returns {MessageEmbed}
+ */
+exports.embedTemplate = function (iconURL) {
+	return new MessageEmbed().setColor('6b81eb')
+		.setAuthor({ name: "Click here to vist the PotL GitHub", iconURL, url: "https://github.com/Imaginary-Horizons-Productions/prophets-of-the-labyrinth" })
+		.setURL("https://discord.com/api/oauth2/authorize?client_id=950469509628702740&permissions=397284665360&scope=applications.commands%20bot")
+		.setFooter({ text: "Click the title link to add PotL to your server", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" })
+}
+
+
+/** Remove components (buttons and selects) from a given message
  * @param {string} messageId - the id of the message to remove components from
  * @param {MessageManager} messageManager - the MessageManager for the channel the message is in
  */
@@ -85,10 +117,8 @@ exports.clearComponents = function (messageId, messageManager) {
 	}
 }
 
-/**
- * Generate parent directories if necessary, and save a file.
+/** Generate parent directories if necessary, and save a file.
  * Keeps a backup of the fileName that may be replaced, until writing succeeds
- *
  * @param {string} dirPath path to the directory of a file
  * @param {string} fileName name of the file to be saved
  * @param {string} data string to be written to the file
@@ -104,9 +134,7 @@ exports.ensuredPathSave = async function (dirPath, fileName, data) {
 		.catch(console.error) // log error, and avoid fatally crashing
 }
 
-/**
- * Calculates the English cojugation of the ordinal suffix (eg 1st, 2nd, 3rd)
- *
+/** Calculates the English cojugation of the ordinal suffix (eg 1st, 2nd, 3rd)
  * @param {number} integer - the integer to calculate the suffix for
  * @returns {string}
  */
@@ -131,9 +159,7 @@ exports.ordinalSuffixEN = function (integer) {
 	}
 }
 
-/**
- * The version embed lists the following: changes in the most recent update, known issues in the most recent update, and links to support the project
- *
+/** The version embed lists the following: changes in the most recent update, known issues in the most recent update, and links to support the project
  * @param {string} avatarURL
  * @returns {MessageEmbed}
  */
@@ -167,7 +193,5 @@ exports.getVersionEmbed = async function (avatarURL) {
 		// Known Issues section not found
 		embed.setDescription(data.slice(changesStartRegEx.lastIndex, knownIssuesEnd));
 	}
-	return embed.addField(`Become a Sponsor`, `Chip in for server costs or get premimum features by sponsoring [PotL on GitHub](https://github.com/Imaginary-Horizons-Productions/prophets-of-the-labyrinth)`);
+	return embed.addField(`Become a Sponsor`, `Chip in for server costs or get premium features by sponsoring [PotL on GitHub](https://github.com/Imaginary-Horizons-Productions/prophets-of-the-labyrinth)`);
 }
-
-exports.SAFE_DELIMITER = "→";
