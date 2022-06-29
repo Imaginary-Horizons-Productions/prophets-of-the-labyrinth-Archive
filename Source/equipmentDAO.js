@@ -1,5 +1,6 @@
 const { getEmoji, getColor } = require("./elementHelpers.js");
 const { getEquipmentProperty, buildEquipmentDescription } = require("./equipment/_equipmentDictionary");
+const { isBuff, isDebuff, isNonStacking } = require("./Modifiers/_modifierDictionary");
 const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
 const { SAFE_DELIMITER, ordinalSuffixEN } = require("../helpers.js");
 const { getFullName } = require("./combatantDAO.js");
@@ -26,6 +27,9 @@ exports.delverStatsPayload = function (delver, equipmentCapacity) {
 		.setTitle(getFullName(delver, {}))
 		.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nPredicts: ${delver.predict}\nYour ${getEmoji(delver.element)} moves add 1 Stagger to enemies and remove 1 Stagger from allies.`)
 		.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
+	if (delver.block > 0) {
+		embed.addField("Block", delver.block.toString())
+	}
 	for (let index = 0; index < equipmentCapacity; index++) {
 		if (delver.equipment[index]) {
 			embed.addField(...exports.equipmentToEmbedField(delver.equipment[index].name, delver.equipment[index].uses));

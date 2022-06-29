@@ -107,6 +107,10 @@ for (const file of [
 	"sword-guarding.js",
 	"sword-reckless.js",
 	"sword-swift.js",
+	"vigilancecharm-base.js",
+	"vigilancecharm-devoted.js",
+	"vigilancecharm-long.js",
+	"vigilancecharm-guarding.js",
 	"warhammer-base.js",
 	"warhammer-piercing.js"
 ]) {

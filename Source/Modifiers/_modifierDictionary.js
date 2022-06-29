@@ -20,6 +20,7 @@ for (const file of [
 	"slow.js",
 	"stagger.js",
 	"stasis.js",
+	"vigilance.js",
 	"stun.js"
 ]) {
 	const modifier = require(`./${file}`);

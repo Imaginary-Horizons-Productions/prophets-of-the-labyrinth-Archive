@@ -6,15 +6,16 @@
    3. Intents - Targets and next two Move Names for enemies
    4. Health - HP and Modifiers for each combatant
 - Removed Darkness and Light elements; enemies, weapons, and archetypes have been re-elemented
-- Fixed `/invite`
-- Slash commands can now be used from DMs (as long as they make sense)
+- Added Equipment categories ("Weapons" are now one category among them)
 - New slash command: `/armory` that allows checking stats on a weapon given by name
-- The changelog no longer offers "premimum features" for sponsoring on GitHub
+- New modifiers: Stasis, Oblivious, Vigilance
+- New Equipment: Vigilance Charm
+- Slash commands can now be used from DMs (as long as they make sense)
 - Max delvers per adventure reduced to 8 (UI constraint)
-- New modifier: Stasis
-- New modifier: Oblivious
-- Fixed `/ping` incorrectly mentioning delvers who are ready
+- The changelog no longer offers "premimum features" for sponsoring on GitHub
 - Other bug fixes, optimizations, and improvements
+- Fixed `/invite`
+- Fixed `/ping` incorrectly mentioning delvers who are ready
 #### Prophets of the Labyrinth Version 0.8.0:
 - Added "Data Policy" page to manual
 - Enemy hp now scales with party size

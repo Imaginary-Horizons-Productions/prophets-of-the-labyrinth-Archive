@@ -110,7 +110,7 @@ exports.gainHealth = function (combatant, healing, adventure, inCombat = true) {
 }
 
 exports.addBlock = function (combatant, integer) {
-	combatant.block = integer;
+	combatant.block += integer;
 	return combatant;
 }
 
