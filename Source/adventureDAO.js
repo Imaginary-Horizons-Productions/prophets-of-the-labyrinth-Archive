@@ -8,7 +8,7 @@ const Delver = require("../Classes/Delver.js");
 const Room = require("../Classes/Room.js");
 const Resource = require("../Classes/Resource.js");
 const { getWeakness, getColor } = require("./elementHelpers.js");
-const { ensuredPathSave, parseCount, generateRandomNumber, clearComponents, SAFE_DELIMITER } = require("../helpers.js");
+const { ensuredPathSave, parseCount, generateRandomNumber, clearComponents, SAFE_DELIMITER, MAX_MESSAGE_ACTION_ROWS } = require("../helpers.js");
 const { getGuild } = require("./guildDAO.js");
 const { setPlayer, getPlayer } = require("./playerDAO.js");
 const { spawnEnemy } = require("./enemyDAO.js");
@@ -120,8 +120,7 @@ exports.nextRoom = async function (roomType, thread) {
 			const candidateTag = `${roomTypes[generateRandomNumber(adventure, roomTypes.length, "general")]}${SAFE_DELIMITER}${adventure.depth}`;
 			if (!(candidateTag in adventure.roomCandidates)) {
 				adventure.roomCandidates[candidateTag] = [];
-				if (Object.keys(adventure.roomCandidates).length === 5) {
-					// Should not execed 5, as only 5 buttons can be in a MessageActionRow
+				if (Object.keys(adventure.roomCandidates).length === MAX_MESSAGE_ACTION_ROWS) {
 					break;
 				}
 			}
@@ -282,7 +281,7 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 				.setSpeed(combatant)
 				.setIsCrit(combatant.crit)
 				.setUser(teamName, i)
-			if (combatant.modifiers.Stun > 0) {
+			if (combatant.getModifierStacks("Stun") > 0) {
 				// Dummy move for Stunned combatants
 				move.setMoveName("Stun");
 			} else {

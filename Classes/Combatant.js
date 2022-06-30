@@ -93,6 +93,10 @@ module.exports = class Combatant {
 		return this.critDenominator;
 	}
 
+	/** Get the number of stacks of the given modifier the combatant has
+	 * @param {string} modifierName
+	 * @returns {number}
+	 */
 	getModifierStacks(modifierName){
 		return this.modifiers[modifierName] ?? 0
 	}

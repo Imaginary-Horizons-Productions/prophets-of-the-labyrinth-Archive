@@ -12,7 +12,7 @@ module.exports = new Equipment("Warhammer", 1, "*Strike a foe for @{damage} (+@{
 
 function effect(target, user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger], damage, bonusDamage, critBonus } = module.exports;
-	if (target.modifiers.Stun) {
+	if (target.getModifierStacks("Stun") > 0) {
 		damage += bonusDamage;
 	}
 	if (user.element === element) {

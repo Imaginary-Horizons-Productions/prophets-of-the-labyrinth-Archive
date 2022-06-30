@@ -146,16 +146,16 @@ exports.addModifier = function (combatant, { name: modifier, stacks: pendingStac
 		}
 
 		// Trigger threshold: Stagger to Stun
-		if (combatant.modifiers?.Stagger >= combatant.staggerThreshold) {
+		if (combatant.getModifierStacks("Stagger") >= combatant.staggerThreshold) {
 			combatant.modifiers.Stagger -= combatant.staggerThreshold;
 			combatant.modifiers.Stun = 1;
 			if ("Progress" in combatant.modifiers) {
-				combatant.modifiers.Progress = Math.ceil(combatant.modifiers.Progress * 0.8);
+				combatant.modifiers.Progress = Math.ceil(combatant.getModifierStacks("Progress") * 0.8);
 			}
 		}
 
 		// Trigger threshold: Progress
-		if (combatant.modifiers?.Progress >= 100) {
+		if (combatant.getModifierStacks("Progress") >= 100) {
 			combatant.modifiers.Progress -= 100;
 			exports.addModifier(combatant, { name: "Power Up", stacks: 100, force: true });
 			if ("Stasis" in combatant.modifiers) {

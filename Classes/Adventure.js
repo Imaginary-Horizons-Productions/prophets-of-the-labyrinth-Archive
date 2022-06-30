@@ -1,4 +1,5 @@
 const crypto = require("crypto");
+const { MAX_MESSAGE_ACTION_ROWS } = require("../helpers");
 
 module.exports = class Adventure {
 	constructor(seedInput, guildIdInput) {
@@ -85,7 +86,7 @@ module.exports = class Adventure {
 
 	getEquipmentCapacity() {
 		let count = 4 + this.getArtifactCount("Hammerspace Holster") - this.getChallengeIntensity("Can't Hold All this Value");
-		count = Math.min(5, count);
+		count = Math.min(MAX_MESSAGE_ACTION_ROWS, count);
 		count = Math.max(1, count);
 		return count;
 	}

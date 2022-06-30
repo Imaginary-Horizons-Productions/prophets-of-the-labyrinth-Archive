@@ -2,7 +2,7 @@ const { getEmoji, getColor } = require("./elementHelpers.js");
 const { getEquipmentProperty, buildEquipmentDescription } = require("./equipment/_equipmentDictionary");
 const { isBuff, isDebuff, isNonStacking } = require("./Modifiers/_modifierDictionary");
 const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
-const { SAFE_DELIMITER, ordinalSuffixEN } = require("../helpers.js");
+const { SAFE_DELIMITER, ordinalSuffixEN, MAX_BUTTONS_PER_ROW } = require("../helpers.js");
 const { getFullName } = require("./combatantDAO.js");
 
 /** Seen in target selection embeds and /inspect-self equipment fields contain nearly all information about the equipment they represent
@@ -41,7 +41,7 @@ exports.delverStatsPayload = function (delver, equipmentCapacity) {
 	if (Object.keys(delver.modifiers).length) {
 		let actionRow = [];
 		let modifiers = Object.keys(delver.modifiers);
-		let buttonCount = Math.min(modifiers.length, 4); // 5 buttons per row, save 1 spot for "and X more..." button
+		let buttonCount = Math.min(modifiers.length, MAX_BUTTONS_PER_ROW - 1); // save spot for "and X more..." button
 		for (let i = 0; i < buttonCount; i++) {
 			let modifierName = modifiers[i];
 			let style;

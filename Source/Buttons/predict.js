@@ -34,7 +34,7 @@ module.exports = new Button(id, (interaction, args) => {
 					return calculateTotalSpeed(second) - calculateTotalSpeed(first);
 				});
 			for (const combatant of combatants) {
-				let staggerCount = combatant.modifiers.Stagger || 0;
+				let staggerCount = combatant.getModifierStacks("Stagger");
 				let bar = "";
 				for (let i = 0; i < combatant.staggerThreshold; i++) {
 					if (staggerCount > i) {

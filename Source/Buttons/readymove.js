@@ -14,7 +14,7 @@ module.exports = new Button(id, (interaction, args) => {
 	let adventure = getAdventure(interaction.channel.id);
 	let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 	if (delver) {
-		if (!delver.modifiers.Stun) { // Early out if stunned
+		if (delver.getModifierStacks("Stun") < 1) { // Early out if stunned
 			let embed = new MessageEmbed().setColor(getColor(adventure.room.element))
 				.setTitle("Readying a Move")
 				.setDescription(`Your ${getEmoji(delver.element)} moves add 1 Stagger to enemies and remove 1 Stagger from allies.\n\nPick one option from below as your move for this round:`)
@@ -93,7 +93,7 @@ module.exports = new Button(id, (interaction, args) => {
 function miniPredict(predictType, combatant) {
 	switch (predictType) {
 		case "Movements":
-			let staggerCount = combatant.modifiers.Stagger || 0;
+			let staggerCount = combatant.getModifierStacks("Stagger");
 			let bar = "";
 			for (let i = 0; i < combatant.staggerThreshold; i++) {
 				if (staggerCount > i) {

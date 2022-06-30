@@ -8,7 +8,7 @@ exports.resolveMove = async function (move, adventure) {
 	let user = userTeam[move.userIndex];
 	if (user.hp > 0) {
 		let moveText = `• ${getFullName(user, adventure.room.enemyTitles)} `;
-		if (move.name !== "Stun" && !user.modifiers.Stun) {
+		if (move.name !== "Stun" && user.getModifierStacks("Stun") < 1) {
 			let effect;
 			let targetAll = false;
 			let breakText = "";
@@ -70,10 +70,12 @@ exports.resolveMove = async function (move, adventure) {
 		}
 
 		// Poison/Regen
-		if (user.modifiers.Poison) {
-			moveText += ` ${await dealDamage(user, null, user.modifiers.Poison * 10, true, "Poison", adventure)}`;
-		} else if (user.modifiers.Regen) {
-			moveText += ` ${gainHealth(user, user.modifiers.Regen * 10, adventure)}`;
+		const poisonStacks = user.getModifierStacks("Poison");
+		const regenStacks = user.getModifierStacks("Regen");
+		if (poisonStacks) {
+			moveText += ` ${await dealDamage(user, null, poisonStacks * 10, true, "Poison", adventure)}`;
+		} else if (regenStacks) {
+			moveText += ` ${gainHealth(user, regenStacks * 10, adventure)}`;
 		}
 		return `${moveText}\n`;
 	} else {

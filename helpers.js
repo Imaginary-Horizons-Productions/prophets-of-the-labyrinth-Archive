@@ -38,6 +38,8 @@ exports.getNumberEmoji = function (number) {
 }
 
 exports.maxDelverCount = 8;
+exports.MAX_MESSAGE_ACTION_ROWS = 5;
+exports.MAX_BUTTONS_PER_ROW = 5;
 
 /** Check if the given `id` belongs to a sponsor of the project
  * @param {string} id

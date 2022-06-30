@@ -1,4 +1,4 @@
-const { parseCount } = require("../helpers");
+const { parseCount, MAX_MESSAGE_ACTION_ROWS, MAX_BUTTONS_PER_ROW } = require("../helpers");
 
 module.exports = class Artifact {
 	constructor(nameInput, descriptionInput) {
@@ -15,7 +15,7 @@ module.exports = class Artifact {
 			copies = parseCount(copiesExpression, copies);
 		}
 
-		return description.replace(/@{copies.*}/g, copies);
+		return description.replace(/@{copies.*}/g, copies).replace(/@{rows}/g, MAX_MESSAGE_ACTION_ROWS).replace(/@{buttons}/g, MAX_BUTTONS_PER_ROW);
 	}
 
 	setElement(elementEnum) {
