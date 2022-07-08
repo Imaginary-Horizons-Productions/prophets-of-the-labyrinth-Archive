@@ -13,6 +13,7 @@ for (const file of [
 	"modifier.js",
 	"nontargetmove.js",
 	"predict.js",
+	"readyconsumable.js",
 	"readymove.js",
 	"replaceequipment.js",
 	"rest.js",

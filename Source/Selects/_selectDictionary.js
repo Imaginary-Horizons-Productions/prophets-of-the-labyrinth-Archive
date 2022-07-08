@@ -6,6 +6,8 @@ for (const file of [
 	"buyequipment.js",
 	"challenge.js",
 	"collectartifact.js",
+	"consumable.js",
+	"consumablestats.js",
 	"loot.js",
 	"randomupgrade.js",
 	"repair.js",

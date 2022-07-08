@@ -166,7 +166,6 @@ exports.buildEquipmentDescription = function (equipmentName, buildFullDescriptio
 }
 
 exports.rollEquipmentDrop = function (tier, adventure) {
-	let elements = adventure.delvers.map(delver => delver.element);
-	let pool = elements.reduce((pool, element) => pool.concat(equipmentDrops[element][tier]), []);
+	let pool = adventure.getElementPool().reduce((pool, element) => pool.concat(equipmentDrops[element][tier]), []);
 	return pool[generateRandomNumber(adventure, pool.length, "general")];
 }

@@ -10,6 +10,7 @@ module.exports = class Room {
 
 	initializeCombatProperties() {
 		this.round = -1;
+		this.priorityMoves = [];
 		this.moves = [];
 		this.enemies = [];
 		this.enemyTitles = {};

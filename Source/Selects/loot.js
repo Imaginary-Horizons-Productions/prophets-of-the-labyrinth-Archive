@@ -54,6 +54,19 @@ module.exports = new Select(id, (interaction, args) => {
 					}
 				}
 				break;
+			case "consumable":
+				if (count && count > 0) {
+					if (name in adventure.consumables) {
+						adventure.consumables[name] += count;
+					} else {
+						adventure.consumables[name] = count;
+					}
+					adventure.room.resources[name] = 0;
+					result = {
+						content: `The party acquires ${name} x ${count}.`
+					}
+				}
+				break;
 		}
 		if (result) {
 			interaction.reply(result).then(() => {

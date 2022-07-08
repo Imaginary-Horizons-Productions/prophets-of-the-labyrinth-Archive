@@ -28,6 +28,7 @@ module.exports.execute = (interaction) => {
 		if (challenges.length) {
 			embed.addField("Challenges", Object.keys(adventure.challenges).join(", "));
 		}
+		const infoSelects = [];
 		let artifactOptions = Object.keys(adventure.artifacts).map(artifact => {
 			return {
 				label: `${artifact} x ${adventure.artifacts[artifact].count}`,
@@ -35,31 +36,42 @@ module.exports.execute = (interaction) => {
 				value: `${artifact}${SAFE_DELIMITER}${adventure.artifacts[artifact].count}`
 			}
 		})
-		let artifactSelect;
 		if (artifactOptions.length > 0) {
 			embed.addField("Artifacts", Object.entries(adventure.artifacts).map(entry => `${entry[0]} x ${entry[1].count}`).join(", "))
-			artifactSelect = [
-				new MessageActionRow().addComponents(
-					new MessageSelectMenu().setCustomId(`artifact`)
-						.setPlaceholder("Get details about an artifact...")
-						.setOptions(artifactOptions)
-				)
-			]
+			infoSelects.push(new MessageActionRow().addComponents(
+				new MessageSelectMenu().setCustomId(`artifact`)
+					.setPlaceholder("Get details about an artifact...")
+					.setOptions(artifactOptions)
+			))
 		} else {
-			artifactSelect = [
-				new MessageActionRow().addComponents(
-					new MessageSelectMenu().setCustomId(`artifact`)
-						.setPlaceholder("No artifacts to inspect...")
-						.setDisabled(true)
-						.setOptions([{
-							label: "placeholder",
-							description: "",
-							value: "placeholder"
-						}])
-				)
-			]
+			infoSelects.push(new MessageActionRow().addComponents(
+				new MessageSelectMenu().setCustomId(`artifact`)
+					.setPlaceholder("No artifacts to inspect...")
+					.setDisabled(true)
+					.setOptions([{
+						label: "placeholder",
+						description: "",
+						value: "placeholder"
+					}])
+			))
 		}
-		interaction.reply({ embeds: [embed], components: artifactSelect, ephemeral: true })
+		let consumablesOptions = Object.keys(adventure.consumables).map(consumable => {
+			return {
+				label: `${consumable} x ${adventure.consumables[consumable]}`,
+				description: "",
+				value: `${consumable}${SAFE_DELIMITER}${adventure.consumables[consumable]}`
+			}
+		})
+		if (consumablesOptions.length > 0) {
+			//TODONOW decide if it needs its own field
+			embed.addField("Consumables", Object.entries(adventure.consumables).map(([name, count]) => `${name} x ${count}`).join(", "))
+			infoSelects.push(new MessageActionRow().addComponents(
+				new MessageSelectMenu().setCustomId("consumablestats")
+					.setPlaceholder("Get details about a consumable...")
+					.setOptions(consumablesOptions)
+			))
+		}
+		interaction.reply({ embeds: [embed], components: infoSelects, ephemeral: true })
 			.catch(console.error);
 	} else {
 		interaction.reply({ content: "This channel doesn't appear to be an adventure's thread.", ephemeral: true });

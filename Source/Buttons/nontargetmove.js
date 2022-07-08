@@ -63,6 +63,16 @@ module.exports = new Button(id, async (interaction, [moveName, round, index]) =>
 				}
 			}
 			if (!overwritten) {
+				for (let i = 0; i < adventure.room.priorityMoves.length; i++) {
+					let move = adventure.room.priorityMoves[i];
+					if (move.userTeam === user.team && move.userIndex === userIndex) {
+						await adventure.room.moves.splice(i, 1, newMove);
+						overwritten = true;
+						break;
+					}
+				}
+			}
+			if (!overwritten) {
 				await adventure.room.moves.push(newMove);
 			}
 

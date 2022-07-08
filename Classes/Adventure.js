@@ -36,6 +36,7 @@ module.exports = class Adventure {
 	gold = 100;
 	peakGold = 100;
 	artifacts = {}; // {artifactName: {count, staistic1, statistic2...}}
+	consumables = {}; // {consumableName: count}
 	rnIndices = {
 		general: 0,
 		battle: 0
@@ -70,6 +71,19 @@ module.exports = class Adventure {
 	setLeaderId(id) {
 		this.leaderId = id;
 		return this;
+	}
+
+	/** Get an array with Untyped and all elements in the party
+	 * @returns {string[]}
+	 */
+	getElementPool() {
+		return this.delvers.reduce((elements, delver) => {
+			if (!elements.includes(delver.element)) {
+				return [...elements, delver.element];
+			} else {
+				return elements;
+			}
+		}, ["Untyped"]);
 	}
 
 	getArtifactCount(artifactName) {
