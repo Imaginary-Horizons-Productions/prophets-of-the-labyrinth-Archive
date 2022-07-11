@@ -1,7 +1,7 @@
-const Equipment = require('../../Classes/Equipment.js');
+const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { dealDamage, addModifier } = require('../combatantDAO.js');
 
-module.exports = new Equipment("Censer", 1, "Burn a foe for @{damage} (+@{bonusDamage} if target has 0 block) @{element} damage*\nCritical Hit: Also apply @{mod1Stacks} @{mod1}", "Fire", effect, [])
+module.exports = new EquipmentTemplate("Censer", 1, "Burn a foe for @{damage} (+@{bonusDamage} if target has 0 block) @{element} damage*\nCritical Hit: Also apply @{mod1Stacks} @{mod1}", "Fire", effect, [])
 	.setCategory("Trinket")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Slow", stacks: 2 }])

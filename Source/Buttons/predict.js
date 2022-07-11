@@ -28,13 +28,13 @@ module.exports = new Button(id, (interaction, args) => {
 	let descriptionText = "";
 	switch (delver.predict) {
 		case "Movements": // Shows speed, stagger and poise of all combatants
-			let combatants = adventure.room.enemies.filter(combatant => combatant.hp > 0)
+			const activeCombatants = adventure.room.enemies.filter(enemy => enemy.hp > 0)
 				.concat(adventure.delvers)
 				.sort((first, second) => {
 					return calculateTotalSpeed(second) - calculateTotalSpeed(first);
 				});
-			for (const combatant of combatants) {
-				let staggerCount = combatant.getModifierStacks("Stagger");
+			for (const combatant of activeCombatants) {
+				const staggerCount = combatant.getModifierStacks("Stagger");
 				let bar = "";
 				for (let i = 0; i < combatant.staggerThreshold; i++) {
 					if (staggerCount > i) {
@@ -54,12 +54,21 @@ module.exports = new Button(id, (interaction, args) => {
 			});
 			break;
 		case "Intents": // Shows each enemy's target(s) in the next round and the names of the next two moves
-			adventure.room.moves.forEach(move => {
-				if (move.userTeam === "enemy") {
-					let enemy = adventure.room.enemies[move.userIndex];
+			adventure.room.priorityMoves.forEach(({ userTeam, userIndex, targets, name }) => {
+				if (userTeam === "enemy") {
+					const enemy = adventure.room.enemies[userIndex];
 					if (enemy.hp > 0) {
-						let targets = getTargetList(move.targets, adventure);
-						descriptionText += `\n__${getFullName(enemy, adventure.room.enemyTitles)}__\nRound ${adventure.room.round + 1}: ${move.name} (Targets: ${targets.length ? targets.join(", ") : "???"})\nRound ${adventure.room.round + 2}: ${enemy.nextAction}\n`;
+						const targetNames = getTargetList(targets, adventure);
+						descriptionText += `\n__${getFullName(enemy, adventure.room.enemyTitles)}__\nRound ${adventure.room.round + 1} (Priority): ${name} (Targets: ${targetNames.length ? targetNames.join(", ") : "???"})\nRound ${adventure.room.round + 2}: ${enemy.nextAction}\n`;
+					}
+				}
+			})
+			adventure.room.moves.forEach(({ userTeam, userIndex, targets, name }) => {
+				if (userTeam === "enemy") {
+					const enemy = adventure.room.enemies[userIndex];
+					if (enemy.hp > 0) {
+						const targetNames = getTargetList(targets, adventure);
+						descriptionText += `\n__${getFullName(enemy, adventure.room.enemyTitles)}__\nRound ${adventure.room.round + 1}: ${name} (Targets: ${targetNames.length ? targetNames.join(", ") : "???"})\nRound ${adventure.room.round + 2}: ${enemy.nextAction}\n`;
 					}
 				}
 			})

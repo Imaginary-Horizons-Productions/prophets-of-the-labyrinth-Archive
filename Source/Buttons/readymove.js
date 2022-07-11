@@ -56,14 +56,14 @@ module.exports = new Button(id, (interaction, args) => {
 							targetOptions = targetOptions.concat(delverOptions);
 						}
 						moveMenu.push(new MessageActionRow().addComponents(
-							new MessageSelectMenu().setCustomId(`targetmove${SAFE_DELIMITER}${equip.name}${SAFE_DELIMITER}${adventure.room.round}${SAFE_DELIMITER}${i}`)
+							new MessageSelectMenu().setCustomId(`movetarget${SAFE_DELIMITER}${equip.name}${SAFE_DELIMITER}${adventure.room.round}${SAFE_DELIMITER}${i}`)
 								.setPlaceholder(`${elementEmoji} Use ${equip.name} on...`)
 								.addOptions(targetOptions)
 						));
 					} else {
 						// Button
 						moveMenu.push(new MessageActionRow().addComponents(
-							new MessageButton().setCustomId(`nontargetmove${SAFE_DELIMITER}${equip.name}${SAFE_DELIMITER}${adventure.room.round}${SAFE_DELIMITER}${i}`)
+							new MessageButton().setCustomId(`confirmmove${SAFE_DELIMITER}${equip.name}${SAFE_DELIMITER}${adventure.room.round}${SAFE_DELIMITER}${i}`)
 								.setLabel(`Use ${equip.name}`)
 								.setEmoji(elementEmoji)
 								.setStyle("SECONDARY")
@@ -75,7 +75,7 @@ module.exports = new Button(id, (interaction, args) => {
 				moveMenu.push(new MessageActionRow()
 					.addComponents(
 						new MessageSelectMenu()
-							.setCustomId(`targetmove${SAFE_DELIMITER}Punch${SAFE_DELIMITER}${adventure.room.round}${SAFE_DELIMITER}`)
+							.setCustomId(`movetarget${SAFE_DELIMITER}Punch${SAFE_DELIMITER}${adventure.room.round}${SAFE_DELIMITER}`)
 							.setPlaceholder(`Use Punch on...`)
 							.addOptions(enemyOptions)
 					));

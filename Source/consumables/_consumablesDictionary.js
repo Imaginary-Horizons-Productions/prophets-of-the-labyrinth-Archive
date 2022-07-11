@@ -1,3 +1,5 @@
+const Adventure = require("../../Classes/Adventure.js");
+const ConsumableTemplate = require("../../Classes/ConsumableTemplate.js");
 const { generateRandomNumber } = require("../../helpers.js");
 
 const CONSUMABLES = {};
@@ -18,11 +20,20 @@ for (const file of [
 	ROLL_TABLE[consumable.element].push(consumable.name);
 }
 
+/** Template should not be mutated
+ * @param {string} consumableName
+ * @returns {ConsumableTemplate}
+ */
 exports.getConsumable = function (consumableName) {
 	return CONSUMABLES[consumableName];
 }
 
+/** Rolls a consumable's name from droppable consumables
+ * @param {Adventure} adventure
+ * @returns {string}
+ */
+
 exports.rollConsumable = function (adventure) {
-	let consumablePool = adventure.getElementPool().reduce((artifacts, element) => artifacts.concat(ROLL_TABLE[element]), []);
+	let consumablePool = adventure.getElementPool().reduce((consumables, element) => consumables.concat(ROLL_TABLE[element]), []);
 	return consumablePool[generateRandomNumber(adventure, consumablePool.length, "general")];
 }

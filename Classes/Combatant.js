@@ -62,14 +62,12 @@ module.exports = class Combatant {
 		return this;
 	}
 
-	/**
-	 * Set's the combatant's element
-	 *
-	 * @param {string} elementInput
+	/** Combatant element determines weaknesses, resistances, and same element stagger bonus
+	 * @param {"Fire" | "Water" | "Earth" | "Wind" | "@{adventure}" | "@{adventureOpposite}"} elementEnum
 	 * @returns {Combatant}
 	 */
-	setElement(elementInput) {
-		this.element = elementInput;
+	setElement(elementEnum) {
+		this.element = elementEnum;
 		return this;
 	}
 
@@ -97,7 +95,7 @@ module.exports = class Combatant {
 	 * @param {string} modifierName
 	 * @returns {number}
 	 */
-	getModifierStacks(modifierName){
+	getModifierStacks(modifierName) {
 		return this.modifiers[modifierName] ?? 0
 	}
 }

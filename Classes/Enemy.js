@@ -32,6 +32,7 @@ module.exports = class Enemy extends Combatant {
 	 *
 	 * @param {object} actionsInput
 	 * @param {string} actionsInput.name
+	 * @param {boolean} actionsInput.isPriority
 	 * @param {function} actionsInput.effect
 	 * @param {function} actionsInput.selector
 	 * @param {function} actionsInput.next

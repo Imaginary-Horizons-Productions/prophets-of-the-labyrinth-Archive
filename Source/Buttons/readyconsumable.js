@@ -2,6 +2,8 @@ const Button = require('../../Classes/Button.js');
 const { MessageEmbed, MessageActionRow, MessageSelectMenu } = require('discord.js');
 const { getColor } = require('../elementHelpers.js');
 const { getAdventure } = require('../adventureDAO.js');
+const { SAFE_DELIMITER } = require('../../helpers.js');
+const { getConsumable } = require('../consumables/_consumablesDictionary.js');
 
 const id = "readyconsumable";
 module.exports = new Button(id, (interaction, args) => {
@@ -19,11 +21,11 @@ module.exports = new Button(id, (interaction, args) => {
 				],
 				components: [
 					new MessageActionRow().addComponents(
-						new MessageSelectMenu().setCustomId("consumable")
+						new MessageSelectMenu().setCustomId(`consumable${SAFE_DELIMITER}${adventure.room.round}`)
 							.setPlaceholder("Pick a consumable...")
 							.addOptions(Object.keys(adventure.consumables).reduce((options, consumable) => options.concat({
-								label: consumable,
-								description: `x ${adventure.consumables[consumable]}`,
+								label: `${consumable} (Held: ${adventure.consumables[consumable]})`,
+								description: getConsumable(consumable).description,
 								value: consumable
 							}), [])))
 				],

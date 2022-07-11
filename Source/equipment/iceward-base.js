@@ -1,7 +1,7 @@
-const Equipment = require('../../Classes/Equipment.js');
+const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addBlock, removeModifier } = require('../combatantDAO.js');
 
-module.exports = new Equipment("Ice Ward", 1, "*Grant @{block} block to an ally and yourself*\nCritical Hit: Block x@{critBonus}", "Water", effect, ["Heavy Ice Ward", "Sweeping Ice Ward"])
+module.exports = new EquipmentTemplate("Ice Ward", 1, "*Grant @{block} block to an ally and yourself*\nCritical Hit: Block x@{critBonus}", "Water", effect, ["Heavy Ice Ward", "Sweeping Ice Ward"])
 	.setCategory("Spell")
 	.setTargetingTags({ target: "single", team: "delver" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }])

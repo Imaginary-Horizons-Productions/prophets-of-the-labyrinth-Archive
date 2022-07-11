@@ -11,7 +11,7 @@ for (const file of [
 	"inspectself.js",
 	"join.js",
 	"modifier.js",
-	"nontargetmove.js",
+	"confirmmove.js",
 	"predict.js",
 	"readyconsumable.js",
 	"readymove.js",

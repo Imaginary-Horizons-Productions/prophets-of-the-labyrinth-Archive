@@ -1,3 +1,12 @@
+### Accelerating
+Grants the user the Quicken modifier
+
+#### Available on
+- Sun Flare (Fire)
+- Cloak (Wind)
+- Sword (Earth)
+- Midas Staff (Water)
+
 ### Charging
 User gains Power Up modifier
 
@@ -152,15 +161,6 @@ Hits all enemes/allies
 - Inspiration (Wind)
 - Ice Ward (Water)
 
-### Swift
-Grants the user the Quicken modifier
-
-#### Available on
-- Sun Flare (Fire)
-- Cloak (Wind)
-- Sword (Earth)
-- Midas Staff (Water)
-
 ### Thick
 Increased durability, grants the differences in uses when upgraded.
 
@@ -190,7 +190,7 @@ Applies Poison
 - Scythe (Wind)
 
 ### Urgent
-Bonus speed
+Using this equipment puts moves in the priority queue
 
 #### Avaialble on
 - all Bows (Wind)

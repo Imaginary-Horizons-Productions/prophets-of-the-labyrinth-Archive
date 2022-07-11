@@ -1,7 +1,7 @@
-const Equipment = require('../../Classes/Equipment.js');
+const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { dealDamage } = require('../combatantDAO.js');
 
-module.exports = new Equipment("Punch", -1, "description", "Untyped", effect, [])
+module.exports = new EquipmentTemplate("Punch", -1, "description", "Untyped", effect, [])
 	.setCategory("Weapon")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([])

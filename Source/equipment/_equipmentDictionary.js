@@ -56,7 +56,7 @@ for (const file of [
 	"censer-base.js",
 	"cloak-base.js",
 	"cloak-long.js",
-	"cloak-swift.js",
+	"cloak-accelerating.js",
 	"cloak-thick.js",
 	"corrosion-base.js",
 	"corrosion-flanking.js",
@@ -82,7 +82,7 @@ for (const file of [
 	"lifedrain-urgent.js",
 	"midasstaff-base.js",
 	"midasstaff-soothing.js",
-	"midasstaff-swift.js",
+	"midasstaff-accelerating.js",
 	"potion-base.js",
 	"potion-earthen.js",
 	"potion-watery.js",
@@ -101,12 +101,12 @@ for (const file of [
 	"spear-sweeping.js",
 	"sunflare-base.js",
 	"sunflare-evasive.js",
-	"sunflare-swift.js",
+	"sunflare-accelerating.js",
 	"sunflare-tormenting.js",
 	"sword-base.js",
 	"sword-guarding.js",
 	"sword-reckless.js",
-	"sword-swift.js",
+	"sword-accelerating.js",
 	"vigilancecharm-base.js",
 	"vigilancecharm-devoted.js",
 	"vigilancecharm-long.js",
@@ -148,8 +148,7 @@ exports.buildEquipmentDescription = function (equipmentName, buildFullDescriptio
 			.replace("@{bonusDamage}", exports.getEquipmentProperty(equipmentName, "bonusDamage"))
 			.replace("@{block}", exports.getEquipmentProperty(equipmentName, "block"))
 			.replace("@{hpCost}", exports.getEquipmentProperty(equipmentName, "hpCost"))
-			.replace("@{healing}", exports.getEquipmentProperty(equipmentName, "healing"))
-			.replace("@{speedBonus}", exports.getEquipmentProperty(equipmentName, "speedBonus"));
+			.replace("@{healing}", exports.getEquipmentProperty(equipmentName, "healing"));
 		exports.getEquipmentProperty(equipmentName, "modifiers").forEach((modifier, index) => {
 			description = description.replace(new RegExp(`@{mod${index}}`, "g"), modifier.name)
 				.replace(new RegExp(`@{mod${index}Stacks}`, "g"), modifier.stacks);

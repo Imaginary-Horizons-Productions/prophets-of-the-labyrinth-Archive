@@ -1,14 +1,14 @@
-const Equipment = require('../../Classes/Equipment.js');
+const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { dealDamage, addModifier } = require('../combatantDAO.js');
 
-module.exports = new Equipment("Mercurial Bow", 2, "*Strike a foe for @{damage} damage matching the user's element (+@{speedBonus} speed bonus)*\nCritical Hit: Damage x@{critBonus}", "Wind", effect, ["Evasive Bow", "Hunter's Bow"])
+module.exports = new EquipmentTemplate("Mercurial Bow", 2, "*Strike a foe for @{damage} damage matching the user's element with priority*\nCritical Hit: Damage x@{critBonus}", "Wind", effect, ["Evasive Bow", "Hunter's Bow"])
 	.setCategory("Weapon")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(350)
 	.setUses(10)
 	.setDamage(75)
-	.setSpeedBonus(10);
+	.markPriority();
 
 function effect(target, user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger], damage, critBonus } = module.exports;

@@ -1,7 +1,7 @@
-const Equipment = require('../../Classes/Equipment.js');
+const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addModifier } = require('../combatantDAO.js');
 
-module.exports = new Equipment("Unfinished Potion", 1, "*Apply @{mod1Stacks} @{mod1} to a foe*\nCritical Hit: @{mod1} x@{critBonus}", "Water", effect, ["Earthen Potion", "Windy Potion", "Watery Potion"])
+module.exports = new EquipmentTemplate("Unfinished Potion", 1, "*Apply @{mod1Stacks} @{mod1} to a foe*\nCritical Hit: @{mod1} x@{critBonus}", "Water", effect, ["Earthen Potion", "Windy Potion", "Watery Potion"])
 	.setCategory("Trinket")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Poison", stacks: 4 }, { name: "Poison", stacks: 8 }])

@@ -63,7 +63,6 @@ module.exports.execute = (interaction) => {
 			}
 		})
 		if (consumablesOptions.length > 0) {
-			//TODONOW decide if it needs its own field
 			embed.addField("Consumables", Object.entries(adventure.consumables).map(([name, count]) => `${name} x ${count}`).join(", "))
 			infoSelects.push(new MessageActionRow().addComponents(
 				new MessageSelectMenu().setCustomId("consumablestats")

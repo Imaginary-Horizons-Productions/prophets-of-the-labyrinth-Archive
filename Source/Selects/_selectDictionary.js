@@ -9,11 +9,11 @@ for (const file of [
 	"consumable.js",
 	"consumablestats.js",
 	"loot.js",
+	"movetarget.js",
 	"randomupgrade.js",
 	"repair.js",
 	"startingartifact.js",
-	"startingchallenges.js",
-	"targetmove.js"
+	"startingchallenges.js"
 ]) {
 	const select = require(`./${file}`);
 	selectDictionary[select.name] = select;

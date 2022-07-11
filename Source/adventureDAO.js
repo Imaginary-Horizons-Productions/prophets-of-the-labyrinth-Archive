@@ -279,7 +279,8 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 
 			// Roll Enemy Moves and Generate Dummy Moves
 			let move = new Move()
-				.setSpeed(combatant)
+				.setType("action")
+				.calculateMoveSpeed(combatant)
 				.setIsCrit(combatant.crit)
 				.setUser(teamName, i)
 			if (combatant.getModifierStacks("Stun") > 0) {
@@ -360,9 +361,15 @@ exports.endRound = async function (adventure, thread) {
 	adventure.room.enemies.forEach((enemy, index) => {
 		if (enemy.lookupName === "@{clone}") {
 			let move = new Move()
-				.setSpeed(enemy)
+				.setType("action")
+				.calculateMoveSpeed(enemy)
 				.setIsCrit(enemy.crit)
+			let counterpartHasPriority = false;
 			let counterpartMove = adventure.room.moves.find(move => move.userTeam === "delver" && move.userIndex == index);
+			if (!counterpartMove) {
+				counterpartMove = adventure.room.priorityMoves.find(move => move.userTeam === "delver" && move.userIndex == index);
+				counterpartHasPriority = true;
+			}
 			move.setUser("clone", index)
 				.setMoveName(counterpartMove.name);
 			counterpartMove.targets.forEach(target => {
@@ -372,9 +379,13 @@ exports.endRound = async function (adventure, thread) {
 					move.addTarget("enemy", target.index);
 				}
 			})
-			adventure.room.moves.splice(adventure.room.moves.findIndex(move => move.userTeam === "enemy" && move.userIndex == index), 1, move);
+			if (counterpartHasPriority) {
+				adventure.room.priorityMoves.splice(adventure.room.priorityMoves.findIndex(move => move.userTeam === "enemy" && move.userIndex == index), 1, move);
+			} else {
+				adventure.room.moves.splice(adventure.room.moves.findIndex(move => move.userTeam === "enemy" && move.userIndex == index), 1, move);
+			}
 		}
-	})
+	});
 
 
 	// Randomize speed ties
@@ -404,32 +415,34 @@ exports.endRound = async function (adventure, thread) {
 			totalBounty *= (90 + generateRandomNumber(adventure, 21, "general")) / 100;
 			adventure.room.resources.gold.count = Math.ceil(totalBounty);
 
-			// Equipment drops
 			const dropThreshold = 1;
 			const dropMax = 8;
-			const roll = generateRandomNumber(adventure, dropMax, "general");
-			if (roll < dropThreshold) {
-				if (roll % 2) {
-					const cloverCount = adventure.getArtifactCount("Negative-One Leaf Clover");
-					let tier = 1;
-					let upgradeThreshold = 1 + cloverCount;
-					let upgradeMax = 8 + cloverCount;
-					if (generateRandomNumber(adventure, upgradeMax, "general") < upgradeThreshold) {
-						tier = 2;
-					}
-					let droppedEquip = rollEquipmentDrop(tier, adventure);
-					if (adventure.room.resources[droppedEquip]) {
-						adventure.room.resources[droppedEquip].count++;
-					} else {
-						adventure.room.resources[droppedEquip] = new Resource(droppedEquip, "equipment", 1, "loot", 0);
-					}
+			// Equipment drops
+			const equipRoll = generateRandomNumber(adventure, dropMax, "general");
+			if (equipRoll < dropThreshold) {
+				const cloverCount = adventure.getArtifactCount("Negative-One Leaf Clover");
+				let tier = 1;
+				let upgradeThreshold = 1 + cloverCount;
+				let upgradeMax = 8 + cloverCount;
+				if (generateRandomNumber(adventure, upgradeMax, "general") < upgradeThreshold) {
+					tier = 2;
+				}
+				let droppedEquip = rollEquipmentDrop(tier, adventure);
+				if (adventure.room.resources[droppedEquip]) {
+					adventure.room.resources[droppedEquip].count++;
 				} else {
-					const droppedConsumable = rollConsumable(adventure);
-					if (adventure.room.resources[droppedConsumable]) {
-						adventure.room.resources[droppedConsumable].count++;
-					} else {
-						adventure.room.resources[droppedConsumable] = new Resource(droppedConsumable, "consumable", 1, "loot", 0);
-					}
+					adventure.room.resources[droppedEquip] = new Resource(droppedEquip, "equipment", 1, "loot", 0);
+				}
+			}
+
+			// Consumable drops
+			const consumableRoll = generateRandomNumber(adventure, dropMax, "general");
+			if (consumableRoll < dropThreshold) {
+				const droppedConsumable = rollConsumable(adventure);
+				if (adventure.room.resources[droppedConsumable]) {
+					adventure.room.resources[droppedConsumable].count++;
+				} else {
+					adventure.room.resources[droppedConsumable] = new Resource(droppedConsumable, "consumable", 1, "loot", 0);
 				}
 			}
 
@@ -462,6 +475,7 @@ exports.endRound = async function (adventure, thread) {
 			}
 		}
 	}
+	adventure.room.priorityMoves = [];
 	adventure.room.moves = [];
 	exports.newRound(adventure, thread, embed.setDescription(lastRoundText));
 }
