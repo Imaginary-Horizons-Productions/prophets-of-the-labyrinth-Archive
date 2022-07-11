@@ -1,7 +1,7 @@
 const ConsumableTemplate = require("../../Classes/ConsumableTemplate.js");
 const { gainHealth } = require("../combatantDAO.js");
 
-module.exports = new ConsumableTemplate("Vitamins", "Increases the user's max HP by 50.", selectTargets, effect)
+module.exports = new ConsumableTemplate("Vitamins", "Increases the user's max HP by 50", selectTargets, effect)
 	.setElement("Untyped")
 	.setTargetTags("self", "delver")
 	.setFlavorText(["*Additional Notes*", "*Make sure to consume exactly the right number so your HP isn't divisible by 4*"]);

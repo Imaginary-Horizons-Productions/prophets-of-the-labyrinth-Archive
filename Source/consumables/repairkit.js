@@ -1,7 +1,7 @@
 const ConsumableTemplate = require("../../Classes/ConsumableTemplate.js");
 const { getEquipmentProperty } = require("../equipment/_equipmentDictionary.js");
 
-module.exports = new ConsumableTemplate("Repair Kit", "Repairs all the user's equipment by 25% of its max uses.", selectTargets, effect)
+module.exports = new ConsumableTemplate("Repair Kit", "Repairs all the user's equipment by 25% of its max uses", selectTargets, effect)
 	.setElement("Untyped")
 	.setTargetTags("self", "delver")
 	.setFlavorText([]);

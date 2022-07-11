@@ -1,7 +1,7 @@
 const ConsumableTemplate = require("../../Classes/ConsumableTemplate.js");
-const { gainHealth } = require("../combatantDAO.js");
+const { addModifier, getFullName } = require("../combatantDAO.js");
 
-module.exports = new ConsumableTemplate("Health Potion", "Heals the user by 25% of their max HP", selectTargets, effect)
+module.exports = new ConsumableTemplate("Smoke Bomb", "Grants the user 2 Evade", selectTargets, effect)
 	.setElement("Untyped")
 	.setTargetTags("self", "delver")
 	.setFlavorText([]);
@@ -14,6 +14,7 @@ function selectTargets(userIndex, adventure) {
 }
 
 function effect(target, user, isCrit, adventure) {
-	// +25% max hp
-	return gainHealth(user, Math.floor(user.maxHp * 0.25), adventure);
+	// +2 Evade
+	addModifier(user, { name: "Evade", stacks: 2 });
+	return `${getFullName(user, adventure.room.enemyTitles)} becomes more evasive.`;
 }
