@@ -13,6 +13,7 @@ const ROLL_TABLE = {
 }
 
 for (const file of [
+	"explosionpotion.js",
 	"healthpotion.js",
 	"repairkit.js",
 	"smokebomb.js",
