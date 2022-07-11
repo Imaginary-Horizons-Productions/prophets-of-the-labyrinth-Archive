@@ -14,6 +14,7 @@ const ROLL_TABLE = {
 
 for (const file of [
 	"healthpotion.js",
+	"repairkit.js",
 	"vitamins.js"
 ]) {
 	const consumable = require(`./${file}`);

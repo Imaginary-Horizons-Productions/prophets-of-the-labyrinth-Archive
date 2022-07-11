@@ -3,6 +3,7 @@
 - Added **Consumables**: these resources can be used by any party member during combat at priority speed
    1. Vitamins
    2. Health Potion
+   3. Repair Kit
 - Reworked *Urgent* weapon variant: it now adds priority to the move
 - Renamed *Swift* weapon variant to *Accelerating*
 

@@ -15,5 +15,5 @@ function selectTargets(userIndex, adventure) {
 
 function effect(target, user, isCrit, adventure) {
 	// +25% max hp
-	return gainHealth(user, Math.floor(user.maxHp * 0.25), adventure); // result text
+	return gainHealth(user, Math.floor(user.maxHp * 0.25), adventure);
 }
