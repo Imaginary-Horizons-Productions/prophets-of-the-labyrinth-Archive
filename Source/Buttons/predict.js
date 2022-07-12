@@ -45,7 +45,7 @@ module.exports = new Button(id, (interaction, args) => {
 				}
 				descriptionText += `\n__${getFullName(combatant, adventure.room.enemyTitles)}__\nStagger: ${bar}\nSpeed: ${calculateTotalSpeed(combatant)}\n`;
 			}
-			descriptionText += "\nCombatants tied in speed may act in any order.";
+			descriptionText += "\nCombatants may act out of order if they have priority or they are tied in speed.";
 			break;
 		case "Vulnerabilities": // Shows elemental affinities and if critically hitting this turn for all combatants
 			infoForNextRound = false;
