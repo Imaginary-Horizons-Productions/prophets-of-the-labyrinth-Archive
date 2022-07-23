@@ -1,7 +1,7 @@
-const Equipment = require('../../Classes/Equipment.js');
+const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { dealDamage, addModifier } = require("../combatantDAO.js");
 
-module.exports = new Equipment("Daggers", 1, "*Strike a foe for @{damage} @{element} damage*\nCritical Hit: Damage x@{critBonus}", "Wind", effect, ["Sharpened Daggers", "Sweeping Daggers", "Wicked Daggers"])
+module.exports = new EquipmentTemplate("Daggers", 1, "*Strike a foe for @{damage} @{element} damage*\nCritical Hit: Damage x@{critBonus}", "Wind", effect, ["Sharpened Daggers", "Sweeping Daggers", "Wicked Daggers"])
 	.setCategory("Weapon")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }])

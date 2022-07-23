@@ -1,8 +1,16 @@
+const Adventure = require("../Classes/Adventure.js");
+const Move = require("../Classes/Move.js");
 const { getFullName, dealDamage, gainHealth, removeModifier } = require("./combatantDAO.js");
+const { getConsumable } = require("./consumables/_consumablesDictionary.js");
 const { getEnemy } = require("./Enemies/_enemyDictionary.js");
 const { selectAllFoes } = require("./enemyDAO.js");
 const { getEquipmentProperty } = require("./equipment/_equipmentDictionary.js");
 
+/** Updates game state with the move's effect AND returns the game's description of what happened
+ * @param {Move} move
+ * @param {Adventure} adventure
+ * @returns {string} result text
+ */
 exports.resolveMove = async function (move, adventure) {
 	let userTeam = move.userTeam === "delver" ? adventure.delvers : adventure.room.enemies;
 	let user = userTeam[move.userIndex];
@@ -12,22 +20,40 @@ exports.resolveMove = async function (move, adventure) {
 			let effect;
 			let targetAll = false;
 			let breakText = "";
-			if (move.userTeam === "delver" || move.userTeam === "clone") {
-				effect = getEquipmentProperty(move.name, "effect");
-				if (move.userTeam !== "clone") {
-					targetAll = getEquipmentProperty(move.name, "targetingTags").target === "all"
-					if (move.name !== "Punch") {
+			switch (move.type) {
+				case "action":
+					if (move.userTeam !== "delver" && move.userTeam !== "clone") {
+						const action = getEnemy(user.lookupName).actions[move.name];
+						targetAll = action.selector === selectAllFoes;
+						effect = action.effect;
+					} else {
+						// Special Case for Punch
+						targetAll = getEquipmentProperty(move.name, "targetingTags").target === "all";
+						effect = getEquipmentProperty(move.name, "effect");
+					}
+					break;
+				case "equip":
+					targetAll = getEquipmentProperty(move.name, "targetingTags").target === "all";
+					effect = getEquipmentProperty(move.name, "effect");
+					if (move.userTeam !== "clone") {
 						let equip = user.equipment.find(equip => equip.name === move.name);
 						equip.uses--;
-						if (equip.uses === 0) {
+						if (equip.uses < 1) {
 							breakText = ` The ${move.name} broke!`;
 						}
 					}
-				}
-			} else {
-				let action = getEnemy(user.lookupName).actions[move.name];
-				effect = action.effect;
-				targetAll = action.selector === selectAllFoes;
+					break;
+				case "consumable":
+					const { targetDescription, effect: consumableEffect } = getConsumable(move.name);
+					targetAll = targetDescription === "all";
+					effect = consumableEffect;
+					if (move.userTeam !== "clone") {
+						adventure.consumables[move.name]--;
+						if (adventure.consumables[move.name] < 1) {
+							delete adventure.consumables[move.name];
+						}
+					}
+					break;
 			}
 
 			// An arry containing move result texts

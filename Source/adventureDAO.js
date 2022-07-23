@@ -21,6 +21,7 @@ const { rollArtifact } = require("./Artifacts/_artifactDictionary.js");
 const { getEnemy } = require("./Enemies/_enemyDictionary");
 const { getChallenge, rollChallenges } = require("./Challenges/_challengeDictionary.js");
 const { generateRoutingRow, generateLootRow, generateMerchantRows } = require("./roomDAO.js");
+const { rollConsumable } = require("./consumables/_consumablesDictionary.js");
 
 const dirPath = "./Saves";
 const fileName = "adventures.json";
@@ -260,7 +261,7 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 	for (let teamName in teams) {
 		teams[teamName].forEach((combatant, i) => {
 			// Clear Excess Block if doesn't have vigilance
-			if (combatant.getModifierStacks("Vigilance") == 0){
+			if (combatant.getModifierStacks("Vigilance") == 0) {
 				clearBlock(combatant);
 			}
 			// Roll Round Speed
@@ -278,7 +279,8 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 
 			// Roll Enemy Moves and Generate Dummy Moves
 			let move = new Move()
-				.setSpeed(combatant)
+				.setType("action")
+				.calculateMoveSpeed(combatant)
 				.setIsCrit(combatant.crit)
 				.setUser(teamName, i)
 			if (combatant.getModifierStacks("Stun") > 0) {
@@ -317,7 +319,7 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 	embed.setColor(getColor(adventure.room.element))
 		.setFooter({ text: `Room #${adventure.depth} - Round ${adventure.room.round}` });
 	if (!exports.checkNextRound(adventure)) {
-		let battleMenu = [new MessageActionRow().addComponents(
+		const battleButtons = [
 			new MessageButton().setCustomId("inspectself")
 				.setLabel("Inspect Self")
 				.setStyle("SECONDARY"),
@@ -328,8 +330,17 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 			new MessageButton().setCustomId("readymove")
 				.setLabel("Ready a Move")
 				.setStyle("PRIMARY")
-		)];
-		thread.send({ embeds: [embed], components: battleMenu }).then(message => {
+		];
+		if (Object.values(adventure.consumables).some(quantity => quantity > 0)) {
+			battleButtons.push(
+				new MessageButton().setCustomId("readyconsumable")
+					.setLabel("Ready a Consumable")
+					.setStyle("PRIMARY")
+			)
+		}
+		thread.send({
+			embeds: [embed], components: [new MessageActionRow().addComponents(...battleButtons)]
+		}).then(message => {
 			exports.updateRoomHeader(adventure, message);
 			adventure.messageIds.battleRound = message.id;
 			exports.setAdventure(adventure);
@@ -350,9 +361,15 @@ exports.endRound = async function (adventure, thread) {
 	adventure.room.enemies.forEach((enemy, index) => {
 		if (enemy.lookupName === "@{clone}") {
 			let move = new Move()
-				.setSpeed(enemy)
+				.setType("action")
+				.calculateMoveSpeed(enemy)
 				.setIsCrit(enemy.crit)
+			let counterpartHasPriority = false;
 			let counterpartMove = adventure.room.moves.find(move => move.userTeam === "delver" && move.userIndex == index);
+			if (!counterpartMove) {
+				counterpartMove = adventure.room.priorityMoves.find(move => move.userTeam === "delver" && move.userIndex == index);
+				counterpartHasPriority = true;
+			}
 			move.setUser("clone", index)
 				.setMoveName(counterpartMove.name);
 			counterpartMove.targets.forEach(target => {
@@ -362,20 +379,28 @@ exports.endRound = async function (adventure, thread) {
 					move.addTarget("enemy", target.index);
 				}
 			})
-			adventure.room.moves.splice(adventure.room.moves.findIndex(move => move.userTeam === "enemy" && move.userIndex == index), 1, move);
+			if (counterpartHasPriority) {
+				adventure.room.priorityMoves.splice(adventure.room.priorityMoves.findIndex(move => move.userTeam === "enemy" && move.userIndex == index), 1, move);
+			} else {
+				adventure.room.moves.splice(adventure.room.moves.findIndex(move => move.userTeam === "enemy" && move.userIndex == index), 1, move);
+			}
 		}
+	});
+
+
+	// Randomize speed ties
+	[adventure.room.priorityMoves, adventure.room.moves].forEach(moveQueue => {
+		moveQueue.forEach(move => {
+			move.speed += generateRandomNumber(adventure, 10, "battle") / 10;
+		})
+		moveQueue.sort((first, second) => {
+			return second.speed - first.speed;
+		})
 	})
 
 	// Resolve moves
-	adventure.room.moves.forEach(move => {
-		// Randomize speed ties
-		move.speed += generateRandomNumber(adventure, 10, "battle") / 10;
-	})
-	adventure.room.moves.sort((first, second) => {
-		return second.speed - first.speed;
-	})
 	let lastRoundText = "";
-	for (let move of adventure.room.moves) {
+	for (const move of adventure.room.priorityMoves.concat(adventure.room.moves)) {
 		lastRoundText += await resolveMove(move, adventure);
 		// Check for Defeat
 		if (adventure.lives <= 0) {
@@ -390,10 +415,11 @@ exports.endRound = async function (adventure, thread) {
 			totalBounty *= (90 + generateRandomNumber(adventure, 21, "general")) / 100;
 			adventure.room.resources.gold.count = Math.ceil(totalBounty);
 
+			const dropThreshold = 1;
+			const dropMax = 8;
 			// Equipment drops
-			let dropThreshold = 1;
-			let dropMax = 8;
-			if (generateRandomNumber(adventure, dropMax, "general") < dropThreshold) {
+			const equipRoll = generateRandomNumber(adventure, dropMax, "general");
+			if (equipRoll < dropThreshold) {
 				const cloverCount = adventure.getArtifactCount("Negative-One Leaf Clover");
 				let tier = 1;
 				let upgradeThreshold = 1 + cloverCount;
@@ -406,6 +432,17 @@ exports.endRound = async function (adventure, thread) {
 					adventure.room.resources[droppedEquip].count++;
 				} else {
 					adventure.room.resources[droppedEquip] = new Resource(droppedEquip, "equipment", 1, "loot", 0);
+				}
+			}
+
+			// Consumable drops
+			const consumableRoll = generateRandomNumber(adventure, dropMax, "general");
+			if (consumableRoll < dropThreshold) {
+				const droppedConsumable = rollConsumable(adventure);
+				if (adventure.room.resources[droppedConsumable]) {
+					adventure.room.resources[droppedConsumable].count++;
+				} else {
+					adventure.room.resources[droppedConsumable] = new Resource(droppedConsumable, "consumable", 1, "loot", 0);
 				}
 			}
 
@@ -438,12 +475,19 @@ exports.endRound = async function (adventure, thread) {
 			}
 		}
 	}
+	adventure.room.priorityMoves = [];
 	adventure.room.moves = [];
 	exports.newRound(adventure, thread, embed.setDescription(lastRoundText));
 }
 
-exports.checkNextRound = function (adventure) {
-	return adventure.room.moves.length - adventure.room.enemies.length === adventure.delvers.length;
+/** The round ends when all combatants have readied all their moves
+ * @param {Adventure} adventure
+ * @returns {boolean}
+ */
+exports.checkNextRound = function ({ room, delvers }) {
+	const readiedMoves = room.moves.length + room.priorityMoves.length;
+	const movesThisRound = room.enemies.length + delvers.length;
+	return readiedMoves === movesThisRound;
 }
 
 exports.completeAdventure = function (adventure, thread, { isSuccess, description }) {

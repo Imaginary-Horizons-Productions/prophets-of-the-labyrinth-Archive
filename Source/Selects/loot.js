@@ -14,27 +14,23 @@ module.exports = new Select(id, (interaction, args) => {
 		const [name, index] = interaction.values[0].split(SAFE_DELIMITER);
 		let result;
 		let { resourceType: type, count } = adventure.room.resources[name];
-		switch (type) {
-			case "gold":
-				if (count && count > 0) { // Prevents double message if multiple players take near same time
+		if (count && count > 0) { // Prevents double message if multiple players take near same time
+			switch (type) {
+				case "gold":
 					adventure.gainGold(count);
 					adventure.room.resources.gold = 0;
 					result = {
 						content: `The party acquires ${count} gold.`
 					}
-				}
-				break;
-			case "artifact":
-				if (count && count > 0) { // Prevents double message if multiple players take near same time
+					break;
+				case "artifact":
 					adventure.gainArtifact(name, count);
 					adventure.room.resources[name] = 0;
 					result = {
 						content: `The party acquires ${name} x ${count}.`
 					}
-				}
-				break;
-			case "equipment":
-				if (count && count > 0) { // Prevents double message if multiple players take near same time
+					break;
+				case "equipment":
 					if (delver.equipment.length < adventure.getEquipmentCapacity()) {
 						delver.equipment.push({ name, uses: getEquipmentProperty(name, "maxUses") });
 						adventure.room.resources[name].count = Math.max(count - 1, 0);
@@ -52,8 +48,19 @@ module.exports = new Select(id, (interaction, args) => {
 							ephemeral: true
 						};
 					}
-				}
-				break;
+					break;
+				case "consumable":
+					if (name in adventure.consumables) {
+						adventure.consumables[name] += count;
+					} else {
+						adventure.consumables[name] = count;
+					}
+					adventure.room.resources[name] = 0;
+					result = {
+						content: `The party acquires ${name} x ${count}.`
+					}
+					break;
+			}
 		}
 		if (result) {
 			interaction.reply(result).then(() => {

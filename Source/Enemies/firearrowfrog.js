@@ -4,9 +4,9 @@ const { selectRandomFoe, selectSelf } = require("../enemyDAO.js");
 
 module.exports = new Enemy("Fire-Arrow Frog")
 	.setFirstAction("random")
-	.addAction({ name: "Venom Cannon", effect: venomCannonEffect, selector: selectRandomFoe, next: firearrowFrogPattern })
-	.addAction({ name: "Evade", effect: evadeEffect, selector: selectSelf, next: firearrowFrogPattern })
-	.addAction({ name: "Goop Spray", effect: goopSprayEffect, selector: selectRandomFoe, next: firearrowFrogPattern })
+	.addAction({ name: "Venom Cannon", isPriority: false, effect: venomCannonEffect, selector: selectRandomFoe, next: firearrowFrogPattern })
+	.addAction({ name: "Evade", isPriority: false, effect: evadeEffect, selector: selectSelf, next: firearrowFrogPattern })
+	.addAction({ name: "Goop Spray", isPriority: false, effect: goopSprayEffect, selector: selectRandomFoe, next: firearrowFrogPattern })
 	.setBounty(25)
 	.setHp(250)
 	.setSpeed(100)

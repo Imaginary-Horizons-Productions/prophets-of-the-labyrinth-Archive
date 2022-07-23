@@ -1,7 +1,7 @@
-const Equipment = require('../../Classes/Equipment.js');
+const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addModifier } = require('../combatantDAO.js');
 
-module.exports = new Equipment("Swift Midas Staff", 2, "*Apply @{mod1Stacks} @{mod1} to a combatant, then gain $${mod2Stacks} @{mod2}*\nCritical Hit: @{mod1} x@{critBonus}", "Water", effect, ["Soothing Midas Staff"])
+module.exports = new EquipmentTemplate("Accelerating Midas Staff", 2, "*Apply @{mod1Stacks} @{mod1} to a combatant, then gain $${mod2Stacks} @{mod2}*\nCritical Hit: @{mod1} x@{critBonus}", "Water", effect, ["Soothing Midas Staff"])
 	.setCategory("Weapon")
 	.setTargetingTags({ target: "single", team: "any" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Curse of Midas", stacks: 1 }, { name: "Quicken", stacks: 1 }, { name: "Curse of Midas", stacks: 2 }])

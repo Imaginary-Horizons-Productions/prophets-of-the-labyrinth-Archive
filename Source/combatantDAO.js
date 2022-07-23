@@ -16,7 +16,7 @@ exports.getFullName = function (combatant, titleObject) {
 }
 
 exports.calculateTotalSpeed = function (combatant) {
-	let totalSpeed = combatant.speed + combatant.roundSpeed + combatant.actionSpeed;
+	let totalSpeed = combatant.speed + combatant.roundSpeed;
 	if ("Slow" in combatant.modifiers) {
 		totalSpeed -= 10;
 	}

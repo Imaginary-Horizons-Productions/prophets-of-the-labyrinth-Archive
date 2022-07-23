@@ -1,8 +1,8 @@
-const Equipment = require('../../Classes/Equipment.js');
+const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { dealDamage, addModifier } = require('../combatantDAO.js');
 const { SAFE_DELIMITER } = require("../../helpers.js");
 
-module.exports = new Equipment("Toxic Firecracker", 2, "*Strike 3 random foes applying @{mod1Stacks} @{mod1} and @{damage} @{element} damage*\nCritical Hit: Damage x@{critBonus}", "Fire", effect, ["Double Firecracker", "Mercurial Firecracker"])
+module.exports = new EquipmentTemplate("Toxic Firecracker", 2, "*Strike 3 random foes applying @{mod1Stacks} @{mod1} and @{damage} @{element} damage*\nCritical Hit: Damage x@{critBonus}", "Fire", effect, ["Double Firecracker", "Mercurial Firecracker"])
 	.setCategory("Weapon")
 	.setTargetingTags({ target: `random${SAFE_DELIMITER}3`, team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Poison", stacks: 3 }])

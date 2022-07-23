@@ -22,10 +22,8 @@ module.exports = class Delver extends Combatant {
 
 	setElement = super.setElement;
 
-	/**
-	 * Sets the predict for the delver.
-	 *
-	 * @param {string} predictEnum
+	/** Sets the predict for the delver.
+	 * @param {"Movements" | "Vulnerabilities" | "Intents" | "Health"} predictEnum
 	 * @returns {Delver}
 	 */
 	setPredict(predictEnum) {

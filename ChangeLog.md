@@ -1,4 +1,14 @@
 # Prophets of the Labyrinth Change Log
+#### Prophets of the Labyrinth Version 0.10.0:
+- Added **Consumables**: these resources can be used by any party member during combat at priority speed
+   1. Vitamins
+   2. Health Potion
+   3. Repair Kit
+   4. Smoke Bomb
+   5. Explosion Potion
+- Reworked *Urgent* weapon variant: it now adds priority to the move
+- Renamed *Swift* weapon variant to *Accelerating*
+
 #### Prophets of the Labyrinth Version 0.9.0:
 - Rebalanced predicts, they are now as follows
    1. Movements - Speed, Stagger, and Poise for each combatant
