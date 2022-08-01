@@ -29,7 +29,7 @@ module.exports.execute = (interaction) => {
 			embed.addField("Challenges", Object.keys(adventure.challenges).join(", "));
 		}
 		const infoSelects = [];
-		let artifactOptions = Object.keys(adventure.artifacts).map(artifact => {
+		let artifactOptions = Object.keys(adventure.artifacts).slice(0, 25).map(artifact => {
 			return {
 				label: `${artifact} x ${adventure.artifacts[artifact].count}`,
 				description: "",
@@ -55,7 +55,7 @@ module.exports.execute = (interaction) => {
 					}])
 			))
 		}
-		let consumablesOptions = Object.keys(adventure.consumables).map(consumable => {
+		let consumablesOptions = Object.keys(adventure.consumables).slice(0, 25).map(consumable => {
 			return {
 				label: `${consumable} x ${adventure.consumables[consumable]}`,
 				description: "",
