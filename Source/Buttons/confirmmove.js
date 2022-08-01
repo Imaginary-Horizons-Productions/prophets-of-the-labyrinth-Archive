@@ -45,7 +45,7 @@ module.exports = new Button(id, async (interaction, [moveName, round, index]) =>
 					targetText = `${targetCount} random enem${targetCount === 1 ? "y" : "ies"}`;
 				}
 				for (let i = 0; i < targetCount; i++) {
-					newMove.addTarget(team, generateRandomNumber(adventure, poolSize, "Battle"));
+					newMove.addTarget(team, generateRandomNumber(adventure, poolSize, "battle"));
 				}
 			} else if (target === "self") {
 				newMove.addTarget(team, userIndex);

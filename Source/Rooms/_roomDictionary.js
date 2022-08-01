@@ -66,5 +66,5 @@ exports.manufactureRoomTemplate = function (type, adventure) {
 		adventure.roomCandidates[`Battle${SAFE_DELIMITER}${adventure.depth}`] = true;
 		return ROOMS["Empty"][0];
 	}
-	return roomPool[generateRandomNumber(adventure, roomPool.length, "General")];
+	return roomPool[generateRandomNumber(adventure, roomPool.length, "general")];
 }

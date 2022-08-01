@@ -61,21 +61,20 @@ exports.isSponsor = function (id) {
 /** Generate an integer between 0 and the given `exclusiveMax`
  * @param {Adventure} adventure the adventure in which to roll
  * @param {number} exclusiveMax the integer after the max roll
- * @param {string} branch which rnTable branch to roll on ("general" or "battle")
+ * @param {"general" | "battle"} branch which rnTable branch to roll on
  * @returns {number} generated integer
  */
 exports.generateRandomNumber = function (adventure, exclusiveMax, branch) {
 	if (exclusiveMax === 1) {
 		return 0;
 	} else {
-		branch = branch.toLowerCase();
-		let digits = Math.ceil(Math.log2(exclusiveMax) / Math.log2(12));
-		let start = adventure.rnIndices[branch];
-		let end = start + digits;
+		const digits = Math.ceil(Math.log2(exclusiveMax) / Math.log2(12));
+		const start = adventure.rnIndices[branch];
+		const end = start + digits;
 		adventure.rnIndices[branch] = end % adventure.rnTable.length;
-		let max = 12 ** digits;
-		let sectionLength = max / exclusiveMax;
-		let roll = parseInt(adventure.rnTable.slice(start, end), 12);
+		const max = 12 ** digits;
+		const sectionLength = max / exclusiveMax;
+		const roll = parseInt(adventure.rnTable.slice(start, end), 12);
 		return Math.floor(roll / sectionLength);
 	}
 }

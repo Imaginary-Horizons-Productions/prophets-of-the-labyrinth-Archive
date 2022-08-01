@@ -265,13 +265,13 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 				clearBlock(combatant);
 			}
 			// Roll Round Speed
-			let percentBonus = (generateRandomNumber(adventure, 21, "Battle") - 10) / 100;
+			let percentBonus = (generateRandomNumber(adventure, 21, "battle") - 10) / 100;
 			combatant.roundSpeed = Math.floor(combatant.speed * percentBonus);
 
 			// Roll Critical Hit
 			let threshold = combatant.getCritNumerator(adventure.getArtifactCount("Hawk Tailfeather"));
 			let max = combatant.getCritDenominator(adventure.getArtifactCount("Hawk Tailfeather"));
-			let critRoll = generateRandomNumber(adventure, max, "Battle");
+			let critRoll = generateRandomNumber(adventure, max, "battle");
 			combatant.crit = critRoll < threshold;
 			if (combatant instanceof Delver) {
 				adventure.updateArtifactStat("Hawk Tailfeather", "Expected Extra Critical Hits", (threshold / max) - (1 / 4));
@@ -293,7 +293,7 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 						let actionName = combatant.nextAction;
 						if (actionName === "random") {
 							let actionPool = Object.keys(enemyTemplate.actions);
-							actionName = actionPool[generateRandomNumber(adventure, actionPool.length, "Battle")];
+							actionName = actionPool[generateRandomNumber(adventure, actionPool.length, "battle")];
 						}
 						move.setMoveName(actionName);
 						enemyTemplate.actions[actionName].selector(adventure, combatant).forEach(({ team, index }) => {
