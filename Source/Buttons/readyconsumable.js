@@ -23,8 +23,7 @@ module.exports = new Button(id, (interaction, args) => {
 					new MessageActionRow().addComponents(
 						new MessageSelectMenu().setCustomId(`consumable${SAFE_DELIMITER}${adventure.room.round}`)
 							.setPlaceholder("Pick a consumable...")
-							.addOptions(Object.keys(adventure.consumables).reduce((options, consumable) => options.concat({
-								//TODONOW handle more than 25 types of consumables in inventory
+							.addOptions(Object.keys(adventure.consumables).slice(0, 25).reduce((options, consumable) => options.concat({
 								label: `${consumable} (Held: ${adventure.consumables[consumable]})`,
 								description: getConsumable(consumable).description,
 								value: consumable
