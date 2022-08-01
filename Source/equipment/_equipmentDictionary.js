@@ -1,3 +1,4 @@
+const Adventure = require("../../Classes/Adventure.js");
 const { generateRandomNumber } = require("../../helpers.js");
 const { getEmoji } = require("../elementHelpers.js");
 
@@ -164,7 +165,12 @@ exports.buildEquipmentDescription = function (equipmentName, buildFullDescriptio
 	}
 }
 
+/** Filters by party element pool and given tier, then rolls a random equipment's name
+ * @param {"0" | "1" | "2"} tier
+ * @param {Adventure} adventure
+ * @returns {string} the name of the dropped equipment
+ */
 exports.rollEquipmentDrop = function (tier, adventure) {
-	let pool = adventure.getElementPool().reduce((pool, element) => pool.concat(equipmentDrops[element][tier]), []);
+	const pool = adventure.getElementPool().reduce((pool, element) => pool.concat(equipmentDrops[element][tier]), []);
 	return pool[generateRandomNumber(adventure, pool.length, "general")];
 }
