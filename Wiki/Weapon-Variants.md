@@ -26,12 +26,6 @@ Can target allies (beyond self)
 #### Available on
 - Vigilance Charm (Earth)
 
-### Earthen
-Affects Earth element combatants
-
-#### Available on
-- Potion (Water)
-
 ### Evasive
 User gains Evade
 
@@ -199,23 +193,11 @@ Using this equipment puts moves in the priority queue
 - Buckler (Earth)
 - Life Drain (Water)
 
-### Watery
-Affects Water element combatants
-
-#### Available on
-- Potion (Water)
-
 ### Wicked
 Increased damage against enemies with 0 block
 
 #### Available on
 - Dagger (Wind)
-
-### Windy
-Affects Wind element combatants
-
-#### Available on
-- Potion (Water)
 
 ## Unnamed
 - Spear (add stagger on crit)
@@ -226,3 +208,4 @@ Affects Wind element combatants
 - Corrosion (power down to enemy)
 - Midas Staff (apply Curse of Midas)
 - Pact of Healing (pay hp to apply regen)
+- Potion Kit (add potion consumable to loot)

@@ -9,6 +9,7 @@ module.exports = class Adventure {
 	}
 	id; // the id of the thread created for the adventure
 	name;
+	labyrinth = "Debug Dungeon"; //TODO #462 generate/take labyrinth as input
 	state = "config"; // enum: "config", "ongoing", "completed"
 	element;
 	messageIds = {

@@ -17,12 +17,12 @@ const { resolveMove } = require("./moveDAO.js");
 const { clearBlock, removeModifier } = require("./combatantDAO.js");
 const { manufactureRoomTemplate, prerollBoss } = require("./Rooms/_roomDictionary.js");
 const { getTurnDecrement } = require("./Modifiers/_modifierDictionary.js");
-const { rollEquipmentDrop, getEquipmentProperty } = require("./equipment/_equipmentDictionary.js");
+const { getEquipmentProperty } = require("./equipment/_equipmentDictionary.js");
 const { rollArtifact } = require("./Artifacts/_artifactDictionary.js");
 const { getEnemy } = require("./Enemies/_enemyDictionary");
 const { getChallenge, rollChallenges } = require("./Challenges/_challengeDictionary.js");
 const { generateRoutingRow, generateLootRow, generateMerchantRows } = require("./roomDAO.js");
-const { rollConsumable } = require("./consumables/_consumablesDictionary.js");
+const { rollEquipmentDrop, rollConsumable } = require("./labyrinths/_labyrinthDictionary.js");
 
 const dirPath = "./Saves";
 const fileName = "adventures.json";
@@ -191,18 +191,14 @@ exports.nextRoom = async function (roomType, thread) {
 						let max = 8 + cloverCount;
 						adventure.updateArtifactStat("Negative-One Leaf Clover", "Expected Extra Rare Equipment", (threshold / max) - (1 / 8));
 						if (generateRandomNumber(adventure, max, "general") < threshold) {
-							parsedTier = "2";
+							parsedTier = "Rare"; //TODONOW find other tiers and convert to enums
 						} else {
-							parsedTier = "1";
+							parsedTier = "Common";
 						}
 					}
-					let equipName = rollEquipmentDrop(parsedTier, adventure);
-					if (adventure.room.resources[equipName]?.resourceType === "equipment") {
-						adventure.room.resources[equipName].count++;
-					} else {
-						adventure.room.resources[equipName] = new Resource(equipName, "equipment", 1, "merchant", getEquipmentProperty(equipName, "cost"))
-							.setUIGroup(category);
-					}
+					const equipName = rollEquipmentDrop(parsedTier, adventure);
+					adventure.addResource(new Resource(equipName, "equipment", 1, "merchant", getEquipmentProperty(equipName, "cost"))
+						.setUIGroup(category));
 				}
 			} else if (category === "scouting") {
 				adventure.room.resources["bossScouting"] = new Resource("bossScouting", "scouting", true, "merchant", adventure.calculateScoutingCost("Final Battle"))
@@ -419,32 +415,20 @@ exports.endRound = async function (adventure, thread) {
 			const dropThreshold = 1;
 			const dropMax = 8;
 			// Equipment drops
-			const equipRoll = generateRandomNumber(adventure, dropMax, "general");
-			if (equipRoll < dropThreshold) {
+			if (generateRandomNumber(adventure, dropMax, "general") < dropThreshold) {
 				const cloverCount = adventure.getArtifactCount("Negative-One Leaf Clover");
-				let tier = 1;
+				let tier = "Common";
 				let upgradeThreshold = 1 + cloverCount;
 				let upgradeMax = 8 + cloverCount;
 				if (generateRandomNumber(adventure, upgradeMax, "general") < upgradeThreshold) {
-					tier = 2;
+					tier = "Rare";
 				}
-				let droppedEquip = rollEquipmentDrop(tier, adventure);
-				if (adventure.room.resources[droppedEquip]) {
-					adventure.room.resources[droppedEquip].count++;
-				} else {
-					adventure.room.resources[droppedEquip] = new Resource(droppedEquip, "equipment", 1, "loot", 0);
-				}
+				adventure.addResource(new Resource(rollEquipmentDrop(tier, adventure), "equipment", 1, "loot", 0));
 			}
 
 			// Consumable drops
-			const consumableRoll = generateRandomNumber(adventure, dropMax, "general");
-			if (consumableRoll < dropThreshold) {
-				const droppedConsumable = rollConsumable(adventure);
-				if (adventure.room.resources[droppedConsumable]) {
-					adventure.room.resources[droppedConsumable].count++;
-				} else {
-					adventure.room.resources[droppedConsumable] = new Resource(droppedConsumable, "consumable", 1, "loot", 0);
-				}
+			if (generateRandomNumber(adventure, dropMax, "general") < dropThreshold) {
+				adventure.addResource(new Resource(rollConsumable(adventure), "consumable", 1, "loot", 0));
 			}
 
 			// Finalize UI
