@@ -1,5 +1,5 @@
 const crypto = require("crypto");
-const { MAX_MESSAGE_ACTION_ROWS } = require("../helpers");
+const { MAX_MESSAGE_ACTION_ROWS } = require("../constants.js");
 const Resource = require("./Resource");
 
 module.exports = class Adventure {

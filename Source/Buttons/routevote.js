@@ -1,7 +1,8 @@
 const { getAdventure, endRoom } = require('../adventureDAO.js');
 const Button = require('../../Classes/Button.js');
 const { MessageActionRow, MessageButton } = require('discord.js');
-const { SAFE_DELIMITER, clearComponents } = require('../../helpers.js');
+const { SAFE_DELIMITER } = require("../../constants.js");
+const { clearComponents } = require('../../helpers.js');
 
 const id = "routevote";
 module.exports = new Button(id, (interaction, [candidate, depth]) => {

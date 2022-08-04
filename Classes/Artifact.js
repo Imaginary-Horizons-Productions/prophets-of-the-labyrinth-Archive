@@ -1,4 +1,5 @@
-const { parseCount, MAX_MESSAGE_ACTION_ROWS, MAX_BUTTONS_PER_ROW } = require("../helpers");
+const { MAX_MESSAGE_ACTION_ROWS, MAX_BUTTONS_PER_ROW } = require("../constants.js");
+const { parseCount } = require("../helpers");
 
 module.exports = class Artifact {
 	constructor(nameInput, descriptionInput) {

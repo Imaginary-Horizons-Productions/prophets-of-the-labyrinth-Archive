@@ -8,7 +8,8 @@ const Delver = require("../Classes/Delver.js");
 const Room = require("../Classes/Room.js");
 const Resource = require("../Classes/Resource.js");
 const { getWeakness, getColor } = require("./elementHelpers.js");
-const { ensuredPathSave, parseCount, generateRandomNumber, clearComponents, SAFE_DELIMITER, MAX_MESSAGE_ACTION_ROWS } = require("../helpers.js");
+const { SAFE_DELIMITER, MAX_MESSAGE_ACTION_ROWS, MAX_SELECT_OPTIONS } = require("../constants.js");
+const { ensuredPathSave, parseCount, generateRandomNumber, clearComponents } = require("../helpers.js");
 const { getGuild } = require("./guildDAO.js");
 const { setPlayer, getPlayer } = require("./playerDAO.js");
 const { spawnEnemy } = require("./enemyDAO.js");
@@ -183,7 +184,7 @@ exports.nextRoom = async function (roomType, thread) {
 			if (category.startsWith("equipment")) {
 				let [type, tier] = category.split(SAFE_DELIMITER);
 				let parsedTier = tier;
-				let count = Math.min(25, parseCount(roomTemplate.saleList[category], adventure.delvers.length));
+				let count = Math.min(MAX_SELECT_OPTIONS, parseCount(roomTemplate.saleList[category], adventure.delvers.length));
 				for (let i = 0; i < count; i++) {
 					if (tier === "?") {
 						let threshold = 1 + cloverCount;

@@ -7,7 +7,8 @@ const { getChallenge } = require('../Challenges/_challengeDictionary.js');
 const { elementsList, getColor } = require('../elementHelpers.js');
 const { getGuild } = require('../guildDAO.js');
 const { prerollBoss } = require('../Rooms/_roomDictionary.js');
-const { SAFE_DELIMITER, isSponsor, generateRandomNumber } = require('./../../helpers.js');
+const { SAFE_DELIMITER } = require("../../constants.js");
+const { isSponsor, generateRandomNumber } = require('./../../helpers.js');
 
 const id = "delve";
 const options = [

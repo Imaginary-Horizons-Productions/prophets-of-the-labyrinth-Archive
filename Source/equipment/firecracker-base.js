@@ -1,6 +1,6 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { dealDamage, addModifier } = require('../combatantDAO.js');
-const { SAFE_DELIMITER } = require("../../helpers.js");
+const { SAFE_DELIMITER } = require("../../constants.js");
 
 module.exports = new EquipmentTemplate("Firecracker", 1, "*Strike 3 random foes for @{damage} @{element} damage*\nCritical Hit: Damage x@{critBonus}", "Fire", effect, ["Double Firecracker", "Mercurial Firecracker", "Toxic Firecracker"])
 	.setCategory("Weapon")

@@ -1,6 +1,6 @@
 const { MessageActionRow, MessageSelectMenu } = require('discord.js');
 const Button = require('../../Classes/Button.js');
-const { SAFE_DELIMITER } = require('../../helpers.js');
+const { SAFE_DELIMITER } = require('../../constants.js');
 const { getAdventure } = require("../adventureDAO.js");
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
 

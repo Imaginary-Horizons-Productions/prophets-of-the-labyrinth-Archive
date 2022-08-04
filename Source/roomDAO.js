@@ -1,5 +1,6 @@
 const { MessageActionRow, MessageButton, MessageSelectMenu } = require("discord.js");
-const { SAFE_DELIMITER, ordinalSuffixEN, getNumberEmoji } = require("../helpers");
+const { SAFE_DELIMITER } = require("../constants.js");
+const { ordinalSuffixEN, getNumberEmoji } = require("../helpers");
 const { getArtifact } = require("./Artifacts/_artifactDictionary");
 const { buildEquipmentDescription, getEquipmentProperty } = require("./equipment/_equipmentDictionary");
 

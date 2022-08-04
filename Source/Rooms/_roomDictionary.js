@@ -1,4 +1,5 @@
-const { SAFE_DELIMITER, generateRandomNumber } = require("../../helpers.js");
+const { SAFE_DELIMITER } = require("../../constants.js");
+const { generateRandomNumber } = require("../../helpers.js");
 
 const ROOMS = {
 	"Event": [],

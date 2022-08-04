@@ -1,12 +1,11 @@
 const { MessageEmbed } = require("discord.js");
 const fs = require("fs");
+const Adventure = require("./Classes/Adventure");
 
 exports.versionData = {};
 exports.sponsors = {};
 exports.versionData = require('./Config/versionData.json');
 exports.sponsors = require("./Config/sponsors.json");
-
-exports.SAFE_DELIMITER = "→";
 
 exports.getNumberEmoji = function (number) {
 	switch (number) {
@@ -36,10 +35,6 @@ exports.getNumberEmoji = function (number) {
 			return '#️⃣';
 	}
 }
-
-exports.maxDelverCount = 8;
-exports.MAX_MESSAGE_ACTION_ROWS = 5;
-exports.MAX_BUTTONS_PER_ROW = 5;
 
 /** Check if the given `id` belongs to a sponsor of the project
  * @param {string} id

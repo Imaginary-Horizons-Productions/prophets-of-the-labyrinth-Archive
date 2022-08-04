@@ -1,6 +1,7 @@
 const Button = require('../../Classes/Button.js');
 const Move = require('../../Classes/Move');
-const { SAFE_DELIMITER, generateRandomNumber } = require('../../helpers.js');
+const { SAFE_DELIMITER } = require("../../constants.js");
+const { generateRandomNumber } = require('../../helpers.js');
 const { getAdventure, checkNextRound, endRound, setAdventure } = require('../adventureDAO');
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
 
