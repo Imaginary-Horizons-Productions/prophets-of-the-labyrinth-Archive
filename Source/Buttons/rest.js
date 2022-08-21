@@ -21,6 +21,6 @@ module.exports = new Button(id, (interaction, args) => {
 			setAdventure(adventure);
 		});
 	} else {
-		interaction.reply({ content: "Please buy lives in adventures you've joined.", ephemeral: true });
+		interaction.reply({ content: "Please rest at rest sites in adventures you've joined.", ephemeral: true });
 	}
 });
