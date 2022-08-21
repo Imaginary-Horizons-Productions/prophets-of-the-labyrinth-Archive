@@ -13,5 +13,6 @@ function selectTargets(userIndex, adventure) {
 
 function effect(target, user, isCrit, adventure) {
 	// +50 block
-	return addBlock(target, 50);
+	addBlock(target, 50);
+	return "";
 }

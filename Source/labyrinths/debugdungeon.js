@@ -91,7 +91,7 @@ module.exports = new Labyrinth("Debug Dungeon", "Untyped")
 				],
 				"Rare": [
 					"Charging Blood Aegis",
-					"Heavy Boold Aegis",
+					"Heavy Blood Aegis",
 					"Sweeping Blood Aegis",
 					"Heavy Ice Ward",
 					"Sweeping Ice Ward",
