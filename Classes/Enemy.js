@@ -16,9 +16,7 @@ module.exports = class Enemy extends Combatant {
 	setTitle = super.setTitle;
 	setStaggerThreshold = super.setStaggerThreshold;
 
-	/**
-	 * Set the name of the first action an enemy takes. "random" allowed for random move in enemy's move pool.
-	 *
+	/** Set the name of the first action an enemy takes. "random" allowed for random move in enemy's move pool.
 	 * @param {string} actionName
 	 * @returns {Enemy}
 	 */

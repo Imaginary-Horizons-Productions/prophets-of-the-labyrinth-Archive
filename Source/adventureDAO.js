@@ -8,7 +8,8 @@ const Delver = require("../Classes/Delver.js");
 const Room = require("../Classes/Room.js");
 const Resource = require("../Classes/Resource.js");
 const { getWeakness, getColor } = require("./elementHelpers.js");
-const { ensuredPathSave, parseCount, generateRandomNumber, clearComponents, SAFE_DELIMITER, MAX_MESSAGE_ACTION_ROWS } = require("../helpers.js");
+const { SAFE_DELIMITER, MAX_MESSAGE_ACTION_ROWS, MAX_SELECT_OPTIONS } = require("../constants.js");
+const { ensuredPathSave, parseCount, generateRandomNumber, clearComponents } = require("../helpers.js");
 const { getGuild } = require("./guildDAO.js");
 const { setPlayer, getPlayer } = require("./playerDAO.js");
 const { spawnEnemy } = require("./enemyDAO.js");
@@ -16,12 +17,12 @@ const { resolveMove } = require("./moveDAO.js");
 const { clearBlock, removeModifier } = require("./combatantDAO.js");
 const { manufactureRoomTemplate, prerollBoss } = require("./Rooms/_roomDictionary.js");
 const { getTurnDecrement } = require("./Modifiers/_modifierDictionary.js");
-const { rollEquipmentDrop, getEquipmentProperty } = require("./equipment/_equipmentDictionary.js");
+const { getEquipmentProperty } = require("./equipment/_equipmentDictionary.js");
 const { rollArtifact } = require("./Artifacts/_artifactDictionary.js");
 const { getEnemy } = require("./Enemies/_enemyDictionary");
 const { getChallenge, rollChallenges } = require("./Challenges/_challengeDictionary.js");
 const { generateRoutingRow, generateLootRow, generateMerchantRows } = require("./roomDAO.js");
-const { rollConsumable } = require("./consumables/_consumablesDictionary.js");
+const { rollEquipmentDrop, rollConsumable } = require("./labyrinths/_labyrinthDictionary.js");
 
 const dirPath = "./Saves";
 const fileName = "adventures.json";
@@ -183,25 +184,21 @@ exports.nextRoom = async function (roomType, thread) {
 			if (category.startsWith("equipment")) {
 				let [type, tier] = category.split(SAFE_DELIMITER);
 				let parsedTier = tier;
-				let count = Math.min(25, parseCount(roomTemplate.saleList[category], adventure.delvers.length));
+				let count = Math.min(MAX_SELECT_OPTIONS, parseCount(roomTemplate.saleList[category], adventure.delvers.length));
 				for (let i = 0; i < count; i++) {
 					if (tier === "?") {
 						let threshold = 1 + cloverCount;
 						let max = 8 + cloverCount;
 						adventure.updateArtifactStat("Negative-One Leaf Clover", "Expected Extra Rare Equipment", (threshold / max) - (1 / 8));
 						if (generateRandomNumber(adventure, max, "general") < threshold) {
-							parsedTier = "2";
+							parsedTier = "Rare"; //TODONOW find other tiers and convert to enums
 						} else {
-							parsedTier = "1";
+							parsedTier = "Common";
 						}
 					}
-					let equipName = rollEquipmentDrop(parsedTier, adventure);
-					if (adventure.room.resources[equipName]?.resourceType === "equipment") {
-						adventure.room.resources[equipName].count++;
-					} else {
-						adventure.room.resources[equipName] = new Resource(equipName, "equipment", 1, "merchant", getEquipmentProperty(equipName, "cost"))
-							.setUIGroup(category);
-					}
+					const equipName = rollEquipmentDrop(parsedTier, adventure);
+					adventure.addResource(new Resource(equipName, "equipment", 1, "merchant", getEquipmentProperty(equipName, "cost"))
+						.setUIGroup(category));
 				}
 			} else if (category === "scouting") {
 				adventure.room.resources["bossScouting"] = new Resource("bossScouting", "scouting", true, "merchant", adventure.calculateScoutingCost("Final Battle"))
@@ -265,13 +262,13 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 				clearBlock(combatant);
 			}
 			// Roll Round Speed
-			let percentBonus = (generateRandomNumber(adventure, 21, "Battle") - 10) / 100;
+			let percentBonus = (generateRandomNumber(adventure, 21, "battle") - 10) / 100;
 			combatant.roundSpeed = Math.floor(combatant.speed * percentBonus);
 
 			// Roll Critical Hit
 			let threshold = combatant.getCritNumerator(adventure.getArtifactCount("Hawk Tailfeather"));
 			let max = combatant.getCritDenominator(adventure.getArtifactCount("Hawk Tailfeather"));
-			let critRoll = generateRandomNumber(adventure, max, "Battle");
+			let critRoll = generateRandomNumber(adventure, max, "battle");
 			combatant.crit = critRoll < threshold;
 			if (combatant instanceof Delver) {
 				adventure.updateArtifactStat("Hawk Tailfeather", "Expected Extra Critical Hits", (threshold / max) - (1 / 4));
@@ -293,7 +290,7 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 						let actionName = combatant.nextAction;
 						if (actionName === "random") {
 							let actionPool = Object.keys(enemyTemplate.actions);
-							actionName = actionPool[generateRandomNumber(adventure, actionPool.length, "Battle")];
+							actionName = actionPool[generateRandomNumber(adventure, actionPool.length, "battle")];
 						}
 						move.setMoveName(actionName);
 						enemyTemplate.actions[actionName].selector(adventure, combatant).forEach(({ team, index }) => {
@@ -418,32 +415,20 @@ exports.endRound = async function (adventure, thread) {
 			const dropThreshold = 1;
 			const dropMax = 8;
 			// Equipment drops
-			const equipRoll = generateRandomNumber(adventure, dropMax, "general");
-			if (equipRoll < dropThreshold) {
+			if (generateRandomNumber(adventure, dropMax, "general") < dropThreshold) {
 				const cloverCount = adventure.getArtifactCount("Negative-One Leaf Clover");
-				let tier = 1;
+				let tier = "Common";
 				let upgradeThreshold = 1 + cloverCount;
 				let upgradeMax = 8 + cloverCount;
 				if (generateRandomNumber(adventure, upgradeMax, "general") < upgradeThreshold) {
-					tier = 2;
+					tier = "Rare";
 				}
-				let droppedEquip = rollEquipmentDrop(tier, adventure);
-				if (adventure.room.resources[droppedEquip]) {
-					adventure.room.resources[droppedEquip].count++;
-				} else {
-					adventure.room.resources[droppedEquip] = new Resource(droppedEquip, "equipment", 1, "loot", 0);
-				}
+				adventure.addResource(new Resource(rollEquipmentDrop(tier, adventure), "equipment", 1, "loot", 0));
 			}
 
 			// Consumable drops
-			const consumableRoll = generateRandomNumber(adventure, dropMax, "general");
-			if (consumableRoll < dropThreshold) {
-				const droppedConsumable = rollConsumable(adventure);
-				if (adventure.room.resources[droppedConsumable]) {
-					adventure.room.resources[droppedConsumable].count++;
-				} else {
-					adventure.room.resources[droppedConsumable] = new Resource(droppedConsumable, "consumable", 1, "loot", 0);
-				}
+			if (generateRandomNumber(adventure, dropMax, "general") < dropThreshold) {
+				adventure.addResource(new Resource(rollConsumable(adventure), "consumable", 1, "loot", 0));
 			}
 
 			// Finalize UI

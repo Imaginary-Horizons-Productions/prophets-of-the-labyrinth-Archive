@@ -2,7 +2,7 @@
 module.exports = class EquipmentTemplate {
 	constructor(nameInput, tierInput, descriptionInput, elementInput, effectInput, upgradeNames) {
 		this.name = nameInput;
-		this.tier = tierInput;
+		this.tier = tierInput; //TODO #463 obsoleted by Labyrinths
 		this.description = descriptionInput;
 		this.element = elementInput;
 		this.effect = effectInput;

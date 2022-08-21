@@ -1,5 +1,5 @@
 const Select = require('../../Classes/Select.js');
-const { SAFE_DELIMITER } = require('../../helpers.js');
+const { SAFE_DELIMITER } = require('../../constants.js');
 const { getAdventure, setAdventure } = require('../adventureDAO.js');
 const { decrementForgeSupplies } = require('../roomDAO.js');
 

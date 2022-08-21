@@ -1,5 +1,5 @@
 const { MessageEmbed } = require('discord.js');
-const { SAFE_DELIMITER } = require('../../helpers.js');
+const { SAFE_DELIMITER } = require('../../constants.js');
 const Select = require('../../Classes/Select.js');
 const { getConsumable } = require('../consumables/_consumablesDictionary.js');
 

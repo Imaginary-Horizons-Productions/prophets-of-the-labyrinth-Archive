@@ -2,7 +2,8 @@ const { getEmoji, getColor } = require("./elementHelpers.js");
 const { getEquipmentProperty, buildEquipmentDescription } = require("./equipment/_equipmentDictionary");
 const { isBuff, isDebuff, isNonStacking } = require("./Modifiers/_modifierDictionary");
 const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
-const { SAFE_DELIMITER, ordinalSuffixEN, MAX_BUTTONS_PER_ROW } = require("../helpers.js");
+const { SAFE_DELIMITER, MAX_BUTTONS_PER_ROW } = require("../constants.js");
+const { ordinalSuffixEN } = require("../helpers.js");
 const { getFullName } = require("./combatantDAO.js");
 
 /** Seen in target selection embeds and /inspect-self equipment fields contain nearly all information about the equipment they represent

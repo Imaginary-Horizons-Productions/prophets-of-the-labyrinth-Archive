@@ -7,7 +7,8 @@ const { getChallenge } = require('../Challenges/_challengeDictionary.js');
 const { elementsList, getColor } = require('../elementHelpers.js');
 const { getGuild } = require('../guildDAO.js');
 const { prerollBoss } = require('../Rooms/_roomDictionary.js');
-const { SAFE_DELIMITER, isSponsor, generateRandomNumber } = require('./../../helpers.js');
+const { SAFE_DELIMITER } = require("../../constants.js");
+const { isSponsor, generateRandomNumber } = require('./../../helpers.js');
 
 const id = "delve";
 const options = [
@@ -15,8 +16,8 @@ const options = [
 ];
 module.exports = new Command(id, "Start a new adventure", false, false, options);
 
-let DESCRIPTORS = ["Shining", "New", "Dusty", "Old", "Floating", "Undersea", "Future", "Intense"];
-let LOCATIONS = ["Adventure", "Castle", "Labyrinth", "Ruins", "Plateau", "Dungeon", "Maze", "Fortress", "Dream"];
+const DESCRIPTORS = ["Shining", "New", "Dusty", "Old", "Floating", "Undersea", "Future", "Intense"];
+const LOCATIONS = ["Pyramid", "Adventure", "Castle", "Labyrinth", "Ruins", "Plateau", "Dungeon", "Maze", "Fortress", "Dream"];
 
 module.exports.execute = (interaction) => {
 	// Start a new adventure
@@ -29,6 +30,7 @@ module.exports.execute = (interaction) => {
 				prerollBoss("Final Battle", adventure);
 				prerollBoss("Artifact Guardian", adventure);
 
+				//TODO #469 generate adventure name using labyrinth name
 				let elementPool = elementsList();
 				let pickedElement = elementPool[generateRandomNumber(adventure, elementPool.length, "general")];
 				adventure.setName(`${DESCRIPTORS[generateRandomNumber(adventure, DESCRIPTORS.length, "general")]} ${LOCATIONS[generateRandomNumber(adventure, LOCATIONS.length, "general")]} of ${pickedElement}`)

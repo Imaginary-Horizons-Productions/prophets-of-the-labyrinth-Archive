@@ -1,6 +1,6 @@
 const Move = require('../../Classes/Move');
 const Select = require('../../Classes/Select.js');
-const { SAFE_DELIMITER } = require('../../helpers.js');
+const { SAFE_DELIMITER } = require('../../constants.js');
 const { getAdventure, checkNextRound, endRound, setAdventure } = require('../adventureDAO');
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary');
 const { getFullName } = require("../combatantDAO.js");

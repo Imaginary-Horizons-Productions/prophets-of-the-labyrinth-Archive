@@ -1,6 +1,6 @@
 const Button = require('../../Classes/Button.js');
 const { MessageActionRow, MessageSelectMenu, MessageButton } = require('discord.js');
-const { SAFE_DELIMITER } = require('../../helpers.js');
+const { SAFE_DELIMITER } = require('../../constants.js');
 const { getPlayer } = require('../playerDAO.js');
 const { getArchetype } = require('../Archetypes/_archetypeDictionary.js');
 const { getAdventure } = require('../adventureDAO.js');

@@ -1,35 +1,6 @@
-const { generateRandomNumber } = require("../../helpers.js");
 const { getEmoji } = require("../elementHelpers.js");
 
-const allEquipment = {};
-const equipmentDrops = {
-	Earth: {
-		"0": [],
-		"1": [],
-		"2": []
-	},
-	Wind: {
-		"0": [],
-		"1": [],
-		"2": []
-	},
-	Water: {
-		"0": [],
-		"1": [],
-		"2": []
-	},
-	Fire: {
-		"0": [],
-		"1": [],
-		"2": []
-	},
-	Untyped: {
-		"-1": [],
-		"0": [],
-		"1": [],
-		"2": []
-	}
-};
+const EQUIPMENT = {};
 
 for (const file of [
 	"-punch.js",
@@ -83,10 +54,7 @@ for (const file of [
 	"midasstaff-base.js",
 	"midasstaff-soothing.js",
 	"midasstaff-accelerating.js",
-	"potion-base.js",
-	"potion-earthen.js",
-	"potion-watery.js",
-	"potion-windy.js",
+	"potionkit-base.js",
 	"scythe-base.js",
 	"scythe-lethal.js",
 	"scythe-piercing.js",
@@ -115,16 +83,15 @@ for (const file of [
 	"warhammer-piercing.js"
 ]) {
 	const equip = require(`./${file}`);
-	allEquipment[equip.name] = equip;
-	equipmentDrops[equip.element][equip.tier.toString()].push(equip.name);
-}
+	EQUIPMENT[equip.name] = equip;
+};
 
 /** Checks if a type of equipment with the given name exists
  * @param {string} equipmentName
  * @returns {boolean}
  */
 exports.equipmentExists = function (equipmentName) {
-	return equipmentName in allEquipment;
+	return equipmentName in EQUIPMENT;
 }
 
 /** Fetch a single default property from an existing type of equipment
@@ -134,7 +101,7 @@ exports.equipmentExists = function (equipmentName) {
  */
 exports.getEquipmentProperty = function (equipmentName, propertyName) {
 	if (exports.equipmentExists(equipmentName)) {
-		return allEquipment[equipmentName][propertyName];
+		return EQUIPMENT[equipmentName][propertyName];
 	} else {
 		console.error("Fetching property from illegal equipment: " + equipmentName);
 	}
@@ -162,9 +129,4 @@ exports.buildEquipmentDescription = function (equipmentName, buildFullDescriptio
 			return description.split("\n")[0].replace(/\*/g, "");
 		}
 	}
-}
-
-exports.rollEquipmentDrop = function (tier, adventure) {
-	let pool = adventure.getElementPool().reduce((pool, element) => pool.concat(equipmentDrops[element][tier]), []);
-	return pool[generateRandomNumber(adventure, pool.length, "general")];
 }

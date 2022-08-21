@@ -7,7 +7,7 @@ module.exports.spawnEnemy = function (adventure, enemyTemplate, randomizeHp) {
 	enemy.modifiers = { ...enemyTemplate.startingModifiers }; // breaks shared reference to modifiers object by enemies of same name
 	let hpPercent = 85 + 15 * adventure.delvers.length;
 	if (randomizeHp) {
-		hpPercent += 10 * (2 - generateRandomNumber(adventure, 5, "Battle"));
+		hpPercent += 10 * (2 - generateRandomNumber(adventure, 5, "battle"));
 	}
 	enemy.setHp(Math.ceil(enemy.maxHp * hpPercent / 100));
 	let tagRegex = /@{([a-zA-Z]+)}/;
@@ -40,7 +40,7 @@ module.exports.spawnEnemy = function (adventure, enemyTemplate, randomizeHp) {
 
 module.exports.selectRandomFoe = function (adventure, self) {
 	let team = "delver";
-	let index = generateRandomNumber(adventure, adventure.delvers.length, "Battle");
+	let index = generateRandomNumber(adventure, adventure.delvers.length, "battle");
 	return [{ team, index }];
 }
 

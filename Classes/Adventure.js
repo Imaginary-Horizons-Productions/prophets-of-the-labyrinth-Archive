@@ -1,5 +1,6 @@
 const crypto = require("crypto");
-const { MAX_MESSAGE_ACTION_ROWS } = require("../helpers");
+const { MAX_MESSAGE_ACTION_ROWS } = require("../constants.js");
+const Resource = require("./Resource");
 
 module.exports = class Adventure {
 	constructor(seedInput, guildIdInput) {
@@ -8,6 +9,7 @@ module.exports = class Adventure {
 	}
 	id; // the id of the thread created for the adventure
 	name;
+	labyrinth = "Debug Dungeon"; //TODO #462 generate/take labyrinth as input
 	state = "config"; // enum: "config", "ongoing", "completed"
 	element;
 	messageIds = {
@@ -140,8 +142,8 @@ module.exports = class Adventure {
 		}
 	}
 
-	/** Calculates a scouting cost
-	 * @param {string} type - enum: "Final Battle", "Artifact Guardian"
+	/** Applies relics, challenges, etc to scouting cost
+	 * @param {"Final Battle" | "Artifact Guardian"} type
 	 * @returns {number}
 	 */
 	calculateScoutingCost(type) {
@@ -151,6 +153,17 @@ module.exports = class Adventure {
 				return 150 - (count * 5);
 			case "Artifact Guardian":
 				return 100 - (count * 5);
+		}
+	}
+
+	/** Initializes a resource in the room's resources if it's not already present
+	 * @param {Resource} resource
+	 */
+	addResource(resource) {
+		if (this.room.resources[resource.name]) {
+			this.room.resources[resource.name].count++;
+		} else {
+			this.room.resources[resource.name] = resource;
 		}
 	}
 }

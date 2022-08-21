@@ -1,6 +1,7 @@
 const Button = require('../../Classes/Button.js');
 const Move = require('../../Classes/Move');
-const { SAFE_DELIMITER, generateRandomNumber } = require('../../helpers.js');
+const { SAFE_DELIMITER } = require("../../constants.js");
+const { generateRandomNumber } = require('../../helpers.js');
 const { getAdventure, checkNextRound, endRound, setAdventure } = require('../adventureDAO');
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
 
@@ -45,7 +46,7 @@ module.exports = new Button(id, async (interaction, [moveName, round, index]) =>
 					targetText = `${targetCount} random enem${targetCount === 1 ? "y" : "ies"}`;
 				}
 				for (let i = 0; i < targetCount; i++) {
-					newMove.addTarget(team, generateRandomNumber(adventure, poolSize, "Battle"));
+					newMove.addTarget(team, generateRandomNumber(adventure, poolSize, "battle"));
 				}
 			} else if (target === "self") {
 				newMove.addTarget(team, userIndex);

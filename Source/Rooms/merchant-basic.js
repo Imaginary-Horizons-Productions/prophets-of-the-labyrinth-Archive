@@ -1,4 +1,4 @@
-const { SAFE_DELIMITER } = require('../../helpers.js');
+const { SAFE_DELIMITER } = require('../../constants.js');
 const RoomTemplate = require("../../Classes/RoomTemplate.js");
 
 module.exports = new RoomTemplate()
@@ -9,6 +9,6 @@ module.exports = new RoomTemplate()
 
 module.exports.saleList = {
 	[`equipment${SAFE_DELIMITER}?`]: "n",
-	[`equipment${SAFE_DELIMITER}2`]: "1",
+	[`equipment${SAFE_DELIMITER}Rare`]: "1",
 	"scouting": "1"
 };

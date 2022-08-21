@@ -1,6 +1,6 @@
 const Command = require('../../Classes/Command.js');
 const { MessageEmbed, MessageActionRow, MessageSelectMenu } = require('discord.js');
-const { SAFE_DELIMITER } = require('../../helpers.js');
+const { SAFE_DELIMITER, MAX_SELECT_OPTIONS } = require('../../constants.js');
 const { getAdventure } = require('../adventureDAO.js');
 
 const id = "party-stats";
@@ -29,7 +29,7 @@ module.exports.execute = (interaction) => {
 			embed.addField("Challenges", Object.keys(adventure.challenges).join(", "));
 		}
 		const infoSelects = [];
-		let artifactOptions = Object.keys(adventure.artifacts).map(artifact => {
+		const artifactOptions = Object.keys(adventure.artifacts).slice(0, MAX_SELECT_OPTIONS).map(artifact => {
 			return {
 				label: `${artifact} x ${adventure.artifacts[artifact].count}`,
 				description: "",
@@ -55,7 +55,7 @@ module.exports.execute = (interaction) => {
 					}])
 			))
 		}
-		let consumablesOptions = Object.keys(adventure.consumables).map(consumable => {
+		const consumablesOptions = Object.keys(adventure.consumables).slice(0, MAX_SELECT_OPTIONS).map(consumable => {
 			return {
 				label: `${consumable} x ${adventure.consumables[consumable]}`,
 				description: "",

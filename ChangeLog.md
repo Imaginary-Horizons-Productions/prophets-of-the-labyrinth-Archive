@@ -6,7 +6,18 @@
    3. Repair Kit
    4. Smoke Bomb
    5. Explosion Potion
+   6. Earthen Potion
+   7. Fiery Potion
+   8. Salt of Oblivion
+   9. Quick Pepper
+   10. Regen Root
+   11. Stasis Quartz
+   12. Strength Spinach
+   13. Watery Potion
+   14. Windy Potion
+   15. Block Potion
 - Reworked *Urgent* weapon variant: it now adds priority to the move
+- Reworked *Unfinished Potion* to *Potion Kit*: it now adds a random "potion" consumable to loot
 - Renamed *Swift* weapon variant to *Accelerating*
 
 #### Prophets of the Labyrinth Version 0.9.0:

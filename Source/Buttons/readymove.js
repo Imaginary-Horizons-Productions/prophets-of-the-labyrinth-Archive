@@ -1,7 +1,7 @@
 const Button = require('../../Classes/Button.js');
 const { MessageEmbed, MessageActionRow, MessageSelectMenu, MessageButton } = require('discord.js');
 const Delver = require('../../Classes/Delver.js');
-const { SAFE_DELIMITER } = require('../../helpers.js');
+const { SAFE_DELIMITER } = require('../../constants.js');
 const { getEmoji, getWeakness, getColor } = require('../elementHelpers.js');
 const { getAdventure } = require('../adventureDAO.js');
 const { getFullName } = require("../combatantDAO.js");
