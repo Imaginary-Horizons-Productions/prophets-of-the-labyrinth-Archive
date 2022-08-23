@@ -2,15 +2,16 @@ module.exports = class Labyrinth {
 	/**
 	 * @param {string} nameInput
 	 * @param {"Fire" | "Water" | "Earth" | "Wind" | "Untyped"} elementInput
+	 * @param {number} maxDepthInput integer
 	 */
-	constructor(nameInput, elementInput) {
+	constructor(nameInput, elementInput, maxDepthInput) {
 		this.name = nameInput;
 		this.element = elementInput;
+		this.maxDepth = maxDepthInput;
 	}
 	availableConsumables = []; //TODO #465 merge consumable changes into base labyrinth
 	availableEquipment = []; //TODO #464 merge equipment changes into base labyrinth
 	// avaialableRooms = []; //TODO #466 add rooms to Labyrinth
-	// maxDepth = 10; //TODO #467 move maxDepth to Labyrinth
 	// bossRoomDepths = []; //TODO #468 move bossRoomDepths to Labyrinth
 
 	/**
