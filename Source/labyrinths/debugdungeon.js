@@ -100,6 +100,7 @@ module.exports = new Labyrinth("Debug Dungeon", "Untyped")
 					"Urgent Life Drain",
 					"Soothing Midas Staff",
 					"Accelerating Midas Staff",
+					"Urgent Potion Kit",
 					"Hunter's Sickle",
 					"Sharpened Sickle",
 					"Thick Sickle"
