@@ -15,6 +15,10 @@ exports.getFullName = function (combatant, titleObject) {
 	}
 }
 
+/** Speed is affected by `roundSpeed` and modifiers
+ * @param {Delver | Enemy} combatant
+ * @returns {number}
+ */
 exports.calculateTotalSpeed = function (combatant) {
 	let totalSpeed = combatant.speed + combatant.roundSpeed;
 	if ("Slow" in combatant.modifiers) {

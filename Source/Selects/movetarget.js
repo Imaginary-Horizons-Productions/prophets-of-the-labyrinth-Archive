@@ -16,7 +16,7 @@ module.exports = new Select(id, async (interaction, [moveName, round, index]) =>
 			let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
 			let [targetTeam, targetIndex] = interaction.values[0].split(SAFE_DELIMITER);
 			let newMove = new Move()
-				.calculateMoveSpeed(user)
+				.onSetMoveSpeed(user)
 				.setIsCrit(user.crit)
 				.setMoveName(moveName)
 				.setType(moveName === "Punch" ? "action" : "equip")

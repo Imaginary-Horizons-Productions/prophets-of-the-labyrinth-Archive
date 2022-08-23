@@ -1,4 +1,6 @@
-const { calculateTotalSpeed, removeModifier } = require("../Source/combatantDAO");
+const { calculateTotalSpeed: calculateTotalSpeed, removeModifier } = require("../Source/combatantDAO");
+const Delver = require("./Delver");
+const Enemy = require("./Enemy");
 
 module.exports = class Move {
 	constructor() {
@@ -25,7 +27,11 @@ module.exports = class Move {
 		return this;
 	}
 
-	calculateMoveSpeed(combatant) {
+	/** In addition to containing logic for enemy speed mechanics, this function also consumes a stack of Quicken and Slow
+	 * @param {Delver | Enemy} combatant
+	 * @returns {Move}
+	 */
+	onSetMoveSpeed(combatant) {
 		this.speed = calculateTotalSpeed(combatant);
 		removeModifier(combatant, { name: "Slow", stacks: 1, force: true });
 		removeModifier(combatant, { name: "Quicken", stacks: 1, force: true });
