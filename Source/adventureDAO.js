@@ -22,7 +22,7 @@ const { rollArtifact } = require("./Artifacts/_artifactDictionary.js");
 const { getEnemy } = require("./Enemies/_enemyDictionary");
 const { getChallenge, rollChallenges } = require("./Challenges/_challengeDictionary.js");
 const { generateRoutingRow, generateLootRow, generateMerchantRows } = require("./roomDAO.js");
-const { rollEquipmentDrop, rollConsumable } = require("./labyrinths/_labyrinthDictionary.js");
+const { rollEquipmentDrop, rollConsumable, getLabyrinthProperty } = require("./labyrinths/_labyrinthDictionary.js");
 
 const dirPath = "./Saves";
 const fileName = "adventures.json";
@@ -207,7 +207,7 @@ exports.nextRoom = async function (roomType, thread) {
 					.setUIGroup("scouting");
 			}
 		}
-		if (adventure.depth < adventure.labyrinth.maxDepth) {
+		if (adventure.depth < getLabyrinthProperty(adventure.labyrinth,"maxDepth")) {
 			let roomMessage = await thread.send({
 				embeds: [embed.addField("Decide the next room", "Each delver can pick or change their pick for the next room. The party will move on when the decision is unanimous.")],
 				components: [...roomTemplate.uiRows, ...generateMerchantRows(adventure), generateRoutingRow(adventure)]
@@ -434,7 +434,7 @@ exports.endRound = async function (adventure, thread) {
 			// Finalize UI
 			embed = embed.setTitle("Victory!").setDescription(lastRoundText)
 				.setColor(getColor(adventure.room.element));
-			if (adventure.depth < adventure.labyrinth.maxDepth) {
+			if (adventure.depth < getLabyrinthProperty(adventure.labyrinth,"maxDepth")) {
 				return thread.send({
 					embeds: [embed.addField("Decide the next room", "Each delver can pick or change their pick for the next room. The party will move on when the decision is unanimous.")],
 					components: [generateLootRow(adventure), generateRoutingRow(adventure)]
