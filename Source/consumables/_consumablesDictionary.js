@@ -23,6 +23,14 @@ for (const file of [
 	CONSUMABLES[consumable.name] = consumable;
 }
 
+/** Checks if a consumable with the given name exists
+ * @param {string} consumableName
+ * @returns {boolean}
+ */
+exports.consumableExists = function (consumableName) {
+	return consumableName in CONSUMABLES;
+}
+
 /** Template should not be mutated
  * @param {string} consumableName
  * @returns {ConsumableTemplate}

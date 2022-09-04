@@ -16,6 +16,7 @@ module.exports.execute = (interaction) => {
 			.setDescription(`${adventure.name} - Depth: ${adventure.depth}`)
 			.addField(`${adventure.lives} Lives Remain`, "When a player runs out of HP, a life will be lost and they'll be returned to max HP. When all lives are lost, the adventure will end.")
 			.addField(`${adventure.gold} Gold`, "Gold is exchanged for goods and services within adventures. Gold *will be lost when an adventure ends*.")
+			.addField("Consumables", Object.keys(adventure.consumables).map(consumable => `${consumable} x ${adventure.consumables[consumable]}`).join("\n") || "None")
 			.addField("Scouting", `Final Battle: ${adventure.scouting.finalBoss ? adventure.finalBoss : "???"}\nArtifact Guardians (${adventure.scouting.artifactGuardiansEncountered} encountered so far): ${adventure.artifactGuardians.slice(0, adventure.scouting.artifactGuardians).map((encounter, index) => {
 				if (adventure.scouting.artifactGuardiansEncountered === index) {
 					return `**${encounter}**`;
@@ -53,21 +54,6 @@ module.exports.execute = (interaction) => {
 						description: "",
 						value: "placeholder"
 					}])
-			))
-		}
-		const consumablesOptions = Object.keys(adventure.consumables).slice(0, MAX_SELECT_OPTIONS).map(consumable => {
-			return {
-				label: `${consumable} x ${adventure.consumables[consumable]}`,
-				description: "",
-				value: `${consumable}${SAFE_DELIMITER}${adventure.consumables[consumable]}`
-			}
-		})
-		if (consumablesOptions.length > 0) {
-			embed.addField("Consumables", Object.entries(adventure.consumables).map(([name, count]) => `${name} x ${count}`).join(", "))
-			infoSelects.push(new MessageActionRow().addComponents(
-				new MessageSelectMenu().setCustomId("consumablestats")
-					.setPlaceholder("Get details about a consumable...")
-					.setOptions(consumablesOptions)
 			))
 		}
 		interaction.reply({ embeds: [embed], components: infoSelects, ephemeral: true })
