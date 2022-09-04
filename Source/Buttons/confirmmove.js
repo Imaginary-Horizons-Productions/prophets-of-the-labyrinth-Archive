@@ -15,7 +15,7 @@ module.exports = new Button(id, async (interaction, [moveName, round, index]) =>
 			// Add move to round list (overwrite exisiting readied move)
 			let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
 			let newMove = new Move()
-				.calculateMoveSpeed(user)
+				.onSetMoveSpeed(user)
 				.setIsCrit(user.crit)
 				.setMoveName(moveName)
 				.setType("equip")

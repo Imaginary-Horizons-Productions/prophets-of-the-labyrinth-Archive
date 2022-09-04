@@ -15,7 +15,7 @@ module.exports = new Select(id, async (interaction, [round]) => {
 			const user = adventure.delvers.find(delver => delver.id === interaction.user.id);
 			let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
 			let newMove = new Move()
-				.calculateMoveSpeed(user)
+				.onSetMoveSpeed(user)
 				.setIsCrit(false)
 				.setMoveName(consumableName)
 				.setType("consumable")

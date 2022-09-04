@@ -277,7 +277,7 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 			// Roll Enemy Moves and Generate Dummy Moves
 			let move = new Move()
 				.setType("action")
-				.calculateMoveSpeed(combatant)
+				.onSetMoveSpeed(combatant)
 				.setIsCrit(combatant.crit)
 				.setUser(teamName, i)
 			if (combatant.getModifierStacks("Stun") > 0) {
@@ -359,7 +359,7 @@ exports.endRound = async function (adventure, thread) {
 		if (enemy.lookupName === "@{clone}") {
 			let move = new Move()
 				.setType("action")
-				.calculateMoveSpeed(enemy)
+				.onSetMoveSpeed(enemy)
 				.setIsCrit(enemy.crit)
 			let counterpartHasPriority = false;
 			let counterpartMove = adventure.room.moves.find(move => move.userTeam === "delver" && move.userIndex == index);
