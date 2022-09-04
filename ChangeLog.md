@@ -16,6 +16,7 @@
    13. Watery Potion
    14. Windy Potion
    15. Block Potion
+- New command: `/consumables-info` for looking up information on consumables
 - Reworked *Urgent* weapon variant: it now adds priority to the move
 - Reworked *Unfinished Potion* to *Potion Kit*: it now adds a random "potion" consumable to loot
 - Renamed *Swift* weapon variant to *Accelerating*
