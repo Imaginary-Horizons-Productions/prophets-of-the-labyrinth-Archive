@@ -192,6 +192,7 @@ Using this equipment puts moves in the priority queue
 - Barrier (Fire)
 - Buckler (Earth)
 - Life Drain (Water)
+- Potion Kit (Water)
 
 ### Wicked
 Increased damage against enemies with 0 block

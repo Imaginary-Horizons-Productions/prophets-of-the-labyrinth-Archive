@@ -3,12 +3,13 @@ const Resource = require('../../Classes/Resource.js');
 const { removeModifier, getFullName } = require('../combatantDAO.js');
 const { rollConsumable } = require('../labyrinths/_labyrinthDictionary');
 
-module.exports = new EquipmentTemplate("Potion Kit", 1, "*Add 1 random potion to loot*\nCritical Hit: +@{critBonus} potion", "Water", effect, ["Urgent Potion Kit"])
+module.exports = new EquipmentTemplate("Urgent Potion Kit", 1, "*Add 1 random potion to loot with priority*\nCritical Hit: +@{critBonus} potion", "Water", effect, [])
 .setCategory("Trinket")
 .setTargetingTags({ target: "self", team: "delver" })
 .setModifiers([{ name: "Stagger", stacks: 1 }])
 .setCost(200)
-.setUses(10);
+.setUses(10)
+.markPriority();
 
 function effect(target, user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger] } = module.exports;
