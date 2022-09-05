@@ -10,21 +10,22 @@ for (const file of [
 	LABYRINTHS[labyrinth.name] = labyrinth;
 }
 
-/**
- * Lookup static property of a labyrinth by labyrinth name
- * @param {string} labyrinthName 
- * @param {string} propertyName 
+/** Lookup static property of a labyrinth by labyrinth name
+ * @param {string} labyrinthName
+ * @param {string} propertyName
  * @returns {any}
  */
 exports.getLabyrinthProperty = function (labyrinthName, propertyName) {
 	if (labyrinthName in LABYRINTHS) {
-		if (propertyName in LABYRINTHS[labyrinthName]) {
-			return LABYRINTHS[labyrinthName][propertyName];
+		const template = LABYRINTHS[labyrinthName];
+		if (propertyName in template) {
+			return template[propertyName];
+		} else {
+			console.error(`Property ${propertyName} not found in ${labyrinthName}`);
 		}
-		console.error(`property ${propertyName} not found in ${labyrinthName}`);
-
+	} else {
+		console.error(`Labyrinth name ${labyrinthName} not recognized`);
 	}
-	console.error(`Labyrinth name ${labyrinthName} not recognized`);
 }
 
 /** Rolls a consumable's name from droppable consumables
