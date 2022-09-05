@@ -1,6 +1,6 @@
 const { MessageActionRow, MessageButton, MessageSelectMenu } = require("discord.js");
 const { SAFE_DELIMITER } = require("../constants.js");
-const { ordinalSuffixEN, getNumberEmoji } = require("../helpers");
+const { ordinalSuffixEN } = require("../helpers");
 const { getArtifact } = require("./Artifacts/_artifactDictionary");
 const { buildEquipmentDescription, getEquipmentProperty } = require("./equipment/_equipmentDictionary");
 
@@ -142,34 +142,4 @@ exports.editButtons = function (components, edits) {
 			}
 		}));
 	})
-}
-
-/** Decrement the resource count on "forgeSupplies", update the count in the room's embed, and disable components if supplies are exhausted
- * @param {Interaction} interaction
- * @param {string} roomMessageId
- * @param {Room} room
- * @returns {Promise<Message>}
- */
-exports.decrementForgeSupplies = async function (interaction, roomMessageId, room) {
-	room.resources.forgeSupplies.count--;
-	const roomMessage = await interaction.channel.messages.fetch(roomMessageId)
-	let { embeds } = roomMessage;
-	embeds[0].spliceFields(embeds[0].fields.findIndex(field => field.name === "Remaining Forge Supplies"), 1, { name: "Remaining Forge Supplies", value: room.resources.forgeSupplies.count.toString() })
-	if (room.resources.forgeSupplies.count === 0) {
-		return roomMessage.edit({
-			embeds,
-			components: exports.editButtons(roomMessage.components, {
-				"upgrade": { preventUse: true, label: "Forge supplies exhausted", emoji: "✔️" },
-				"viewrepairs": { preventUse: true, label: "Forge supplies exhausted", emoji: "✔️" }
-			})
-		})
-	} else {
-		return roomMessage.edit({
-			embeds,
-			components: exports.editButtons(roomMessage.components, {
-				"upgrade": { preventUse: false, label: "Consider equipment upgrades", emoji: getNumberEmoji(room.resources.forgeSupplies.count) },
-				"viewrepairs": { preventUse: false, label: "Plan equipment repairs", emoji: getNumberEmoji(room.resources.forgeSupplies.count) }
-			})
-		});
-	}
 }

@@ -28,16 +28,16 @@ module.exports = new Labyrinth("Debug Dungeon", "Untyped", 10)
 	.setEquipment(
 		{
 			Earth: {
-				"Cursed": [
+				Cursed: [
 				],
-				"Common": [
+				Common: [
 					"Buckler",
 					"Infinite Regeneration",
 					"Sword",
 					"Vigilance Charm",
 					"Warhammer"
 				],
-				"Rare": [
+				Rare: [
 					"Guarding Buckler",
 					"Heavy Buckler",
 					"Urgent Buckler",
@@ -51,16 +51,16 @@ module.exports = new Labyrinth("Debug Dungeon", "Untyped", 10)
 				]
 			},
 			Wind: {
-				"Cursed": [
+				Cursed: [
 				],
-				"Common": [
+				Common: [
 					"Bow",
 					"Cloak",
 					"Daggers",
 					"Inspiration",
 					"Scythe"
 				],
-				"Rare": [
+				Rare: [
 					"Evasive Bow",
 					"Hunter's Bow",
 					"Mercurial Bow",
@@ -79,9 +79,9 @@ module.exports = new Labyrinth("Debug Dungeon", "Untyped", 10)
 				]
 			},
 			Water: {
-				"Cursed": [
+				Cursed: [
 				],
-				"Common": [
+				Common: [
 					"Blood Aegis",
 					"Ice Ward",
 					"Life Drain",
@@ -89,7 +89,7 @@ module.exports = new Labyrinth("Debug Dungeon", "Untyped", 10)
 					"Potion Kit",
 					"Sickle"
 				],
-				"Rare": [
+				Rare: [
 					"Charging Blood Aegis",
 					"Heavy Blood Aegis",
 					"Sweeping Blood Aegis",
@@ -107,9 +107,9 @@ module.exports = new Labyrinth("Debug Dungeon", "Untyped", 10)
 				]
 			},
 			Fire: {
-				"Cursed": [
+				Cursed: [
 				],
-				"Common": [
+				Common: [
 					"Barrier",
 					"Battleaxe",
 					"Censer",
@@ -118,7 +118,7 @@ module.exports = new Labyrinth("Debug Dungeon", "Untyped", 10)
 					"Spear",
 					"Sun Flare"
 				],
-				"Rare": [
+				Rare: [
 					"Purifying Barrier",
 					"Thick Barrier",
 					"Urgent Barrier",
@@ -138,11 +138,11 @@ module.exports = new Labyrinth("Debug Dungeon", "Untyped", 10)
 				]
 			},
 			Untyped: {
-				"Cursed": [
+				Cursed: [
 				],
-				"Common": [
+				Common: [
 				],
-				"Rare": [
+				Rare: [
 				]
 			}
 		})

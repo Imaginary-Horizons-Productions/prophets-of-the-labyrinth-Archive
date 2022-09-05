@@ -13,7 +13,7 @@ module.exports = new Select(id, (interaction, args) => {
 	if (delver) {
 		const [name, index] = interaction.values[0].split(SAFE_DELIMITER);
 		let result;
-		let { resourceType: type, count } = adventure.room.resources[name];
+		const { resourceType: type, count } = adventure.room.resources[name];
 		if (count && count > 0) { // Prevents double message if multiple players take near same time
 			switch (type) {
 				case "gold":

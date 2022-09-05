@@ -144,19 +144,17 @@ exports.nextRoom = async function (roomType, thread) {
 		.setTitle(roomTemplate.title)
 		.setDescription(roomTemplate.description.replace("@{roomElement}", adventure.room.element))
 		.setFooter({ text: `Room #${adventure.depth}` });
-	for (let resource in roomTemplate.resourceList) {
+	for (const resource in roomTemplate.resourceList) {
 		if (resource === "challenges") {
 			rollChallenges(2, adventure).forEach(challengeName => {
-				adventure.room.resources[challengeName] = new Resource(challengeName, "challenges", true, "resource", 0);
+				adventure.room.resources[challengeName] = new Resource(challengeName, resource, true, "resource", 0);
 			})
 		} else {
 			let count = parseCount(roomTemplate.resourceList[resource], adventure.delvers.length);
-			let resourceType;
-			if (resource === "forgeSupplies") {
-				embed.addField("Remaining Forge Supplies", count.toString());
-				resourceType = "resource";
+			if (resource === "roomActions") {
+				embed.addField("Room Actions", count.toString());
 			}
-			adventure.room.resources[resource] = new Resource(resource, resourceType, count, "resource", 0);
+			adventure.room.resources[resource] = new Resource(resource, resource, count, "resource", 0);
 		}
 	}
 	if (["Battle", "Artifact Guardian", "Final Battle"].includes(roomType)) {
@@ -191,7 +189,7 @@ exports.nextRoom = async function (roomType, thread) {
 						let max = 8 + cloverCount;
 						adventure.updateArtifactStat("Negative-One Leaf Clover", "Expected Extra Rare Equipment", (threshold / max) - (1 / 8));
 						if (generateRandomNumber(adventure, max, "general") < threshold) {
-							parsedTier = "Rare"; //TODONOW find other tiers and convert to enums
+							parsedTier = "Rare";
 						} else {
 							parsedTier = "Common";
 						}
@@ -207,7 +205,7 @@ exports.nextRoom = async function (roomType, thread) {
 					.setUIGroup("scouting");
 			}
 		}
-		if (adventure.depth < getLabyrinthProperty(adventure.labyrinth,"maxDepth")) {
+		if (adventure.depth < getLabyrinthProperty(adventure.labyrinth, "maxDepth")) {
 			let roomMessage = await thread.send({
 				embeds: [embed.addField("Decide the next room", "Each delver can pick or change their pick for the next room. The party will move on when the decision is unanimous.")],
 				components: [...roomTemplate.uiRows, ...generateMerchantRows(adventure), generateRoutingRow(adventure)]
@@ -434,7 +432,7 @@ exports.endRound = async function (adventure, thread) {
 			// Finalize UI
 			embed = embed.setTitle("Victory!").setDescription(lastRoundText)
 				.setColor(getColor(adventure.room.element));
-			if (adventure.depth < getLabyrinthProperty(adventure.labyrinth,"maxDepth")) {
+			if (adventure.depth < getLabyrinthProperty(adventure.labyrinth, "maxDepth")) {
 				return thread.send({
 					embeds: [embed.addField("Decide the next room", "Each delver can pick or change their pick for the next room. The party will move on when the decision is unanimous.")],
 					components: [generateLootRow(adventure), generateRoutingRow(adventure)]

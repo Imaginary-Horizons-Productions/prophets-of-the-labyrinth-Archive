@@ -10,10 +10,12 @@ module.exports = new RoomTemplate()
 module.exports.uiRows.push(new MessageActionRow().addComponents(
 	new MessageButton().setCustomId("rest")
 		.setLabel("Rest [30% hp]")
+		.setEmoji("1️⃣")
 		.setStyle("PRIMARY"),
 	new MessageButton().setCustomId("viewchallenges")
 		.setLabel("Take a challenge")
+		.setEmoji("1️⃣")
 		.setStyle("DANGER")
 ))
 
-module.exports.resourceList = { "challenges": "2" };
+module.exports.resourceList = { "roomActions": "n", "challenges": "2" };
