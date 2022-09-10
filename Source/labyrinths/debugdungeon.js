@@ -1,6 +1,6 @@
 const Labyrinth = require("../../Classes/Labyrinth");
 
-module.exports = new Labyrinth("Debug Dungeon", "Untyped", 10)
+module.exports = new Labyrinth("Debug Dungeon", "Untyped", 10, [10])
 	.setConsumables(
 		{
 			Earth: [],

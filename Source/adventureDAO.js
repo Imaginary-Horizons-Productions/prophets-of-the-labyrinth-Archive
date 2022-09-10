@@ -110,14 +110,13 @@ exports.updateRoomHeader = function (adventure, message) {
 exports.nextRoom = async function (roomType, thread) {
 	let adventure = exports.getAdventure(thread.id);
 	// Roll options for next room type
-	let roomTypes = ["Battle", "Event", "Forge", "Rest Site", "Artifact Guardian", "Merchant"]; //TODO #126 add weights to room types
-	let finalBossDepths = [10];
-	if (!finalBossDepths.includes(adventure.depth + 1)) {
-		let mapCount = adventure.getArtifactCount("Enchanted Map");
-		let numCandidates = 2 + mapCount;
+	const roomTypes = ["Battle", "Event", "Forge", "Rest Site", "Artifact Guardian", "Merchant"]; //TODO #126 add weights to room types
+	if (!getLabyrinthProperty(adventure.labyrinth, "bossRoomDepths").includes(adventure.depth + 1)) {
+		const mapCount = adventure.getArtifactCount("Enchanted Map");
 		if (mapCount) {
 			adventure.updateArtifactStat("Enchanted Map", "Extra Rooms Rolled", mapCount);
 		}
+		const numCandidates = 2 + mapCount;
 		for (let i = 0; i < numCandidates; i++) {
 			const candidateTag = `${roomTypes[generateRandomNumber(adventure, roomTypes.length, "general")]}${SAFE_DELIMITER}${adventure.depth}`;
 			if (!(candidateTag in adventure.roomCandidates)) {
