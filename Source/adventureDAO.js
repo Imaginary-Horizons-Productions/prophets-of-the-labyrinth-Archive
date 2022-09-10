@@ -1,12 +1,12 @@
 const fs = require("fs");
-const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
+const { MessageEmbed, MessageActionRow, MessageButton, Message } = require("discord.js");
 const Adventure = require("../Classes/Adventure.js");
-
 const Move = require("../Classes/Move.js");
 const Enemy = require("../Classes/Enemy.js");
 const Delver = require("../Classes/Delver.js");
 const Room = require("../Classes/Room.js");
 const Resource = require("../Classes/Resource.js");
+
 const { getWeakness, getColor } = require("./elementHelpers.js");
 const { SAFE_DELIMITER, MAX_MESSAGE_ACTION_ROWS, MAX_SELECT_OPTIONS } = require("../constants.js");
 const { ensuredPathSave, parseCount, generateRandomNumber, clearComponents } = require("../helpers.js");
@@ -103,12 +103,16 @@ function roomHeaderString({ lives, gold, accumulatedScore }) {
 	return `Lives: ${lives} - Party Gold: ${gold} - Score: ${accumulatedScore}`;
 }
 
+/** The room header goes in the embed's author field and should contain information about the party's commonly used or important resources
+ * @param {Adventure} adventure
+ * @param {Message} message
+ */
 exports.updateRoomHeader = function (adventure, message) {
-	message.edit({ embeds: [message.embeds[0].setAuthor({ name: roomHeaderString(adventure), iconURL: message.client.user.displayAvatarURL() })] })
+	message.edit({ embeds: message.embeds.map(embed => embed.setAuthor({ name: roomHeaderString(adventure), iconURL: message.client.user.displayAvatarURL() })) })
 }
 
 exports.nextRoom = async function (roomType, thread) {
-	let adventure = exports.getAdventure(thread.id);
+	const adventure = exports.getAdventure(thread.id);
 	// Roll options for next room type
 	const roomTypes = ["Battle", "Event", "Forge", "Rest Site", "Artifact Guardian", "Merchant"]; //TODO #126 add weights to room types
 	if (!getLabyrinthProperty(adventure.labyrinth, "bossRoomDepths").includes(adventure.depth + 1)) {
@@ -131,7 +135,7 @@ exports.nextRoom = async function (roomType, thread) {
 	}
 
 	// Generate current room
-	let roomTemplate = manufactureRoomTemplate(roomType, adventure);
+	const roomTemplate = manufactureRoomTemplate(roomType, adventure);
 	adventure.room = new Room(roomTemplate.title, roomTemplate.element);
 	if (adventure.room.element === "@{adventure}") {
 		adventure.room.element = adventure.element;
@@ -206,7 +210,7 @@ exports.nextRoom = async function (roomType, thread) {
 					.setUIGroup("scouting");
 			}
 		}
-		if (adventure.depth < getLabyrinthProperty(adventure.labyrinth,"maxDepth")) {
+		if (adventure.depth < getLabyrinthProperty(adventure.labyrinth, "maxDepth")) {
 			let roomMessage = await thread.send({
 				embeds: [embed.addField("Decide the next room", "Each delver can pick or change their pick for the next room. The party will move on when the decision is unanimous.")],
 				components: [...roomTemplate.uiRows, ...generateMerchantRows(adventure), generateRoutingRow(adventure)]
@@ -433,7 +437,7 @@ exports.endRound = async function (adventure, thread) {
 			// Finalize UI
 			embed = embed.setTitle("Victory!").setDescription(lastRoundText)
 				.setColor(getColor(adventure.room.element));
-			if (adventure.depth < getLabyrinthProperty(adventure.labyrinth,"maxDepth")) {
+			if (adventure.depth < getLabyrinthProperty(adventure.labyrinth, "maxDepth")) {
 				return thread.send({
 					embeds: [embed.addField("Decide the next room", "Each delver can pick or change their pick for the next room. The party will move on when the decision is unanimous.")],
 					components: [generateLootRow(adventure), generateRoutingRow(adventure)]
