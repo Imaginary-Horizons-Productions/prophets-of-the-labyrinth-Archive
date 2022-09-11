@@ -29,22 +29,24 @@ exports.generateLootRow = function (adventure) {
 	for (const resource of Object.values(adventure.room.resources)) {
 		if (resource.uiType === "loot") {
 			const { name, resourceType: type, count } = resource;
-			let option = { value: `${name}${SAFE_DELIMITER}${options.length}` };
+			if (count > 0) {
+				let option = { value: `${name}${SAFE_DELIMITER}${options.length}` };
 
-			if (name == "gold") {
-				option.label = `${count} Gold`;
-			} else {
-				option.label = `${name} x ${count}`;
-			}
+				if (name == "gold") {
+					option.label = `${count} Gold`;
+				} else {
+					option.label = `${name} x ${count}`;
+				}
 
-			if (type === "equipment") {
-				option.description = buildEquipmentDescription(name, false);
-			} else if (type === "artifact") {
-				option.description = getArtifact(name).dynamicDescription(count);
-			} else {
-				option.description = "";
+				if (type === "equipment") {
+					option.description = buildEquipmentDescription(name, false);
+				} else if (type === "artifact") {
+					option.description = getArtifact(name).dynamicDescription(count);
+				} else {
+					option.description = "";
+				}
+				options.push(option)
 			}
-			options.push(option)
 		}
 	}
 	if (options.length > 0) {
