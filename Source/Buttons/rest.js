@@ -27,7 +27,7 @@ module.exports = new Button(id,
 					})
 				}
 				interaction.update({ embeds, components }).then(() => {
-					interaction.followUp(gainHealth(delver, delver.maxHp * 0.30 * (1 - adventure.getChallengeIntensity("Restless")), adventure, 0));
+					interaction.followUp(gainHealth(delver, delver.maxHp * 0.30 * (1 - adventure.getChallengeIntensity("Restless")/100.0), adventure, 0));
 					setAdventure(adventure);
 				});
 			} else {

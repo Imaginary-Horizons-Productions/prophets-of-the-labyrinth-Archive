@@ -27,10 +27,10 @@ module.exports = new Select(id,
 			user.equipment.splice(index, 1, { name: upgradeName, uses: Math.min(upgradeUses, user.equipment[index].uses) });
 			const remainingActions = --adventure.room.resources.roomActions.count;
 			interaction.channel.messages.fetch(adventure.messageIds.room).then(roomMessage => {
-				const embeds = interaction.message.embeds.map(embed =>
+				const embeds = roomMessage.embeds.map(embed =>
 					embed.spliceFields(embed.fields.findIndex(field => field.name === "Room Actions"), 1, { name: "Room Actions", value: remainingActions.toString() })
 				);
-				let components = interaction.message.components;
+				let components = roomMessage.components;
 				if (remainingActions < 1) {
 					components = editButtons(components, {
 						"upgrade": { preventUse: true, label: "Forge supplies exhausted", emoji: "✔️" },
