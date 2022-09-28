@@ -95,16 +95,21 @@ exports.equipmentExists = function (equipmentName) {
 	return equipmentName in EQUIPMENT;
 }
 
-/** Fetch a single default property from an existing type of equipment
+/** Lookup a static property for a type of equipment
  * @param {string} equipmentName
  * @param {string} propertyName
- * @returns
+ * @returns {any}
  */
 exports.getEquipmentProperty = function (equipmentName, propertyName) {
 	if (exports.equipmentExists(equipmentName)) {
-		return EQUIPMENT[equipmentName][propertyName];
+		const template = EQUIPMENT[equipmentName];
+		if (propertyName in template) {
+			return template[propertyName];
+		} else {
+			console.error(`Property ${propertyName} not found on ${equipmentName}`);
+		}
 	} else {
-		console.error("Fetching property from illegal equipment: " + equipmentName);
+		console.error(`Equipment name ${equipmentName} not recognized`);
 	}
 }
 

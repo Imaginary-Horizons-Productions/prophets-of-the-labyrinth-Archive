@@ -1,13 +1,17 @@
-const { MessageActionRow, MessageSelectMenu } = require('discord.js');
+const { MessageActionRow, MessageSelectMenu, Interaction } = require('discord.js');
 const Button = require('../../Classes/Button.js');
 const { SAFE_DELIMITER } = require('../../constants.js');
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
 const { getAdventure } = require("./../adventureDAO.js");
 
 const id = "upgrade";
-module.exports = new Button(id, (interaction, args) => {
-	// Present the user with an opportunity to upgrade a piece of equipment
-	let adventure = getAdventure(interaction.channel.id);
+module.exports = new Button(id,
+	/** Present the user with an opportunity to upgrade a piece of equipment
+	 * @param {Interaction} interaction
+	 * @param {Array<string>} args
+	 */
+	(interaction, args) => {
+	let adventure = getAdventure(interaction.channelId);
 	let user = adventure.delvers.find(delver => delver.id === interaction.user.id);
 	if (user) {
 		let options = [];
@@ -21,10 +25,10 @@ module.exports = new Button(id, (interaction, args) => {
 				})
 			}
 		})
-		if (adventure.room.resources.forgeSupplies.count > 0) {
+		if (adventure.room.resources.roomActions.count > 0) {
 			if (options.length > 0) {
 				let upgradeSelect = new MessageActionRow().addComponents(
-					new MessageSelectMenu().setCustomId(`randomupgrade${SAFE_DELIMITER}${interaction.message.id}`)
+					new MessageSelectMenu().setCustomId("randomupgrade")
 						.setPlaceholder("Pick a piece of equipment to randomly tinker with...")
 						.setOptions(options)
 				)
