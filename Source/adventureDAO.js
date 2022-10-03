@@ -15,7 +15,6 @@ const { setPlayer, getPlayer } = require("./playerDAO.js");
 const { spawnEnemy } = require("./enemyDAO.js");
 const { resolveMove } = require("./moveDAO.js");
 const { clearBlock, removeModifier } = require("./combatantDAO.js");
-const { manufactureRoomTemplate, prerollBoss } = require("./Rooms/_roomDictionary.js");
 const { getTurnDecrement } = require("./Modifiers/_modifierDictionary.js");
 const { getEquipmentProperty } = require("./equipment/_equipmentDictionary.js");
 const { rollArtifact } = require("./Artifacts/_artifactDictionary.js");
@@ -133,7 +132,7 @@ exports.nextRoom = async function (roomType, thread) {
 	}
 
 	// Generate current room
-	const roomTemplate = manufactureRoomTemplate(roomType, adventure);
+	const roomTemplate = rollRoom(roomType, adventure);
 	adventure.room = new Room(roomTemplate.title, roomTemplate.element);
 	if (adventure.room.element === "@{adventure}") {
 		adventure.room.element = adventure.element;

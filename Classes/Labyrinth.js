@@ -11,9 +11,9 @@ module.exports = class Labyrinth {
 		this.maxDepth = maxDepthInput;
 		this.bossRoomDepths = bossRoomDepthsInput;
 	}
-	availableConsumables = []; //TODO #465 merge consumable changes into base labyrinth
-	availableEquipment = []; //TODO #464 merge equipment changes into base labyrinth
-	avaialableRooms = [];
+	availableConsumables = {}; //TODO #465 merge consumable changes into base labyrinth
+	availableEquipment = {}; //TODO #464 merge equipment changes into base labyrinth
+	availableRooms = {};
 
 	/**
 	 * @param {object} consumables
@@ -35,7 +35,7 @@ module.exports = class Labyrinth {
 	 * @param {object} consumables
 	 */
 	setRooms(rooms) {
-		this.avaialableRooms = rooms;
+		this.availableRooms = rooms;
 		return this;
 	}
 }

@@ -59,7 +59,7 @@ exports.rollEquipmentDrop = function (tier, adventure) {
  * @param {Adventure} adventure
  */
 exports.prerollBoss = function (type, adventure) {
-	const roomPool = LABYRINTHS[adventure.labyrinth][type];
+	const roomPool = LABYRINTHS[adventure.labyrinth].availableRooms[type];
 	const roomTitle = roomPool[generateRandomNumber(adventure, roomPool.length, "general")].title;
 	if (type === "Artifact Guardian") {
 		adventure.artifactGuardians.push(roomTitle);
@@ -86,8 +86,8 @@ exports.rollRoom = function (type, adventure) {
 		console.error("Attempt to create room of unidentified type: " + type);
 		adventure.roomCandidates = {};
 		adventure.roomCandidates[`Battle${SAFE_DELIMITER}${adventure.depth}`] = true;
-		return LABYRINTHS["Debug Dungeon"]["Empty"][0];
+		return LABYRINTHS["Debug Dungeon"].availableRooms["Empty"][0];
 	}
-	const roomPool = LABYRINTHS[adventure.labyrinth][type];
+	const roomPool = LABYRINTHS[adventure.labyrinth].availableRooms[type];
 	return getRoom(roomPool[generateRandomNumber(adventure, roomPool.length, "general")]);
 }
