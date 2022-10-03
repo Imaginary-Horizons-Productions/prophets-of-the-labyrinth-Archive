@@ -2,7 +2,7 @@ const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addBlock, removeModifier, getFullName } = require('../combatantDAO.js');
 const { isDebuff } = require('../Modifiers/_modifierDictionary.js');
 
-module.exports = new EquipmentTemplate("Purifying Barrier", 2, "*Grant an ally @{block} block and cure them of all debuffs*\nCritical Hit: Block x@{critBonus}", "Fire", effect, ["Thick Barrier", "Urgent Barrier"])
+module.exports = new EquipmentTemplate("Purifying Barrier", "*Grant an ally @{block} block and cure them of all debuffs*\nCritical Hit: Block x@{critBonus}", "Fire", effect, ["Thick Barrier", "Urgent Barrier"])
 	.setCategory("Spell")
 	.setTargetingTags({ target: "single", team: "delver" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }])

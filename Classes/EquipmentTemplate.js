@@ -1,8 +1,13 @@
-// A readonly template containing stats for a piece of equipment
 module.exports = class EquipmentTemplate {
-	constructor(nameInput, tierInput, descriptionInput, elementInput, effectInput, upgradeNames) {
+	/** This read-only data class defines stats for a piece of equipment
+	 * @param {string} nameInput
+	 * @param {string} descriptionInput
+	 * @param {"Fire" | "Water" | "Earth" | "Wind" | "Untyped"} elementInput
+	 * @param {Function} effectInput
+	 * @param {Array<string>} upgradeNames
+	 */
+	constructor(nameInput, descriptionInput, elementInput, effectInput, upgradeNames) {
 		this.name = nameInput;
-		this.tier = tierInput; //TODO #463 obsoleted by Labyrinths
 		this.description = descriptionInput;
 		this.element = elementInput;
 		this.effect = effectInput;

@@ -95,7 +95,7 @@ exports.generateMerchantRows = function (adventure) {
 			if (options.length) {
 				rows.push(new MessageActionRow().addComponents(
 					new MessageSelectMenu().setCustomId(`buy${groupName}`)
-						.setPlaceholder(`Check a ${tier === "2" ? "rare " : ""}piece of equipment...`)
+						.setPlaceholder(`Check a ${tier === "Rare" ? "rare " : ""}piece of equipment...`)
 						.setOptions(options)));
 			} else {
 				rows.push(new MessageActionRow().addComponents(
