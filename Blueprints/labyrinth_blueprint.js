@@ -146,6 +146,16 @@ module.exports = new Labyrinth("name", "Untyped", 10)
 				]
 			}
 		})
-	// .setRooms([
-
-	// ]);
+	.setRooms(
+		{
+			"Event": ["Element Redistrabution", "Free Gold?", "Health Redistrabution", "The Score Beggar", "Abandoned Forge", "Equipment Merchant", "Rest Site", "Treasure!"],
+			"Battle": ["Hawk Fight", "Frog Fight", "Mechabee Fight", "Slime Fight", "Tortoise Fight"],
+			"Merchant": ["Equipment Merchant"],
+			"Rest Site": ["Rest Site"],
+			"Final Battle": ["A Northern Laboratory", "Hall of Mirrors"],
+			"Forge": ["Abandoned Forge"],
+			"Artifact Guardian": ["A Slimy Throneroom", "A windfall of treasure!"],
+			"Treasure": ["Treasure!"],
+			"Empty": ["Empty Room"]
+		}
+	);

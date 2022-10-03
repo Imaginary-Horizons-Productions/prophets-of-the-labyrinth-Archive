@@ -1,9 +1,7 @@
-const { SAFE_DELIMITER } = require('../../constants.js');
+const ResourceTemplate = require("../../Classes/ResourceTemplate.js");
 const RoomTemplate = require("../../Classes/RoomTemplate.js");
 
-module.exports = new RoomTemplate()
-	.setTypes("Event", "Merchant")
-	.setTitle("Equipment Merchant")
+module.exports = new RoomTemplate("Equipment Merchant")
 	.setDescription("A masked figure sits in front of a packed rack of weapons and other equipment. \"Care to trade?\"")
 	.setElement("@{adventure}");
 

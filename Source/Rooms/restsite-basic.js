@@ -1,9 +1,8 @@
 const { MessageActionRow, MessageButton } = require("discord.js");
+const ResourceTemplate = require("../../Classes/ResourceTemplate.js");
 const RoomTemplate = require("../../Classes/RoomTemplate.js")
 
-module.exports = new RoomTemplate()
-	.setTypes("Event", "Rest Site")
-	.setTitle("Rest Site")
+module.exports = new RoomTemplate("Rest Site")
 	.setDescription("The room contains a rest site... and a mysterious challenger hanging out in the corner.")
 	.setElement("@{adventure}");
 

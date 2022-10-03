@@ -2,7 +2,7 @@ const Button = require('../../Classes/Button.js');
 const { ordinalSuffixEN } = require('../../helpers.js');
 const { getAdventure, setAdventure, updateRoomHeader } = require('../adventureDAO.js');
 const { editButtons } = require("../roomDAO.js");
-const { prerollBoss } = require('../Rooms/_roomDictionary.js');
+const { prerollBoss } = require('../labyrinths/_labyrinthDictionary.js');
 
 const id = "buyscouting";
 module.exports = new Button(id, (interaction, [type]) => {

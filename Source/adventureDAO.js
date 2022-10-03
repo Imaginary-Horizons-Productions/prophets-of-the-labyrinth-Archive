@@ -20,9 +20,7 @@ const { getTurnDecrement } = require("./Modifiers/_modifierDictionary.js");
 const { getEquipmentProperty } = require("./equipment/_equipmentDictionary.js");
 const { rollArtifact } = require("./Artifacts/_artifactDictionary.js");
 const { getEnemy } = require("./Enemies/_enemyDictionary");
-const { getChallenge, rollChallenges } = require("./Challenges/_challengeDictionary.js");
-const { generateRoutingRow, generateLootRow, generateMerchantRows } = require("./roomDAO.js");
-const { rollEquipmentDrop, rollConsumable, getLabyrinthProperty } = require("./labyrinths/_labyrinthDictionary.js");
+const { rollEquipmentDrop, rollConsumable, getLabyrinthProperty, prerollBoss, rollRoom } = require("./labyrinths/_labyrinthDictionary.js");
 
 const dirPath = "./Saves";
 const fileName = "adventures.json";

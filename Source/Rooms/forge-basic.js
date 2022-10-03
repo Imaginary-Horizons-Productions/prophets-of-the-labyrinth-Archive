@@ -1,9 +1,8 @@
 const { MessageActionRow, MessageButton } = require("discord.js");
+const ResourceTemplate = require("../../Classes/ResourceTemplate.js");
 const RoomTemplate = require("../../Classes/RoomTemplate.js")
 
-module.exports = new RoomTemplate()
-	.setTypes("Event", "Forge")
-	.setTitle("Abandoned Forge")
+module.exports = new RoomTemplate("Abandoned Forge")
 	.setDescription("The room contains an abandoned forge. There seem to be enough supplies leftover for everyone to do something.")
 	.setElement("@{adventure}");
 
