@@ -19,7 +19,8 @@ for (const file of [
 	"finalBattle-mirrors.js",
 	"forge-basic.js",
 	"merchant-basic.js",
-	"restsite-basic.js"
+	"restsite-basic.js",
+	"treasure-basic.js"
 ]) {
 	const room = require(`./${file}`);
 	ROOMS[room.title] = room;

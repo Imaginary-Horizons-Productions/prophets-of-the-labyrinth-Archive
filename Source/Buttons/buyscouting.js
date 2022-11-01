@@ -1,7 +1,7 @@
 const Button = require('../../Classes/Button.js');
 const { ordinalSuffixEN } = require('../../helpers.js');
-const { getAdventure, setAdventure, updateRoomHeader } = require('../adventureDAO.js');
-const { editButtons } = require("../roomDAO.js");
+const { getAdventure, setAdventure } = require('../adventureDAO.js');
+const { editButtons, updateRoomHeader } = require("../roomDAO.js");
 const { prerollBoss } = require('../labyrinths/_labyrinthDictionary.js');
 
 const id = "buyscouting";

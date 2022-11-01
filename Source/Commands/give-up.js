@@ -10,7 +10,7 @@ module.exports.execute = (interaction) => {
 	const adventure = getAdventure(interaction.channelId);
 	if (adventure && adventure.state !== "completed") {
 		if (interaction.user.id === adventure.leaderId) {
-			interaction.reply({ embeds: [completeAdventure(adventure, interaction.channel, { isSuccess: false, description: null })] });
+			interaction.reply(completeAdventure(adventure, interaction.channel));
 		} else {
 			interaction.reply({ content: "Please ask the leader to end the adventure.", ephemeral: true });
 		}

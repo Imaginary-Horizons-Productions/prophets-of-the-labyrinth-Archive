@@ -11,7 +11,7 @@ module.exports = new Button(id, (interaction, args) => {
 		if (interaction.user.id === adventure.leaderId) {
 			let options = [];
 			Object.values(adventure.room.resources).forEach(resource => {
-				if (resource.resourceType === "challenges") {
+				if (resource.resourceType === "challenge") {
 					let challengeName = resource.name;
 					const challenge = getChallenge(challengeName);
 					options.push({ label: challengeName, description: challenge.dynamicDescription(challenge.intensity, challenge.duration, challenge.reward), value: challengeName });

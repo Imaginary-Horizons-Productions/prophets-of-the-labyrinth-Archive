@@ -1,9 +1,10 @@
 const { MessageEmbed } = require('discord.js');
 const Button = require('../../Classes/Button.js');
-const { getAdventure, updateRoomHeader, setAdventure } = require('../adventureDAO.js');
+const { getAdventure, setAdventure } = require('../adventureDAO.js');
 const { getTargetList } = require('../moveDAO.js');
 const { getFullName, calculateTotalSpeed, modifiersToString } = require("../combatantDAO.js");
 const { getWeakness, getColor, getEmoji } = require('../elementHelpers.js');
+const { updateRoomHeader } = require('../roomDAO.js');
 
 const id = "predict";
 module.exports = new Button(id, (interaction, args) => {

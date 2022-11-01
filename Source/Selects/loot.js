@@ -1,9 +1,9 @@
 const { MessageActionRow, MessageButton } = require('discord.js');
 const Select = require('../../Classes/Select.js');
-const { getAdventure, updateRoomHeader, setAdventure } = require('../adventureDAO.js');
+const { getAdventure, setAdventure } = require('../adventureDAO.js');
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
 const { SAFE_DELIMITER } = require('../../constants.js');
-const { generateLootRow, generateRoutingRow } = require("../roomDAO.js");
+const { generateLootRow, generateRoutingRow, updateRoomHeader } = require("../roomDAO.js");
 
 const id = "loot";
 module.exports = new Select(id, (interaction, args) => {

@@ -1,5 +1,5 @@
 const Button = require('../../Classes/Button.js');
-const { getAdventure, completeAdventure, updateRoomHeader } = require('../adventureDAO.js');
+const { getAdventure, completeAdventure, setAdventure } = require('../adventureDAO.js');
 const { gainHealth, dealDamage } = require("../combatantDAO.js");
 const { editButtons } = require('../roomDAO.js');
 
@@ -12,18 +12,19 @@ module.exports = new Button(id, (interaction, args) => {
 		if (adventure.gold >= 50) {
 			adventure.gold -= 50;
 			dealDamage(delver, null, 50, true, "Untyped", adventure).then(damageText => {
-				updateRoomHeader(adventure, interaction.message);
+				const resultText = `${damageText} Everyone else gains 50 hp.`;
 				adventure.delvers.forEach(delver => {
 					if (delver.id !== interaction.user.id) {
 						gainHealth(delver, 50, adventure.room.enemyTitles, false);
 					}
 				})
-				return interaction.reply(`${damageText} Everyone else gains 50 hp.`);
-			}).then(() => {
 				if (adventure.lives < 1) {
-					interaction.reply({ embeds: [completeAdventure(adventure, interaction.channel, { isSuccess: false, description: null })] });
+					interaction.update({ components: [] });
+					interaction.channel.send(completeAdventure(adventure, interaction.channel, resultText));
 				} else {
 					interaction.update({ components: editButtons(interaction.message.components, { [id]: { preventUse: true, label: `${interaction.user} shared HP.`, emoji: "✔️" } }) });
+					interaction.channel.send(resultText);
+					setAdventure(adventure);
 				}
 			})
 		} else {

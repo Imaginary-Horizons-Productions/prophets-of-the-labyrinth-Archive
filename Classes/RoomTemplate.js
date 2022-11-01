@@ -2,15 +2,14 @@ module.exports = class RoomTemplate {
 	/** This read-only data class defines stats for a room
 	 * @param {string} titleText room titles double as the id, so must be unique (likely to change for localization)
 	 */
-	constructor(titleText) {
+	constructor(titleText, resourceArray) {
 		this.title = titleText;
-	 }
-	title = "";
+		this.resourceList = resourceArray;
+	}
 	description = "";
 	element = "";
 	uiRows = [];
 	enemyList = {};
-	resourceList = {};
 
 	setDescription(descriptionText) {
 		this.description = descriptionText;

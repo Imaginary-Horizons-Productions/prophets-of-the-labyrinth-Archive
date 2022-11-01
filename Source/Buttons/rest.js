@@ -14,8 +14,8 @@ module.exports = new Button(id,
 		const adventure = getAdventure(interaction.channel.id);
 		const delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 		if (delver) {
-			if (adventure.room.resources.roomActions.count > 0) {
-				const remainingActions = --adventure.room.resources.roomActions.count;
+			if (adventure.room.resources.roomAction.count > 0) {
+				const remainingActions = --adventure.room.resources.roomAction.count;
 				const embeds = interaction.message.embeds.map(embed =>
 					embed.spliceFields(embed.fields.findIndex(field => field.name === "Room Actions"), 1, { name: "Room Actions", value: remainingActions.toString() })
 				);
