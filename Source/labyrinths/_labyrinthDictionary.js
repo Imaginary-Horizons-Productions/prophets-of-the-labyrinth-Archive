@@ -60,7 +60,7 @@ exports.rollEquipmentDrop = function (tier, adventure) {
  */
 exports.prerollBoss = function (type, adventure) {
 	const roomPool = LABYRINTHS[adventure.labyrinth].availableRooms[type];
-	const roomTitle = roomPool[generateRandomNumber(adventure, roomPool.length, "general")].title;
+	const roomTitle = roomPool[generateRandomNumber(adventure, roomPool.length, "general")];
 	if (type === "Artifact Guardian") {
 		adventure.artifactGuardians.push(roomTitle);
 	} else {
