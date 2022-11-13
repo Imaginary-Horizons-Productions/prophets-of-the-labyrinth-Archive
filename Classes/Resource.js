@@ -3,7 +3,7 @@ module.exports = class Resource {
 	 * @param {string} nameInput Note: all names in the combined pool of equipment, artifacts, consumables, and resources must be unique
 	 * @param {"equipment" | "artifact" | "gold" | "scouting" | "roomAction" | "challenge"| "consumable"} resourceTypeInput
 	 * @param {number} countInput
-	 * @param {"loot" | "always" | "internal"} visibilityInput
+	 * @param {"loot" | "always" | "internal"} visibilityInput "loot" only shows in end of room loot, "always" always shows in ui, "internal" never shows in ui
 	 * @param {number} costInput
 	 * @param {string} selectName - Only necessary for UI with multiple generated selects (eg merchants)
 	 */
