@@ -1,7 +1,7 @@
 const { MessageActionRow, MessageButton } = require("discord.js");
 const RoomTemplate = require("../../Classes/RoomTemplate.js")
 
-module.exports = new RoomTemplate("Health Redistrabution", [
+module.exports = new RoomTemplate("Health Redistribution", [
 ]).setDescription("An imp wearing glasses approaches you with a contract. It would allow you to heal your party members at the expense of the life of one of your own.")
 	.setElement("Water");
 
