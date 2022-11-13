@@ -14,7 +14,7 @@ module.exports = new Select(id,
 	 */
 	(interaction, args) => {
 		const adventure = getAdventure(interaction.channel.id);
-		if (adventure.room.resources.roomActions.count > 0) {
+		if (adventure.room.resources.roomAction.count > 0) {
 			const user = adventure.delvers.find(delver => delver.id === interaction.user.id);
 			const [equipmentName, index] = interaction.values[0].split(SAFE_DELIMITER);
 			const upgradePool = getEquipmentProperty(equipmentName, "upgrades");
@@ -25,7 +25,7 @@ module.exports = new Select(id,
 				user.equipment[index].uses += usesDifference;
 			}
 			user.equipment.splice(index, 1, { name: upgradeName, uses: Math.min(upgradeUses, user.equipment[index].uses) });
-			const remainingActions = --adventure.room.resources.roomActions.count;
+			const remainingActions = --adventure.room.resources.roomAction.count;
 			interaction.channel.messages.fetch(adventure.messageIds.room).then(roomMessage => {
 				const embeds = roomMessage.embeds.map(embed =>
 					embed.spliceFields(embed.fields.findIndex(field => field.name === "Room Actions"), 1, { name: "Room Actions", value: remainingActions.toString() })

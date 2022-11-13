@@ -13,7 +13,7 @@ module.exports = new Select(id,
 	(interaction, args) => {
 		let adventure = getAdventure(interaction.channelId);
 		if (adventure) {
-			if (adventure.room.resources.roomActions.count > 0) {
+			if (adventure.room.resources.roomAction.count > 0) {
 				const [challengeName] = interaction.values;
 				const { intensity, duration, reward } = getChallenge(challengeName);
 				if (adventure.challenges[challengeName]) {
@@ -23,7 +23,7 @@ module.exports = new Select(id,
 				} else {
 					adventure.challenges[challengeName] = { intensity, duration, reward };
 				}
-				const remainingActions = --adventure.room.resources.roomActions.count;
+				const remainingActions = --adventure.room.resources.roomAction.count;
 				interaction.channel.messages.fetch(adventure.messageIds.room).then(roomMessage => {
 					const embeds = roomMessage.embeds.map(embed =>
 						embed.spliceFields(embed.fields.findIndex(field => field.name === "Room Actions"), 1, { name: "Room Actions", value: remainingActions.toString() })
