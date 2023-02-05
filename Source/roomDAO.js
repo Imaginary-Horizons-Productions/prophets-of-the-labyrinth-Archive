@@ -97,7 +97,7 @@ exports.renderRoom = function (adventure, thread, descriptionOverride) {
  * @param {Adventure} adventure
  */
 function addScoreField(embed, adventure) {
-	const isSuccess = adventure.lives > 0 && adventure.depth === getLabyrinthProperty(adventure.labyrinth, "maxDepth");
+	const isSuccess = adventure.lives > 0 && adventure.depth > getLabyrinthProperty(adventure.labyrinth, "maxDepth");
 	const livesScore = adventure.lives * 10;
 	const goldScore = Math.floor(Math.log10(adventure.peakGold)) * 5;
 	let score = adventure.accumulatedScore + livesScore + goldScore + adventure.depth;
