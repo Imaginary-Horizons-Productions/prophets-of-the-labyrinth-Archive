@@ -31,7 +31,7 @@ exports.renderRoom = function (adventure, thread, descriptionOverride) {
 	}
 	let components = [];
 
-	if (adventure.depth < getLabyrinthProperty(adventure.labyrinth, "maxDepth")) {
+	if (adventure.depth <= getLabyrinthProperty(adventure.labyrinth, "maxDepth")) {
 		if (adventure.state !== "completed") {
 			// Continue
 			if ("roomAction" in adventure.room.resources) {
