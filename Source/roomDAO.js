@@ -32,14 +32,15 @@ exports.renderRoom = function (adventure, thread, descriptionOverride) {
 	let components = [];
 
 	if (adventure.depth <= getLabyrinthProperty(adventure.labyrinth, "maxDepth")) {
-		if ( adventure.state !== "completed" ) {
+		if (adventure.state !== "completed") {
 			// Continue
 			if ("roomAction" in adventure.room.resources) {
 				roomEmbed.addField("Room Actions", adventure.room.resources.roomAction.count.toString());
 			}
-			roomEmbed.addField("Decide the next room", "Each delver can pick or change their pick for the next room. The party will move on when the decision is unanimous.")
 
-			if (hasEnemies && !isCombatVictory) {
+			if (!hasEnemies || isCombatVictory) {
+				roomEmbed.addField("Decide the next room", "Each delver can pick or change their pick for the next room. The party will move on when the decision is unanimous.")
+			} else {
 				components.push(new MessageActionRow().addComponents(
 					new MessageButton().setCustomId("inspectself")
 						.setLabel("Inspect Self")
@@ -61,7 +62,7 @@ exports.renderRoom = function (adventure, thread, descriptionOverride) {
 				components.push(...roomTemplate.uiRows);
 			}
 			if (adventure.room.title === "Treasure!") {
-                components.push(exports.generateTreasureRow(adventure));
+				components.push(exports.generateTreasureRow(adventure));
 			}
 			components.push(...exports.generateMerchantRows(adventure));
 			components = components.slice(0, MAX_MESSAGE_ACTION_ROWS - 2);
