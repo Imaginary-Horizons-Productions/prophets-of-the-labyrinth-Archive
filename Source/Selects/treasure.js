@@ -13,7 +13,7 @@ module.exports = new Select(id,
 		const adventure = getAdventure(interaction.channel.id);
 		const delver = adventure?.delvers.find(delver => delver.id === interaction.user.id);
 		if (delver) {
-			if (adventure.room.roomAction.count > 0) {
+			if (adventure.room.resources.roomAction.count > 0) {
 				const [name, index] = interaction.values[0].split(SAFE_DELIMITER);
 				let result;
 				const { resourceType: type, count } = adventure.room.resources[name];
@@ -22,7 +22,7 @@ module.exports = new Select(id,
 						case "gold":
 							adventure.gainGold(count);
 							adventure.room.resources.gold = 0;
-							adventure.room.roomAction.count--;
+							adventure.room.resources.roomAction.count--;
 							result = {
 								content: `The party acquires ${count} gold.`
 							}
@@ -30,7 +30,7 @@ module.exports = new Select(id,
 						case "artifact":
 							adventure.gainArtifact(name, count);
 							adventure.room.resources[name] = 0;
-							adventure.room.roomAction.count--;
+							adventure.room.resources.roomAction.count--;
 							result = {
 								content: `The party acquires ${name} x ${count}.`
 							}
@@ -39,7 +39,7 @@ module.exports = new Select(id,
 							if (delver.equipment.length < adventure.getEquipmentCapacity()) {
 								delver.equipment.push({ name, uses: getEquipmentProperty(name, "maxUses") });
 								adventure.room.resources[name].count = Math.max(count - 1, 0);
-								adventure.room.roomAction.count--;
+								adventure.room.resources.roomAction.count--;
 								result = {
 									content: `${interaction.member.displayName} takes a ${name}. There are ${count - 1} remaining.`
 								}
@@ -62,7 +62,7 @@ module.exports = new Select(id,
 								adventure.consumables[name] = count;
 							}
 							adventure.room.resources[name] = 0;
-							adventure.room.roomAction.count--;
+							adventure.room.resources.roomAction.count--;
 							result = {
 								content: `The party acquires ${name} x ${count}.`
 							}

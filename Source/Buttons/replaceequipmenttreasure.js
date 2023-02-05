@@ -9,7 +9,7 @@ module.exports = new Button(id,
 	 */
 	(interaction, [name, index, atMerchant]) => {
 		const adventure = getAdventure(interaction.channel.id);
-		if (adventure?.room.roomAction.count > 0) {
+		if (adventure?.room.resources.roomAction.count > 0) {
 			const { count, cost } = adventure.room.resources[name];
 			if (count > 0) {
 				let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
@@ -17,7 +17,7 @@ module.exports = new Button(id,
 				delver.equipment.splice(index, 1, { name, uses: getEquipmentProperty(name, "maxUses") });
 				interaction.channel.messages.fetch(adventure.messageIds.room).then(roomMessage => {
 					adventure.room.resources[name].count--;
-					adventure.room.roomAction.count--;
+					adventure.room.resources.roomAction.count--;
 					let uiRows = [];
 					if (Boolean(atMerchant)) {
 						adventure.gold -= cost;

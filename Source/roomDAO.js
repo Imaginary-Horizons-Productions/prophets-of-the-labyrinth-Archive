@@ -60,6 +60,9 @@ exports.renderRoom = function (adventure, thread, descriptionOverride) {
 			if (roomTemplate) {
 				components.push(...roomTemplate.uiRows);
 			}
+			if (adventure.room.title === "Treasure!") {
+                components.push(exports.generateTreasureRow(adventure));
+			}
 			components.push(...exports.generateMerchantRows(adventure));
 			components = components.slice(0, MAX_MESSAGE_ACTION_ROWS - 2);
 			if (isCombatVictory) {
@@ -200,7 +203,7 @@ exports.generateTreasureRow = function (adventure) {
 			if (count > 0) {
 				let option = { value: `${name}${SAFE_DELIMITER}${options.length}` };
 
-				if (name == "gold") {
+				if (name === "gold") {
 					option.label = `${count} Gold`;
 				} else {
 					option.label = `${name} x ${count}`;
