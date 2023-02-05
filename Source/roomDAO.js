@@ -322,3 +322,25 @@ exports.editButtons = function (components, edits) {
 		}));
 	})
 }
+
+/** Update the room action resource's count and edit the room embeds to show remaining room action
+ * @param {Adventure} adventure
+ * @param {MessageEmbed[]} embeds
+ * @param {number} actionsConsumed
+ * @returns {{embeds: MessageEmbed[], remainingActions: number}}
+ */
+exports.consumeRoomActions = function (adventure, embeds, actionsConsumed) {
+	adventure.room.resources.roomAction.count -= actionsConsumed;
+	const remainingActions = adventure.room.resources.roomAction.count;
+	return {
+		embeds: embeds.map(embed => {
+			const roomActionsFieldIndex = embed.fields.findIndex(field => field.name === "Room Actions");
+			if (roomActionsFieldIndex !== -1) {
+				return embed.spliceFields(roomActionsFieldIndex, 1, { name: "Room Actions", value: remainingActions.toString() });
+			} else {
+				return embed;
+			}
+		}),
+		remainingActions
+	}
+}

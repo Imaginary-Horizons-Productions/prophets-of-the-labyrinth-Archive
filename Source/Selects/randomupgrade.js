@@ -4,7 +4,7 @@ const { SAFE_DELIMITER } = require('../../constants.js');
 const { generateRandomNumber } = require('../../helpers.js');
 const { getAdventure, setAdventure } = require('../adventureDAO.js');
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
-const { editButtons } = require('../roomDAO.js');
+const { editButtons, consumeRoomActions } = require('../roomDAO.js');
 
 const id = "randomupgrade";
 module.exports = new Select(id,
@@ -25,11 +25,8 @@ module.exports = new Select(id,
 				user.equipment[index].uses += usesDifference;
 			}
 			user.equipment.splice(index, 1, { name: upgradeName, uses: Math.min(upgradeUses, user.equipment[index].uses) });
-			const remainingActions = --adventure.room.resources.roomAction.count;
 			interaction.channel.messages.fetch(adventure.messageIds.room).then(roomMessage => {
-				const embeds = roomMessage.embeds.map(embed =>
-					embed.spliceFields(embed.fields.findIndex(field => field.name === "Room Actions"), 1, { name: "Room Actions", value: remainingActions.toString() })
-				);
+				const { embeds, remainingActions } = consumeRoomActions(adventure, roomMessage.embeds, 1);
 				let components = roomMessage.components;
 				if (remainingActions < 1) {
 					components = editButtons(components, {

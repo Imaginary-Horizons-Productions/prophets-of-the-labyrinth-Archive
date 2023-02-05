@@ -2,7 +2,7 @@ const { Interaction } = require('discord.js');
 const Button = require('../../Classes/Button.js');
 const { setAdventure, getAdventure } = require('../adventureDAO.js');
 const { gainHealth } = require('../combatantDAO.js');
-const { editButtons } = require('../roomDAO.js');
+const { editButtons, consumeRoomActions } = require('../roomDAO.js');
 
 const id = "rest";
 module.exports = new Button(id,
@@ -15,10 +15,7 @@ module.exports = new Button(id,
 		const delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 		if (delver) {
 			if (adventure.room.resources.roomAction.count > 0) {
-				const remainingActions = --adventure.room.resources.roomAction.count;
-				const embeds = interaction.message.embeds.map(embed =>
-					embed.spliceFields(embed.fields.findIndex(field => field.name === "Room Actions"), 1, { name: "Room Actions", value: remainingActions.toString() })
-				);
+				const { embeds, remainingActions } = consumeRoomActions(adventure, interaction.message.embeds, 1);
 				let components = interaction.message.components;
 				if (remainingActions < 1) {
 					components = editButtons(components, {

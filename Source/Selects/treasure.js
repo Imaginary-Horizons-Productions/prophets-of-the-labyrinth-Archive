@@ -3,7 +3,7 @@ const Select = require('../../Classes/Select.js');
 const { getAdventure, setAdventure } = require('../adventureDAO.js');
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
 const { SAFE_DELIMITER } = require('../../constants.js');
-const { generateLootRow, generateRoutingRow, updateRoomHeader } = require("../roomDAO.js");
+const { generateLootRow, generateRoutingRow, updateRoomHeader, consumeRoomActions } = require("../roomDAO.js");
 
 const id = "treasure";
 module.exports = new Select(id,
@@ -22,7 +22,6 @@ module.exports = new Select(id,
 						case "gold":
 							adventure.gainGold(count);
 							adventure.room.resources.gold = 0;
-							adventure.room.resources.roomAction.count--;
 							result = {
 								content: `The party acquires ${count} gold.`
 							}
@@ -30,7 +29,6 @@ module.exports = new Select(id,
 						case "artifact":
 							adventure.gainArtifact(name, count);
 							adventure.room.resources[name] = 0;
-							adventure.room.resources.roomAction.count--;
 							result = {
 								content: `The party acquires ${name} x ${count}.`
 							}
@@ -39,7 +37,6 @@ module.exports = new Select(id,
 							if (delver.equipment.length < adventure.getEquipmentCapacity()) {
 								delver.equipment.push({ name, uses: getEquipmentProperty(name, "maxUses") });
 								adventure.room.resources[name].count = Math.max(count - 1, 0);
-								adventure.room.resources.roomAction.count--;
 								result = {
 									content: `${interaction.member.displayName} takes a ${name}. There are ${count - 1} remaining.`
 								}
@@ -62,7 +59,6 @@ module.exports = new Select(id,
 								adventure.consumables[name] = count;
 							}
 							adventure.room.resources[name] = 0;
-							adventure.room.resources.roomAction.count--;
 							result = {
 								content: `The party acquires ${name} x ${count}.`
 							}
@@ -70,8 +66,9 @@ module.exports = new Select(id,
 					}
 				}
 				if (result) {
+					const { embeds } = consumeRoomActions(adventure, interaction.message.embeds, 1);
 					interaction.reply(result).then(() => {
-						interaction.message.edit({ components: [generateLootRow(adventure), generateRoutingRow(adventure)] });
+						interaction.message.edit({ embeds, components: [generateLootRow(adventure), generateRoutingRow(adventure)] });
 						updateRoomHeader(adventure, interaction.message);
 						setAdventure(adventure);
 					});
