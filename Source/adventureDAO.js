@@ -345,8 +345,11 @@ exports.endRound = async function (adventure, thread) {
 		lastRoundText += await resolveMove(move, adventure);
 		// Check for end of combat
 		if (adventure.lives <= 0 || adventure.room.enemies.every(enemy => enemy.hp === 0)) {
+			if ( adventure.lives <= 0 ) {
+				exports.completeAdventure(adventure, thread, lastRoundText);
+			}
 			return thread.send(renderRoom(adventure, thread, lastRoundText)).then(message => {
-				if (adventure.depth < getLabyrinthProperty(adventure.labyrinth, "maxDepth")) {
+				if (adventure.depth <= getLabyrinthProperty(adventure.labyrinth, "maxDepth")) {
 					adventure.messageIds.room = message.id;
 					adventure.delvers.forEach(delver => {
 						delver.modifiers = {};

@@ -32,7 +32,7 @@ exports.renderRoom = function (adventure, thread, descriptionOverride) {
 	let components = [];
 
 	if (adventure.depth <= getLabyrinthProperty(adventure.labyrinth, "maxDepth")) {
-		if (adventure.state !== "completed") {
+		if ( adventure.state !== "completed" ) {
 			// Continue
 			if ("roomAction" in adventure.room.resources) {
 				roomEmbed.addField("Room Actions", adventure.room.resources.roomAction.count.toString());
@@ -75,6 +75,7 @@ exports.renderRoom = function (adventure, thread, descriptionOverride) {
 			// Defeat
 			addScoreField(roomEmbed, adventure);
 			components = [];
+
 		}
 	} else {
 		// Victory
