@@ -24,7 +24,7 @@ module.exports = new Button(id,
 					components = editButtons(components, {
 						[id]: { preventUse: true, label: "The party rested", emoji: "✔️" },
 						"viewchallenges": { preventUse: true, label: "The challenger is gone", emoji: "✖️" }
-					})
+					});
 				}
 				interaction.update({ embeds, components }).then(() => {
 					interaction.followUp(gainHealth(delver, Math.ceil(delver.maxHp * 0.30 * (1 - adventure.getChallengeIntensity("Restless") / 100.0)), adventure, 0));

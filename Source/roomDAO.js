@@ -6,6 +6,7 @@ const { ordinalSuffixEN } = require("../helpers");
 
 const { getArtifact } = require("./Artifacts/_artifactDictionary");
 const { getChallenge } = require("./Challenges/_challengeDictionary.js");
+const { getConsumable } = require("./consumables/_consumablesDictionary.js");
 const { getColor } = require("./elementHelpers.js");
 const { buildEquipmentDescription, getEquipmentProperty } = require("./equipment/_equipmentDictionary");
 const { getLabyrinthProperty } = require("./labyrinths/_labyrinthDictionary.js");
@@ -210,12 +211,16 @@ exports.generateTreasureRow = function (adventure) {
 					option.label = `${name} x ${count}`;
 				}
 
-				if (type === "equipment") {
-					option.description = buildEquipmentDescription(name, false);
-				} else if (type === "artifact") {
-					option.description = getArtifact(name).dynamicDescription(count);
-				} else {
-					option.description = "";
+				switch (type) {
+					case "equipment":
+						option.description = buildEquipmentDescription(name, false);
+						break;
+					case "artifact":
+						option.description = getArtifact(name).dynamicDescription(count);
+						break;
+					case "consumable":
+						option.description = getConsumable(name).description;
+						break;
 				}
 				options.push(option)
 			}
