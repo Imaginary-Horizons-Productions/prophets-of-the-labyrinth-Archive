@@ -45,11 +45,8 @@ exports.renderRoom = function (adventure, thread, descriptionOverride) {
 				components.push(exports.generateTreasureRow(adventure));
 			}
 			components.push(...exports.generateMerchantRows(adventure));
-			components = components.slice(0, MAX_MESSAGE_ACTION_ROWS - 2);
-			if (isCombatVictory) {
-				components.push(exports.generateLootRow(adventure));
-			}
 
+			components = components.slice(0, MAX_MESSAGE_ACTION_ROWS - 2);
 			if (hasEnemies && !isCombatVictory) {
 				components.push(new MessageActionRow().addComponents(
 					new MessageButton().setCustomId("inspectself")
@@ -68,6 +65,9 @@ exports.renderRoom = function (adventure, thread, descriptionOverride) {
 						.setDisabled(!Object.values(adventure.consumables).some(quantity => quantity > 0))
 				));
 			} else {
+				if (isCombatVictory) {
+					components.push(exports.generateLootRow(adventure));
+				}
 				roomEmbed.addField("Decide the next room", "Each delver can pick or change their pick for the next room. The party will move on when the decision is unanimous.");
 				components.push(exports.generateRoutingRow(adventure));
 			}
