@@ -38,9 +38,19 @@ exports.renderRoom = function (adventure, thread, descriptionOverride) {
 				roomEmbed.addField("Room Actions", adventure.room.resources.roomAction.count.toString());
 			}
 
-			if (!hasEnemies || isCombatVictory) {
-				roomEmbed.addField("Decide the next room", "Each delver can pick or change their pick for the next room. The party will move on when the decision is unanimous.")
-			} else {
+			if (roomTemplate) {
+				components.push(...roomTemplate.uiRows);
+			}
+			if (adventure.room.title === "Treasure!") {
+				components.push(exports.generateTreasureRow(adventure));
+			}
+			components.push(...exports.generateMerchantRows(adventure));
+			components = components.slice(0, MAX_MESSAGE_ACTION_ROWS - 2);
+			if (isCombatVictory) {
+				components.push(exports.generateLootRow(adventure));
+			}
+
+			if (hasEnemies && !isCombatVictory) {
 				components.push(new MessageActionRow().addComponents(
 					new MessageButton().setCustomId("inspectself")
 						.setLabel("Inspect Self")
@@ -57,19 +67,8 @@ exports.renderRoom = function (adventure, thread, descriptionOverride) {
 						.setStyle("PRIMARY")
 						.setDisabled(!Object.values(adventure.consumables).some(quantity => quantity > 0))
 				));
-			}
-			if (roomTemplate) {
-				components.push(...roomTemplate.uiRows);
-			}
-			if (adventure.room.title === "Treasure!") {
-				components.push(exports.generateTreasureRow(adventure));
-			}
-			components.push(...exports.generateMerchantRows(adventure));
-			components = components.slice(0, MAX_MESSAGE_ACTION_ROWS - 2);
-			if (isCombatVictory) {
-				components.push(exports.generateLootRow(adventure));
-			}
-			if (!hasEnemies || isCombatVictory) {
+			} else {
+				roomEmbed.addField("Decide the next room", "Each delver can pick or change their pick for the next room. The party will move on when the decision is unanimous.");
 				components.push(exports.generateRoutingRow(adventure));
 			}
 		} else {
