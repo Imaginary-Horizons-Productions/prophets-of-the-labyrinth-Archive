@@ -156,8 +156,8 @@ exports.generateRoutingRow = function (adventure) {
 //TODO make generateLootRow private
 exports.generateLootRow = function (adventure) {
 	let options = [];
-	for (const { name, resourceType: type, count, uiType } of Object.values(adventure.room.resources)) {
-		if (uiType === "loot") {
+	for (const { name, resourceType: type, count, visibility } of Object.values(adventure.room.resources)) {
+		if (visibility === "loot") {
 			if (count > 0) {
 				let option = { value: `${name}${SAFE_DELIMITER}${options.length}` };
 
@@ -195,8 +195,8 @@ exports.generateLootRow = function (adventure) {
 
 exports.generateTreasureRow = function (adventure) {
 	let options = [];
-	for (const { name, resourceType: type, count, uiType } of Object.values(adventure.room.resources)) {
-		if (uiType === "internal" && type !== "roomAction") {
+	for (const { name, resourceType: type, count, visibility } of Object.values(adventure.room.resources)) {
+		if (visibility === "internal" && type !== "roomAction") {
 			if (count > 0) {
 				let option = { value: `${name}${SAFE_DELIMITER}${options.length}` };
 
