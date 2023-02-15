@@ -24,13 +24,14 @@ const { renderRoom, updateRoomHeader } = require("./roomDAO.js");
 const { getEquipmentProperty } = require("./equipment/_equipmentDictionary.js");
 const { ThreadChannel } = require("discord.js");
 
-const dirPath = "./Saves";
-const fileName = "adventures.json";
-const filePath = `${dirPath}/${fileName}`;
-const requirePath = "./../Saves/adventures.json";
 const adventureDictionary = new Map();
 
 exports.loadAdventures = async function () {
+	const dirPath = "./Saves";
+	const fileName = "adventures.json";
+	const filePath = `${dirPath}/${fileName}`;
+	const requirePath = "./../Saves/adventures.json";
+
 	if (fs.existsSync(filePath)) {
 		const adventures = require(requirePath);
 		let loaded = 0;
@@ -346,12 +347,11 @@ exports.endRound = async function (adventure, thread) {
 		// Check for end of combat
 		if (adventure.lives <= 0 || adventure.room.enemies.every(enemy => enemy.hp === 0)) {
 			if (adventure.lives <= 0 || adventure.depth === getLabyrinthProperty(adventure.labyrinth, "maxDepth")) {
-				if(  adventure.room.enemies.every(enemy => enemy.hp === 0) && adventure.depth === getLabyrinthProperty(adventure.labyrinth, "maxDepth") ){
+				if (adventure.room.enemies.every(enemy => enemy.hp === 0) && adventure.depth === getLabyrinthProperty(adventure.labyrinth, "maxDepth")) {
 					adventure.depth++;
 				}
-				thread.send(exports.completeAdventure(adventure, thread, lastRoundText));
-			}
-			else {
+				return thread.send(exports.completeAdventure(adventure, thread, lastRoundText));
+			} else {
 				return thread.send(renderRoom(adventure, thread, lastRoundText)).then(message => {
 					if (adventure.depth <= getLabyrinthProperty(adventure.labyrinth, "maxDepth")) {
 						adventure.messageIds.room = message.id;
