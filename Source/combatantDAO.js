@@ -22,10 +22,12 @@ exports.getFullName = function (combatant, titleObject) {
 exports.calculateTotalSpeed = function (combatant) {
 	let totalSpeed = combatant.speed + combatant.roundSpeed;
 	if ("Slow" in combatant.modifiers) {
-		totalSpeed -= 10;
+		const slowStacks = combatant.getModifierStacks("Slow");
+		totalSpeed -= slowStacks * 5;
 	}
 	if ("Quicken" in combatant.modifiers) {
-		totalSpeed += 10;
+		const quickenStacks = combatant.getModifierStacks("Quicken");
+		totalSpeed += quickenStacks * 5;
 	}
 	return Math.ceil(totalSpeed);
 }
