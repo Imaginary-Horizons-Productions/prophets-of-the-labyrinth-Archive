@@ -1,7 +1,7 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { removeModifier, addModifier, dealDamage } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Infinite Regeneration", 1, "*Pay @{hpCost} hp to grant an ally @{mod1Stacks} @{mod1}*\nCritical Hit: HP Cost / @{critBonus}", "Earth", effect, [])
+module.exports = new EquipmentTemplate("Infinite Regeneration", "*Pay @{hpCost} hp to grant an ally @{mod1Stacks} @{mod1}*\nCritical Hit: HP Cost / @{critBonus}", "Earth", effect, [])
 	.setCategory("Pact")
 	.setTargetingTags({ target: "single", team: "delver" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Regen", stacks: 3 }])

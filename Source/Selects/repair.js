@@ -2,7 +2,7 @@ const { Interaction } = require('discord.js');
 const Select = require('../../Classes/Select.js');
 const { SAFE_DELIMITER } = require('../../constants.js');
 const { getAdventure, setAdventure } = require('../adventureDAO.js');
-const { editButtons } = require('../roomDAO.js');
+const { editButtons, consumeRoomActions } = require('../roomDAO.js');
 
 const id = "repair";
 module.exports = new Select(id,
@@ -12,15 +12,12 @@ module.exports = new Select(id,
 	 */
 	(interaction, args) => {
 		const adventure = getAdventure(interaction.channel.id);
-		if (adventure.room.resources.roomActions.count > 0) {
+		if (adventure.room.resources.roomAction.count > 0) {
 			const user = adventure.delvers.find(delver => delver.id === interaction.user.id);
 			const [equipmentName, index, value] = interaction.values[0].split(SAFE_DELIMITER);
 			user.equipment[index].uses += Number(value);
-			const remainingActions = --adventure.room.resources.roomActions.count;
 			interaction.channel.messages.fetch(adventure.messageIds.room).then(roomMessage => {
-				const embeds = roomMessage.embeds.map(embed =>
-					embed.spliceFields(embed.fields.findIndex(field => field.name === "Room Actions"), 1, { name: "Room Actions", value: remainingActions.toString() })
-				);
+				const { embeds, remainingActions } = consumeRoomActions(adventure, roomMessage.embeds, 1);
 				let components = roomMessage.components;
 				if (remainingActions < 1) {
 					components = editButtons(components, {

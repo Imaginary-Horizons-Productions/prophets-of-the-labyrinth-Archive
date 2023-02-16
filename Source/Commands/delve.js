@@ -6,7 +6,7 @@ const { setAdventure } = require('../adventureDAO.js');
 const { getChallenge } = require('../Challenges/_challengeDictionary.js');
 const { elementsList, getColor } = require('../elementHelpers.js');
 const { getGuild } = require('../guildDAO.js');
-const { prerollBoss } = require('../Rooms/_roomDictionary.js');
+const { prerollBoss } = require('../labyrinths/_labyrinthDictionary.js');
 const { SAFE_DELIMITER } = require("../../constants.js");
 const { isSponsor, generateRandomNumber } = require('./../../helpers.js');
 

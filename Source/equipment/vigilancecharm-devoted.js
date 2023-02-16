@@ -1,7 +1,7 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addModifier, removeModifier } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Devoted Vigilance Charm", 2, "*Grant ally @{mod1Stacks} @{mod1}*\nCritical Hit: Grant ally @{mod2Stacks} @{mod2}", "Earth", effect, ["Long Vigilance Charm", "Guarding Vigilance Charm"])
+module.exports = new EquipmentTemplate("Devoted Vigilance Charm", "*Grant ally @{mod1Stacks} @{mod1}*\nCritical Hit: Grant ally @{mod2Stacks} @{mod2}", "Earth", effect, ["Long Vigilance Charm", "Guarding Vigilance Charm"])
 	.setCategory("Trinket")
 	.setTargetingTags({ target: "single", team: "delver" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Vigilance", stacks: 3 }, { name: "Vigilance", stacks: 5 }])

@@ -2,7 +2,7 @@ const { Interaction } = require('discord.js');
 const Select = require('../../Classes/Select.js');
 const { getAdventure, setAdventure } = require('../adventureDAO.js');
 const { getChallenge } = require('../Challenges/_challengeDictionary.js');
-const { editButtons } = require('../roomDAO.js');
+const { editButtons, consumeRoomActions } = require('../roomDAO.js');
 
 const id = "challenge";
 module.exports = new Select(id,
@@ -13,7 +13,7 @@ module.exports = new Select(id,
 	(interaction, args) => {
 		let adventure = getAdventure(interaction.channelId);
 		if (adventure) {
-			if (adventure.room.resources.roomActions.count > 0) {
+			if (adventure.room.resources.roomAction.count > 0) {
 				const [challengeName] = interaction.values;
 				const { intensity, duration, reward } = getChallenge(challengeName);
 				if (adventure.challenges[challengeName]) {
@@ -23,11 +23,8 @@ module.exports = new Select(id,
 				} else {
 					adventure.challenges[challengeName] = { intensity, duration, reward };
 				}
-				const remainingActions = --adventure.room.resources.roomActions.count;
 				interaction.channel.messages.fetch(adventure.messageIds.room).then(roomMessage => {
-					const embeds = roomMessage.embeds.map(embed =>
-						embed.spliceFields(embed.fields.findIndex(field => field.name === "Room Actions"), 1, { name: "Room Actions", value: remainingActions.toString() })
-					);
+					const { embeds, remainingActions } = consumeRoomActions(adventure, roomMessage.embeds, 1);
 					let components = roomMessage.components;
 					if (remainingActions < 1) {
 						components = editButtons(components, {

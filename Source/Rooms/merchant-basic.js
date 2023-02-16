@@ -1,14 +1,10 @@
-const { SAFE_DELIMITER } = require('../../constants.js');
+const ResourceTemplate = require("../../Classes/ResourceTemplate.js");
 const RoomTemplate = require("../../Classes/RoomTemplate.js");
+const { SAFE_DELIMITER } = require("../../constants.js");
 
-module.exports = new RoomTemplate()
-	.setTypes("Event", "Merchant")
-	.setTitle("Equipment Merchant")
-	.setDescription("A masked figure sits in front of a packed rack of weapons and other equipment. \"Care to trade?\"")
+module.exports = new RoomTemplate("Equipment Merchant", [
+	new ResourceTemplate("equipment", "n", "always", "?", "n", `equipment${SAFE_DELIMITER}?`),
+	new ResourceTemplate("equipment", "1", "always", "Rare", "n", `equipment${SAFE_DELIMITER}Rare`),
+	new ResourceTemplate("scouting", "1", "always", "Common", "n", "scouting")
+]).setDescription("A masked figure sits in front of a packed rack of weapons and other equipment. \"Care to trade?\"")
 	.setElement("@{adventure}");
-
-module.exports.saleList = {
-	[`equipment${SAFE_DELIMITER}?`]: "n",
-	[`equipment${SAFE_DELIMITER}Rare`]: "1",
-	"scouting": "1"
-};

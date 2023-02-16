@@ -1,10 +1,11 @@
 const { MessageActionRow, MessageButton } = require("discord.js");
+const ResourceTemplate = require("../../Classes/ResourceTemplate.js");
 const RoomTemplate = require("../../Classes/RoomTemplate.js")
 
-module.exports = new RoomTemplate()
-	.setTypes("Event", "Rest Site")
-	.setTitle("Rest Site")
-	.setDescription("The room contains a rest site... and a mysterious challenger hanging out in the corner.")
+module.exports = new RoomTemplate("Rest Site", [
+	new ResourceTemplate("roomAction", "n", "internal"),
+	new ResourceTemplate("challenge", "2", "internal")
+]).setDescription("The room contains a rest site... and a mysterious challenger hanging out in the corner.")
 	.setElement("@{adventure}");
 
 module.exports.uiRows.push(new MessageActionRow().addComponents(
@@ -17,5 +18,3 @@ module.exports.uiRows.push(new MessageActionRow().addComponents(
 		.setEmoji("1️⃣")
 		.setStyle("DANGER")
 ))
-
-module.exports.resourceList = { "roomActions": "n", "challenges": "2" };

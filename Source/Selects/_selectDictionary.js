@@ -12,7 +12,8 @@ for (const file of [
 	"randomupgrade.js",
 	"repair.js",
 	"startingartifact.js",
-	"startingchallenges.js"
+	"startingchallenges.js",
+	"treasure.js"
 ]) {
 	const select = require(`./${file}`);
 	selectDictionary[select.name] = select;

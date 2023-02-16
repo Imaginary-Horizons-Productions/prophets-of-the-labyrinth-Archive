@@ -25,7 +25,7 @@ module.exports = new Button(id,
 				})
 			}
 		})
-		if (adventure.room.resources.roomActions.count > 0) {
+		if (adventure.room.resources.roomAction.count > 0) {
 			if (options.length > 0) {
 				let upgradeSelect = new MessageActionRow().addComponents(
 					new MessageSelectMenu().setCustomId("randomupgrade")

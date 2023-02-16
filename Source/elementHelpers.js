@@ -60,7 +60,7 @@ exports.getWeakness = function (element) {
  * @returns {string}
  */
 exports.getColor = function (element) {
-	return ELEMENTS[element]?.color || "n/a";
+	return ELEMENTS[element]?.color || "GREY";
 }
 
 exports.getEmoji = function (element) {
