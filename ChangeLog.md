@@ -21,6 +21,7 @@
 - Reworked *Unfinished Potion* to *Potion Kit*: it now adds a random "potion" consumable to loot
 - Renamed *Swift* weapon variant to *Accelerating*
 - The Quicken and Slow modifiers now grant/penalize speed scaling with their number of stacks
+- The Quicken and Slow modifiers now grant/penalize speed scaling with their number of stacks
 - Delvers can now use the default Punch move when they don't have a usable weapon (previously had to have no usable equipment)
 
 #### Prophets of the Labyrinth Version 0.9.0:
