@@ -20,6 +20,7 @@
 - Reworked *Urgent* weapon variant: it now adds priority to the move
 - Reworked *Unfinished Potion* to *Potion Kit*: it now adds a random "potion" consumable to loot
 - Renamed *Swift* weapon variant to *Accelerating*
+- The Quicken and Slow modifiers now grant/penalize speed scaling with their number of stacks
 
 #### Prophets of the Labyrinth Version 0.9.0:
 - Rebalanced predicts, they are now as follows
