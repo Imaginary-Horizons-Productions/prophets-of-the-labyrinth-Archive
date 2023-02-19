@@ -60,6 +60,10 @@ exports.isSponsor = function (id) {
  * @returns {number} generated integer
  */
 exports.generateRandomNumber = function (adventure, exclusiveMax, branch) {
+	if (typeof exclusiveMax !== 'number' || isNaN(exclusiveMax)) {
+		throw new Error(`generateRandomNumber recieved invalid exclusiveMax: ${exclusiveMax}`);
+	}
+
 	if (exclusiveMax === 1) {
 		return 0;
 	} else {

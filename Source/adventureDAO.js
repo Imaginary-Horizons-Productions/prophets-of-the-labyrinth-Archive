@@ -96,10 +96,19 @@ exports.setAdventure = function (adventure) {
 	ensuredPathSave("./Saves", "adventures.json", JSON.stringify(Array.from(adventureDictionary.values())));
 }
 
+const roomTypesByRarity = {
+	9: ["Artifact Guardian", "Treasure"],
+	6: ["Forge", "Rest Site", "Merchant"],
+	0: ["Battle", "Event"]
+};
+
+/** Set up the upcoming room: roll options for rooms after, update adventure's room meta data object for current room, and generate room's resources
+ * @param {"Artifact Guardian" | "Treasure" | "Forge" | "Rest Site" | "Merchant" | "Battle" | "Event" | "Empty"} roomType
+ * @param {ThreadChannel} thread
+ */
 exports.nextRoom = function (roomType, thread) {
 	const adventure = exports.getAdventure(thread.id);
 	// Roll options for next room type
-	const roomTypes = ["Battle", "Event", "Forge", "Rest Site", "Artifact Guardian", "Merchant", "Treasure"]; //TODO #126 add weights to room types
 	if (!getLabyrinthProperty(adventure.labyrinth, "bossRoomDepths").includes(adventure.depth + 1)) {
 		const mapCount = adventure.getArtifactCount("Enchanted Map");
 		if (mapCount) {
@@ -107,7 +116,15 @@ exports.nextRoom = function (roomType, thread) {
 		}
 		const numCandidates = 2 + mapCount;
 		for (let i = 0; i < numCandidates; i++) {
-			const candidateTag = `${roomTypes[generateRandomNumber(adventure, roomTypes.length, "general")]}${SAFE_DELIMITER}${adventure.depth}`;
+			const tagRarity = generateRandomNumber(adventure, 10, 'general');
+			let tagPool = [];
+			for (const threshold in roomTypesByRarity) {
+				if (tagRarity >= threshold) {
+					tagPool = roomTypesByRarity[threshold];
+					break;
+				}
+			}
+			const candidateTag = `${tagPool[generateRandomNumber(adventure, tagPool.length, "general")]}${SAFE_DELIMITER}${adventure.depth}`;
 			if (!(candidateTag in adventure.roomCandidates)) {
 				adventure.roomCandidates[candidateTag] = [];
 				if (Object.keys(adventure.roomCandidates).length === MAX_MESSAGE_ACTION_ROWS) {
