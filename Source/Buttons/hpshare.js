@@ -15,7 +15,7 @@ module.exports = new Button(id, (interaction, args) => {
 				const resultText = `${damageText} Everyone else gains 50 hp.`;
 				adventure.delvers.forEach(delver => {
 					if (delver.id !== interaction.user.id) {
-						gainHealth(delver, 50, adventure.room.enemyTitles, false);
+						gainHealth(delver, 50, adventure, false);
 					}
 				})
 				if (adventure.lives < 1) {
