@@ -326,8 +326,7 @@ exports.endRound = async function (adventure, thread) {
 	// Generate Reactive Moves by Enemies
 	adventure.room.enemies.forEach((enemy, index) => {
 		if (enemy.lookupName === "@{clone}") {
-			let move = new Move()
-				.setType("action")
+			const move = new Move()
 				.onSetMoveSpeed(enemy)
 				.setIsCrit(enemy.crit)
 			let counterpartHasPriority = false;
@@ -336,7 +335,8 @@ exports.endRound = async function (adventure, thread) {
 				counterpartMove = adventure.room.priorityMoves.find(move => move.userTeam === "delver" && move.userIndex == index);
 				counterpartHasPriority = true;
 			}
-			move.setUser("clone", index)
+			move.setType(counterpartMove.type)
+				.setUser("clone", index)
 				.setMoveName(counterpartMove.name);
 			counterpartMove.targets.forEach(target => {
 				if (target.team === "enemy") {
