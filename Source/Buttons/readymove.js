@@ -73,7 +73,7 @@ module.exports = new Button(id, (interaction, args) => {
 					))
 				}
 			}
-			if (!hasUsableWeapons && moveMenu.length < MAX_MESSAGE_ACTION_ROWS) {
+			if (!hasUsableWeapons && moveMenu.length < adventure.getEquipmentCapacity()) {
 				// Default move is Punch
 				moveMenu = [
 					new MessageActionRow({
