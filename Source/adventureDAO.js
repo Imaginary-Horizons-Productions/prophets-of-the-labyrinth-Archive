@@ -345,10 +345,13 @@ exports.endRound = async function (adventure, thread) {
 					move.addTarget("enemy", target.index);
 				}
 			})
+
+			// Replace placeholder
+			adventure.room.moves.splice(adventure.room.moves.findIndex(move => move.userTeam === "enemy" && move.userIndex == index), 1);
 			if (counterpartHasPriority) {
-				adventure.room.priorityMoves.splice(adventure.room.priorityMoves.findIndex(move => move.userTeam === "enemy" && move.userIndex == index), 1, move);
+				adventure.room.priorityMoves.push(move);
 			} else {
-				adventure.room.moves.splice(adventure.room.moves.findIndex(move => move.userTeam === "enemy" && move.userIndex == index), 1, move);
+				adventure.room.moves.push(move);
 			}
 		}
 	});
