@@ -1,7 +1,7 @@
 const Button = require('../../Classes/Button.js');
 const { MessageEmbed, MessageActionRow, MessageSelectMenu, MessageButton } = require('discord.js');
 const Delver = require('../../Classes/Delver.js');
-const { SAFE_DELIMITER } = require('../../constants.js');
+const { SAFE_DELIMITER, MAX_MESSAGE_ACTION_ROWS } = require('../../constants.js');
 const { getEmoji, getWeakness, getColor } = require('../elementHelpers.js');
 const { getAdventure } = require('../adventureDAO.js');
 const { getFullName } = require("../combatantDAO.js");
@@ -38,47 +38,56 @@ module.exports = new Button(id, (interaction, args) => {
 				}
 			})
 			let moveMenu = [];
-			let usableMoves = delver.equipment.filter(equip => equip.uses > 0);
-			if (usableMoves.length > 0) {
-				for (let i = 0; i < usableMoves.length; i++) {
-					const equip = usableMoves[i];
-					let elementEmoji = getEmoji(getEquipmentProperty(equip.name, "element"));
-					embed.addField(...equipmentToEmbedField(equip.name, equip.uses));
-					let { target, team } = getEquipmentProperty(equip.name, "targetingTags");
-					if (target === "single") {
-						// Select Menu
-						let targetOptions = [];
-						if (team === "enemy" || team === "any") {
-							targetOptions = targetOptions.concat(enemyOptions);
-						}
-
-						if (team === "delver" || team === "any") {
-							targetOptions = targetOptions.concat(delverOptions);
-						}
-						moveMenu.push(new MessageActionRow().addComponents(
-							new MessageSelectMenu().setCustomId(`movetarget${SAFE_DELIMITER}${equip.name}${SAFE_DELIMITER}${adventure.room.round}${SAFE_DELIMITER}${i}`)
-								.setPlaceholder(`${elementEmoji} Use ${equip.name} on...`)
-								.addOptions(targetOptions)
-						));
-					} else {
-						// Button
-						moveMenu.push(new MessageActionRow().addComponents(
-							new MessageButton().setCustomId(`confirmmove${SAFE_DELIMITER}${equip.name}${SAFE_DELIMITER}${adventure.room.round}${SAFE_DELIMITER}${i}`)
-								.setLabel(`Use ${equip.name}`)
-								.setEmoji(elementEmoji)
-								.setStyle("SECONDARY")
-						))
-					}
+			let hasUsableWeapons = false;
+			const usableMoves = delver.equipment.filter(equip => equip.uses > 0);
+			for (let i = 0; i < usableMoves.length; i++) {
+				const { name: equipName, uses } = usableMoves[i];
+				if (!hasUsableWeapons && getEquipmentProperty(equipName, 'category') === 'Weapon') {
+					hasUsableWeapons = true;
 				}
-			} else {
-				// Default move is Punch
-				moveMenu.push(new MessageActionRow()
-					.addComponents(
-						new MessageSelectMenu()
-							.setCustomId(`movetarget${SAFE_DELIMITER}Punch${SAFE_DELIMITER}${adventure.room.round}${SAFE_DELIMITER}`)
-							.setPlaceholder(`Use Punch on...`)
-							.addOptions(enemyOptions)
+				embed.addField(...equipmentToEmbedField(equipName, uses));
+				const { target, team } = getEquipmentProperty(equipName, "targetingTags");
+				const elementEmoji = getEmoji(getEquipmentProperty(equipName, "element"));
+				if (target === "single") {
+					// Select Menu
+					let targetOptions = [];
+					if (team === "enemy" || team === "any") {
+						targetOptions = targetOptions.concat(enemyOptions);
+					}
+
+					if (team === "delver" || team === "any") {
+						targetOptions = targetOptions.concat(delverOptions);
+					}
+					moveMenu.push(new MessageActionRow().addComponents(
+						new MessageSelectMenu().setCustomId(`movetarget${SAFE_DELIMITER}${equipName}${SAFE_DELIMITER}${adventure.room.round}${SAFE_DELIMITER}${i}`)
+							.setPlaceholder(`${elementEmoji} Use ${equipName} on...`)
+							.addOptions(targetOptions)
 					));
+				} else {
+					// Button
+					moveMenu.push(new MessageActionRow().addComponents(
+						new MessageButton().setCustomId(`confirmmove${SAFE_DELIMITER}${equipName}${SAFE_DELIMITER}${adventure.room.round}${SAFE_DELIMITER}${i}`)
+							.setLabel(`Use ${equipName}`)
+							.setEmoji(elementEmoji)
+							.setStyle("SECONDARY")
+					))
+				}
+			}
+			if (!hasUsableWeapons && moveMenu.length < adventure.getEquipmentCapacity()) {
+				// Default move is Punch
+				moveMenu = [
+					new MessageActionRow({
+						components: [
+							new MessageSelectMenu(
+								{
+									customId: `movetarget${SAFE_DELIMITER}Punch${SAFE_DELIMITER}${adventure.room.round}${SAFE_DELIMITER}`,
+									placeholder: 'Use Punch on...',
+									options: enemyOptions
+								}
+							)
+						]
+					})
+				].concat(moveMenu);
 			}
 			interaction.reply({ embeds: [embed], components: moveMenu, ephemeral: true })
 				.catch(console.error);
