@@ -119,10 +119,11 @@ exports.nextRoom = function (roomType, thread) {
 		}
 		const numCandidates = 2 + mapCount;
 		for (let i = 0; i < numCandidates; i++) {
-			const totalWeight = roomWeights.reduce((total, weight) => total + weight, 0);
+			const roomWeights = Object.keys(roomTypesByRarity);
+			const totalWeight = roomWeights.reduce((total, weight) => total + parseInt(weight), 0);
 			let rn = generateRandomNumber(adventure, totalWeight, 'general');
 			let tagPool = [];
-			for (const weight of Object.keys(roomTypesByRarity).sort((a, b) => a - b)) {
+			for (const weight of roomWeights.sort((a, b) => a - b)) {
 				if (rn < weight) {
 					tagPool = roomTypesByRarity[weight];
 					break;
