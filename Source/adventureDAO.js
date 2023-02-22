@@ -96,10 +96,13 @@ exports.setAdventure = function (adventure) {
 	ensuredPathSave("./Saves", "adventures.json", JSON.stringify(Array.from(adventureDictionary.values())));
 }
 
+/**
+ * @type {Record<number, string[]>} key = weight, value = roomTag[]
+ */
 const roomTypesByRarity = {
-	9: ["Artifact Guardian", "Treasure"],
-	6: ["Forge", "Rest Site", "Merchant"],
-	0: ["Battle", "Event"]
+	1: ["Artifact Guardian", "Treasure"],
+	3: ["Forge", "Rest Site", "Merchant"],
+	6: ["Battle", "Event"]
 };
 
 /** Set up the upcoming room: roll options for rooms after, update adventure's room meta data object for current room, and generate room's resources
@@ -116,12 +119,15 @@ exports.nextRoom = function (roomType, thread) {
 		}
 		const numCandidates = 2 + mapCount;
 		for (let i = 0; i < numCandidates; i++) {
-			const tagRarity = generateRandomNumber(adventure, 10, 'general');
+			const totalWeight = roomWeights.reduce((total, weight) => total + weight, 0);
+			let rn = generateRandomNumber(adventure, totalWeight, 'general');
 			let tagPool = [];
-			for (const threshold in roomTypesByRarity) {
-				if (tagRarity >= threshold) {
-					tagPool = roomTypesByRarity[threshold];
+			for (const weight of Object.keys(roomTypesByRarity).sort((a, b) => a - b)) {
+				if (rn < weight) {
+					tagPool = roomTypesByRarity[weight];
 					break;
+				} else {
+					rn -= weight;
 				}
 			}
 			const candidateTag = `${tagPool[generateRandomNumber(adventure, tagPool.length, "general")]}${SAFE_DELIMITER}${adventure.depth}`;
