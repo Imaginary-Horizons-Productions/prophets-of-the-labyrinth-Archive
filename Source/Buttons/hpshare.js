@@ -22,7 +22,7 @@ module.exports = new Button(id, (interaction, args) => {
 					interaction.update({ components: [] });
 					interaction.channel.send(completeAdventure(adventure, interaction.channel, resultText));
 				} else {
-					interaction.update({ components: editButtons(interaction.message.components, { [id]: { preventUse: true, label: `${interaction.user} shared HP.`, emoji: "✔️" } }) });
+					interaction.update({ components: editButtons(interaction.message.components, { [id]: { preventUse: true, label: `${interaction.member.displayName} shared HP.`, emoji: "✔️" } }) });
 					interaction.channel.send(resultText);
 					setAdventure(adventure);
 				}
