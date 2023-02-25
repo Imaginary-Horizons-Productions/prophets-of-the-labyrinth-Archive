@@ -296,7 +296,7 @@ exports.newRound = function (adventure, thread, lastRoundText) {
 						})
 						combatant.nextAction = enemyTemplate.actions[actionName].next(actionName);
 					} else {
-						move.setMoveName("${clone}");
+						move.setMoveName("@{clone}");
 					}
 				}
 			}
