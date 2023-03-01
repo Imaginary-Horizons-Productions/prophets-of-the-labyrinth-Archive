@@ -36,15 +36,15 @@ module.exports = new Button(id, (interaction, args) => {
 					description: miniPredict(delver.predict, ally),
 					value: `delver${SAFE_DELIMITER}${i}`
 				}
-			})
-			let moveMenu = [];
-			let hasUsableWeapons = false;
+			});
+			const components = [];
 			const usableMoves = delver.equipment.filter(equip => equip.uses > 0);
+			const needsPunch = !usableMoves.some(move => getEquipmentProperty(move.name, 'category') === "Weapon");
+			if (needsPunch && usableMoves.length < adventure.getEquipmentCapacity()) {
+				usableMoves.unshift({ name: "Punch", uses: Infinity });
+			}
 			for (let i = 0; i < usableMoves.length; i++) {
 				const { name: equipName, uses } = usableMoves[i];
-				if (!hasUsableWeapons && getEquipmentProperty(equipName, 'category') === 'Weapon') {
-					hasUsableWeapons = true;
-				}
 				embed.addField(...equipmentToEmbedField(equipName, uses));
 				const { target, team } = getEquipmentProperty(equipName, "targetingTags");
 				const elementEmoji = getEmoji(getEquipmentProperty(equipName, "element"));
@@ -58,38 +58,22 @@ module.exports = new Button(id, (interaction, args) => {
 					if (team === "delver" || team === "any") {
 						targetOptions = targetOptions.concat(delverOptions);
 					}
-					moveMenu.push(new MessageActionRow().addComponents(
+					components.push(new MessageActionRow().addComponents(
 						new MessageSelectMenu().setCustomId(`movetarget${SAFE_DELIMITER}${equipName}${SAFE_DELIMITER}${adventure.room.round}${SAFE_DELIMITER}${i}`)
 							.setPlaceholder(`${elementEmoji} Use ${equipName} on...`)
 							.addOptions(targetOptions)
 					));
 				} else {
 					// Button
-					moveMenu.push(new MessageActionRow().addComponents(
+					components.push(new MessageActionRow().addComponents(
 						new MessageButton().setCustomId(`confirmmove${SAFE_DELIMITER}${equipName}${SAFE_DELIMITER}${adventure.room.round}${SAFE_DELIMITER}${i}`)
 							.setLabel(`Use ${equipName}`)
 							.setEmoji(elementEmoji)
 							.setStyle("SECONDARY")
-					))
+					));
 				}
 			}
-			if (!hasUsableWeapons && moveMenu.length < adventure.getEquipmentCapacity()) {
-				// Default move is Punch
-				moveMenu = [
-					new MessageActionRow({
-						components: [
-							new MessageSelectMenu(
-								{
-									customId: `movetarget${SAFE_DELIMITER}Punch${SAFE_DELIMITER}${adventure.room.round}${SAFE_DELIMITER}`,
-									placeholder: 'Use Punch on...',
-									options: enemyOptions
-								}
-							)
-						]
-					})
-				].concat(moveMenu);
-			}
-			interaction.reply({ embeds: [embed], components: moveMenu, ephemeral: true })
+			interaction.reply({ embeds: [embed], components, ephemeral: true })
 				.catch(console.error);
 		} else {
 			interaction.reply({ content: "You cannot pick a move because you are stunned this round.", ephemeral: true });
