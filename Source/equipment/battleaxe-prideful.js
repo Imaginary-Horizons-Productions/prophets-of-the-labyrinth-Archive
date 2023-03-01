@@ -1,7 +1,7 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addModifier, dealDamage } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Prideful Battleaxe", "Strike a foe for @{damage} (+@{bonusDamage} if you have 0 block) @{element} damage*\nCritical Hit: Damage x@{critBonus}", "Untyped", effect, ["Thick Battleaxe", "Thirsting Battleaxe"])
+module.exports = new EquipmentTemplate("Prideful Battleaxe", "*Strike a foe for @{damage} (+@{bonusDamage} if you have 0 block) @{element} damage*\nCritical Hit: Damage x@{critBonus}", "Untyped", effect, ["Thick Battleaxe", "Thirsting Battleaxe"])
 	.setCategory("Weapon")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
