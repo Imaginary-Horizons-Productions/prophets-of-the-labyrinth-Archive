@@ -98,6 +98,11 @@ exports.setAdventure = function (adventure) {
 
 exports.nextRoom = function (roomType, thread) {
 	const adventure = exports.getAdventure(thread.id);
+
+	adventure.delvers.forEach(delver => {
+		delver.modifiers = {};
+	})
+
 	// Roll options for next room type
 	const roomTypes = ["Battle", "Event", "Forge", "Rest Site", "Artifact Guardian", "Merchant", "Treasure"]; //TODO #126 add weights to room types
 	if (!getLabyrinthProperty(adventure.labyrinth, "bossRoomDepths").includes(adventure.depth + 1)) {
@@ -190,10 +195,13 @@ exports.nextRoom = function (roomType, thread) {
 			}
 		}
 		exports.newRound(adventure, thread);
+		exports.setAdventure(adventure);
 	} else {
-		thread.send(renderRoom(adventure, thread));
+		thread.send(renderRoom(adventure, thread)).then(message => {
+			adventure.messageIds.room = message.id;
+			exports.setAdventure(adventure);
+		});
 	}
-	exports.setAdventure(adventure);
 }
 
 exports.endRoom = function (roomType, thread) {
@@ -352,15 +360,7 @@ exports.endRound = async function (adventure, thread) {
 				}
 				return thread.send(exports.completeAdventure(adventure, thread, lastRoundText));
 			} else {
-				return thread.send(renderRoom(adventure, thread, lastRoundText)).then(message => {
-					if (adventure.depth <= getLabyrinthProperty(adventure.labyrinth, "maxDepth")) {
-						adventure.messageIds.room = message.id;
-						adventure.delvers.forEach(delver => {
-							delver.modifiers = {};
-						})
-						exports.setAdventure(adventure);
-					}
-				});
+				return thread.send(renderRoom(adventure, thread, lastRoundText));
 			}
 		}
 	}
