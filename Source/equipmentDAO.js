@@ -12,8 +12,9 @@ const { getFullName } = require("./combatantDAO.js");
  * @returns {string[2]} contents for a message embed field [heading, body]
  */
 exports.equipmentToEmbedField = function (equipmentName, uses) {
+	const usesText = uses === Infinity ? "∞ uses" : `${uses}/${getEquipmentProperty(equipmentName, "maxUses")} uses`;
 	return [
-		`${equipmentName} ${getEmoji(getEquipmentProperty(equipmentName, "element"))} (${uses}/${getEquipmentProperty(equipmentName, "maxUses")})`,
+		`${equipmentName} ${getEmoji(getEquipmentProperty(equipmentName, "element"))} (${usesText})`,
 		buildEquipmentDescription(equipmentName, true)
 	];
 }
