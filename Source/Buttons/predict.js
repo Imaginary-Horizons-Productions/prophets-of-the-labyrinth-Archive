@@ -69,7 +69,11 @@ module.exports = new Button(id, (interaction, args) => {
 					const enemy = adventure.room.enemies[userIndex];
 					if (enemy.hp > 0) {
 						const targetNames = getTargetList(targets, adventure);
-						descriptionText += `\n__${getFullName(enemy, adventure.room.enemyTitles)}__\nRound ${adventure.room.round + 1}: ${name} (Targets: ${targetNames.length ? targetNames.join(", ") : "???"})\nRound ${adventure.room.round + 2}: ${enemy.nextAction}\n`;
+						if (name !== "@{clone}") {
+							descriptionText += `\n__${getFullName(enemy, adventure.room.enemyTitles)}__\nRound ${adventure.room.round + 1}: ${name} (Targets: ${targetNames.length ? targetNames.join(", ") : "???"})\nRound ${adventure.room.round + 2}: ${enemy.nextAction}\n`;
+						} else {
+							descriptionText += `\n__${getFullName(enemy, adventure.room.enemyTitles)}__\nMirror Clones mimic your allies!\n`;
+						}
 					}
 				}
 			})
