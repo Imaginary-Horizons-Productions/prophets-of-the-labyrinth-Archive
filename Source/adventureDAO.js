@@ -96,6 +96,19 @@ exports.setAdventure = function (adventure) {
 	ensuredPathSave("./Saves", "adventures.json", JSON.stringify(Array.from(adventureDictionary.values())));
 }
 
+/**
+ * @type {Record<number, string[]>} key = weight, value = roomTag[]
+ */
+const roomTypesByRarity = {
+	1: ["Artifact Guardian", "Treasure"],
+	3: ["Forge", "Rest Site", "Merchant"],
+	6: ["Battle", "Event"]
+};
+
+/** Set up the upcoming room: roll options for rooms after, update adventure's room meta data object for current room, and generate room's resources
+ * @param {"Artifact Guardian" | "Treasure" | "Forge" | "Rest Site" | "Merchant" | "Battle" | "Event" | "Empty"} roomType
+ * @param {ThreadChannel} thread
+ */
 exports.nextRoom = function (roomType, thread) {
 	const adventure = exports.getAdventure(thread.id);
 
@@ -104,7 +117,6 @@ exports.nextRoom = function (roomType, thread) {
 	})
 
 	// Roll options for next room type
-	const roomTypes = ["Battle", "Event", "Forge", "Rest Site", "Artifact Guardian", "Merchant", "Treasure"]; //TODO #126 add weights to room types
 	if (!getLabyrinthProperty(adventure.labyrinth, "bossRoomDepths").includes(adventure.depth + 1)) {
 		const mapCount = adventure.getArtifactCount("Enchanted Map");
 		if (mapCount) {
@@ -112,7 +124,19 @@ exports.nextRoom = function (roomType, thread) {
 		}
 		const numCandidates = 2 + mapCount;
 		for (let i = 0; i < numCandidates; i++) {
-			const candidateTag = `${roomTypes[generateRandomNumber(adventure, roomTypes.length, "general")]}${SAFE_DELIMITER}${adventure.depth}`;
+			const roomWeights = Object.keys(roomTypesByRarity);
+			const totalWeight = roomWeights.reduce((total, weight) => total + parseInt(weight), 0);
+			let rn = generateRandomNumber(adventure, totalWeight, 'general');
+			let tagPool = [];
+			for (const weight of roomWeights.sort((a, b) => a - b)) {
+				if (rn < weight) {
+					tagPool = roomTypesByRarity[weight];
+					break;
+				} else {
+					rn -= weight;
+				}
+			}
+			const candidateTag = `${tagPool[generateRandomNumber(adventure, tagPool.length, "general")]}${SAFE_DELIMITER}${adventure.depth}`;
 			if (!(candidateTag in adventure.roomCandidates)) {
 				adventure.roomCandidates[candidateTag] = [];
 				if (Object.keys(adventure.roomCandidates).length === MAX_MESSAGE_ACTION_ROWS) {
@@ -310,8 +334,7 @@ exports.endRound = async function (adventure, thread) {
 	// Generate Reactive Moves by Enemies
 	adventure.room.enemies.forEach((enemy, index) => {
 		if (enemy.lookupName === "@{clone}") {
-			let move = new Move()
-				.setType("action")
+			const move = new Move()
 				.onSetMoveSpeed(enemy)
 				.setIsCrit(enemy.crit)
 			let counterpartHasPriority = false;
@@ -320,7 +343,8 @@ exports.endRound = async function (adventure, thread) {
 				counterpartMove = adventure.room.priorityMoves.find(move => move.userTeam === "delver" && move.userIndex == index);
 				counterpartHasPriority = true;
 			}
-			move.setUser("clone", index)
+			move.setType(counterpartMove.type)
+				.setUser("clone", index)
 				.setMoveName(counterpartMove.name);
 			counterpartMove.targets.forEach(target => {
 				if (target.team === "enemy") {
@@ -329,10 +353,13 @@ exports.endRound = async function (adventure, thread) {
 					move.addTarget("enemy", target.index);
 				}
 			})
+
+			// Replace placeholder
+			adventure.room.moves.splice(adventure.room.moves.findIndex(move => move.userTeam === "enemy" && move.userIndex == index), 1);
 			if (counterpartHasPriority) {
-				adventure.room.priorityMoves.splice(adventure.room.priorityMoves.findIndex(move => move.userTeam === "enemy" && move.userIndex == index), 1, move);
+				adventure.room.priorityMoves.push(move);
 			} else {
-				adventure.room.moves.splice(adventure.room.moves.findIndex(move => move.userTeam === "enemy" && move.userIndex == index), 1, move);
+				adventure.room.moves.push(move);
 			}
 		}
 	});
