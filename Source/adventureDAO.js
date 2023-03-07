@@ -380,13 +380,30 @@ exports.endRound = async function (adventure, thread) {
 	for (const move of adventure.room.priorityMoves.concat(adventure.room.moves)) {
 		lastRoundText += await resolveMove(move, adventure);
 		// Check for end of combat
-		if (adventure.lives <= 0 || adventure.room.enemies.every(enemy => enemy.hp === 0)) {
-			if (adventure.lives <= 0 || adventure.depth === getLabyrinthProperty(adventure.labyrinth, "maxDepth")) {
-				if (adventure.room.enemies.every(enemy => enemy.hp === 0) && adventure.depth === getLabyrinthProperty(adventure.labyrinth, "maxDepth")) {
+		const outOfLives = adventure.lives <= 0;
+		const allEnemiesAreDead = adventure.room.enemies.every(enemy => enemy.hp === 0);
+		const atMaxDepth = adventure.depth === getLabyrinthProperty(adventure.labyrinth, "maxDepth");
+		if (outOfLives || allEnemiesAreDead) {
+			if (outOfLives || atMaxDepth) {
+				if (allEnemiesAreDead && atMaxDepth) {
 					adventure.depth++;
 				}
 				return thread.send(exports.completeAdventure(adventure, thread, lastRoundText));
 			} else {
+				// Equipment drops
+				const dropThreshold = 1;
+				const dropMax = 8;
+				if (generateRandomNumber(adventure, dropMax, "general") < dropThreshold) {
+					const cloverCount = adventure.getArtifactCount("Negative-One Leaf Clover");
+					let tier = "Common";
+					const upgradeThreshold = 1 + cloverCount;
+					const upgradeMax = 8 + cloverCount;
+					if (generateRandomNumber(adventure, upgradeMax, "general") < upgradeThreshold) {
+						tier = "Rare";
+					}
+					const droppedEquip = rollEquipmentDrop(tier, adventure);
+					adventure.addResource(droppedEquip, "equipment", 1, "loot", 0);
+				}
 				return thread.send(renderRoom(adventure, thread, lastRoundText));
 			}
 		}
