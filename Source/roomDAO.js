@@ -101,7 +101,7 @@ function addScoreField(embed, adventure) {
 	const isSuccess = adventure.lives > 0 && adventure.depth > getLabyrinthProperty(adventure.labyrinth, "maxDepth");
 	const livesScore = adventure.lives * 10;
 	const goldScore = Math.floor(Math.log10(adventure.peakGold)) * 5;
-	let score = adventure.accumulatedScore + livesScore + goldScore + adventure.depth + 1; // adventure.depth is 0 indexed
+	let score = adventure.accumulatedScore + livesScore + goldScore + adventure.depth;
 	let challengeMultiplier = 1;
 	Object.keys(adventure.challenges).forEach(challengeName => {
 		const challenge = getChallenge(challengeName);
