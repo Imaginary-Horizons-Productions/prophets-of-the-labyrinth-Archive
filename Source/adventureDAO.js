@@ -280,6 +280,7 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 				.onSetMoveSpeed(combatant)
 				.setIsCrit(combatant.crit)
 				.setUser(teamName, i)
+			let isPriorityMove = false;
 			if (combatant.getModifierStacks("Stun") > 0) {
 				// Dummy move for Stunned combatants
 				move.setMoveName("Stun");
@@ -292,10 +293,15 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 							let actionPool = Object.keys(enemyTemplate.actions);
 							actionName = actionPool[generateRandomNumber(adventure, actionPool.length, "battle")];
 						}
+						if (actionName === "a random protocol") {
+							let actionPool = Object.keys(enemyTemplate.actions).filter(actionName => actionName.includes("Protocol"));
+							actionName = actionPool[generateRandomNumber(adventure, actionPool.length, "battle")];
+						}
 						move.setMoveName(actionName);
 						enemyTemplate.actions[actionName].selector(adventure, combatant).forEach(({ team, index }) => {
 							move.addTarget(team, index);
 						})
+						isPriorityMove = enemyTemplate.actions[actionName].isPriority;
 						combatant.nextAction = enemyTemplate.actions[actionName].next(actionName);
 					} else {
 						move.setMoveName("${clone}");
@@ -303,7 +309,7 @@ exports.newRound = function (adventure, thread, embed = new MessageEmbed()) {
 				}
 			}
 			if (move.name) {
-				adventure.room.moves.push(move);
+				(isPriorityMove ? adventure.room.priorityMoves : adventure.room.moves).push(move);
 			}
 
 			// Decrement Modifiers
