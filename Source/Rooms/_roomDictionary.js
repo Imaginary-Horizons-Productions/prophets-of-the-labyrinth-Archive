@@ -16,6 +16,7 @@ for (const file of [
 	"event-hpshare.js",
 	"event-scorebeggar.js",
 	"finalBattle-elkemist.js",
+	"finalBattle-mechaqueen.js",
 	"finalBattle-mirrors.js",
 	"forge-basic.js",
 	"merchant-basic.js",

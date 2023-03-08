@@ -38,6 +38,21 @@ module.exports.spawnEnemy = function (adventure, enemyTemplate, randomizeHp) {
 	Enemy.setEnemyTitle(adventure.room.enemyTitles, enemy);
 }
 
+module.exports.selectRandomOtherAlly = function (adventure, self) {
+	const selfIndex = adventure.room.enemies.findIndex(enemy => enemy.lookupName === self.lookupName && enemy.title === self.title);
+	const liveOtherEnemyIndexes = [];
+	adventure.room.enemies.forEach((enemy, index) => {
+		if (enemy.hp > 0 && index !== selfIndex) {
+			liveOtherEnemyIndexes.push(index);
+		}
+	})
+	if (selfIndex === -1 || liveOtherEnemyIndexes.length === 0) {
+		return [{ team: "none", index: "none" }];
+	}
+	let index = liveOtherEnemyIndexes[generateRandomNumber(adventure, liveOtherEnemyIndexes.length, "battle")];
+	return [{ team: "enemy", index }];
+}
+
 module.exports.selectRandomFoe = function (adventure, self) {
 	let team = "delver";
 	let index = generateRandomNumber(adventure, adventure.delvers.length, "battle");
