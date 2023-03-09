@@ -4,7 +4,7 @@ const { rollConsumable } = require('../labyrinths/_labyrinthDictionary');
 
 module.exports = new EquipmentTemplate("Potion Kit", "*Add 1 random potion to loot*\nCritical Hit: +@{critBonus} potion", "Water", effect, ["Urgent Potion Kit"])
 .setCategory("Trinket")
-.setTargetingTags({ target: "self", team: "delver" })
+.setTargetingTags({ target: "none", team: "none" })
 .setModifiers([{ name: "Stagger", stacks: 1 }])
 .setCost(200)
 .setUses(10);
