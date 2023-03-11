@@ -54,7 +54,7 @@ module.exports = new Button(id, (interaction, args) => {
 				descriptionText += `\n__${getFullName(combatant, adventure.room.enemyTitles)}__ ${getEmoji(combatant.element)}\nCritical Hit: ${combatant.crit}\nWeakness: ${getEmoji(getWeakness(combatant.element))}\nResistance: ${getEmoji(combatant.element)}\n`;
 			});
 			break;
-		case "Intents": // Shows each enemy's target(s) in the next round and the names of the next two moves
+		case "Intents": // Shows each enemy's target(s) in the next round and the names of the next two moves and if their move has priority
 			adventure.room.priorityMoves.forEach(({ userTeam, userIndex, targets, name }) => {
 				if (userTeam === "enemy") {
 					const enemy = adventure.room.enemies[userIndex];
