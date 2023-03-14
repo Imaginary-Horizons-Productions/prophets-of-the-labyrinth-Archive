@@ -1,12 +1,12 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { dealDamage } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Punch", "description", "Untyped", effect, [])
+module.exports = new EquipmentTemplate("Punch", "*Strike a foe for @{damage} @{element} damage*\nCritical Hit💥: Damage x@{critBonus}", "Untyped", effect, [])
 	.setCategory("Weapon")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([])
 	.setCost(0)
-	.setUses(0)
+	.setUses(Infinity)
 	.setDamage(50);
 
 function effect(target, user, isCrit, adventure) {

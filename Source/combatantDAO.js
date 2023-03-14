@@ -11,7 +11,7 @@ exports.getFullName = function (combatant, titleObject) {
 			return combatant.name;
 		}
 	} else if (combatant instanceof Delver) {
-		return `${combatant.name} the ${combatant.title}`;
+		return `${combatant.name}`;
 	}
 }
 
@@ -66,9 +66,9 @@ exports.dealDamage = async function (target, user, damage, isUnblockable, elemen
 			let damageCap = 500 + limitBreak;
 			pendingDamage = Math.min(pendingDamage, damageCap);
 			target.hp -= pendingDamage;
-			let damageText = ` ${targetName} takes *${pendingDamage} damage*${blockedDamage > 0 ? ` (${blockedDamage} blocked)` : ""}${element === "Poison" ? " from Poison" : ""}${isWeakness ? "!!!" : isResistance ? "." : "!"}`;
+			let damageText = ` **${targetName}** takes ${pendingDamage} damage${blockedDamage > 0 ? ` (${blockedDamage} was blocked)` : ""}${element === "Poison" ? " from Poison" : ""}${isWeakness ? "!!!" : isResistance ? "." : "!"}`;
 			if (element !== "Poison" && targetModifiers.includes("Curse of Midas")) {
-				adventure.room.resources.gold.count += Math.floor(pendingDamage / 10);
+				adventure.gainGold(Math.floor(pendingDamage / 10));
 				damageText += ` Gold scatters about the room.`;
 			}
 			if (target.hp <= 0) {

@@ -15,14 +15,14 @@ module.exports = new Button(id, (interaction, args) => {
 				const resultText = `${damageText} Everyone else gains 50 hp.`;
 				adventure.delvers.forEach(delver => {
 					if (delver.id !== interaction.user.id) {
-						gainHealth(delver, 50, adventure.room.enemyTitles, false);
+						gainHealth(delver, 50, adventure, false);
 					}
 				})
 				if (adventure.lives < 1) {
 					interaction.update({ components: [] });
 					interaction.channel.send(completeAdventure(adventure, interaction.channel, resultText));
 				} else {
-					interaction.update({ components: editButtons(interaction.message.components, { [id]: { preventUse: true, label: `${interaction.user} shared HP.`, emoji: "✔️" } }) });
+					interaction.update({ components: editButtons(interaction.message.components, { [id]: { preventUse: true, label: `${interaction.member.displayName} shared HP.`, emoji: "✔️" } }) });
 					interaction.channel.send(resultText);
 					setAdventure(adventure);
 				}

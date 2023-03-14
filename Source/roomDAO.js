@@ -114,10 +114,40 @@ function addScoreField(embed, adventure) {
 	} else {
 		embed.setTitle(`Success in ${adventure.labyrinth}`);
 	}
-	const skippedStartingArtifactMultiplier = 1 + (adventure.delvers.reduce((count, delver) => delver.startingArtifact ? count : count + 1, 0) / adventure.delvers.length);
-	score = Math.max(1, score * skippedStartingArtifactMultiplier);
-	embed.addField("Score Breakdown", `Depth: ${adventure.depth}\nLives: ${livesScore}\nGold: ${goldScore}\nBonus: ${adventure.accumulatedScore}\nChallenges Multiplier: ${challengeMultiplier}\nMultiplier (Skipped Starting Artifacts): ${skippedStartingArtifactMultiplier}\n\n__Total__: ${!isSuccess && score > 0 ? `score ÷ 2  = ${score} (Defeat)` : score}`);
+	const skippedArtifactsMultiplier = 1 + (adventure.delvers.reduce((count, delver) => delver.startingArtifact ? count : count + 1, 0) / adventure.delvers.length);
+	score = Math.max(1, score * skippedArtifactsMultiplier);
+	const depthScoreLine = generateScoreline("additive", "Depth", adventure.depth);
+	const livesScoreLine = generateScoreline("additive", "Lives", livesScore);
+	const goldScoreline = generateScoreline("additive", "Gold", goldScore);
+	const bonusScoreline = generateScoreline("additive", "Bonus", adventure.accumulatedScore);
+	const challengesScoreline = generateScoreline("multiplicative", "Challenges Multiplier", challengeMultiplier);
+	const skippedArtifactScoreline = generateScoreline("multiplicative", "Artifact Skip Multiplier", skippedArtifactsMultiplier);
+	const defeatScoreline = generateScoreline("multiplicative", "Defeat", isSuccess ? 1 : 0.5);
+	embed.addField("Score Breakdown", `${depthScoreLine}${livesScoreLine}${goldScoreline}${bonusScoreline}${challengesScoreline}${skippedArtifactScoreline}${defeatScoreline}\n__Total__: ${score}`);
 	adventure.accumulatedScore = score;
+}
+
+/** Generates the string for a scoreline or omits the line (returns empty string) if value is the identity for stackType
+ * @param {"additive" | "multiplicative"} stackType
+ * @param {string} label
+ * @param {number} value
+ */
+function generateScoreline(stackType, label, value) {
+	switch (stackType) {
+		case "additive":
+			if (value !== 0) {
+				return `${label}: ${value.toString()}\n`;
+			}
+			break;
+		case "multiplicative":
+			if (value !== 1) {
+				return `${label}: x${value.toString()}\n`;
+			}
+			break;
+		default:
+			console.error(new Error(`Generating scoreline with unregistered stackType: ${stackType}`));
+	}
+	return "";
 }
 
 /** A room embed's author field contains the most important or commonly viewed party resources and stats

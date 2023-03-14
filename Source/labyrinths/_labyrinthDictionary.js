@@ -82,7 +82,7 @@ exports.rollRoom = function (type, adventure) {
 		return getRoom(adventure.finalBoss);
 	}
 
-	if (type in LABYRINTHS[adventure.labyrinth]) {
+	if (!(type in LABYRINTHS[adventure.labyrinth].availableRooms)) {
 		console.error("Attempt to create room of unidentified type: " + type);
 		adventure.roomCandidates = {};
 		adventure.roomCandidates[`Battle${SAFE_DELIMITER}${adventure.depth}`] = true;

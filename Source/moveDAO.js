@@ -2,6 +2,7 @@ const Adventure = require("../Classes/Adventure.js");
 const Move = require("../Classes/Move.js");
 const { getFullName, dealDamage, gainHealth, removeModifier } = require("./combatantDAO.js");
 const { getConsumable } = require("./consumables/_consumablesDictionary.js");
+const { getEmoji, getOpposite } = require("./elementHelpers.js");
 const { getEnemy } = require("./Enemies/_enemyDictionary.js");
 const { selectAllFoes } = require("./enemyDAO.js");
 const { getEquipmentProperty } = require("./equipment/_equipmentDictionary.js");
@@ -15,7 +16,7 @@ exports.resolveMove = async function (move, adventure) {
 	let userTeam = move.userTeam === "delver" ? adventure.delvers : adventure.room.enemies;
 	let user = userTeam[move.userIndex];
 	if (user.hp > 0) {
-		let moveText = `• ${getFullName(user, adventure.room.enemyTitles)} `;
+		let moveText = `**${getFullName(user, adventure.room.enemyTitles)}** `;
 		if (move.name !== "Stun" && user.getModifierStacks("Stun") < 1) {
 			let effect;
 			let targetAll = false;
@@ -24,12 +25,20 @@ exports.resolveMove = async function (move, adventure) {
 				case "action":
 					if (move.userTeam !== "delver" && move.userTeam !== "clone") {
 						const action = getEnemy(user.lookupName).actions[move.name];
+						let parsedElement = action.element;
+						if (parsedElement === "@{adventure}") {
+							parsedElement = adventure.element;
+						} else if (parsedElement === "@{adventureOpposite}") {
+							parsedElement = getOpposite(adventure.element);
+						}
 						targetAll = action.selector === selectAllFoes;
 						effect = action.effect;
+						moveText = `${getEmoji(parsedElement)} ${moveText}`;
 					} else {
 						// Special Case for Punch
 						targetAll = getEquipmentProperty(move.name, "targetingTags").target === "all";
 						effect = getEquipmentProperty(move.name, "effect");
+						moveText = `${getEmoji(getEquipmentProperty(move.name, "element"))} ${moveText}`;
 					}
 					break;
 				case "equip":
@@ -42,9 +51,10 @@ exports.resolveMove = async function (move, adventure) {
 							breakText = ` The ${move.name} broke!`;
 						}
 					}
+					moveText = `${getEmoji(getEquipmentProperty(move.name, "element"))} ${moveText}`;
 					break;
 				case "consumable":
-					const { targetDescription, effect: consumableEffect } = getConsumable(move.name);
+					const { targetDescription, effect: consumableEffect, element } = getConsumable(move.name);
 					targetAll = targetDescription === "all";
 					effect = consumableEffect;
 					if (move.userTeam !== "clone") {
@@ -53,6 +63,7 @@ exports.resolveMove = async function (move, adventure) {
 							delete adventure.consumables[move.name];
 						}
 					}
+					moveText = `${getEmoji(element)} ${moveText}`;
 					break;
 			}
 
@@ -76,22 +87,13 @@ exports.resolveMove = async function (move, adventure) {
 				}
 			}).filter(text => text !== ""));
 
-			// eg "used {move name}[ on {targets}]"
-			let targetStatement = `used ${move.name}`;
-			if (targetAll) {
-				let team = "combatants";
-				if (move.targets.every(target => target.team === move.userTeam)) {
-					team = "allies";
-				} else if (move.targets.every(target => target.team !== move.userTeam)) {
-					team = "foes";
-				}
-				targetStatement += ` on all ${team}`;
-			} else if (move.targets[0].team !== "none" && move.targets[0].team !== "self") {
-				targetStatement += ` on ${exports.getTargetList(move.targets, adventure).join(", ")}`;
+			if (move.isCrit) {
+				moveText = `💥${moveText}`;
 			}
-			moveText += `${targetStatement}.${move.isCrit ? " *Critical Hit!*" : ""} ${resultTexts.join(" ")}${breakText}`;
+			moveText += `used ${move.name}. ${resultTexts.join(" ")}${breakText}`;
 		} else {
 			removeModifier(user, { name: "Stun", stacks: "all" });
+			moveText = `💫 ${moveText}`;
 			moveText += "is Stunned!";
 		}
 

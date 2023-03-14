@@ -32,7 +32,7 @@ module.exports = new Button(id, async (interaction, [guildId, adventureId, conte
 
 						// Welcome player to thread
 						let thread = interaction.client.guilds.resolve(guildId).channels.resolve(adventureId);
-						thread.send(`<@${interaction.user.id}> joined the adventure.`).then(_message => {
+						thread.send(`<@${interaction.user.id}> joined the adventure!`).then(_message => {
 							if (adventure.messageIds.start) {
 								thread.messages.delete(adventure.messageIds.start);
 								adventure.messageIds.start = "";
@@ -66,7 +66,7 @@ module.exports = new Button(id, async (interaction, [guildId, adventureId, conte
 					}
 				} else {
 					recruitMessage.edit({ components: [] });
-					interaction.update({ content: "Due to UI limitations, maximum number of delvers on an adventure is 12.", components: [], ephemeral: true });
+					interaction.update({ content: `Due to UI limitations, maximum number of delvers on an adventure is ${maxDelverCount}.`, components: [], ephemeral: true });
 				}
 			} else {
 				interaction.reply({ content: "This adventure has already started, but you can recruit for your own with `/delve`.", ephemeral: true });

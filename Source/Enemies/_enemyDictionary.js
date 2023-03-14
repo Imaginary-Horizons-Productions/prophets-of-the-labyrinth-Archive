@@ -7,6 +7,7 @@ for (const file of [
 	"firearrowfrog.js",
 	"geodetortoise.js",
 	"mechabee.js",
+	"mechaqueen.js",
 	"ooze.js",
 	"royalslime.js",
 	"slime.js",

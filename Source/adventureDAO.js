@@ -96,10 +96,27 @@ exports.setAdventure = function (adventure) {
 	ensuredPathSave("./Saves", "adventures.json", JSON.stringify(Array.from(adventureDictionary.values())));
 }
 
+/**
+ * @type {Record<number, string[]>} key = weight, value = roomTag[]
+ */
+const roomTypesByRarity = {
+	1: ["Artifact Guardian", "Treasure"],
+	3: ["Forge", "Rest Site", "Merchant"],
+	6: ["Battle", "Event"]
+};
+
+/** Set up the upcoming room: roll options for rooms after, update adventure's room meta data object for current room, and generate room's resources
+ * @param {"Artifact Guardian" | "Treasure" | "Forge" | "Rest Site" | "Merchant" | "Battle" | "Event" | "Empty"} roomType
+ * @param {ThreadChannel} thread
+ */
 exports.nextRoom = function (roomType, thread) {
 	const adventure = exports.getAdventure(thread.id);
+
+	adventure.delvers.forEach(delver => {
+		delver.modifiers = {};
+	})
+
 	// Roll options for next room type
-	const roomTypes = ["Battle", "Event", "Forge", "Rest Site", "Artifact Guardian", "Merchant", "Treasure"]; //TODO #126 add weights to room types
 	if (!getLabyrinthProperty(adventure.labyrinth, "bossRoomDepths").includes(adventure.depth + 1)) {
 		const mapCount = adventure.getArtifactCount("Enchanted Map");
 		if (mapCount) {
@@ -107,7 +124,19 @@ exports.nextRoom = function (roomType, thread) {
 		}
 		const numCandidates = 2 + mapCount;
 		for (let i = 0; i < numCandidates; i++) {
-			const candidateTag = `${roomTypes[generateRandomNumber(adventure, roomTypes.length, "general")]}${SAFE_DELIMITER}${adventure.depth}`;
+			const roomWeights = Object.keys(roomTypesByRarity);
+			const totalWeight = roomWeights.reduce((total, weight) => total + parseInt(weight), 0);
+			let rn = generateRandomNumber(adventure, totalWeight, 'general');
+			let tagPool = [];
+			for (const weight of roomWeights.sort((a, b) => a - b)) {
+				if (rn < weight) {
+					tagPool = roomTypesByRarity[weight];
+					break;
+				} else {
+					rn -= weight;
+				}
+			}
+			const candidateTag = `${tagPool[generateRandomNumber(adventure, tagPool.length, "general")]}${SAFE_DELIMITER}${adventure.depth}`;
 			if (!(candidateTag in adventure.roomCandidates)) {
 				adventure.roomCandidates[candidateTag] = [];
 				if (Object.keys(adventure.roomCandidates).length === MAX_MESSAGE_ACTION_ROWS) {
@@ -190,10 +219,13 @@ exports.nextRoom = function (roomType, thread) {
 			}
 		}
 		exports.newRound(adventure, thread);
+		exports.setAdventure(adventure);
 	} else {
-		thread.send(renderRoom(adventure, thread));
+		thread.send(renderRoom(adventure, thread)).then(message => {
+			adventure.messageIds.room = message.id;
+			exports.setAdventure(adventure);
+		});
 	}
-	exports.setAdventure(adventure);
 }
 
 exports.endRoom = function (roomType, thread) {
@@ -254,6 +286,7 @@ exports.newRound = function (adventure, thread, lastRoundText) {
 				.onSetMoveSpeed(combatant)
 				.setIsCrit(combatant.crit)
 				.setUser(teamName, i)
+			let isPriorityMove = false;
 			if (combatant.getModifierStacks("Stun") > 0) {
 				// Dummy move for Stunned combatants
 				move.setMoveName("Stun");
@@ -266,18 +299,23 @@ exports.newRound = function (adventure, thread, lastRoundText) {
 							let actionPool = Object.keys(enemyTemplate.actions);
 							actionName = actionPool[generateRandomNumber(adventure, actionPool.length, "battle")];
 						}
+						if (actionName === "a random protocol") {
+							let actionPool = Object.keys(enemyTemplate.actions).filter(actionName => actionName.includes("Protocol"));
+							actionName = actionPool[generateRandomNumber(adventure, actionPool.length, "battle")];
+						}
 						move.setMoveName(actionName);
 						enemyTemplate.actions[actionName].selector(adventure, combatant).forEach(({ team, index }) => {
 							move.addTarget(team, index);
 						})
+						isPriorityMove = enemyTemplate.actions[actionName].isPriority;
 						combatant.nextAction = enemyTemplate.actions[actionName].next(actionName);
 					} else {
-						move.setMoveName("${clone}");
+						move.setMoveName("@{clone}");
 					}
 				}
 			}
 			if (move.name) {
-				adventure.room.moves.push(move);
+				(isPriorityMove ? adventure.room.priorityMoves : adventure.room.moves).push(move);
 			}
 
 			// Decrement Modifiers
@@ -302,8 +340,7 @@ exports.endRound = async function (adventure, thread) {
 	// Generate Reactive Moves by Enemies
 	adventure.room.enemies.forEach((enemy, index) => {
 		if (enemy.lookupName === "@{clone}") {
-			let move = new Move()
-				.setType("action")
+			const move = new Move()
 				.onSetMoveSpeed(enemy)
 				.setIsCrit(enemy.crit)
 			let counterpartHasPriority = false;
@@ -312,7 +349,8 @@ exports.endRound = async function (adventure, thread) {
 				counterpartMove = adventure.room.priorityMoves.find(move => move.userTeam === "delver" && move.userIndex == index);
 				counterpartHasPriority = true;
 			}
-			move.setUser("clone", index)
+			move.setType(counterpartMove.type)
+				.setUser("clone", index)
 				.setMoveName(counterpartMove.name);
 			counterpartMove.targets.forEach(target => {
 				if (target.team === "enemy") {
@@ -321,10 +359,13 @@ exports.endRound = async function (adventure, thread) {
 					move.addTarget("enemy", target.index);
 				}
 			})
+
+			// Replace placeholder
+			adventure.room.moves.splice(adventure.room.moves.findIndex(move => move.userTeam === "enemy" && move.userIndex == index), 1);
 			if (counterpartHasPriority) {
-				adventure.room.priorityMoves.splice(adventure.room.priorityMoves.findIndex(move => move.userTeam === "enemy" && move.userIndex == index), 1, move);
+				adventure.room.priorityMoves.push(move);
 			} else {
-				adventure.room.moves.splice(adventure.room.moves.findIndex(move => move.userTeam === "enemy" && move.userIndex == index), 1, move);
+				adventure.room.moves.push(move);
 			}
 		}
 	});
@@ -352,15 +393,7 @@ exports.endRound = async function (adventure, thread) {
 				}
 				return thread.send(exports.completeAdventure(adventure, thread, lastRoundText));
 			} else {
-				return thread.send(renderRoom(adventure, thread, lastRoundText)).then(message => {
-					if (adventure.depth <= getLabyrinthProperty(adventure.labyrinth, "maxDepth")) {
-						adventure.messageIds.room = message.id;
-						adventure.delvers.forEach(delver => {
-							delver.modifiers = {};
-						})
-						exports.setAdventure(adventure);
-					}
-				});
+				return thread.send(renderRoom(adventure, thread, lastRoundText));
 			}
 		}
 	}

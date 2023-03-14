@@ -51,10 +51,10 @@ module.exports = new Button(id, (interaction, args) => {
 		case "Vulnerabilities": // Shows elemental affinities and if critically hitting this turn for all combatants
 			infoForNextRound = false;
 			adventure.room.enemies.filter(combatant => combatant.hp > 0).concat(adventure.delvers).forEach(combatant => {
-				descriptionText += `\n__${getFullName(combatant, adventure.room.enemyTitles)}__ ${getEmoji(combatant.element)}\nCritical Hit: ${combatant.crit}\nWeakness: ${getEmoji(getWeakness(combatant.element))}\nResistance: ${getEmoji(combatant.element)}\n`;
+				descriptionText += `\n__${getFullName(combatant, adventure.room.enemyTitles)}__ ${getEmoji(combatant.element)}\nCritical Hit: ${combatant.crit ? "💥" : "🚫"}\nWeakness: ${getEmoji(getWeakness(combatant.element))}\nResistance: ${getEmoji(combatant.element)}\n`;
 			});
 			break;
-		case "Intents": // Shows each enemy's target(s) in the next round and the names of the next two moves
+		case "Intents": // Shows each enemy's target(s) in the next round and the names of the next two moves and if their move has priority
 			adventure.room.priorityMoves.forEach(({ userTeam, userIndex, targets, name }) => {
 				if (userTeam === "enemy") {
 					const enemy = adventure.room.enemies[userIndex];
@@ -69,7 +69,11 @@ module.exports = new Button(id, (interaction, args) => {
 					const enemy = adventure.room.enemies[userIndex];
 					if (enemy.hp > 0) {
 						const targetNames = getTargetList(targets, adventure);
-						descriptionText += `\n__${getFullName(enemy, adventure.room.enemyTitles)}__\nRound ${adventure.room.round + 1}: ${name} (Targets: ${targetNames.length ? targetNames.join(", ") : "???"})\nRound ${adventure.room.round + 2}: ${enemy.nextAction}\n`;
+						if (name !== "@{clone}") {
+							descriptionText += `\n__${getFullName(enemy, adventure.room.enemyTitles)}__\nRound ${adventure.room.round + 1}: ${name} (Targets: ${targetNames.length ? targetNames.join(", ") : "???"})\nRound ${adventure.room.round + 2}: ${enemy.nextAction}\n`;
+						} else {
+							descriptionText += `\n__${getFullName(enemy, adventure.room.enemyTitles)}__\nMirror Clones mimic your allies!\n`;
+						}
 					}
 				}
 			})
