@@ -4,7 +4,7 @@ const { selectRandomFoe, nextRepeat } = require("../enemyDAO.js");
 
 module.exports = new Enemy("Bloodtail Hawk")
 	.setFirstAction("Rake")
-	.addAction({ name: "Rake", isPriority: false, effect: rakeEffect, selector: selectRandomFoe, next: nextRepeat })
+	.addAction({ name: "Rake", element: "Wind", isPriority: false, effect: rakeEffect, selector: selectRandomFoe, next: nextRepeat })
 	.setHp(200)
 	.setSpeed(105)
 	.setElement("Wind")
