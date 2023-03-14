@@ -48,6 +48,7 @@ Adds block on the user
 - Sword (Earth)
 - all Ice Ward (Water)
 - Vigilance Charm (Earth)
+- Potion Kit (Water)
 
 ### Heavy
 Increased base block
