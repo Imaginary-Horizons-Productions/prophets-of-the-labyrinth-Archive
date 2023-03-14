@@ -55,6 +55,7 @@ for (const file of [
 	"midasstaff-soothing.js",
 	"midasstaff-accelerating.js",
 	"potionkit-base.js",
+	"potionkit-guarding.js",
 	"potionkit-urgent.js",
 	"scythe-base.js",
 	"scythe-lethal.js",

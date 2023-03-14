@@ -18,7 +18,7 @@
    15. Block Potion
 - New command: `/consumables-info` for looking up information on consumables
 - Reworked *Urgent* weapon variant: it now adds priority to the move
-- Reworked *Unfinished Potion* to *Potion Kit*: it now adds a random "potion" consumable to loot
+- Reworked *Unfinished Potion* to *Potion Kit*: it now adds a random "potion" consumable to loot (upgrades: Guarding, Urgent)
 - Renamed *Swift* weapon variant to *Accelerating*
 - The Quicken and Slow modifiers now grant/penalize speed scaling with their number of stacks
 - Delvers can now use the default Punch move when they don't have a usable weapon (previously had to have no usable equipment)
