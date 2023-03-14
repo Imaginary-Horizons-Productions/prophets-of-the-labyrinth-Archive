@@ -176,6 +176,7 @@ Adds stacks to debuffs
 
 #### Avaialble on
 - Sun Flare (Fire)
+- Censer (Fire)
 
 ### Toxic
 Applies Poison
@@ -194,6 +195,12 @@ Using this equipment puts moves in the priority queue
 - Buckler (Earth)
 - Life Drain (Water)
 - Potion Kit (Water)
+
+### Vexing
+Bonus damage if target has has debuffs
+
+#### Available on
+ - all Censer (Fire)
 
 ### Wicked
 Increased damage against enemies with 0 block

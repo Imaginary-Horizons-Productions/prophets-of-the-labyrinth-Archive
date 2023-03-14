@@ -13,7 +13,6 @@ module.exports = new EquipmentTemplate("Tormenting Sun Flare", "*Inflict @{mod1S
 function effect(target, user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger, stagger, slow] } = module.exports;
 	for (const modifier in target.modifiers) {
-
 		if (isDebuff(modifier)) {
 			addModifier(target, { name: modifier, stacks: 1 });
 		}
