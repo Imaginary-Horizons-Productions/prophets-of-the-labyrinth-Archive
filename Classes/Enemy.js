@@ -28,6 +28,7 @@ module.exports = class Enemy extends Combatant {
 	/** Set the name, effect, target selector, and move selector of an enemy attack
 	 * @param {object} actionsInput
 	 * @param {string} actionsInput.name
+	 * @param {"Fire" | "Water" | "Wind" | "Earth" | "Untyped" | "@{adventure}" | "@{adventureOpposite}"} actionsInput.element
 	 * @param {boolean} actionsInput.isPriority
 	 * @param {function} actionsInput.effect
 	 * @param {function} actionsInput.selector
