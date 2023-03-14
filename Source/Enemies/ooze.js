@@ -4,8 +4,8 @@ const { selectRandomFoe, nextRandom } = require("../enemyDAO.js");
 
 module.exports = new Enemy("@{adventureOpposite} Ooze")
 	.setFirstAction("Goop Spray")
-	.addAction({ name: "Goop Spray", isPriority: false, effect: goopSprayEffect, selector: selectRandomFoe, next: nextRandom })
-	.addAction({ name: "Tackle", isPriority: false, effect: tackleEffect, selector: selectRandomFoe, next: nextRandom })
+	.addAction({ name: "Goop Spray", element: "Untyped", isPriority: false, effect: goopSprayEffect, selector: selectRandomFoe, next: nextRandom })
+	.addAction({ name: "Tackle", element: "@{adventureOpposite}", isPriority: false, effect: tackleEffect, selector: selectRandomFoe, next: nextRandom })
 	.setHp(200)
 	.setSpeed(90)
 	.setElement("@{adventureOpposite}")
