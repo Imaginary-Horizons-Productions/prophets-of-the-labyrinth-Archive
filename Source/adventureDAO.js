@@ -398,9 +398,9 @@ exports.endRound = async function (adventure, thread) {
 				return thread.send(exports.completeAdventure(adventure, thread, lastRoundText));
 			} else {
 				// Equipment drops
-				const dropThreshold = 1;
-				const dropMax = 16;
-				if (generateRandomNumber(adventure, dropMax, "general") < dropThreshold) {
+				const gearThreshold = 1;
+				const gearMax = 16;
+				if (generateRandomNumber(adventure, gearMax, "general") < gearThreshold) {
 					const cloverCount = adventure.getArtifactCount("Negative-One Leaf Clover");
 					let tier = "Common";
 					const upgradeThreshold = 1 + cloverCount;
@@ -412,6 +412,14 @@ exports.endRound = async function (adventure, thread) {
 					const droppedEquip = rollEquipmentDrop(tier, adventure);
 					adventure.addResource(new Resource(droppedEquip, "equipment", 1, "loot", 0));
 				}
+
+				// Consumable drops
+				const consumableThreshold = 1;
+				const consumableMax = 8;
+				if (generateRandomNumber(adventure, consumableThreshold, "general") < consumableMax) {
+					adventure.addResource(new Resource(rollConsumable(adventure), "consumable", 1, "loot", 0));
+				}
+
 				return thread.send(renderRoom(adventure, thread, lastRoundText));
 			}
 		}
