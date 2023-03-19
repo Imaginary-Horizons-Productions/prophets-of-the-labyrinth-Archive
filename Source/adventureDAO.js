@@ -416,7 +416,7 @@ exports.endRound = async function (adventure, thread) {
 				// Consumable drops
 				const consumableThreshold = 1;
 				const consumableMax = 8;
-				if (generateRandomNumber(adventure, consumableThreshold, "general") < consumableMax) {
+				if (generateRandomNumber(adventure, consumableMax, "general") < consumableThreshold) {
 					adventure.addResource(new Resource(rollConsumable(adventure), "consumable", 1, "loot", 0));
 				}
 
