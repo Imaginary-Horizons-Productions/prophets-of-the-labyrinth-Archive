@@ -1,5 +1,5 @@
 const { MessageActionRow, MessageButton, MessageSelectMenu, ThreadChannel, MessageEmbed } = require("discord.js");
-const Adventure = require("../Classes/Adventure.js");
+const { Adventure } = require("../Classes/Adventure.js");
 
 const { SAFE_DELIMITER, MAX_MESSAGE_ACTION_ROWS } = require("../constants.js");
 const { ordinalSuffixEN } = require("../helpers");

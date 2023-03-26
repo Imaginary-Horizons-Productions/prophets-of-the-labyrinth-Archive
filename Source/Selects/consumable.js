@@ -1,4 +1,5 @@
-const Move = require('../../Classes/Move');
+const { CombatantReference } = require('../../Classes/Adventure');
+const { Move } = require('../../Classes/Move');
 const Select = require('../../Classes/Select.js');
 const { getAdventure, checkNextRound, endRound, setAdventure } = require('../adventureDAO');
 const { getConsumable } = require('../consumables/_consumablesDictionary');
@@ -19,10 +20,10 @@ module.exports = new Select(id, async (interaction, [round]) => {
 				.setIsCrit(false)
 				.setMoveName(consumableName)
 				.setType("consumable")
-				.setUser(user.team, userIndex);
+				.setUser(new CombatantReference(user.team, userIndex));
 
 			consumable.selectTargets(userIndex, adventure).forEach(target => {
-				newMove.addTarget(...target);
+				newMove.addTarget(target);
 			})
 			let overwritten = false;
 			for (let i = 0; i < adventure.room.moves.length; i++) {

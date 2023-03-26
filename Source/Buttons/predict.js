@@ -55,18 +55,18 @@ module.exports = new Button(id, (interaction, args) => {
 			});
 			break;
 		case "Intents": // Shows each enemy's target(s) in the next round and the names of the next two moves and if their move has priority
-			adventure.room.priorityMoves.forEach(({ userTeam, userIndex, targets, name }) => {
-				if (userTeam === "enemy") {
-					const enemy = adventure.room.enemies[userIndex];
+			adventure.room.priorityMoves.forEach(({ userReference, targets, name }) => {
+				if (userReference.team === "enemy") {
+					const enemy = adventure.getCombatant(userReference);
 					if (enemy.hp > 0) {
 						const targetNames = getTargetList(targets, adventure);
 						descriptionText += `\n__${getFullName(enemy, adventure.room.enemyTitles)}__\nRound ${adventure.room.round + 1} (Priority): ${name} (Targets: ${targetNames.length ? targetNames.join(", ") : "???"})\nRound ${adventure.room.round + 2}: ${enemy.nextAction}\n`;
 					}
 				}
 			})
-			adventure.room.moves.forEach(({ userTeam, userIndex, targets, name }) => {
-				if (userTeam === "enemy") {
-					const enemy = adventure.room.enemies[userIndex];
+			adventure.room.moves.forEach(({ userReference, targets, name }) => {
+				if (userReference.team === "enemy") {
+					const enemy = adventure.getCombatant(userReference);
 					if (enemy.hp > 0) {
 						const targetNames = getTargetList(targets, adventure);
 						if (name !== "@{clone}") {

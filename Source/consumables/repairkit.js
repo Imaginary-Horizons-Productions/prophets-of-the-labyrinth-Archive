@@ -1,17 +1,11 @@
 const ConsumableTemplate = require("../../Classes/ConsumableTemplate.js");
 const { getEquipmentProperty } = require("../equipment/_equipmentDictionary.js");
+const { selectSelf } = require("./selectors/selectSelf.js");
 
-module.exports = new ConsumableTemplate("Repair Kit", "Repairs all the user's equipment by 25% of its max uses", selectTargets, effect)
+module.exports = new ConsumableTemplate("Repair Kit", "Repairs all the user's equipment by 25% of its max uses", selectSelf, effect)
 	.setElement("Untyped")
 	.setTargetTags("self", "delver")
 	.setFlavorText([]);
-
-function selectTargets(userIndex, adventure) {
-	// self
-	const team = "self";
-	const index = userIndex;
-	return [[team, index]];
-}
 
 function effect(target, user, isCrit, adventure) {
 	// +25% max uses to all equipment

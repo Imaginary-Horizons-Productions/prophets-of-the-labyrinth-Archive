@@ -1,15 +1,16 @@
-const { calculateTotalSpeed: calculateTotalSpeed, removeModifier } = require("../Source/combatantDAO");
+const { CombatantReference } = require("./Adventure");
 const Delver = require("./Delver");
 const Enemy = require("./Enemy");
+const { calculateTotalSpeed, removeModifier } = require("../Source/combatantDAO");
 
-module.exports = class Move {
+module.exports.Move = class {
 	constructor() {
 		this.name = "";
 		this.type = "";
 		this.speed = 0;
 		this.isCrit = false;
-		this.userTeam = ""; //TODO #76 convert to array to support joint/combo moves
-		this.userIndex = "";
+		this.userReference; //TODO #76 convert to array to support joint/combo moves
+		/** @type {CombatantReference[]} */
 		this.targets = [];
 	}
 
@@ -20,7 +21,6 @@ module.exports = class Move {
 
 	/** Move type determines which resource to deplete, among other things
 	 * @param {"equip" | "consumable" | "action"} typeEnum
-	 * @returns {Move}
 	 */
 	setType(typeEnum) {
 		this.type = typeEnum;
@@ -29,9 +29,9 @@ module.exports = class Move {
 
 	/** In addition to containing logic for enemy speed mechanics, this function also consumes a stack of Quicken and Slow
 	 * @param {Delver | Enemy} combatant
-	 * @returns {Move}
 	 */
 	onSetMoveSpeed(combatant) {
+		// DESIGN SPACE: if enemy.lookupName has static speed, or is always faster than a delver, etc, put that logic here
 		this.speed = calculateTotalSpeed(combatant);
 		removeModifier(combatant, { name: "Slow", stacks: 1, force: true });
 		removeModifier(combatant, { name: "Quicken", stacks: 1, force: true });
@@ -43,14 +43,15 @@ module.exports = class Move {
 		return this;
 	}
 
-	setUser(team, index) {
-		this.userTeam = team;
-		this.userIndex = index;
+	/** @param {CombatantReference} reference */
+	setUser(reference) {
+		this.userReference = reference;
 		return this;
 	}
 
-	addTarget(team, index) {
-		this.targets.push({ team, index });
+	/** @param {CombatantReference} reference */
+	addTarget(reference) {
+		this.targets.push(reference);
 		return this;
 	}
-}
+};

@@ -1,5 +1,6 @@
+const { CombatantReference } = require('../../Classes/Adventure.js');
 const Button = require('../../Classes/Button.js');
-const Move = require('../../Classes/Move');
+const { Move } = require('../../Classes/Move');
 const { SAFE_DELIMITER } = require("../../constants.js");
 const { generateRandomNumber } = require('../../helpers.js');
 const { getAdventure, checkNextRound, endRound, setAdventure } = require('../adventureDAO');
@@ -19,7 +20,7 @@ module.exports = new Button(id, async (interaction, [moveName, round, index]) =>
 				.setIsCrit(user.crit)
 				.setMoveName(moveName)
 				.setType("equip")
-				.setUser(user.team, userIndex);
+				.setUser(new CombatantReference(user.team, userIndex));
 
 			let targetText = "";
 			let { target, team } = getEquipmentProperty(moveName, "targetingTags");
@@ -46,12 +47,12 @@ module.exports = new Button(id, async (interaction, [moveName, round, index]) =>
 					targetText = `${targetCount} random enem${targetCount === 1 ? "y" : "ies"}`;
 				}
 				for (let i = 0; i < targetCount; i++) {
-					newMove.addTarget(team, generateRandomNumber(adventure, poolSize, "battle"));
+					newMove.addTarget(new CombatantReference(team, generateRandomNumber(adventure, poolSize, "battle")));
 				}
 			} else if (target === "self") {
-				newMove.addTarget(team, userIndex);
+				newMove.addTarget(new CombatantReference(team, userIndex));
 			} else if (target === "none") {
-				newMove.addTarget("none", "none");
+				newMove.addTarget(new CombatantReference("none", -1));
 			}
 
 			let overwritten = false;

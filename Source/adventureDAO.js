@@ -1,9 +1,9 @@
 const fs = require("fs");
-const Adventure = require("../Classes/Adventure.js");
-const Move = require("../Classes/Move.js");
+const { Adventure, CombatantReference } = require("../Classes/Adventure.js");
+const { Move } = require("../Classes/Move.js");
 const Enemy = require("../Classes/Enemy.js");
 const Delver = require("../Classes/Delver.js");
-const Room = require("../Classes/Room.js");
+const { Room } = require("../Classes/Room.js");
 
 const { SAFE_DELIMITER, MAX_SELECT_OPTIONS, MAX_MESSAGE_ACTION_ROWS } = require("../constants.js");
 const { ensuredPathSave, generateRandomNumber, parseCount, clearComponents } = require("../helpers.js");
@@ -96,9 +96,7 @@ exports.setAdventure = function (adventure) {
 	ensuredPathSave("./Saves", "adventures.json", JSON.stringify(Array.from(adventureDictionary.values())));
 }
 
-/**
- * @type {Record<number, string[]>} key = weight, value = roomTag[]
- */
+/** @type {Record<number, string[]>} key = weight, value = roomTag[] */
 const roomTypesByRarity = {
 	1: ["Artifact Guardian", "Treasure"],
 	3: ["Forge", "Rest Site", "Merchant"],
@@ -281,11 +279,11 @@ exports.newRound = function (adventure, thread, lastRoundText) {
 			}
 
 			// Roll Enemy Moves and Generate Dummy Moves
-			let move = new Move()
+			const move = new Move()
 				.setType("action")
 				.onSetMoveSpeed(combatant)
 				.setIsCrit(combatant.crit)
-				.setUser(teamName, i)
+				.setUser(new CombatantReference(teamName, i))
 			let isPriorityMove = false;
 			if (combatant.getModifierStacks("Stun") > 0) {
 				// Dummy move for Stunned combatants
@@ -305,7 +303,7 @@ exports.newRound = function (adventure, thread, lastRoundText) {
 						}
 						move.setMoveName(actionName);
 						enemyTemplate.actions[actionName].selector(adventure, combatant).forEach(({ team, index }) => {
-							move.addTarget(team, index);
+							move.addTarget(new CombatantReference(team, index));
 						})
 						isPriorityMove = enemyTemplate.actions[actionName].isPriority;
 						combatant.nextAction = enemyTemplate.actions[actionName].next(actionName);
@@ -336,13 +334,15 @@ exports.newRound = function (adventure, thread, lastRoundText) {
 	});
 }
 
+/** Generate reactive moves, randomize speed ties, then resolve moves
+ * @param {Adventure} adventure
+ * @param {ThreadChannel} thread
+ */
 exports.endRound = async function (adventure, thread) {
 	// Generate Reactive Moves by Enemies
 	adventure.room.enemies.forEach((enemy, index) => {
 		if (enemy.lookupName === "@{clone}") {
-			const move = new Move()
-				.onSetMoveSpeed(enemy)
-				.setIsCrit(enemy.crit)
+			const move = adventure.room.moves.find(move => move.userIndex === "enemy" && move.userIndex === index);
 			let counterpartHasPriority = false;
 			let counterpartMove = adventure.room.moves.find(move => move.userTeam === "delver" && move.userIndex == index);
 			if (!counterpartMove) {
@@ -350,13 +350,12 @@ exports.endRound = async function (adventure, thread) {
 				counterpartHasPriority = true;
 			}
 			move.setType(counterpartMove.type)
-				.setUser("clone", index)
 				.setMoveName(counterpartMove.name);
 			counterpartMove.targets.forEach(target => {
 				if (target.team === "enemy") {
-					move.addTarget("delver", target.index);
+					move.addTarget(new CombatantReference("delver", target.index));
 				} else {
-					move.addTarget("enemy", target.index);
+					move.addTarget(new CombatantReference("enemy", target.index));
 				}
 			})
 

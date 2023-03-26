@@ -1,3 +1,4 @@
+const { CombatantReference } = require("../../Classes/Adventure.js");
 const Enemy = require("../../Classes/Enemy.js");
 const { addBlock, addModifier } = require("../combatantDAO.js");
 const { selectRandomFoe, selectNone, selectAllFoes, selectRandomOtherAlly, spawnEnemy } = require("../enemyDAO.js");
@@ -47,7 +48,7 @@ function swarmEffect(target, user, isCrit, adventure) {
 	adventure.room.moves.forEach(move => {
 		if (move.userTeam === "enemy" && move.userIndex !== 0) {
 			move.name = "Call for Help";
-			move.targets = [{ team: "none", index: "none" }];
+			move.targets = [new CombatantReference("none", -1)];
 		}
 	});
 	addBlock(user, isCrit ? 200 : 100);

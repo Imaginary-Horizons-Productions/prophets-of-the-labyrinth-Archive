@@ -1,4 +1,4 @@
-const Adventure = require("../../Classes/Adventure.js");
+const { Adventure } = require("../../Classes/Adventure.js");
 const RoomTemplate = require("../../Classes/RoomTemplate.js");
 const { generateRandomNumber } = require("../../helpers.js");
 const { getRoom } = require("../Rooms/_roomDictionary.js");

@@ -1,5 +1,6 @@
-const Move = require('../../Classes/Move');
+const { Move } = require('../../Classes/Move');
 const Select = require('../../Classes/Select.js');
+const { CombatantReference } = require('../../Classes/Adventure');
 const { SAFE_DELIMITER } = require('../../constants.js');
 const { getAdventure, checkNextRound, endRound, setAdventure } = require('../adventureDAO');
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary');
@@ -14,14 +15,13 @@ module.exports = new Select(id, async (interaction, [moveName, round, index]) =>
 		if (moveName === "Punch" || user.equipment.some(equip => equip.name === moveName && equip.uses > 0)) {
 			// Add move to round list (overwrite exisiting readied move)
 			let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
-			let [targetTeam, targetIndex] = interaction.values[0].split(SAFE_DELIMITER);
 			let newMove = new Move()
 				.onSetMoveSpeed(user)
 				.setIsCrit(user.crit)
 				.setMoveName(moveName)
-				.setType(moveName === "Punch" ? "action" : "equip")
+				.setType("equip")
 				.setUser(user.team, userIndex)
-				.addTarget(targetTeam, targetIndex);
+				.addTarget(new CombatantReference(...interaction.values[0].split(SAFE_DELIMITER)));
 
 			let overwritten = false;
 			for (let i = 0; i < adventure.room.moves.length; i++) {
