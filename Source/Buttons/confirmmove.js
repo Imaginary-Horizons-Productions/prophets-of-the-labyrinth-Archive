@@ -34,7 +34,7 @@ module.exports = new Button(id, async (interaction, [moveName, round, index]) =>
 					targetText = "all enemies";
 				}
 				for (let i = 0; i < targetCount; i++) {
-					newMove.addTarget(team, i);
+					newMove.addTarget(new CombatantReference(team, i));
 				}
 			} else if (target.startsWith("random")) {
 				let targetCount = Number(target.split(SAFE_DELIMITER)[1]);
@@ -57,8 +57,8 @@ module.exports = new Button(id, async (interaction, [moveName, round, index]) =>
 
 			let overwritten = false;
 			for (let i = 0; i < adventure.room.moves.length; i++) {
-				const { userTeam, userIndex: currentUserIndex } = adventure.room.moves[i];
-				if (userTeam === user.team && currentUserIndex === userIndex) {
+				const { userReference } = adventure.room.moves[i];
+				if (userReference.team === user.team && userReference.index === userIndex) {
 					await adventure.room.moves.splice(i, 1);
 					overwritten = true;
 					break;
@@ -66,8 +66,8 @@ module.exports = new Button(id, async (interaction, [moveName, round, index]) =>
 			}
 			if (!overwritten) {
 				for (let i = 0; i < adventure.room.priorityMoves.length; i++) {
-					const { userTeam, userIndex: currentUserIndex } = adventure.room.priorityMoves[i];
-					if (userTeam === user.team && currentUserIndex === userIndex) {
+					const { userReference } = adventure.room.priorityMoves[i];
+					if (userReference.team === user.team && userReference.index === userIndex) {
 						await adventure.room.priorityMoves.splice(i, 1);
 						break;
 					}

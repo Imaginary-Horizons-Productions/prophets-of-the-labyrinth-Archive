@@ -27,8 +27,8 @@ module.exports = new Select(id, async (interaction, [round]) => {
 			})
 			let overwritten = false;
 			for (let i = 0; i < adventure.room.moves.length; i++) {
-				const { userTeam, userIndex: currentUserIndex } = adventure.room.moves[i];
-				if (userTeam === user.team && currentUserIndex === userIndex) {
+				const { userReference } = adventure.room.moves[i];
+				if (userReference.team === user.team && userReference.index === userIndex) {
 					await adventure.room.moves.splice(i, 1);
 					overwritten = true;
 					break;
@@ -36,8 +36,8 @@ module.exports = new Select(id, async (interaction, [round]) => {
 			}
 			if (!overwritten) {
 				for (let i = 0; i < adventure.room.priorityMoves.length; i++) {
-					const { userTeam, userIndex: currentUserIndex } = adventure.room.priorityMoves[i];
-					if (userTeam === user.team && currentUserIndex === userIndex) {
+					const { userReference } = adventure.room.priorityMoves[i];
+					if (userReference.team === user.team && userReference.index === userIndex) {
 						await adventure.room.priorityMoves.splice(i, 1);
 						break;
 					}

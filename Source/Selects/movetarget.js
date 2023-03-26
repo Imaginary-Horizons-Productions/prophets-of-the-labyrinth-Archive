@@ -15,18 +15,19 @@ module.exports = new Select(id, async (interaction, [moveName, round, index]) =>
 		if (moveName === "Punch" || user.equipment.some(equip => equip.name === moveName && equip.uses > 0)) {
 			// Add move to round list (overwrite exisiting readied move)
 			let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
+			let [targetTeam, targetIndex] = interaction.values[0].split(SAFE_DELIMITER);
 			let newMove = new Move()
 				.onSetMoveSpeed(user)
 				.setIsCrit(user.crit)
 				.setMoveName(moveName)
 				.setType("equip")
-				.setUser(user.team, userIndex)
-				.addTarget(new CombatantReference(...interaction.values[0].split(SAFE_DELIMITER)));
+				.setUser(new CombatantReference(user.team, userIndex))
+				.addTarget(new CombatantReference(targetTeam, targetIndex));
 
 			let overwritten = false;
 			for (let i = 0; i < adventure.room.moves.length; i++) {
-				const { userTeam, userIndex: currentUserIndex } = adventure.room.moves[i];
-				if (userTeam === user.team && currentUserIndex === userIndex) {
+				const { userReference } = adventure.room.moves[i];
+				if (userReference.team === user.team && userReference.index === userIndex) {
 					await adventure.room.moves.splice(i, 1);
 					overwritten = true;
 					break;
@@ -34,8 +35,8 @@ module.exports = new Select(id, async (interaction, [moveName, round, index]) =>
 			}
 			if (!overwritten) {
 				for (let i = 0; i < adventure.room.priorityMoves.length; i++) {
-					const { userTeam, userIndex: currentUserIndex } = adventure.room.priorityMoves[i];
-					if (userTeam === user.team && currentUserIndex === userIndex) {
+					const { userReference } = adventure.room.priorityMoves[i];
+					if (userReference.team === user.team && userReference.index === userIndex) {
 						await adventure.room.priorityMoves.splice(i, 1);
 						break;
 					}

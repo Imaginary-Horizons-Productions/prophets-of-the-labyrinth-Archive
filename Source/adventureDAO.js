@@ -342,11 +342,11 @@ exports.endRound = async function (adventure, thread) {
 	// Generate Reactive Moves by Enemies
 	adventure.room.enemies.forEach((enemy, index) => {
 		if (enemy.lookupName === "@{clone}") {
-			const move = adventure.room.moves.find(move => move.userIndex === "enemy" && move.userIndex === index);
+			const move = adventure.room.moves.find(move => move.userReference.team === "enemy" && move.userReference.index === index);
 			let counterpartHasPriority = false;
-			let counterpartMove = adventure.room.moves.find(move => move.userTeam === "delver" && move.userIndex == index);
+			let counterpartMove = adventure.room.moves.find(move => move.userReference.team === "delver" && move.userReference.index == index);
 			if (!counterpartMove) {
-				counterpartMove = adventure.room.priorityMoves.find(move => move.userTeam === "delver" && move.userIndex == index);
+				counterpartMove = adventure.room.priorityMoves.find(move => move.userReference.team === "delver" && move.userReference.index == index);
 				counterpartHasPriority = true;
 			}
 			move.setType(counterpartMove.type)
@@ -360,7 +360,7 @@ exports.endRound = async function (adventure, thread) {
 			})
 
 			// Replace placeholder
-			adventure.room.moves.splice(adventure.room.moves.findIndex(move => move.userTeam === "enemy" && move.userIndex == index), 1);
+			adventure.room.moves.splice(adventure.room.moves.findIndex(move => move.userReference.team === "enemy" && move.userReference.index == index), 1);
 			if (counterpartHasPriority) {
 				adventure.room.priorityMoves.push(move);
 			} else {
