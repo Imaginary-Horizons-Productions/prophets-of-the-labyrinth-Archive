@@ -3,7 +3,7 @@ module.exports = class Labyrinth {
 	 * @param {string} nameInput
 	 * @param {"Fire" | "Water" | "Earth" | "Wind" | "Untyped"} elementInput
 	 * @param {number} maxDepthInput integer
-	 * @param {Array<number>} bossRoomDepthsInput
+	 * @param {number[]} bossRoomDepthsInput
 	 */
 	constructor(nameInput, elementInput, maxDepthInput, bossRoomDepthsInput) {
 		this.name = nameInput;
@@ -11,29 +11,26 @@ module.exports = class Labyrinth {
 		this.maxDepth = maxDepthInput;
 		this.bossRoomDepths = bossRoomDepthsInput;
 	}
+	/** @type {Record<"Fire" | "Water" | "Earth" | "Wind" | "Untyped", string[]>} equipment */
 	availableConsumables = {}; //TODO #465 merge consumable changes into base labyrinth
+	/** @type {Record<"Fire" | "Water" | "Earth" | "Wind" | "Untyped", Record<"Cursed" | "Common" | "Rare", string[]>>} equipment */
 	availableEquipment = {}; //TODO #464 merge equipment changes into base labyrinth
+	/** @type {Record<"Event" | "Battle" | "Merchant" | "Rest Site" | "Final Battle" | "Forge" | "Artifact Guardian" | "Treasure" | "Empty" |, string[]>} equipment */
 	availableRooms = {};
 
-	/**
-	 * @param {object} consumables
-	 */
+	/** @param {Record<"Fire" | "Water" | "Earth" | "Wind" | "Untyped", string[]>} consumables */
 	setConsumables(consumables) {
 		this.availableConsumables = consumables;
 		return this;
 	}
 
-	/**
-	 * @param {object} equipment
-	 */
+	/** @param {Record<"Fire" | "Water" | "Earth" | "Wind" | "Untyped", Record<"Cursed" | "Common" | "Rare", string[]>>} equipment */
 	setEquipment(equipment) {
 		this.availableEquipment = equipment;
 		return this;
 	}
 
-	/**
-	 * @param {object} consumables
-	 */
+	/** @param {Record<"Event" | "Battle" | "Merchant" | "Rest Site" | "Final Battle" | "Forge" | "Artifact Guardian" | "Treasure" | "Empty" |, string[]>} rooms */
 	setRooms(rooms) {
 		this.availableRooms = rooms;
 		return this;
