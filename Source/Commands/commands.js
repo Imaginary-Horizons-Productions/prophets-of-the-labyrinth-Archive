@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const fs = require("fs");
 const Command = require('../../Classes/Command.js');
 
@@ -16,7 +16,7 @@ fs.readFile("Wiki/Commands.md", { encoding: "utf-8" }, (error, data) => {
 })
 
 module.exports.execute = (interaction) => {
-	let embed = new MessageEmbed().setColor("#6b81eb")
+	let embed = new EmbedBuilder().setColor("#6b81eb")
 		.setAuthor({
 			name: "Click here to visit the PotL GitHub",
 			iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png",
@@ -50,7 +50,7 @@ module.exports.execute = (interaction) => {
 			}];
 			break;
 		} else {
-			embed.addField(commandSetName, commandSetText);
+			embed.addFields({ name: commandSetName, value: commandSetText });
 		}
 	}
 	if (files) {

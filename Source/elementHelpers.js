@@ -1,30 +1,30 @@
 const ELEMENTS = {
 	"Fire": {
-		color: "RED",
+		color: "ca314a",
 		emoji: "🔥",
 		opposite: "Water",
 		weakness: "Earth"
 	},
 	"Earth": {
-		color: "GREEN",
+		color: "809e84",
 		emoji: "🌿",
 		opposite: "Wind",
 		weakness: "Water"
 	},
 	"Water": {
-		color: "BLUE",
+		color: "29a9be",
 		emoji: "💦",
 		opposite: "Fire",
 		weakness: "Wind"
 	},
 	"Wind": {
-		color: "YELLOW",
+		color: "7d54c6",
 		emoji: "💨",
 		opposite: "Earth",
 		weakness: "Fire"
 	},
 	"Untyped": {
-		color: "GREY",
+		color: "445458",
 		emoji: "🌐",
 		opposite: "Untyped",
 		weakness: "none"
@@ -60,7 +60,7 @@ exports.getWeakness = function (element) {
  * @returns {string}
  */
 exports.getColor = function (element) {
-	return ELEMENTS[element]?.color || "GREY";
+	return ELEMENTS[element]?.color || "445458";
 }
 
 exports.getEmoji = function (element) {

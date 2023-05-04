@@ -1,5 +1,5 @@
 const Button = require('../../Classes/Button.js');
-const { MessageEmbed, MessageActionRow, MessageSelectMenu, MessageButton } = require('discord.js');
+const { EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const Delver = require('../../Classes/Delver.js');
 const { SAFE_DELIMITER } = require('../../constants.js');
 const { getEmoji, getWeakness, getColor } = require('../elementHelpers.js');
@@ -15,7 +15,7 @@ module.exports = new Button(id, (interaction, args) => {
 	let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 	if (delver) {
 		if (delver.getModifierStacks("Stun") < 1) { // Early out if stunned
-			let embed = new MessageEmbed().setColor(getColor(adventure.room.element))
+			let embed = new EmbedBuilder().setColor(getColor(adventure.room.element))
 				.setTitle("Readying a Move")
 				.setDescription(`Your ${getEmoji(delver.element)} moves add 1 Stagger to enemies and remove 1 Stagger from allies.\n\nPick one option from below as your move for this round:`)
 				.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
@@ -45,7 +45,7 @@ module.exports = new Button(id, (interaction, args) => {
 			}
 			for (let i = 0; i < usableMoves.length; i++) {
 				const { name: equipName, uses } = usableMoves[i];
-				embed.addField(...equipmentToEmbedField(equipName, uses));
+				embed.addFields(equipmentToEmbedField(equipName, uses));
 				const { target, team } = getEquipmentProperty(equipName, "targetingTags");
 				const elementEmoji = getEmoji(getEquipmentProperty(equipName, "element"));
 				if (target === "single") {
@@ -58,18 +58,18 @@ module.exports = new Button(id, (interaction, args) => {
 					if (team === "delver" || team === "any") {
 						targetOptions = targetOptions.concat(delverOptions);
 					}
-					components.push(new MessageActionRow().addComponents(
-						new MessageSelectMenu().setCustomId(`movetarget${SAFE_DELIMITER}${equipName}${SAFE_DELIMITER}${adventure.room.round}${SAFE_DELIMITER}${i}`)
+					components.push(new ActionRowBuilder().addComponents(
+						new StringSelectMenuBuilder().setCustomId(`movetarget${SAFE_DELIMITER}${equipName}${SAFE_DELIMITER}${adventure.room.round}${SAFE_DELIMITER}${i}`)
 							.setPlaceholder(`${elementEmoji} Use ${equipName} on...`)
 							.addOptions(targetOptions)
 					));
 				} else {
 					// Button
-					components.push(new MessageActionRow().addComponents(
-						new MessageButton().setCustomId(`confirmmove${SAFE_DELIMITER}${equipName}${SAFE_DELIMITER}${adventure.room.round}${SAFE_DELIMITER}${i}`)
+					components.push(new ActionRowBuilder().addComponents(
+						new ButtonBuilder().setCustomId(`confirmmove${SAFE_DELIMITER}${equipName}${SAFE_DELIMITER}${adventure.room.round}${SAFE_DELIMITER}${i}`)
 							.setLabel(`Use ${equipName}`)
 							.setEmoji(elementEmoji)
-							.setStyle("SECONDARY")
+							.setStyle(ButtonStyle.Secondary)
 					));
 				}
 			}

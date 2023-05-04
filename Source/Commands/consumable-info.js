@@ -21,7 +21,7 @@ module.exports.execute = (interaction) => {
 			.setTitle(consumableName)
 			.setDescription(description);
 		if (adventure) {
-			embed.addField("Number Held", numberHeld.toString());
+			embed.addFields({ name: "Number Held", value: numberHeld.toString() });
 		}
 		interaction.reply({ embeds: [embed], ephemeral: true });
 	} else {

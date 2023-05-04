@@ -1,6 +1,6 @@
 const { getAdventure, endRoom } = require('../adventureDAO.js');
 const Button = require('../../Classes/Button.js');
-const { MessageActionRow, MessageButton } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder } = require('discord.js');
 const { SAFE_DELIMITER } = require("../../constants.js");
 const { clearComponents } = require('../../helpers.js');
 
@@ -26,12 +26,12 @@ module.exports = new Button(id, (interaction, [candidate, depth]) => {
 				if (adventure.roomCandidates[candidateTag]?.length === adventure.delvers.length) {
 					clearComponents(adventure.messageIds.battleRound, interaction.channel.messages);
 					let uiRows = [...interaction.message.components.map(row => {
-						return new MessageActionRow().addComponents(...row.components.map(component => {
+						return new ActionRowBuilder().addComponents(...row.components.map(component => {
 							let editedComponent = component.setDisabled(true);
 							if (component.customId === `routevote${SAFE_DELIMITER}${candidateTag}`) {
 								editedComponent.setEmoji("✔️");
 							} else {
-								if (component instanceof MessageButton && !component.emoji?.name) {
+								if (component instanceof ButtonBuilder && !component.emoji?.name) {
 									editedComponent.setEmoji("✖️");
 								}
 							}
