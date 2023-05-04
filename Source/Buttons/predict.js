@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const Button = require('../../Classes/Button.js');
 const { getAdventure, setAdventure } = require('../adventureDAO.js');
 const { getTargetList } = require('../moveDAO.js');
@@ -23,7 +23,7 @@ module.exports = new Button(id, (interaction, args) => {
 		}
 	}
 	let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
-	let embed = new MessageEmbed().setColor(getColor(adventure.room.element))
+	let embed = new EmbedBuilder().setColor(getColor(adventure.room.element))
 		.setFooter({ text: `Room #${adventure.depth} - Round ${adventure.room.round}` });
 	let infoForNextRound = true;
 	let descriptionText = "";

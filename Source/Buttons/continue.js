@@ -1,6 +1,6 @@
 const { getAdventure, endRoom } = require('../adventureDAO.js');
 const Button = require('../../Classes/Button.js');
-const { MessageActionRow, MessageButton } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder } = require('discord.js');
 const { SAFE_DELIMITER } = require('../../constants.js');
 
 const id = "continue";
@@ -11,10 +11,10 @@ module.exports = new Button(id, (interaction, args) => {
 		// Disable all other components
 		interaction.update({
 			components: [...interaction.message.components.map(row => {
-				return new MessageActionRow().addComponents(...row.components.map(component => {
+				return new ActionRowBuilder().addComponents(...row.components.map(component => {
 					if (component.customId !== id) {
 						let editedComponent = component.setDisabled(true);
-						if (component instanceof MessageButton && !component.emoji) {
+						if (component instanceof ButtonBuilder && !component.emoji) {
 							editedComponent.setEmoji("✖️");
 						}
 						return editedComponent;

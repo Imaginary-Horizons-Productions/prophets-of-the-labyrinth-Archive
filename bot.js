@@ -1,5 +1,5 @@
 //#region Imports
-const { Client } = require("discord.js");
+const { Client, GatewayIntentBits } = require("discord.js");
 const { readFile, writeFile } = require("fs").promises;
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
@@ -26,7 +26,7 @@ const client = new Client({
 			type: "LISTENING"
 		}]
 	},
-	intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_MESSAGES"]
+	intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildMessages]
 });
 
 (async () => {
@@ -104,7 +104,7 @@ client.on("interactionCreate", interaction => {
 		const [mainId, ...args] = interaction.customId.split(SAFE_DELIMITER);
 		if (interaction.isButton()) {
 			callButton(mainId, interaction, args);
-		} else if (interaction.isSelectMenu()) {
+		} else if (interaction.isStringSelectMenu()) {
 			callSelect(mainId, interaction, args);
 		}
 	}

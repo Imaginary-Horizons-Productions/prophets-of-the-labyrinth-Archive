@@ -1,5 +1,5 @@
 const Button = require('../../Classes/Button.js');
-const { MessageActionRow, MessageSelectMenu } = require('discord.js');
+const { ActionRowBuilder, StringSelectMenuBuilder } = require('discord.js');
 const { getPlayer } = require('../playerDAO.js');
 const { getAdventure } = require('../adventureDAO.js');
 const { getArtifact } = require('../Artifacts/_artifactDictionary.js');
@@ -26,8 +26,8 @@ module.exports = new Button(id, (interaction, args) => {
 			if (options.length) {
 				interaction.reply({
 					content: "Select an artifact to keep from this adventure.",
-					components: [new MessageActionRow().addComponents(
-						new MessageSelectMenu()
+					components: [new ActionRowBuilder().addComponents(
+						new StringSelectMenuBuilder()
 							.setCustomId("collectartifact")
 							.setPlaceholder("Select an artifact...")
 							.addOptions(options)
@@ -38,8 +38,8 @@ module.exports = new Button(id, (interaction, args) => {
 			} else {
 				interaction.reply({
 					content: "You have already collected all of the artifacts the party obtained in this adventure.",
-					components: [new MessageActionRow().addComponents(
-						new MessageSelectMenu()
+					components: [new ActionRowBuilder().addComponents(
+						new StringSelectMenuBuilder()
 							.setCustomId("collectartifact")
 							.setPlaceholder("Select an artifact...")
 							.addOptions([{

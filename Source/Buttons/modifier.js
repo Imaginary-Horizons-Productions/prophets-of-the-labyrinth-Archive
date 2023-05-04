@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const Button = require('../../Classes/Button.js');
 const { getAdventure } = require('../adventureDAO.js');
 const { modifiersToString } = require('../combatantDAO.js');
@@ -14,19 +14,19 @@ module.exports = new Button(id, (interaction, [modifierName]) => {
 		let debuff = isDebuff(modifierName);
 		let styleColor;
 		if (buff) {
-			styleColor = "BLURPLE";
+			styleColor = "5865f2";
 		} else if (debuff) {
-			styleColor = "RED";
+			styleColor = "ed4245";
 		} else {
-			styleColor = "GREY";
+			styleColor = "4f545c";
 		}
-		let embed = new MessageEmbed().setColor(styleColor)
+		let embed = new EmbedBuilder().setColor(styleColor)
 			.setTitle(`${modifierName}${isNonStacking(modifierName) ? "" : ` x ${delver.modifiers[modifierName]}`}`)
 			.setDescription(getModifierDescription(modifierName, delver))
-			.addField("Category", `${buff ? "Buff" : debuff ? "Debuff" : "Modifier"}`);
+			.addFields({ name: "Category", value: `${buff ? "Buff" : debuff ? "Debuff" : "Modifier"}` });
 		interaction.reply({ embeds: [embed], ephemeral: true });
 	} else {
-		let embed = new MessageEmbed().setColor("GREY")
+		let embed = new EmbedBuilder().setColor("4f545c")
 			.setTitle("All Modifiers")
 			.setDescription(modifiersToString(delver, true))
 		interaction.reply({ embeds: [embed], ephemeral: true });

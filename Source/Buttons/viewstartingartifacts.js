@@ -1,5 +1,5 @@
 const Button = require('../../Classes/Button.js');
-const { MessageActionRow, MessageSelectMenu, MessageButton } = require('discord.js');
+const { ActionRowBuilder, StringSelectMenuBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const { SAFE_DELIMITER, MAX_SELECT_OPTIONS } = require('../../constants.js');
 const { getPlayer } = require('../playerDAO.js');
 const { getAdventure } = require('../adventureDAO.js');
@@ -36,18 +36,18 @@ module.exports = new Button(id, (interaction, args) => {
 			}
 		}
 
-		const artifactSelect = [new MessageActionRow().addComponents(
-			new MessageSelectMenu()
+		const artifactSelect = [new ActionRowBuilder().addComponents(
+			new StringSelectMenuBuilder()
 				.setCustomId("startingartifact")
 				.setPlaceholder("Select an artifact...")
 				.addOptions(options)
 		)];
 		interaction.reply({ content: "Select an artifact from your collection to start with! Each player will have a different set of artifacts to select from.", components: artifactSelect, ephemeral: true });
 	} else {
-		const join = new MessageActionRow().addComponents(
-			new MessageButton().setCustomId(`join${SAFE_DELIMITER}${interaction.guildId}${SAFE_DELIMITER}${interaction.channelId}${SAFE_DELIMITER}aux`)
+		let join = new ActionRowBuilder().addComponents(
+			new ButtonBuilder().setCustomId(`join${SAFE_DELIMITER}${interaction.guildId}${SAFE_DELIMITER}${interaction.channelId}${SAFE_DELIMITER}aux`)
 				.setLabel("Join")
-				.setStyle("SUCCESS"));
+				.setStyle(ButtonStyle.Success));
 		interaction.reply({ content: `You don't appear to be signed up for this adventure. You can join with the button below:`, components: [join], ephemeral: true });
 	}
 });

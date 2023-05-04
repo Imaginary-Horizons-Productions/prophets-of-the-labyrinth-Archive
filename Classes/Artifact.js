@@ -7,7 +7,8 @@ module.exports = class Artifact {
 		this.description = descriptionInput;
 	}
 	element = "";
-	flavorText = [];
+	/** @type {import("discord.js").EmbedField} */
+	flavorText;
 
 	dynamicDescription(copies) {
 		let description = calculateTagContent(this.description, 'copies', copies);
@@ -20,8 +21,8 @@ module.exports = class Artifact {
 		return this;
 	}
 
-	setFlavorText(fieldArray) {
-		this.flavorText = fieldArray;
+	setFlavorText(embedFieldData) {
+		this.flavorText = embedFieldData;
 		return this;
 	}
 }
