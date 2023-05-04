@@ -1,4 +1,4 @@
-const { MessageActionRow, MessageButton } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const Select = require('../../Classes/Select.js');
 const { SAFE_DELIMITER } = require('../../constants.js');
 const { getAdventure, setAdventure } = require('../adventureDAO.js');
@@ -25,11 +25,11 @@ module.exports = new Select(id, (interaction, [tier]) => {
 					updateRoomHeader(adventure, interaction.message);
 					setAdventure(adventure);
 				} else {
-					let replaceUI = [new MessageActionRow().addComponents(
+					let replaceUI = [new ActionRowBuilder().addComponents(
 						...delver.equipment.map((equip, index) => {
-							return new MessageButton().setCustomId(`replaceequipment${SAFE_DELIMITER}${name}${SAFE_DELIMITER}${index}${SAFE_DELIMITER}true`)
+							return new ButtonBuilder().setCustomId(`replaceequipment${SAFE_DELIMITER}${name}${SAFE_DELIMITER}${index}${SAFE_DELIMITER}true`)
 								.setLabel(`Discard ${equip.name}`)
-								.setStyle("SECONDARY")
+								.setStyle(ButtonStyle.Secondary)
 						})
 					)];
 					interaction.reply({ content: `You can only carry ${adventure.getEquipmentCapacity()} pieces of equipment at a time. Pick one to replace:`, components: replaceUI, ephemeral: true });

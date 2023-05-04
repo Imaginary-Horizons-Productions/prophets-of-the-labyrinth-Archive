@@ -14,7 +14,8 @@ module.exports = class Adventure {
 	id; // the id of the thread created for the adventure
 	name;
 	labyrinth = "Debug Dungeon"; //TODO #462 generate/take labyrinth as input
-	state = "config"; // enum: "config", "ongoing", "completed"
+	/** @type {"config" | "ongoing" | "completed"} */
+	state = "config";
 	element;
 	messageIds = {
 		start: "",
@@ -41,7 +42,8 @@ module.exports = class Adventure {
 	lives = 2;
 	gold = 100;
 	peakGold = 100;
-	artifacts = {}; // {artifactName: {count, staistic1, statistic2...}}
+	/** @type {Record<string, {count: number; [statistic: string]: number}>} */
+	artifacts = {};
 	consumables = {}; // {consumableName: count}
 	rnIndices = {
 		general: 0,

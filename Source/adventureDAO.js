@@ -22,7 +22,7 @@ const { resolveMove } = require("./moveDAO.js");
 const { setPlayer, getPlayer } = require("./playerDAO.js");
 const { renderRoom, updateRoomHeader } = require("./roomDAO.js");
 const { getEquipmentProperty } = require("./equipment/_equipmentDictionary.js");
-const { ThreadChannel } = require("discord.js");
+const { ThreadChannel, EmbedBuilder } = require("discord.js");
 const Resource = require("../Classes/Resource.js");
 
 const adventureDictionary = new Map();
@@ -454,10 +454,10 @@ exports.completeAdventure = function (adventure, thread, descriptionOverride) {
 	})
 
 	thread.fetchStarterMessage({ cache: false, force: true }).then(recruitMessage => {
-		let [recruitEmbed] = recruitMessage.embeds;
+		const recruitEmbed = new EmbedBuilder(recruitMessage.embeds[0]);
 		recruitEmbed.setTitle(recruitEmbed.title + ": COMPLETE!")
 			.setThumbnail("https://cdn.discordapp.com/attachments/545684759276421120/734092918369026108/completion.png")
-			.addField("Seed", adventure.initialSeed);
+			.addFields({ name: "Seed", value: adventure.initialSeed });
 		recruitMessage.edit({ embeds: [recruitEmbed], components: [] });
 	})
 	clearComponents(adventure.messageIds.battleRound, messageManager);

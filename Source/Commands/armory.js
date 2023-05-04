@@ -17,9 +17,9 @@ module.exports.execute = (interaction) => {
 		let embed = embedTemplate(interaction.client.user.displayAvatarURL()).setColor(getColor(getEquipmentProperty(equipmentName, "element")))
 			.setTitle(equipmentName)
 			.setDescription(buildEquipmentDescription(equipmentName, true))
-			.addField("Max Durability", getEquipmentProperty(equipmentName, "maxUses").toString())
-			.addField("Base Value", getEquipmentProperty(equipmentName, "cost").toString())
-			.addField("Can be Tinkered Into", upgrades.length ? upgrades.join(", ") : "None");
+			.addFields({ name: "Max Durability", value: getEquipmentProperty(equipmentName, "maxUses").toString() })
+			.addFields({ name: "Base Value", value: getEquipmentProperty(equipmentName, "cost").toString() })
+			.addFields({ name: "Can be Tinkered Into", value: upgrades.length ? upgrades.join(", ") : "None" });
 		interaction.reply({ embeds: [embed], ephemeral: true });
 	} else {
 		interaction.reply({ content: `Stats on **${equipmentName}** could not be found. Check for typos!`, ephemeral: true });

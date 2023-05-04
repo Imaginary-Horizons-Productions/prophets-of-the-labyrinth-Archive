@@ -1,3 +1,4 @@
+const { EmbedBuilder } = require('discord.js');
 const Select = require('../../Classes/Select.js');
 const { getAdventure, setAdventure } = require('../adventureDAO.js');
 const { getChallenge } = require('../Challenges/_challengeDictionary.js');
@@ -10,7 +11,7 @@ module.exports = new Select(id, (interaction, args) => {
 			if (interaction.values.includes("None")) {
 				adventure.challenges = {};
 				interaction.channel.fetchStarterMessage().then(starterMessage => {
-					let embed = starterMessage.embeds[0];
+					let embed = new EmbedBuilder(starterMessage.embeds[0]);
 					let fieldIndex = embed.fields.findIndex(field => field.name === "Challenges");
 					if (fieldIndex !== -1) {
 						embed.spliceFields(fieldIndex, 1);
@@ -25,13 +26,13 @@ module.exports = new Select(id, (interaction, args) => {
 					adventure.challenges[challengeName] = { intensity: challenge.intensity, duration: challenge.duration };
 				})
 				interaction.channel.fetchStarterMessage().then(starterMessage => {
-					let embed = starterMessage.embeds[0];
+					let embed = new EmbedBuilder(starterMessage.embeds[0]);
 					let challengesText = Object.keys(adventure.challenges).join("\n• ");
 					let fieldIndex = embed.fields.findIndex(field => field.name === "Challenges");
 					if (fieldIndex !== -1) {
 						embed.spliceFields(fieldIndex, 1, { name: "Challenges", value: `• ${challengesText}` })
 					} else {
-						embed.addField("Challenges", `• ${challengesText}`);
+						embed.addFields({ name: "Challenges", value: `• ${challengesText}` });
 					}
 					starterMessage.edit({ embeds: [embed] });
 				})

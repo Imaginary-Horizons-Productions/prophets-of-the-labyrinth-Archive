@@ -1,4 +1,4 @@
-const { MessageActionRow, MessageSelectMenu, Interaction } = require('discord.js');
+const { ActionRowBuilder, StringSelectMenuBuilder, Interaction } = require('discord.js');
 const Button = require('../../Classes/Button.js');
 const { SAFE_DELIMITER } = require('../../constants.js');
 const { getAdventure } = require("../adventureDAO.js");
@@ -28,8 +28,8 @@ module.exports = new Button(id,
 			})
 			if (adventure.room.resources.roomAction.count > 0) {
 				if (options.length > 0) {
-					let upgradeSelect = new MessageActionRow().addComponents(
-						new MessageSelectMenu().setCustomId("repair")
+					let upgradeSelect = new ActionRowBuilder().addComponents(
+						new StringSelectMenuBuilder().setCustomId("repair")
 							.setPlaceholder("Pick a piece of equipment to repair...")
 							.setOptions(options)
 					)
