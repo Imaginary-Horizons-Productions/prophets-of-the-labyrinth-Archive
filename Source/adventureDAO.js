@@ -454,11 +454,15 @@ exports.completeAdventure = function (adventure, thread, descriptionOverride) {
 	})
 
 	thread.fetchStarterMessage({ cache: false, force: true }).then(recruitMessage => {
-		const recruitEmbed = new EmbedBuilder(recruitMessage.embeds[0]);
-		recruitEmbed.setTitle(recruitEmbed.title + ": COMPLETE!")
-			.setThumbnail("https://cdn.discordapp.com/attachments/545684759276421120/734092918369026108/completion.png")
-			.addFields({ name: "Seed", value: adventure.initialSeed });
-		recruitMessage.edit({ embeds: [recruitEmbed], components: [] });
+		const [{ data: recruitEmbed }] = recruitMessage.embeds;
+		recruitMessage.edit({
+			embeds: [
+				new EmbedBuilder(recruitEmbed)
+					.setTitle(recruitEmbed.title + ": COMPLETE!")
+					.setThumbnail("https://cdn.discordapp.com/attachments/545684759276421120/734092918369026108/completion.png")
+					.addFields({ name: "Seed", value: adventure.initialSeed })
+			], components: []
+		});
 	})
 	clearComponents(adventure.messageIds.battleRound, messageManager);
 	clearComponents(adventure.messageIds.room, messageManager);
