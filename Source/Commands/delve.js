@@ -41,7 +41,7 @@ module.exports.execute = (interaction) => {
 					.setTitle(adventure.name)
 					.setThumbnail("https://cdn.discordapp.com/attachments/545684759276421120/734093574031016006/bountyboard.png")
 					.setDescription("A new adventure is starting!")
-					.addFields({ name: "1 Party Member", value: `Leader: ${interaction.member}` })
+					.addFields({ name: "1 Party Member", value: `${interaction.member} 👑` })
 				interaction.reply({ embeds: [embed], fetchReply: true }).then(recruitMessage => {
 					return recruitMessage.startThread({ name: adventure.name }).then(thread => {
 						recruitMessage.edit({
