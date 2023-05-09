@@ -1,5 +1,5 @@
 //#region Imports
-const { Client, GatewayIntentBits } = require("discord.js");
+const { Client, GatewayIntentBits, Events, ActivityType } = require("discord.js");
 const { readFile, writeFile } = require("fs").promises;
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
@@ -23,7 +23,7 @@ const client = new Client({
 	presence: {
 		activities: [{
 			name: "/manual",
-			type: "LISTENING"
+			type: ActivityType.Listening
 		}]
 	},
 	intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildMessages]
@@ -42,7 +42,7 @@ const client = new Client({
 //#endregion
 
 //#region Event Handlers
-client.on("ready", () => {
+client.on(Events.ClientReady, () => {
 	console.log(`Connected as ${client.user.tag}`);
 
 	// Post version notes
@@ -86,7 +86,7 @@ client.on("ready", () => {
 	})();
 })
 
-client.on("interactionCreate", interaction => {
+client.on(Events.InteractionCreate, interaction => {
 	if (interaction.isCommand()) {
 		const { premiumCommand, managerCommand, execute } = getCommand(interaction.commandName);
 		if (!premiumCommand || !getPremiumUsers().includes(interaction.user.id)) {
@@ -110,7 +110,7 @@ client.on("interactionCreate", interaction => {
 	}
 })
 
-client.on("guildCreate", guild => {
+client.on(Events.GuildCreate, guild => {
 	setGuild(new GuildProfile(guild.id));
 })
 //#endregion
