@@ -1,4 +1,4 @@
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder } = require('discord.js');
 const { SAFE_DELIMITER } = require('../../constants.js');
 const Archetype = require('../../Classes/Archetype.js');
 const Select = require('../../Classes/Select.js');
@@ -30,9 +30,9 @@ module.exports = new Select(id, (interaction, args) => {
 			// Send confirmation text
 			interaction.update({
 				content: archetypeTemplate.description,
-				components: [/*new ActionRowBuilder().addComponents(
-					interaction.component.setPlaceholder("Pick a different archetype...")
-				)*/]
+				components: [new ActionRowBuilder().addComponents(
+					new StringSelectMenuBuilder(interaction.component.data).setPlaceholder("Pick a different archetype...")
+				)]
 			});
 			interaction.channel.send(`${interaction.user} ${isSwitching ? "has switched to" : "will be playing as"} ${archetype}.`).then(() => {
 				// Check if all ready... wasReady is used to guarantee only one ready-button in a racecondition
