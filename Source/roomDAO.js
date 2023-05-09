@@ -1,4 +1,4 @@
-const { ActionRowBuilder, ButtonBuilder, StringSelectMenuBuilder, ThreadChannel, EmbedBuilder, ButtonStyle } = require("discord.js");
+const { ActionRowBuilder, ButtonBuilder, StringSelectMenuBuilder, ThreadChannel, EmbedBuilder, ButtonStyle, ComponentType } = require("discord.js");
 const Adventure = require("../Classes/Adventure.js");
 
 const { SAFE_DELIMITER, MAX_MESSAGE_ACTION_ROWS } = require("../constants.js");
@@ -329,23 +329,30 @@ exports.generateMerchantRows = function (adventure) {
 
 /** Modify the buttons whose `customId`s are keys in `edits` from among `components` based on `preventUse`, `label`, and `emoji` then return all components
  * @param {MessageActionRow[]} components
- * @param {object} edits - customId as key to object with { preventUse, label, [emoji] }
+ * @param {{[customId: string]: {preventUse: boolean; label: string; emoji?: string}}} edits
  * @returns {MessageActionRow[]} the components of the message with the button edited
  */
 exports.editButtons = function (components, edits) {
 	return components.map(row => {
-		return new ActionRowBuilder().addComponents(...row.components.map(component => {
-			let customId = component.customId;
-			if (customId in edits) {
-				const { preventUse, label, emoji } = edits[customId];
-				let editedButton = component.setDisabled(preventUse)
-					.setLabel(label);
-				if (emoji) {
-					editedButton.setEmoji(emoji);
-				}
-				return editedButton;
-			} else {
-				return component;
+		return new ActionRowBuilder().addComponents(row.components.map(({ data: component }) => {
+			const customId = component.custom_id;
+			switch (component.type) {
+				case ComponentType.Button:
+					const editedButton = new ButtonBuilder(component);
+					if (customId in edits) {
+						const { preventUse, label, emoji } = edits[customId];
+						editedButton.setDisabled(preventUse)
+							.setLabel(label);
+						if (emoji) {
+							editedButton.setEmoji(emoji);
+						}
+					};
+					return editedButton;
+				case ComponentType.StringSelect:
+					return new StringSelectMenuBuilder(component);
+				default:
+					throw new Error(`Disabling unregistered component from editButtons: ${component.type}`);
+
 			}
 		}));
 	})
@@ -361,12 +368,13 @@ exports.consumeRoomActions = function (adventure, embeds, actionsConsumed) {
 	adventure.room.resources.roomAction.count -= actionsConsumed;
 	const remainingActions = adventure.room.resources.roomAction.count;
 	return {
-		embeds: embeds.map(embed => {
+		embeds: embeds.map(({ data: embed }) => {
+			const updatedEmbed = new EmbedBuilder(embed);
 			const roomActionsFieldIndex = embed.fields.findIndex(field => field.name === "Room Actions");
 			if (roomActionsFieldIndex !== -1) {
-				return embed.spliceFields(roomActionsFieldIndex, 1, { name: "Room Actions", value: remainingActions.toString() });
+				return updatedEmbed.spliceFields(roomActionsFieldIndex, 1, { name: "Room Actions", value: remainingActions.toString() });
 			} else {
-				return embed;
+				return updatedEmbed;
 			}
 		}),
 		remainingActions
