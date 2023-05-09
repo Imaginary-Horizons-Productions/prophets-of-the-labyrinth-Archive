@@ -33,7 +33,7 @@ const ELEMENTS = {
 
 /** Get a list of all possible elements
  * @param {boolean} includeUntyped
- * @returns {string[]}
+ * @returns {("Fire" | "Earth" | "Water" | "Wind" | "Untyped")[]}
  */
 exports.elementsList = function (includeUntyped = false) {
 	if (includeUntyped) {
@@ -44,8 +44,8 @@ exports.elementsList = function (includeUntyped = false) {
 }
 
 /** Get the element that deals increased damage to the given element
- * @param {string} element enumeration: "Fire", "Earth", "Water", "Wind", "Untyped"
- * @returns {string}
+ * @param {"Fire" | "Earth" | "Water" | "Wind" | "Untyped"} element
+ * @returns {"Fire" | "Earth" | "Water" | "Wind" | "Untyped"}
  */
 exports.getWeakness = function (element) {
 	if (element in ELEMENTS) {
@@ -56,17 +56,23 @@ exports.getWeakness = function (element) {
 }
 
 /** Each element has an assigned Discord parseable color
- * @param {string} element
- * @returns {string}
+ * @param {"Fire" | "Earth" | "Water" | "Wind" | "Untyped"} element
  */
 exports.getColor = function (element) {
-	return ELEMENTS[element]?.color || "445458";
+	return ELEMENTS[element]?.color || ELEMENTS["Untyped"].color;
 }
 
+/** Each element has an associated emoji
+ * @param {"Fire" | "Earth" | "Water" | "Wind" | "Untyped"} element
+ */
 exports.getEmoji = function (element) {
 	return ELEMENTS[element]?.emoji || "n/a";
 }
 
+/** Used in "opposite of adventure" element
+ * @param {"Fire" | "Earth" | "Water" | "Wind" | "Untyped"} element
+ * @returns {"Fire" | "Earth" | "Water" | "Wind" | "Untyped"}
+ */
 exports.getOpposite = function (element) {
 	return ELEMENTS[element]?.opposite || "n/a";
 }
