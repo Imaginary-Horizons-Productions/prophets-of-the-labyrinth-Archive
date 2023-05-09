@@ -41,15 +41,16 @@ module.exports = new Button(id, async (interaction, [guildId, adventureId, conte
 						});
 
 						// Update recruit message
-						let partyList = `Leader: <@${adventure.leaderId}>`;
+						let partyList = `<@${adventure.leaderId}> 👑`;
 						for (let delver of adventure.delvers) {
 							if (delver.id !== adventure.leaderId) {
 								partyList += `\n<@${delver.id}>`;
 							}
 						}
-						let embeds = [];
-						if (recruitMessage.embeds[0]) {
-							embeds = [new EmbedBuilder(recruitMessage.embeds[0]).spliceFields(0, 1, { name: `${adventure.delvers.length} Party Member${adventure.delvers.length == 1 ? "" : "s"}`, value: partyList })];
+						const embeds = [];
+						const [{ data: recruitEmbed }] = recruitMessage.embeds;
+						if (recruitEmbed) {
+							embeds.push(new EmbedBuilder(recruitEmbed).spliceFields(0, 1, { name: `${adventure.delvers.length} Party Member${adventure.delvers.length == 1 ? "" : "s"}`, value: partyList }));
 						}
 						let components = recruitMessage.components;
 						if (adventure.delvers.length === maxDelverCount) {
