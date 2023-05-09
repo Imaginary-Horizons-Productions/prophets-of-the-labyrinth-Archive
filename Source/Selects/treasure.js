@@ -43,7 +43,7 @@ module.exports = new Select(id,
 							} else {
 								result = {
 									content: `You can only carry ${adventure.getEquipmentCapacity()} pieces of equipment at a time. Pick one to replace with the ${name}:`,
-									components: [new ActionRowBuilder().addComponents(...delver.equipment.map((equip, index) => {
+									components: [new ActionRowBuilder().addComponents(delver.equipment.map((equip, index) => {
 										return new ButtonBuilder().setCustomId(`replaceequipmenttreasure${SAFE_DELIMITER}${name}${SAFE_DELIMITER}${index}${SAFE_DELIMITER}false`)
 											.setLabel(`Discard ${equip.name}`)
 											.setStyle(ButtonStyle.Secondary)
