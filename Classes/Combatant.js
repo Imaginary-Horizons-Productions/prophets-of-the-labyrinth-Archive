@@ -14,25 +14,20 @@ module.exports = class Combatant {
 	critNumerator = 1;
 	critDenominator = 4;
 	element = "not picked";
+	/** @type {{[modifierName: string]: number}} */
 	modifiers = {};
 	staggerThreshold = 3;
 
-	/**
-	 * Sets the combatant's title, either the archetype for delvers or the uniquifying number for enemies
-	 *
+	/** Sets the combatant's title, either the archetype for delvers or the uniquifying number for enemies
 	 * @param {string} titleInput
-	 * @returns {Combatant}
 	 */
 	setTitle(titleInput) {
 		this.title = titleInput;
 		return this;
 	}
 
-	/**
-	 * Sets the hp and max hp of the combatant Delvers start at 300.
-	 *
+	/** Sets the hp and max hp of the combatant Delvers start at 300.
 	 * @param {number} integer
-	 * @returns {Combatant}
 	 */
 	setHp(integer) {
 		this.hp = integer;
@@ -40,22 +35,16 @@ module.exports = class Combatant {
 		return this;
 	}
 
-	/**
-	 * Sets the speed of the combatant. Delvers start at 100.
-	 *
+	/** Sets the speed of the combatant. Delvers start at 100.
 	 * @param {number} integer
-	 * @returns {Combatant}
 	 */
 	setSpeed(integer) {
 		this.speed = integer;
 		return this;
 	}
 
-	/**
-	 * Sets the number of Stagger needed to promote to Stun. Delvers start at 3.
-	 *
+	/** Sets the number of Stagger needed to promote to Stun. Delvers start at 3.
 	 * @param {number} integer
-	 * @returns {Combatant}
 	 */
 	setStaggerThreshold(integer) {
 		this.staggerThreshold = integer;
@@ -63,29 +52,22 @@ module.exports = class Combatant {
 	}
 
 	/** Combatant element determines weaknesses, resistances, and same element stagger bonus
-	 * @param {"Fire" | "Water" | "Earth" | "Wind" | "@{adventure}" | "@{adventureOpposite}"} elementEnum
-	 * @returns {Combatant}
+	 * @param {"Fire" | "Water" | "Earth" | "Wind" | "Untyped" | "@{adventure}" | "@{adventureOpposite}"} elementEnum
 	 */
 	setElement(elementEnum) {
 		this.element = elementEnum;
 		return this;
 	}
 
-	/**
-	 * Gets the numerator of the combatant's critical hit chance. Starts at 1. Delver has an overwrite that uses `count`.
-	 *
+	/** Gets the numerator of the combatant's critical hit chance. Starts at 1. Delver has an overwrite that uses `hawkTailfeatherCount`.
 	 * @param {number} hawkTailfeatherCount
-	 * @returns {number}
 	 */
 	getCritNumerator(hawkTailfeatherCount) {
 		return this.critNumerator;
 	}
 
-	/**
-	 * Gets the denominator of the combatant's critical hit chance. Starts at 4. Delver has an overwrite that uses `count`.
-	 *
+	/** Gets the denominator of the combatant's critical hit chance. Starts at 4. Delver has an overwrite that uses `hawkTailfeatherCount`.
 	 * @param {number} hawkTailfeatherCount
-	 * @returns {number}
 	 */
 	getCritDenominator(hawkTailfeatherCount) {
 		return this.critDenominator;
@@ -93,7 +75,6 @@ module.exports = class Combatant {
 
 	/** Get the number of stacks of the given modifier the combatant has
 	 * @param {string} modifierName
-	 * @returns {number}
 	 */
 	getModifierStacks(modifierName) {
 		return this.modifiers[modifierName] ?? 0

@@ -24,6 +24,7 @@
 - Delvers can now use the default Punch move when they don't have a usable weapon (previously had to have no usable equipment)
 - *Censer*s now gain their bonus when their targets have debuffs (instead of 0 block)
 - Added *Tormenting Censer*
+- Halved the effectiveness of *Hawk Tailfeather*
 
 #### Prophets of the Labyrinth Version 0.9.0:
 - Rebalanced predicts, they are now as follows

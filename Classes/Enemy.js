@@ -11,7 +11,8 @@ module.exports = class Enemy extends Combatant {
 	// Properties from Combatant: hp, maxHp, speed, roundSpeed, element, setHp, setSpeed, setElement
 	actions = {};
 	nextAction = "";
-	startingModifiers = {}; // {modifier: stacks}
+	/** @type {[modifierName: string]: number} */
+	startingModifiers = {};
 
 	setHp = super.setHp;
 	setTitle = super.setTitle;
