@@ -206,8 +206,6 @@ exports.generateLootRow = function (adventure) {
 					option.description = buildEquipmentDescription(name, false);
 				} else if (type === "artifact") {
 					option.description = getArtifact(name).dynamicDescription(count);
-				} else {
-					option.description = "";
 				}
 				options.push(option)
 			}
