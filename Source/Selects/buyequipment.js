@@ -26,7 +26,7 @@ module.exports = new Select(id, (interaction, [tier]) => {
 					setAdventure(adventure);
 				} else {
 					let replaceUI = [new ActionRowBuilder().addComponents(
-						...delver.equipment.map((equip, index) => {
+						delver.equipment.map((equip, index) => {
 							return new ButtonBuilder().setCustomId(`replaceequipment${SAFE_DELIMITER}${name}${SAFE_DELIMITER}${index}${SAFE_DELIMITER}true`)
 								.setLabel(`Discard ${equip.name}`)
 								.setStyle(ButtonStyle.Secondary)
