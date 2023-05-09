@@ -37,3 +37,7 @@ exports.rollArtifact = function (adventure) {
 	let artifactPool = adventure.getElementPool().reduce((artifacts, element) => artifacts.concat(ROLL_TABLE[element]), []);
 	return artifactPool[generateRandomNumber(adventure, artifactPool.length, "general")];
 }
+
+exports.getAllArtifactNames = function () {
+	return Object.keys(ARTIFACTS);
+}
