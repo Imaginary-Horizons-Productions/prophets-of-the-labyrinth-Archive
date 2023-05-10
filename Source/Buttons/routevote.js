@@ -1,6 +1,6 @@
 const { getAdventure, endRoom } = require('../adventureDAO.js');
 const Button = require('../../Classes/Button.js');
-const { ActionRowBuilder, ButtonBuilder } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder, ComponentType, StringSelectMenuBuilder } = require('discord.js');
 const { SAFE_DELIMITER } = require("../../constants.js");
 const { clearComponents } = require('../../helpers.js');
 
@@ -26,17 +26,23 @@ module.exports = new Button(id, (interaction, [candidate, depth]) => {
 				if (adventure.roomCandidates[candidateTag]?.length === adventure.delvers.length) {
 					clearComponents(adventure.messageIds.battleRound, interaction.channel.messages);
 					let uiRows = [...interaction.message.components.map(row => {
-						return new ActionRowBuilder().addComponents(...row.components.map(component => {
-							let editedComponent = component.setDisabled(true);
-							if (component.customId === `routevote${SAFE_DELIMITER}${candidateTag}`) {
-								editedComponent.setEmoji("✔️");
-							} else {
-								if (component instanceof ButtonBuilder && !component.emoji?.name) {
-									editedComponent.setEmoji("✖️");
-								}
+						return new ActionRowBuilder().addComponents(row.components.map(({ data: component }) => {
+							switch (component.type) {
+								case ComponentType.Button:
+									const updatedButton = new ButtonBuilder(component).setDisabled(true);
+									if (component.custom_id === `${id}${SAFE_DELIMITER}${candidateTag}`) {
+										updatedButton.setEmoji("✔️");
+									} else if (!component.emoji) {
+										updatedButton.setEmoji("✖️");
+									}
+
+									return updatedButton;
+								case ComponentType.StringSelect:
+									return new StringSelectMenuBuilder(component).setDisabled(true);
+								default:
+									throw new Error(`Disabling unregistered component from continue button: ${component.type}`);
 							}
-							return editedComponent;
-						}));
+						}))
 					})];
 					interaction.message.edit({ components: uiRows });
 					endRoom(candidate, interaction.channel);
