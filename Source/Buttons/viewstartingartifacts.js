@@ -20,8 +20,7 @@ module.exports = new Button(id, (interaction, args) => {
 		const playerArtifactCollection = Object.values(playerProfile.artifacts);
 		for (let i = 0; i < MAX_SELECT_OPTIONS - options.length; i++) {
 			const digits = Math.ceil(Math.log2(artifactPool.length) / Math.log2(12));
-			const end = start + digits;
-			start = end % adventure.rnTable.length;
+			const end = (start + digits) % adventure.rnTable.length;
 			const max = 12 ** digits;
 			const sectionLength = max / artifactPool.length;
 			const roll = parseInt(adventure.rnTable.slice(start, end), 12);
@@ -34,6 +33,7 @@ module.exports = new Button(id, (interaction, args) => {
 					value: artifact
 				})
 			}
+			start++;
 		}
 
 		const artifactSelect = [new ActionRowBuilder().addComponents(
