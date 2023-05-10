@@ -21,7 +21,7 @@ module.exports = new Select(id, (interaction, args) => {
 	let artifactCopy = Object.assign({}, adventure.artifacts[artifactName]);
 	delete artifactCopy["count"];
 	Object.entries(artifactCopy).forEach(([statistic, value]) => {
-		embed.addFields({ name: statistic, value });
+		embed.addFields({ name: statistic, value: value.toString() });
 	})
 	interaction.reply({ embeds: [embed], ephemeral: true });
 });
