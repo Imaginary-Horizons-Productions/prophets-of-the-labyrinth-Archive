@@ -11,9 +11,11 @@ module.exports = class Artifact {
 	flavorText;
 
 	dynamicDescription(copies) {
-		let description = calculateTagContent(this.description, 'copies', copies);
-		description = calculateTagContent(description, 'rows', MAX_MESSAGE_ACTION_ROWS);
-		return calculateTagContent(description, 'buttons', MAX_BUTTONS_PER_ROW);
+		return calculateTagContent(this.description, [
+			{ tag: 'copies', count: copies },
+			{ tag: 'rows', count: MAX_MESSAGE_ACTION_ROWS },
+			{ tag: 'buttons', count: MAX_BUTTONS_PER_ROW }
+		]);
 	}
 
 	setElement(elementEnum) {

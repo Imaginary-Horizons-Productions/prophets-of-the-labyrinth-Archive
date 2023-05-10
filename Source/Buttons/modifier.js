@@ -22,13 +22,13 @@ module.exports = new Button(id, (interaction, [modifierName]) => {
 		}
 		let embed = new EmbedBuilder().setColor(styleColor)
 			.setTitle(`${modifierName}${isNonStacking(modifierName) ? "" : ` x ${delver.modifiers[modifierName]}`}`)
-			.setDescription(getModifierDescription(modifierName, delver))
+			.setDescription(getModifierDescription(modifierName, delver, adventure))
 			.addFields({ name: "Category", value: `${buff ? "Buff" : debuff ? "Debuff" : "Modifier"}` });
 		interaction.reply({ embeds: [embed], ephemeral: true });
 	} else {
 		let embed = new EmbedBuilder().setColor("4f545c")
 			.setTitle("All Modifiers")
-			.setDescription(modifiersToString(delver, true))
+			.setDescription(modifiersToString(delver, true, adventure))
 		interaction.reply({ embeds: [embed], ephemeral: true });
 	}
 });

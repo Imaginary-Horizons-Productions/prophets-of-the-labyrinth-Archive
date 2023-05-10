@@ -38,7 +38,6 @@ module.exports.execute = (interaction) => {
 		const artifactOptions = Object.keys(adventure.artifacts).slice(0, MAX_SELECT_OPTIONS).map(artifact => {
 			return {
 				label: `${artifact} x ${adventure.artifacts[artifact].count} `,
-				description: "",
 				value: `${artifact}${SAFE_DELIMITER}${adventure.artifacts[artifact].count} `
 			}
 		})
@@ -56,7 +55,6 @@ module.exports.execute = (interaction) => {
 					.setDisabled(true)
 					.setOptions([{
 						label: "placeholder",
-						description: "",
 						value: "placeholder"
 					}])
 			))
