@@ -1,8 +1,10 @@
 const crypto = require("crypto");
 const { MAX_MESSAGE_ACTION_ROWS } = require("../constants.js");
+const Combatant = require("./Combatant.js");
 const Resource = require("./Resource.js");
+const { Room } = require("./Room.js");
 
-module.exports = class Adventure {
+module.exports.Adventure = class {
 	/** This read-write payload class describes an ongoing adventure
 	 * @param {string} seedInput
 	 * @param {string} guildIdInput
@@ -11,7 +13,8 @@ module.exports = class Adventure {
 		this.initialSeed = seedInput || Date.now().toString();
 		this.guildId = guildIdInput;
 	}
-	id; // the id of the thread created for the adventure
+	/** @type {string} the id of the thread created for the adventure */
+	id;
 	name;
 	labyrinth = "Debug Dungeon"; //TODO #462 generate/take labyrinth as input
 	/** @type {"config" | "ongoing" | "completed"} */
@@ -34,9 +37,11 @@ module.exports = class Adventure {
 		artifactGuardiansEncountered: 0
 	}
 	finalBoss = "";
+	/** @type {string[]} */
 	artifactGuardians = [];
 	accumulatedScore = 0;
 	depth = 1;
+	/** @type {Room} */
 	room = {};
 	roomCandidates = {};
 	lives = 2;
@@ -44,7 +49,8 @@ module.exports = class Adventure {
 	peakGold = 100;
 	/** @type {Record<string, {count: number; [statistic: string]: number}>} */
 	artifacts = {};
-	consumables = {}; // {consumableName: count}
+	/** @type {Record<string, number>} {consumableName: count} */
+	consumables = {};
 	rnIndices = {
 		general: 0,
 		battle: 0
@@ -172,4 +178,31 @@ module.exports = class Adventure {
 			this.room.resources[nameInput] = resource;
 		}
 	}
-}
+
+	/** Get a delver or enemy based on the team and index of the combatant
+	 * @param {CombatantReference} reference
+	 * @returns {Combatant | undefined}
+	 */
+	getCombatant({ team, index }) {
+		switch (team) {
+			case "delver":
+				return this.delvers[index];
+			case "clone":
+			case "enemy":
+				return this.room.enemies[index];
+			case "none":
+				return undefined;
+		}
+	}
+};
+
+module.exports.CombatantReference = class {
+	/**
+	 * @param {"delver" | "enemy" | "none"} teamInput
+	 * @param {number} indexInput
+	*/
+	constructor(teamInput, indexInput) {
+		this.team = teamInput;
+		this.index = indexInput;
+	}
+};

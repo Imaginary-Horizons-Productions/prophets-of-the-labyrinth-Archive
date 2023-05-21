@@ -1,17 +1,11 @@
 const ConsumableTemplate = require("../../Classes/ConsumableTemplate.js");
 const { addModifier, getFullName } = require("../combatantDAO.js");
+const { selectSelf } = require("./selectors/selectSelf.js");
 
-module.exports = new ConsumableTemplate("Regen Root", "Grants the user 5 Regen", selectTargets, effect)
+module.exports = new ConsumableTemplate("Regen Root", "Grants the user 5 Regen", selectSelf, effect)
 	.setElement("Untyped")
 	.setTargetTags("self", "delver")
 	.setFlavorText([]);
-
-function selectTargets(userIndex, adventure) {
-	// self
-	const team = "self";
-	const index = userIndex;
-	return [[team, index]];
-}
 
 function effect(target, user, isCrit, adventure) {
 	// +5 Regen

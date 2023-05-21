@@ -1,6 +1,6 @@
 const { EmbedBuilder } = require("discord.js");
 const fs = require("fs");
-const Adventure = require("./Classes/Adventure");
+const { Adventure } = require("./Classes/Adventure");
 
 exports.versionData = {};
 exports.sponsors = {};

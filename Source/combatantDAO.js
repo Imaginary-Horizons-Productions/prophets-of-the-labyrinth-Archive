@@ -1,5 +1,6 @@
 const Enemy = require("../Classes/Enemy.js");
 const Delver = require("../Classes/Delver.js");
+const Combatant = require("../Classes/Combatant.js");
 const { getInverse, isNonStacking, getModifierDescription, isBuff, isDebuff } = require("./Modifiers/_modifierDictionary.js");
 const { getWeakness } = require("./elementHelpers.js");
 const Adventure = require("../Classes/Adventure.js");
