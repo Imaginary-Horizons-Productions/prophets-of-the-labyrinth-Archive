@@ -13,9 +13,11 @@ module.exports = class ChallengeTemplate {
 	complete(adventure, thread) { }
 
 	dynamicDescription(intensity, duration, reward) {
-		let description = calculateTagContent(this.description, 'intensity', intensity);
-		description = calculateTagContent(description, 'duration', duration);
-		return calculateTagContent(description, 'reward', reward);
+		return calculateTagContent(this.description, [
+			{ tag: 'intensity', count: intensity },
+			{ tag: 'duration', count: duration },
+			{ tag: 'reward', count: reward }
+		]);
 	}
 
 	setIntensity(intensityInput) {

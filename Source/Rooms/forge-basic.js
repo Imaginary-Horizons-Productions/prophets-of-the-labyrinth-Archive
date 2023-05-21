@@ -1,4 +1,4 @@
-const { MessageActionRow, MessageButton } = require("discord.js");
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const ResourceTemplate = require("../../Classes/ResourceTemplate.js");
 const RoomTemplate = require("../../Classes/RoomTemplate.js")
 
@@ -7,13 +7,13 @@ module.exports = new RoomTemplate("Abandoned Forge", [
 ]).setDescription("The room contains an abandoned forge. There seem to be enough supplies leftover for everyone to do something.")
 	.setElement("@{adventure}");
 
-module.exports.uiRows.push(new MessageActionRow().addComponents(
-	new MessageButton().setCustomId("upgrade")
+module.exports.uiRows.push(new ActionRowBuilder().addComponents(
+	new ButtonBuilder().setCustomId("upgrade")
 		.setLabel("Consider equipment upgrades")
 		.setEmoji("1️⃣")
-		.setStyle("SUCCESS"),
-	new MessageButton().setCustomId("viewrepairs")
+		.setStyle(ButtonStyle.Success),
+	new ButtonBuilder().setCustomId("viewrepairs")
 		.setLabel("Plan equipment repairs")
 		.setEmoji("1️⃣")
-		.setStyle("PRIMARY")
+		.setStyle(ButtonStyle.Primary)
 ))

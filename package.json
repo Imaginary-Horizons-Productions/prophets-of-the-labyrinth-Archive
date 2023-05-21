@@ -3,9 +3,7 @@
 		"start": "node upload_commands.js && node bot.js"
 	},
 	"dependencies": {
-		"@discordjs/builders": "^0.15.0",
-		"@discordjs/rest": "^0.4.1",
-		"discord-api-types": "^0.33.0",
-		"discord.js": "^13.8.1"
+		"discord-api-types": "^0.37.41",
+		"discord.js": "^14.11.0"
 	}
 }

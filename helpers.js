@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const fs = require("fs");
 const { Adventure } = require("./Classes/Adventure");
 
@@ -95,19 +95,19 @@ exports.parseCount = function (countExpression, nValue) {
 
 /** Replace all @{tag}s in the text with the evaluation of the expression in the tag with n as count
  * @param {string} text
- * @param {string} tag
- * @param {number} count
- * @returns {string}
+ * @param {{tag: string, count: number}[]} tags
  */
-exports.calculateTagContent = function (text, tag, count) {
-	const taggedGlobal = new RegExp(`@{(${tag}[\\*\\d]*)}`, "g");
-	const untagged = new RegExp(tag, "g");
-	const taggedSingle = new RegExp(`@{(${tag}[\\*\\d]*)}`);
+exports.calculateTagContent = function (text, tags) {
+	for (const { tag, count } of tags) {
+		const taggedGlobal = new RegExp(`@{(${tag}[\\*\\d]*)}`, "g");
+		const untagged = new RegExp(tag, "g");
+		const taggedSingle = new RegExp(`@{(${tag}[\\*\\d]*)}`);
 
-	for (const match of text.matchAll(taggedGlobal)) {
-		const countExpression = match?.[1].replace(untagged, "n");
-		if (countExpression) {
-			text = text.replace(taggedSingle, exports.parseCount(countExpression, count));
+		for (const match of text.matchAll(taggedGlobal)) {
+			const countExpression = match?.[1].replace(untagged, "n");
+			if (countExpression) {
+				text = text.replace(taggedSingle, exports.parseCount(countExpression, count));
+			}
 		}
 	}
 	return text;
@@ -118,7 +118,7 @@ exports.calculateTagContent = function (text, tag, count) {
  * @returns {MessageEmbed}
  */
 exports.embedTemplate = function (iconURL) {
-	return new MessageEmbed().setColor('6b81eb')
+	return new EmbedBuilder().setColor('6b81eb')
 		.setAuthor({ name: "Click here to vist the PotL GitHub", iconURL, url: "https://github.com/Imaginary-Horizons-Productions/prophets-of-the-labyrinth" })
 		.setURL("https://discord.com/api/oauth2/authorize?client_id=950469509628702740&permissions=397284665360&scope=applications.commands%20bot")
 		.setFooter({ text: "Click the title link to add PotL to your server", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" })
@@ -197,7 +197,7 @@ exports.getVersionEmbed = async function (avatarURL) {
 	}
 	let knownIssuesEnd = dividerRegEx.exec(data).index;
 
-	let embed = new MessageEmbed().setColor('6b81eb')
+	const embed = new EmbedBuilder().setColor('6b81eb')
 		.setAuthor({ name: "Click here to check out the Imaginary Horizons GitHub", iconURL: avatarURL, url: "https://github.com/Imaginary-Horizons-Productions" })
 		.setTitle(data.slice(titleStart + 5, changesStartRegEx.lastIndex))
 		.setURL('https://discord.gg/JxqE9EpKt9')
@@ -208,10 +208,10 @@ exports.getVersionEmbed = async function (avatarURL) {
 	if (knownIssuesStart && knownIssuesStart < knownIssuesEnd) {
 		// Known Issues section found
 		embed.setDescription(data.slice(changesStartRegEx.lastIndex, knownIssuesStart))
-			.addField(`Known Issues`, data.slice(knownIssuesStart + 16, knownIssuesEnd));
+			.addFields({ name: "Known Issues", value: data.slice(knownIssuesStart + 16, knownIssuesEnd) });
 	} else {
 		// Known Issues section not found
 		embed.setDescription(data.slice(changesStartRegEx.lastIndex, knownIssuesEnd));
 	}
-	return embed.addField(`Become a Sponsor`, `Chip in for server costs or get premium features by sponsoring [PotL on GitHub](https://github.com/Imaginary-Horizons-Productions/prophets-of-the-labyrinth)`);
+	return embed.addFields({ name: "Become a Sponsor", value: "Chip in for server costs or get premium features by sponsoring [PotL on GitHub](https://github.com/Imaginary-Horizons-Productions/prophets-of-the-labyrinth)" });
 }

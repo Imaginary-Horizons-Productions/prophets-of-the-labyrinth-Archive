@@ -7,12 +7,15 @@ module.exports = class Artifact {
 		this.description = descriptionInput;
 	}
 	element = "";
-	flavorText = [];
+	/** @type {import("discord.js").EmbedField} */
+	flavorText;
 
 	dynamicDescription(copies) {
-		let description = calculateTagContent(this.description, 'copies', copies);
-		description = calculateTagContent(description, 'rows', MAX_MESSAGE_ACTION_ROWS);
-		return calculateTagContent(description, 'buttons', MAX_BUTTONS_PER_ROW);
+		return calculateTagContent(this.description, [
+			{ tag: 'copies', count: copies },
+			{ tag: 'rows', count: MAX_MESSAGE_ACTION_ROWS },
+			{ tag: 'buttons', count: MAX_BUTTONS_PER_ROW }
+		]);
 	}
 
 	setElement(elementEnum) {
@@ -20,8 +23,8 @@ module.exports = class Artifact {
 		return this;
 	}
 
-	setFlavorText(fieldArray) {
-		this.flavorText = fieldArray;
+	setFlavorText(embedFieldData) {
+		this.flavorText = embedFieldData;
 		return this;
 	}
 }

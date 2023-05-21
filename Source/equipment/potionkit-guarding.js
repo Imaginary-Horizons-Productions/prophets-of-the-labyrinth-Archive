@@ -1,4 +1,5 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
+const Resource = require('../../Classes/Resource.js');
 const { removeModifier, getFullName, addBlock } = require('../combatantDAO.js');
 const { rollConsumable } = require('../labyrinths/_labyrinthDictionary');
 
@@ -18,10 +19,10 @@ function effect(target, user, isCrit, adventure) {
 	const randomPotion = rollConsumable(adventure, "Potion");
 	addBlock(user, block);
 	if (isCrit) {
-		adventure.addResource(randomPotion, "consumable", 2, "loot", 0);
+		adventure.addResource(new Resource(randomPotion, "consumable", 2, "loot", 0));
 		return `${getFullName(user, adventure.room.enemyTitles)} hunkers down and sets a double-batch of ${randomPotion} simmering.`;
 	} else {
-		adventure.addResource(randomPotion, "consumable", 1, "loot", 0);
+		adventure.addResource(new Resource(randomPotion, "consumable", 1, "loot", 0));
 		return `${getFullName(user, adventure.room.enemyTitles)} hunkers down and sets a batch of ${randomPotion} simmering.`;
 	}
 }

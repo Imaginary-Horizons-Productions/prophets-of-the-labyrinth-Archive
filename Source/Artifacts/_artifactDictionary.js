@@ -18,7 +18,8 @@ for (const file of [
 	"hawktailfeather.js",
 	"negativeoneleafclover.js",
 	"oilpainting.js",
-	"phoenixfruitblossom.js"
+	"phoenixfruitblossom.js",
+	"spiralfunnel.js"
 ]) {
 	const artifact = require(`./${file}`);
 	ARTIFACTS[artifact.name] = artifact;

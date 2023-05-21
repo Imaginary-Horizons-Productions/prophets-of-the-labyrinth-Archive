@@ -1,4 +1,4 @@
-const { MessageActionRow, MessageButton, MessageSelectMenu, ThreadChannel, MessageEmbed } = require("discord.js");
+const { ActionRowBuilder, ButtonBuilder, StringSelectMenuBuilder, ThreadChannel, EmbedBuilder, ButtonStyle, ComponentType } = require("discord.js");
 const { Adventure } = require("../Classes/Adventure.js");
 
 const { SAFE_DELIMITER, MAX_MESSAGE_ACTION_ROWS } = require("../constants.js");
@@ -22,7 +22,7 @@ exports.renderRoom = function (adventure, thread, descriptionOverride) {
 	const { hasEnemies } = adventure.room;
 	const isCombatVictory = adventure.room.enemies?.every(enemy => enemy.hp === 0);
 
-	const roomEmbed = new MessageEmbed().setColor(getColor(adventure.room.element))
+	const roomEmbed = new EmbedBuilder().setColor(getColor(adventure.room.element))
 		.setAuthor({ name: roomHeaderString(adventure), iconURL: thread.client.user.displayAvatarURL() })
 		.setTitle(`${adventure.room.title}${isCombatVictory ? " - Victory!" : ""}`)
 		.setFooter({ text: `Room #${adventure.depth}${hasEnemies ? ` - Round ${adventure.room.round}` : ""}` });
@@ -36,7 +36,7 @@ exports.renderRoom = function (adventure, thread, descriptionOverride) {
 		if (adventure.state !== "completed") {
 			// Continue
 			if ("roomAction" in adventure.room.resources) {
-				roomEmbed.addField("Room Actions", adventure.room.resources.roomAction.count.toString());
+				roomEmbed.addFields({ name: "Room Actions", value: adventure.room.resources.roomAction.count.toString() });
 			}
 
 			if (roomTemplate) {
@@ -49,27 +49,27 @@ exports.renderRoom = function (adventure, thread, descriptionOverride) {
 
 			components = components.slice(0, MAX_MESSAGE_ACTION_ROWS - 2);
 			if (hasEnemies && !isCombatVictory) {
-				components.push(new MessageActionRow().addComponents(
-					new MessageButton().setCustomId("inspectself")
+				components.push(new ActionRowBuilder().addComponents(
+					new ButtonBuilder().setCustomId("inspectself")
 						.setLabel("Inspect Self")
-						.setStyle("SECONDARY"),
-					new MessageButton().setCustomId("predict")
+						.setStyle(ButtonStyle.Secondary),
+					new ButtonBuilder().setCustomId("predict")
 						.setEmoji("🔮")
 						.setLabel("Predict")
-						.setStyle("SECONDARY"),
-					new MessageButton().setCustomId("readymove")
+						.setStyle(ButtonStyle.Secondary),
+					new ButtonBuilder().setCustomId("readymove")
 						.setLabel("Ready a Move")
-						.setStyle("PRIMARY"),
-					new MessageButton().setCustomId("readyconsumable")
+						.setStyle(ButtonStyle.Primary),
+					new ButtonBuilder().setCustomId("readyconsumable")
 						.setLabel("Ready a Consumable")
-						.setStyle("PRIMARY")
+						.setStyle(ButtonStyle.Primary)
 						.setDisabled(!Object.values(adventure.consumables).some(quantity => quantity > 0))
 				));
 			} else {
 				if (isCombatVictory) {
 					components.push(exports.generateLootRow(adventure));
 				}
-				roomEmbed.addField("Decide the next room", "Each delver can pick or change their pick for the next room. The party will move on when the decision is unanimous.");
+				roomEmbed.addFields({ name: "Decide the next room", value: "Each delver can pick or change their pick for the next room. The party will move on when the decision is unanimous." });
 				components.push(exports.generateRoutingRow(adventure));
 			}
 		} else {
@@ -81,10 +81,10 @@ exports.renderRoom = function (adventure, thread, descriptionOverride) {
 	} else {
 		// Victory
 		addScoreField(roomEmbed, adventure);
-		components = [new MessageActionRow().addComponents(
-			new MessageButton().setCustomId("viewcollectartifact")
+		components = [new ActionRowBuilder().addComponents(
+			new ButtonBuilder().setCustomId("viewcollectartifact")
 				.setLabel("Collect Artifact")
-				.setStyle("SUCCESS")
+				.setStyle(ButtonStyle.Success)
 		)];
 	}
 	return {
@@ -123,7 +123,7 @@ function addScoreField(embed, adventure) {
 	const challengesScoreline = generateScoreline("multiplicative", "Challenges Multiplier", challengeMultiplier);
 	const skippedArtifactScoreline = generateScoreline("multiplicative", "Artifact Skip Multiplier", skippedArtifactsMultiplier);
 	const defeatScoreline = generateScoreline("multiplicative", "Defeat", isSuccess ? 1 : 0.5);
-	embed.addField("Score Breakdown", `${depthScoreLine}${livesScoreLine}${goldScoreline}${bonusScoreline}${challengesScoreline}${skippedArtifactScoreline}${defeatScoreline}\n__Total__: ${score}`);
+	embed.addFields({ name: "Score Breakdown", value: `${depthScoreLine}${livesScoreLine}${goldScoreline}${bonusScoreline}${challengesScoreline}${skippedArtifactScoreline}${defeatScoreline}\n__Total__: ${score}` });
 	adventure.accumulatedScore = score;
 }
 
@@ -164,26 +164,26 @@ function roomHeaderString({ lives, gold, accumulatedScore }) {
  */
 //TODO make updateRoomHeader private
 exports.updateRoomHeader = function (adventure, message) {
-	message.edit({ embeds: message.embeds.map(embed => embed.setAuthor({ name: roomHeaderString(adventure), iconURL: message.client.user.displayAvatarURL() })) })
+	message.edit({ embeds: message.embeds.map(embed => new EmbedBuilder(embed).setAuthor({ name: roomHeaderString(adventure), iconURL: message.client.user.displayAvatarURL() })) })
 }
 
 //TODO make generateRoutingRow private
 exports.generateRoutingRow = function (adventure) {
 	const candidateKeys = Object.keys(adventure.roomCandidates);
 	if (candidateKeys.length > 1) {
-		return new MessageActionRow().addComponents(
+		return new ActionRowBuilder().addComponents(
 			...candidateKeys.map(candidateTag => {
 				const [roomType, depth] = candidateTag.split(SAFE_DELIMITER);
-				return new MessageButton().setCustomId(`routevote${SAFE_DELIMITER}${candidateTag}`)
+				return new ButtonBuilder().setCustomId(`routevote${SAFE_DELIMITER}${candidateTag}`)
 					.setLabel(`Next room: ${roomType}`)
-					.setStyle("SECONDARY")
+					.setStyle(ButtonStyle.Secondary)
 			}));
 	} else {
-		return new MessageActionRow().addComponents(
-			new MessageButton().setCustomId("continue")
+		return new ActionRowBuilder().addComponents(
+			new ButtonBuilder().setCustomId("continue")
 				.setEmoji("👑")
 				.setLabel(`Continue to the ${candidateKeys[0].split(SAFE_DELIMITER)[0]}`)
-				.setStyle("SECONDARY")
+				.setStyle(ButtonStyle.Secondary)
 		);
 	}
 }
@@ -206,21 +206,19 @@ exports.generateLootRow = function (adventure) {
 					option.description = buildEquipmentDescription(name, false);
 				} else if (type === "artifact") {
 					option.description = getArtifact(name).dynamicDescription(count);
-				} else {
-					option.description = "";
 				}
 				options.push(option)
 			}
 		}
 	}
 	if (options.length > 0) {
-		return new MessageActionRow().addComponents(
-			new MessageSelectMenu().setCustomId("loot")
+		return new ActionRowBuilder().addComponents(
+			new StringSelectMenuBuilder().setCustomId("loot")
 				.setPlaceholder("Take some of the spoils of combat...")
 				.setOptions(options))
 	} else {
-		return new MessageActionRow().addComponents(
-			new MessageSelectMenu().setCustomId("loot")
+		return new ActionRowBuilder().addComponents(
+			new StringSelectMenuBuilder().setCustomId("loot")
 				.setPlaceholder("No loot")
 				.setOptions([{ label: "If the menu is stuck, close and reopen the thread.", description: "This usually happens when two players try to take the last thing at the same time.", value: "placeholder" }])
 				.setDisabled(true)
@@ -257,13 +255,13 @@ exports.generateTreasureRow = function (adventure) {
 		}
 	}
 	if (options.length > 0) {
-		return new MessageActionRow().addComponents(
-			new MessageSelectMenu().setCustomId("treasure")
+		return new ActionRowBuilder().addComponents(
+			new StringSelectMenuBuilder().setCustomId("treasure")
 				.setPlaceholder("Pick 1 treasure to take...")
 				.setOptions(options))
 	} else {
-		return new MessageActionRow().addComponents(
-			new MessageSelectMenu().setCustomId("treasure")
+		return new ActionRowBuilder().addComponents(
+			new StringSelectMenuBuilder().setCustomId("treasure")
 				.setPlaceholder("No treasure")
 				.setOptions([{ label: "If the menu is stuck, close and reopen the thread.", description: "This usually happens when two players try to take the last thing at the same time.", value: "placeholder" }])
 				.setDisabled(true)
@@ -300,13 +298,13 @@ exports.generateMerchantRows = function (adventure) {
 				}
 			})
 			if (options.length) {
-				rows.push(new MessageActionRow().addComponents(
-					new MessageSelectMenu().setCustomId(`buy${groupName}`)
+				rows.push(new ActionRowBuilder().addComponents(
+					new StringSelectMenuBuilder().setCustomId(`buy${groupName}`)
 						.setPlaceholder(`Check a ${tier === "Rare" ? "rare " : ""}piece of equipment...`)
 						.setOptions(options)));
 			} else {
-				rows.push(new MessageActionRow().addComponents(
-					new MessageSelectMenu().setCustomId(`buy${groupName}`)
+				rows.push(new ActionRowBuilder().addComponents(
+					new StringSelectMenuBuilder().setCustomId(`buy${groupName}`)
 						.setPlaceholder("SOLD OUT")
 						.setOptions([{ label: "If the menu is stuck, close and reopen the thread.", description: "This usually happens when two players try to buy the last item at the same time.", value: "placeholder" }])
 						.setDisabled(true)));
@@ -314,14 +312,14 @@ exports.generateMerchantRows = function (adventure) {
 		} else if (groupName === "scouting") {
 			const bossScoutingCost = adventure.room.resources.bossScouting.cost;
 			const guardScoutingCost = adventure.room.resources.guardScouting.cost;
-			rows.push(new MessageActionRow().addComponents(
-				new MessageButton().setCustomId(`buyscouting${SAFE_DELIMITER}Final Battle`)
+			rows.push(new ActionRowBuilder().addComponents(
+				new ButtonBuilder().setCustomId(`buyscouting${SAFE_DELIMITER}Final Battle`)
 					.setLabel(`${adventure.scouting.finalBoss ? `Final Battle: ${adventure.finalBoss}` : `${bossScoutingCost}g: Scout the Final Battle`}`)
-					.setStyle("SECONDARY")
+					.setStyle(ButtonStyle.Secondary)
 					.setDisabled(adventure.scouting.finalBoss || adventure.gold < bossScoutingCost),
-				new MessageButton().setCustomId(`buyscouting${SAFE_DELIMITER}Artifact Guardian`)
+				new ButtonBuilder().setCustomId(`buyscouting${SAFE_DELIMITER}Artifact Guardian`)
 					.setLabel(`${guardScoutingCost}g: Scout the ${ordinalSuffixEN(adventure.scouting.artifactGuardians + 1)} Artifact Guardian`)
-					.setStyle("SECONDARY")
+					.setStyle(ButtonStyle.Secondary)
 					.setDisabled(adventure.gold < guardScoutingCost)
 			));
 		}
@@ -331,23 +329,30 @@ exports.generateMerchantRows = function (adventure) {
 
 /** Modify the buttons whose `customId`s are keys in `edits` from among `components` based on `preventUse`, `label`, and `emoji` then return all components
  * @param {MessageActionRow[]} components
- * @param {object} edits - customId as key to object with { preventUse, label, [emoji] }
+ * @param {{[customId: string]: {preventUse: boolean; label: string; emoji?: string}}} edits
  * @returns {MessageActionRow[]} the components of the message with the button edited
  */
 exports.editButtons = function (components, edits) {
 	return components.map(row => {
-		return new MessageActionRow().addComponents(...row.components.map(component => {
-			let customId = component.customId;
-			if (customId in edits) {
-				const { preventUse, label, emoji } = edits[customId];
-				let editedButton = component.setDisabled(preventUse)
-					.setLabel(label);
-				if (emoji) {
-					editedButton.setEmoji(emoji);
-				}
-				return editedButton;
-			} else {
-				return component;
+		return new ActionRowBuilder().addComponents(row.components.map(({ data: component }) => {
+			const customId = component.custom_id;
+			switch (component.type) {
+				case ComponentType.Button:
+					const editedButton = new ButtonBuilder(component);
+					if (customId in edits) {
+						const { preventUse, label, emoji } = edits[customId];
+						editedButton.setDisabled(preventUse)
+							.setLabel(label);
+						if (emoji) {
+							editedButton.setEmoji(emoji);
+						}
+					};
+					return editedButton;
+				case ComponentType.StringSelect:
+					return new StringSelectMenuBuilder(component);
+				default:
+					throw new Error(`Disabling unregistered component from editButtons: ${component.type}`);
+
 			}
 		}));
 	})
@@ -363,12 +368,13 @@ exports.consumeRoomActions = function (adventure, embeds, actionsConsumed) {
 	adventure.room.resources.roomAction.count -= actionsConsumed;
 	const remainingActions = adventure.room.resources.roomAction.count;
 	return {
-		embeds: embeds.map(embed => {
+		embeds: embeds.map(({ data: embed }) => {
+			const updatedEmbed = new EmbedBuilder(embed);
 			const roomActionsFieldIndex = embed.fields.findIndex(field => field.name === "Room Actions");
 			if (roomActionsFieldIndex !== -1) {
-				return embed.spliceFields(roomActionsFieldIndex, 1, { name: "Room Actions", value: remainingActions.toString() });
+				return updatedEmbed.spliceFields(roomActionsFieldIndex, 1, { name: "Room Actions", value: remainingActions.toString() });
 			} else {
-				return embed;
+				return updatedEmbed;
 			}
 		}),
 		remainingActions

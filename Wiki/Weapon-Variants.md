@@ -162,7 +162,7 @@ Increased durability, grants the differences in uses when upgraded.
 #### Available on
 - Barrier (Fire)
 - Cloak (Wind)
-- Sickle (Water)
+- Censer (Fire)
 - Battleaxe (Fire)
 
 ### Thirsting
@@ -184,6 +184,7 @@ Applies Poison
 #### Avaialble on
 - Fire Cracker (Fire)
 - Scythe (Wind)
+- Sickle (Water)
 
 ### Urgent
 Using this equipment puts moves in the priority queue
