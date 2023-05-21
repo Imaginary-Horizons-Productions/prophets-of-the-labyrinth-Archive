@@ -1,7 +1,7 @@
 const Button = require('../../Classes/Button.js');
 const { getAdventure, setAdventure } = require('../adventureDAO.js');
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
-const { generateRoutingRow, generateLootRow, generateMerchantRows } = require("../roomDAO.js");
+const { renderRoom } = require("../roomDAO.js");
 
 const id = "replaceequipmenttreasure";
 module.exports = new Button(id,
@@ -18,15 +18,10 @@ module.exports = new Button(id,
 				interaction.channel.messages.fetch(adventure.messageIds.room).then(roomMessage => {
 					adventure.room.resources[name].count--;
 					adventure.room.resources.roomAction.count--;
-					let uiRows = [];
 					if (Boolean(atMerchant)) {
 						adventure.gold -= cost;
-						uiRows = generateMerchantRows(adventure);
-					} else {
-						uiRows.push(generateLootRow(adventure));
 					}
-					uiRows.push(generateRoutingRow(adventure));
-					return roomMessage.edit({ components: uiRows });
+					return roomMessage.edit(renderRoom(adventure, interaction.channel));
 				}).then(() => {
 					interaction.update({ components: [] });
 					interaction.channel.send(`${interaction.user} discards ${discardedName} to take ${name}.`);

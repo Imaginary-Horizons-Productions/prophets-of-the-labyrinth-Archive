@@ -3,7 +3,7 @@ const Select = require('../../Classes/Select.js');
 const { SAFE_DELIMITER } = require('../../constants.js');
 const { getAdventure, setAdventure } = require('../adventureDAO.js');
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
-const { generateMerchantRows, generateRoutingRow, updateRoomHeader } = require("../roomDAO.js");
+const { renderRoom } = require("../roomDAO.js");
 
 const id = "buyequipment";
 module.exports = new Select(id, (interaction, [tier]) => {
@@ -19,10 +19,8 @@ module.exports = new Select(id, (interaction, [tier]) => {
 					adventure.gold -= cost;
 					adventure.room.resources[name].count--;
 					delver.equipment.push({ name, uses: getEquipmentProperty(name, "maxUses") });
-					let updatedUI = [...generateMerchantRows(adventure), generateRoutingRow(adventure)];
-					interaction.message.edit({ components: updatedUI });
+					interaction.message.edit(renderRoom(adventure, interaction.channel));
 					interaction.reply({ content: `${interaction.member.displayName} buys a ${name} for ${cost}g.` });
-					updateRoomHeader(adventure, interaction.message);
 					setAdventure(adventure);
 				} else {
 					let replaceUI = [new ActionRowBuilder().addComponents(
