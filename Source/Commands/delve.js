@@ -1,4 +1,4 @@
-const { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder, EmbedBuilder, StringSelectMenuBuilder, ButtonStyle, ChannelType } = require('discord.js');
 const Adventure = require('../../Classes/Adventure.js');
 const Command = require('../../Classes/Command.js');
 const Delver = require('../../Classes/Delver.js');
@@ -24,7 +24,7 @@ module.exports.execute = (interaction) => {
 	if (interaction.inGuild()) {
 		let guildProfile = getGuild(interaction.guildId);
 		if (isSponsor(interaction.user.id) || !guildProfile.adventuring.has(interaction.user.id)) {
-			if (interaction.channel.type === "GUILD_TEXT") {
+			if (interaction.channel.type === ChannelType.GuildText) {
 				let adventure = new Adventure(interaction.options.getString(options[0].name), interaction.guildId).generateRNTable();
 				// roll bosses
 				prerollBoss("Final Battle", adventure);
@@ -36,19 +36,19 @@ module.exports.execute = (interaction) => {
 				adventure.setName(`${DESCRIPTORS[generateRandomNumber(adventure, DESCRIPTORS.length, "general")]} ${LOCATIONS[generateRandomNumber(adventure, LOCATIONS.length, "general")]} of ${pickedElement}`)
 					.setElement(pickedElement);
 
-				let embed = new MessageEmbed().setColor(getColor(pickedElement))
+				let embed = new EmbedBuilder().setColor(getColor(pickedElement))
 					.setAuthor({ name: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png", url: "https://github.com/Imaginary-Horizons-Productions/prophets-of-the-labyrinth" })
 					.setTitle(adventure.name)
 					.setThumbnail("https://cdn.discordapp.com/attachments/545684759276421120/734093574031016006/bountyboard.png")
 					.setDescription("A new adventure is starting!")
-					.addField("1 Party Member", `Leader: ${interaction.member}`)
+					.addFields({ name: "1 Party Member", value: `${interaction.member} 👑` })
 				interaction.reply({ embeds: [embed], fetchReply: true }).then(recruitMessage => {
 					return recruitMessage.startThread({ name: adventure.name }).then(thread => {
 						recruitMessage.edit({
-							components: [new MessageActionRow().addComponents(
-								new MessageButton().setCustomId(`join${SAFE_DELIMITER}${thread.guildId}${SAFE_DELIMITER}${thread.id}${SAFE_DELIMITER}recruit`)
+							components: [new ActionRowBuilder().addComponents(
+								new ButtonBuilder().setCustomId(`join${SAFE_DELIMITER}${thread.guildId}${SAFE_DELIMITER}${thread.id}${SAFE_DELIMITER}recruit`)
 									.setLabel("Join")
-									.setStyle("SUCCESS")
+									.setStyle(ButtonStyle.Success)
 							)]
 						});
 						adventure.delvers.push(new Delver(interaction.user.id, interaction.member.displayName, thread.id));
@@ -59,8 +59,8 @@ module.exports.execute = (interaction) => {
 							const challenge = getChallenge(challengeName);
 							options.push({ label: challengeName, description: challenge.dynamicDescription(challenge.intensity, challenge.duration), value: challengeName });
 						})
-						let components = [new MessageActionRow().addComponents(
-							new MessageSelectMenu().setCustomId("startingchallenges")
+						let components = [new ActionRowBuilder().addComponents(
+							new StringSelectMenuBuilder().setCustomId("startingchallenges")
 								.setPlaceholder("👑 Select challenge(s)...")
 								.setMinValues(1)
 								.setMaxValues(options.length)
@@ -71,13 +71,13 @@ module.exports.execute = (interaction) => {
 							content: `${interaction.user} Here's the channel for your new adventure. As adventure leader you're responsible for inputting the group's decisions (indicated with a 👑).`,
 							components
 						}).then(leaderMessage => {
-							let ready = new MessageActionRow().addComponents(
-								new MessageButton().setCustomId("deploy")
+							let ready = new ActionRowBuilder().addComponents(
+								new ButtonBuilder().setCustomId("deploy")
 									.setLabel("Pick Archetype")
-									.setStyle("PRIMARY"),
-								new MessageButton().setCustomId("viewstartingartifacts")
+									.setStyle(ButtonStyle.Primary),
+								new ButtonBuilder().setCustomId("viewstartingartifacts")
 									.setLabel("Pick Starting Artifact")
-									.setStyle("SECONDARY")
+									.setStyle(ButtonStyle.Secondary)
 							)
 							adventure.setId(thread.id)
 								.setLeaderId(interaction.user.id);

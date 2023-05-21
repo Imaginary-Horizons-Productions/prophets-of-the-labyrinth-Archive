@@ -1,3 +1,4 @@
+const { EmbedBuilder } = require('discord.js');
 const Button = require('../../Classes/Button.js');
 const Delver = require('../../Classes/Delver.js');
 const { maxDelverCount } = require("../../constants.js");
@@ -40,15 +41,16 @@ module.exports = new Button(id, async (interaction, [guildId, adventureId, conte
 						});
 
 						// Update recruit message
-						let partyList = `Leader: <@${adventure.leaderId}>`;
+						let partyList = `<@${adventure.leaderId}> 👑`;
 						for (let delver of adventure.delvers) {
 							if (delver.id !== adventure.leaderId) {
 								partyList += `\n<@${delver.id}>`;
 							}
 						}
-						let embeds = [];
-						if (recruitMessage.embeds[0]) {
-							embeds = [recruitMessage.embeds[0].spliceFields(0, 1, { name: `${adventure.delvers.length} Party Member${adventure.delvers.length == 1 ? "" : "s"}`, value: partyList })];
+						const embeds = [];
+						const [{ data: recruitEmbed }] = recruitMessage.embeds;
+						if (recruitEmbed) {
+							embeds.push(new EmbedBuilder(recruitEmbed).spliceFields(0, 1, { name: `${adventure.delvers.length} Party Member${adventure.delvers.length == 1 ? "" : "s"}`, value: partyList }));
 						}
 						let components = recruitMessage.components;
 						if (adventure.delvers.length === maxDelverCount) {
@@ -73,7 +75,7 @@ module.exports = new Button(id, async (interaction, [guildId, adventureId, conte
 			}
 		} else {
 			interaction.message.edit({ components: [] });
-			interaction.reply({ content: "The adventure you tried joining, could not be found.", ephemeral: true });
+			interaction.reply({ content: "The adventure you tried joining could not be found.", ephemeral: true });
 		}
 	} else {
 		interaction.reply({ content: "Delving in more than one adventure per server is a premium perk. Use `/support` for more details.", ephemeral: true });
