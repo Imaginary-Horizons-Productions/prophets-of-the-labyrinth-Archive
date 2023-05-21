@@ -1,5 +1,5 @@
 const { ActionRowBuilder, ButtonBuilder, EmbedBuilder, StringSelectMenuBuilder, ButtonStyle, ChannelType } = require('discord.js');
-const Adventure = require('../../Classes/Adventure.js');
+const { Adventure } = require('../../Classes/Adventure.js');
 const Command = require('../../Classes/Command.js');
 const Delver = require('../../Classes/Delver.js');
 const { setAdventure } = require('../adventureDAO.js');

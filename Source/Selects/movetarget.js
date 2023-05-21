@@ -1,5 +1,6 @@
-const Move = require('../../Classes/Move');
+const { Move } = require('../../Classes/Move');
 const Select = require('../../Classes/Select.js');
+const { CombatantReference } = require('../../Classes/Adventure');
 const { SAFE_DELIMITER } = require('../../constants.js');
 const { getAdventure, checkNextRound, endRound, setAdventure } = require('../adventureDAO');
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary');
@@ -19,14 +20,14 @@ module.exports = new Select(id, async (interaction, [moveName, round, index]) =>
 				.onSetMoveSpeed(user)
 				.setIsCrit(user.crit)
 				.setMoveName(moveName)
-				.setType(moveName === "Punch" ? "action" : "equip")
-				.setUser(user.team, userIndex)
-				.addTarget(targetTeam, targetIndex);
+				.setType("equip")
+				.setUser(new CombatantReference(user.team, userIndex))
+				.addTarget(new CombatantReference(targetTeam, targetIndex));
 
 			let overwritten = false;
 			for (let i = 0; i < adventure.room.moves.length; i++) {
-				const { userTeam, userIndex: currentUserIndex } = adventure.room.moves[i];
-				if (userTeam === user.team && currentUserIndex === userIndex) {
+				const { userReference } = adventure.room.moves[i];
+				if (userReference.team === user.team && userReference.index === userIndex) {
 					await adventure.room.moves.splice(i, 1);
 					overwritten = true;
 					break;
@@ -34,8 +35,8 @@ module.exports = new Select(id, async (interaction, [moveName, round, index]) =>
 			}
 			if (!overwritten) {
 				for (let i = 0; i < adventure.room.priorityMoves.length; i++) {
-					const { userTeam, userIndex: currentUserIndex } = adventure.room.priorityMoves[i];
-					if (userTeam === user.team && currentUserIndex === userIndex) {
+					const { userReference } = adventure.room.priorityMoves[i];
+					if (userReference.team === user.team && userReference.index === userIndex) {
 						await adventure.room.priorityMoves.splice(i, 1);
 						break;
 					}

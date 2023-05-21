@@ -1,4 +1,5 @@
-const Move = require('../../Classes/Move');
+const { CombatantReference } = require('../../Classes/Adventure');
+const { Move } = require('../../Classes/Move');
 const Select = require('../../Classes/Select.js');
 const { getAdventure, checkNextRound, endRound, setAdventure } = require('../adventureDAO');
 const { getConsumable } = require('../consumables/_consumablesDictionary');
@@ -19,15 +20,15 @@ module.exports = new Select(id, async (interaction, [round]) => {
 				.setIsCrit(false)
 				.setMoveName(consumableName)
 				.setType("consumable")
-				.setUser(user.team, userIndex);
+				.setUser(new CombatantReference(user.team, userIndex));
 
 			consumable.selectTargets(userIndex, adventure).forEach(target => {
-				newMove.addTarget(...target);
+				newMove.addTarget(target);
 			})
 			let overwritten = false;
 			for (let i = 0; i < adventure.room.moves.length; i++) {
-				const { userTeam, userIndex: currentUserIndex } = adventure.room.moves[i];
-				if (userTeam === user.team && currentUserIndex === userIndex) {
+				const { userReference } = adventure.room.moves[i];
+				if (userReference.team === user.team && userReference.index === userIndex) {
 					await adventure.room.moves.splice(i, 1);
 					overwritten = true;
 					break;
@@ -35,8 +36,8 @@ module.exports = new Select(id, async (interaction, [round]) => {
 			}
 			if (!overwritten) {
 				for (let i = 0; i < adventure.room.priorityMoves.length; i++) {
-					const { userTeam, userIndex: currentUserIndex } = adventure.room.priorityMoves[i];
-					if (userTeam === user.team && currentUserIndex === userIndex) {
+					const { userReference } = adventure.room.priorityMoves[i];
+					if (userReference.team === user.team && userReference.index === userIndex) {
 						await adventure.room.priorityMoves.splice(i, 1);
 						break;
 					}

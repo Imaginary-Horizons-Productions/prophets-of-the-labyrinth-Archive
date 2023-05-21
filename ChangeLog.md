@@ -28,6 +28,7 @@
    - When starting an adventure, a pool of eligible artifacts will be rolled for each delver
    - Delvers will be able to bring an artifact from that pool if they've rolled it before
    - Each delver will have a different pool of eligible artifacts in each adventure
+- Halved the effectiveness of *Hawk Tailfeather*
 
 #### Prophets of the Labyrinth Version 0.9.0:
 - Rebalanced predicts, they are now as follows

@@ -1,3 +1,4 @@
+const { CombatantReference } = require("../../Classes/Adventure.js");
 const Enemy = require("../../Classes/Enemy.js");
 const { addBlock, addModifier } = require("../combatantDAO.js");
 const { selectRandomFoe, selectNone, selectAllFoes, selectRandomOtherAlly, spawnEnemy } = require("../enemyDAO.js");
@@ -45,9 +46,9 @@ function deployEffect(target, user, isCrit, adventure) {
 // assumes mecha queen is at enemy index 0 and that all other enemies are mechabees
 function swarmEffect(target, user, isCrit, adventure) {
 	adventure.room.moves.forEach(move => {
-		if (move.userTeam === "enemy" && move.userIndex !== 0) {
+		if (move.userReference.team === "enemy" && move.userReference.index !== 0) {
 			move.name = "Call for Help";
-			move.targets = [{ team: "none", index: "none" }];
+			move.targets = [new CombatantReference("none", -1)];
 		}
 	});
 	addBlock(user, isCrit ? 200 : 100);
@@ -56,9 +57,9 @@ function swarmEffect(target, user, isCrit, adventure) {
 
 // assumes mecha queen is at enemy index 0 and that all other enemies are mechabees
 function assaultEffect(target, user, isCrit, adventure) {
-	const { targets } = adventure.room.priorityMoves.find(move => move.userTeam === "enemy" && move.userIndex === 0)
+	const { targets } = adventure.room.priorityMoves.find(move => move.userReference.team === "enemy" && move.userReference.index === 0)
 	adventure.room.moves.forEach(move => {
-		if (move.userTeam === "enemy" && move.userIndex !== 0) {
+		if (move.userReference.team === "enemy" && move.userReference.index !== 0) {
 			move.name = "Sting";
 			move.targets = targets;
 		}
@@ -70,7 +71,7 @@ function assaultEffect(target, user, isCrit, adventure) {
 function sacrificeEffect(target, user, isCrit, adventure) {
 	addBlock(user, isCrit ? 200 : 100);
 	if (target) {
-		const targetMove = adventure.room.moves.find(move => move.userTeam === "enemy" && move.userIndex === parseInt(target.title));
+		const targetMove = adventure.room.moves.find(move => move.userReference.team === "enemy" && move.userReference.index === parseInt(target.title));
 		targetMove.name = "Self-Destruct";
 		targetMove.targets = selectAllFoes(adventure, target);
 		return "She braces herself and employs desperate measures!";

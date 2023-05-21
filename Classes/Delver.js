@@ -9,7 +9,8 @@ module.exports = class Delver extends Combatant {
 		this.adventureId = adventureIdInput;
 	}
 	predict = "not picked";
-	equipment = []; // {name, uses}
+	/** @type {{name: string; uses: number}[]} */
+	equipment = [];
 	startingArtifact = "";
 
 	setTitle = super.setTitle;
@@ -24,30 +25,23 @@ module.exports = class Delver extends Combatant {
 
 	/** Sets the predict for the delver.
 	 * @param {"Movements" | "Vulnerabilities" | "Intents" | "Health"} predictEnum
-	 * @returns {Delver}
 	 */
 	setPredict(predictEnum) {
 		this.predict = predictEnum;
 		return this;
 	}
 
-	/**
-	 * Overwrite of Combatant.getCritNumerator(). `count` included so delvers can modify value via artifacts.
-	 *
+	/** Overwrite of Combatant.getCritNumerator(). `hawkTailfeatherCount` included so delvers can modify value via artifacts.
 	 * @param {number} hawkTailfeatherCount
-	 * @returns {number}
 	 */
 	getCritNumerator(hawkTailfeatherCount) {
-		return this.critNumerator + hawkTailfeatherCount;
+		return this.critNumerator + (hawkTailfeatherCount / 2);
 	}
 
-	/**
-	 * Overwrite of Combatant.getCritDenominator(). `count` included so delvers can modify value via artifacts.
-	 *
+	/** Overwrite of Combatant.getCritDenominator(). `hawkTailfeatherCount` included so delvers can modify value via artifacts.
 	 * @param {number} hawkTailfeatherCount
-	 * @returns {number}
 	 */
-	 getCritDenominator(hawkTailfeatherCount) {
-		return this.critDenominator + hawkTailfeatherCount;
+	getCritDenominator(hawkTailfeatherCount) {
+		return this.critDenominator + (hawkTailfeatherCount / 2);
 	}
 }

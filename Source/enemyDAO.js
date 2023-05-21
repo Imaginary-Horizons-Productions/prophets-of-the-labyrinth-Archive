@@ -1,3 +1,4 @@
+const { CombatantReference } = require("../Classes/Adventure.js");
 const Enemy = require("../Classes/Enemy.js");
 const { generateRandomNumber } = require("../helpers.js");
 const { getOpposite } = require("./elementHelpers.js");
@@ -47,35 +48,29 @@ module.exports.selectRandomOtherAlly = function (adventure, self) {
 		}
 	})
 	if (selfIndex === -1 || liveOtherEnemyIndexes.length === 0) {
-		return [{ team: "none", index: "none" }];
+		return [new CombatantReference("none", -1)];
 	}
-	let index = liveOtherEnemyIndexes[generateRandomNumber(adventure, liveOtherEnemyIndexes.length, "battle")];
-	return [{ team: "enemy", index }];
+	const index = liveOtherEnemyIndexes[generateRandomNumber(adventure, liveOtherEnemyIndexes.length, "battle")];
+	return [new CombatantReference("enemy", index)];
 }
 
 module.exports.selectRandomFoe = function (adventure, self) {
-	let team = "delver";
-	let index = generateRandomNumber(adventure, adventure.delvers.length, "battle");
-	return [{ team, index }];
+	return [new CombatantReference("delver", generateRandomNumber(adventure, adventure.delvers.length, "battle"))];
 }
 
 module.exports.selectAllFoes = function (adventure, self) {
 	return adventure.delvers.map((delver, index) => {
-		return {
-			team: "delver",
-			index
-		}
+		return new CombatantReference("delver", index);
 	})
 }
 
 module.exports.selectSelf = function (adventure, self) {
-	let team = "self";
-	let index = adventure.room.enemies.findIndex(enemy => enemy.name === self.name && enemy.title === self.title);
-	return [{ team, index }];
+	const index = adventure.room.enemies.findIndex(enemy => enemy.name === self.name && enemy.title === self.title);
+	return [new CombatantReference("enemy", index)];
 }
 
 module.exports.selectNone = function (adventure, self) {
-	return [{ team: "none", index: "none" }];
+	return [new CombatantReference("none", -1)];
 }
 
 module.exports.nextRandom = function (actionName) {

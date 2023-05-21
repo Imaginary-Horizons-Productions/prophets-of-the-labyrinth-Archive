@@ -1,6 +1,7 @@
+const Resource = require("./Resource");
 const RoomTemplate = require("./RoomTemplate");
 
-module.exports = class Room {
+module.exports.Room = class {
 	/** This read-write payload class describes a room in an adventure
 	 * @param {RoomTemplate} roomTemplate
 	 * @param roomTemplate.types Saving the generated type only would cause the game to lose track of Treasure rooms that were rolled as Event rooms.
@@ -18,5 +19,6 @@ module.exports = class Room {
 			this.enemyTitles = {};
 		}
 	}
+	/** @type {Record<string, Resource>} */
 	resources = {};
-}
+};

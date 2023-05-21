@@ -13,7 +13,7 @@ module.exports.execute = (interaction) => {
 		let inCombat = adventure.room.enemies && !adventure.room.enemies.every(enemy => enemy.hp === 0);
 		if (inCombat) {
 			adventure.room.moves.forEach(move => {
-				if (move.userTeam === "delver") {
+				if (move.userReference.team === "delver") {
 					let userId = adventure.delvers[move.userIndex].id;
 					if (mentions.has(userId)) {
 						mentions.delete(userId);
