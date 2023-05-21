@@ -1,22 +1,18 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { dealDamage, addModifier } = require('../combatantDAO.js');
+const { isDebuff } = require('../Modifiers/_modifierDictionary.js');
 
-module.exports = new EquipmentTemplate("Tormenting Censer", "Burn a foe for @{damage} (+@{bonusDamage} if target has any debuffs) @{element} damage and apply 1 stack of all their debuffs*\nCritical Hit💥: Also apply @{mod1Stacks} @{mod1}", "Fire", effect, ["Thick Censer"])
+module.exports = new EquipmentTemplate("Thick Censer", "Burn a foe for @{damage} (+@{bonusDamage} if target has any debuffs) @{element} damage*\nCritical Hit💥: Also apply @{mod1Stacks} @{mod1}", "Fire", effect, ["Tormenting Censor"])
 	.setCategory("Trinket")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Slow", stacks: 2 }])
 	.setDamage(50)
 	.setBonusDamage(75)
 	.setCost(350)
-	.setUses(10);
+	.setUses(20);
 
 function effect(target, user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger, slow], damage, bonusDamage } = module.exports;
-	for (const modifier in target.modifiers) {
-		if (isDebuff(modifier)) {
-			addModifier(target, { name: modifier, stacks: 1 });
-		}
-	}
 	if (user.element === element) {
 		addModifier(target, elementStagger);
 	}

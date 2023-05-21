@@ -81,7 +81,7 @@ module.exports = new Button(id, (interaction, args) => {
 		case "Health": // Shows hp and modifiers for all combatants
 			infoForNextRound = false;
 			adventure.room.enemies.concat(adventure.delvers).filter(combatant => combatant.hp > 0).forEach(combatant => {
-				let modifiersText = modifiersToString(combatant, false);
+				let modifiersText = modifiersToString(combatant, false, adventure);
 				descriptionText += `\n__${getFullName(combatant, adventure.room.enemyTitles)}__\n${combatant.hp}/${combatant.maxHp} HP${combatant.block ? `, ${combatant.block} Block` : ""}\n${modifiersText ? `${modifiersText}` : "No modifiers\n"}`;
 			})
 			break;

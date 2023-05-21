@@ -1,3 +1,5 @@
+const Adventure = require("../../Classes/Adventure");
+const Combatant = require("../../Classes/Combatant");
 const { calculateTagContent } = require("../../helpers");
 
 const modifierDictionary = {};
@@ -27,10 +29,18 @@ for (const file of [
 	modifierDictionary[modifier.name] = modifier;
 }
 
-exports.getModifierDescription = function (modifierName, bearer) {
-	let description = calculateTagContent(modifierDictionary[modifierName].description, 'stackCount', bearer.modifiers[modifierName]);
-	description = calculateTagContent(description, 'poise', bearer.staggerThreshold);
-	return calculateTagContent(description, 'roundDecrement', exports.getTurnDecrement(modifierName));
+/**
+ * @param {string} modifierName
+ * @param {Combatant} bearer
+ * @param {Adventure} adventure
+ */
+exports.getModifierDescription = function (modifierName, bearer, adventure) {
+	return calculateTagContent(modifierDictionary[modifierName].description, [
+		{ tag: 'stackCount', count: bearer.modifiers[modifierName] },
+		{ tag: 'poise', count: bearer.staggerThreshold },
+		{ tag: 'funnelCount', count: adventure.getArtifactCount("Spiral Funnel") },
+		{ tag: 'roundDecrement', count: exports.getTurnDecrement(modifierName) }
+	]);
 }
 
 exports.getTurnDecrement = (modifierName) => {

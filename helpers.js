@@ -95,19 +95,19 @@ exports.parseCount = function (countExpression, nValue) {
 
 /** Replace all @{tag}s in the text with the evaluation of the expression in the tag with n as count
  * @param {string} text
- * @param {string} tag
- * @param {number} count
- * @returns {string}
+ * @param {{tag: string, count: number}[]} tags
  */
-exports.calculateTagContent = function (text, tag, count) {
-	const taggedGlobal = new RegExp(`@{(${tag}[\\*\\d]*)}`, "g");
-	const untagged = new RegExp(tag, "g");
-	const taggedSingle = new RegExp(`@{(${tag}[\\*\\d]*)}`);
+exports.calculateTagContent = function (text, tags) {
+	for (const { tag, count } of tags) {
+		const taggedGlobal = new RegExp(`@{(${tag}[\\*\\d]*)}`, "g");
+		const untagged = new RegExp(tag, "g");
+		const taggedSingle = new RegExp(`@{(${tag}[\\*\\d]*)}`);
 
-	for (const match of text.matchAll(taggedGlobal)) {
-		const countExpression = match?.[1].replace(untagged, "n");
-		if (countExpression) {
-			text = text.replace(taggedSingle, exports.parseCount(countExpression, count));
+		for (const match of text.matchAll(taggedGlobal)) {
+			const countExpression = match?.[1].replace(untagged, "n");
+			if (countExpression) {
+				text = text.replace(taggedSingle, exports.parseCount(countExpression, count));
+			}
 		}
 	}
 	return text;

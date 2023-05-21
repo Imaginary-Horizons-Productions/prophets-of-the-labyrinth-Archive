@@ -99,9 +99,16 @@ exports.resolveMove = async function (move, adventure) {
 
 		// Poison/Regen
 		const poisonStacks = user.getModifierStacks("Poison");
+		let poisonDamage = poisonStacks * 10;
+		if (user.team === "enemy") {
+			const funnelDamage = adventure.getArtifactCount("Spiral Funnel") * 5 * poisonStacks;
+			poisonDamage += funnelDamage;
+			adventure.updateArtifactStat("Spiral Funnel", "Additional Damage", funnelDamage);
+		}
+
 		const regenStacks = user.getModifierStacks("Regen");
-		if (poisonStacks) {
-			moveText += ` ${await dealDamage(user, null, poisonStacks * 10, true, "Poison", adventure)}`;
+		if (poisonDamage) {
+			moveText += ` ${await dealDamage(user, null, poisonDamage, true, "Poison", adventure)}`;
 		} else if (regenStacks) {
 			moveText += ` ${gainHealth(user, regenStacks * 10, adventure)}`;
 		}
