@@ -1,5 +1,7 @@
 const fs = require("fs");
+const { ThreadChannel, EmbedBuilder } = require("discord.js");
 const { Adventure, CombatantReference } = require("../Classes/Adventure.js");
+const Resource = require("../Classes/Resource.js");
 const { Move } = require("../Classes/Move.js");
 const Enemy = require("../Classes/Enemy.js");
 const Delver = require("../Classes/Delver.js");
@@ -22,8 +24,6 @@ const { resolveMove } = require("./moveDAO.js");
 const { setPlayer, getPlayer } = require("./playerDAO.js");
 const { renderRoom, updateRoomHeader } = require("./roomDAO.js");
 const { getEquipmentProperty } = require("./equipment/_equipmentDictionary.js");
-const { ThreadChannel, EmbedBuilder } = require("discord.js");
-const Resource = require("../Classes/Resource.js");
 
 const adventureDictionary = new Map();
 

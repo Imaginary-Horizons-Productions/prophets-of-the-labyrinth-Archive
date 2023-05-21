@@ -17,10 +17,11 @@ module.exports = new Button(id, (interaction, args) => {
 							const updatedButton = new ButtonBuilder(component).setDisabled(true);
 							if (component.custom_id === id) {
 								updatedButton.setEmoji("✔️");
-							} else if (!component.emoji) {
-								updatedButton.setEmoji("✖️");
+							} else {
+								if (!component.emoji) {
+									updatedButton.setEmoji("✖️");
+								}
 							}
-
 							return updatedButton;
 						case ComponentType.StringSelect:
 							return new StringSelectMenuBuilder(component).setDisabled(true);
