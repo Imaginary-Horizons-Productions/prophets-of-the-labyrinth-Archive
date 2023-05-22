@@ -3,12 +3,11 @@ const Select = require('../../Classes/Select.js');
 const { getAdventure, setAdventure } = require('../adventureDAO.js');
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
 const { SAFE_DELIMITER } = require('../../constants.js');
-const { generateLootRow, generateRoutingRow, updateRoomHeader, consumeRoomActions } = require("../roomDAO.js");
+const { consumeRoomActions, renderRoom } = require("../roomDAO.js");
 
 const id = "treasure";
 module.exports = new Select(id,
-	/** Move the selected loot into party/delver's inventory, then decrement a roomAction
-	 */
+	/** Move the selected loot into party/delver's inventory, then decrement a roomAction */
 	(interaction, args) => {
 		const adventure = getAdventure(interaction.channel.id);
 		const delver = adventure?.delvers.find(delver => delver.id === interaction.user.id);
@@ -67,9 +66,9 @@ module.exports = new Select(id,
 				}
 				if (result) {
 					const { embeds } = consumeRoomActions(adventure, interaction.message.embeds, 1);
+					const updatedMessage = { ...renderRoom(adventure, interaction.channel), embeds };
 					interaction.reply(result).then(() => {
-						interaction.message.edit({ embeds, components: [generateLootRow(adventure), generateRoutingRow(adventure)] });
-						updateRoomHeader(adventure, interaction.message);
+						interaction.message.edit(updatedMessage);
 						setAdventure(adventure);
 					});
 				} else {

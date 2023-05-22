@@ -3,7 +3,7 @@ const Select = require('../../Classes/Select.js');
 const { getAdventure, setAdventure } = require('../adventureDAO.js');
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
 const { SAFE_DELIMITER } = require('../../constants.js');
-const { generateLootRow, generateRoutingRow, updateRoomHeader } = require("../roomDAO.js");
+const { renderRoom } = require("../roomDAO.js");
 
 const id = "loot";
 module.exports = new Select(id, (interaction, args) => {
@@ -64,8 +64,7 @@ module.exports = new Select(id, (interaction, args) => {
 		}
 		if (result) {
 			interaction.reply(result).then(() => {
-				interaction.message.edit({ components: [generateLootRow(adventure), generateRoutingRow(adventure)] });
-				updateRoomHeader(adventure, interaction.message);
+				interaction.message.edit(renderRoom(adventure, interaction.channel));
 				setAdventure(adventure);
 			});
 		} else {

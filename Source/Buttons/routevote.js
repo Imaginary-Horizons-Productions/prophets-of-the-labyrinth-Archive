@@ -1,6 +1,6 @@
 const { getAdventure, endRoom } = require('../adventureDAO.js');
 const Button = require('../../Classes/Button.js');
-const { ActionRowBuilder, ButtonBuilder } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder, ComponentType, StringSelectMenuBuilder } = require('discord.js');
 const { SAFE_DELIMITER } = require("../../constants.js");
 const { clearComponents } = require('../../helpers.js');
 

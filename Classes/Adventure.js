@@ -175,7 +175,7 @@ module.exports.Adventure = class {
 		if (resource.name in this.room.resources) {
 			this.room.resources[resource.name].count += resource.count;
 		} else {
-			this.room.resources[nameInput] = resource;
+			this.room.resources[resource.name] = resource;
 		}
 	}
 

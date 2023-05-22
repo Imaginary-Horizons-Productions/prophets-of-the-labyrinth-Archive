@@ -43,9 +43,9 @@ exports.renderRoom = function (adventure, thread, descriptionOverride) {
 				components.push(...roomTemplate.uiRows);
 			}
 			if (adventure.room.title === "Treasure!") {
-				components.push(exports.generateTreasureRow(adventure));
+				components.push(generateTreasureRow(adventure));
 			}
-			components.push(...exports.generateMerchantRows(adventure));
+			components.push(...generateMerchantRows(adventure));
 
 			components = components.slice(0, MAX_MESSAGE_ACTION_ROWS - 2);
 			if (hasEnemies && !isCombatVictory) {
@@ -67,10 +67,10 @@ exports.renderRoom = function (adventure, thread, descriptionOverride) {
 				));
 			} else {
 				if (isCombatVictory) {
-					components.push(exports.generateLootRow(adventure));
+					components.push(generateLootRow(adventure));
 				}
 				roomEmbed.addFields({ name: "Decide the next room", value: "Each delver can pick or change their pick for the next room. The party will move on when the decision is unanimous." });
-				components.push(exports.generateRoutingRow(adventure));
+				components.push(generateRoutingRow(adventure));
 			}
 		} else {
 			// Defeat
@@ -162,13 +162,11 @@ function roomHeaderString({ lives, gold, accumulatedScore }) {
  * @param {Adventure} adventure
  * @param {Message} message
  */
-//TODO make updateRoomHeader private
 exports.updateRoomHeader = function (adventure, message) {
 	message.edit({ embeds: message.embeds.map(embed => new EmbedBuilder(embed).setAuthor({ name: roomHeaderString(adventure), iconURL: message.client.user.displayAvatarURL() })) })
 }
 
-//TODO make generateRoutingRow private
-exports.generateRoutingRow = function (adventure) {
+function generateRoutingRow(adventure) {
 	const candidateKeys = Object.keys(adventure.roomCandidates);
 	if (candidateKeys.length > 1) {
 		return new ActionRowBuilder().addComponents(
@@ -188,8 +186,7 @@ exports.generateRoutingRow = function (adventure) {
 	}
 }
 
-//TODO make generateLootRow private
-exports.generateLootRow = function (adventure) {
+function generateLootRow(adventure) {
 	let options = [];
 	for (const { name, resourceType: type, count, visibility } of Object.values(adventure.room.resources)) {
 		if (visibility === "loot") {
@@ -226,7 +223,7 @@ exports.generateLootRow = function (adventure) {
 	}
 }
 
-exports.generateTreasureRow = function (adventure) {
+function generateTreasureRow(adventure) {
 	let options = [];
 	for (const { name, resourceType: type, count, visibility } of Object.values(adventure.room.resources)) {
 		if (visibility === "internal" && type !== "roomAction") {
@@ -269,8 +266,7 @@ exports.generateTreasureRow = function (adventure) {
 	}
 }
 
-//TODO make generateMerchantRows private
-exports.generateMerchantRows = function (adventure) {
+function generateMerchantRows(adventure) {
 	let categorizedResources = {};
 	for (const { name, visibility, uiGroup } of Object.values(adventure.room.resources)) {
 		if (visibility === "always") {
