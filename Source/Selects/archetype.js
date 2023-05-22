@@ -1,4 +1,4 @@
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder, MessageFlags } = require('discord.js');
 const { SAFE_DELIMITER } = require('../../constants.js');
 const Archetype = require('../../Classes/Archetype.js');
 const Select = require('../../Classes/Select.js');
@@ -52,7 +52,7 @@ module.exports = new Select(id, (interaction, args) => {
 						delete adventure.messageIds.start;
 					}
 
-					interaction.channel.send({ content: "All players are ready, the adventure will start when the leader clicks the button below!", components: readyButton }).then(message => {
+					interaction.channel.send({ content: "All players are ready, the adventure will start when the leader clicks the button below!", components: readyButton, flags: MessageFlags.SuppressNotifications }).then(message => {
 						adventure.messageIds.start = message.id;
 						setAdventure(adventure);
 					})
