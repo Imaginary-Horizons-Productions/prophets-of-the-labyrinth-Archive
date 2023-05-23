@@ -11,14 +11,20 @@ module.exports = new EquipmentTemplate("Toxic Firecracker", "*Strike 3 random fo
 	.setCritBonus(2)
 	.setDamage(50);
 
-function effect(target, user, isCrit, adventure) {
+function effect(targets, user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger, poison], damage, critBonus } = module.exports;
-	if (user.element === element) {
-		addModifier(target, elementStagger);
-	}
 	if (isCrit) {
 		damage *= critBonus;
 	}
-	addModifier(target, poison);
-	return dealDamage(target, user, damage, false, element, adventure);
+	return targets.map(target => {
+		if (target.hp < 1) {
+			return "";
+		}
+
+		if (user.element === element) {
+			addModifier(target, elementStagger);
+		}
+		addModifier(target, poison);
+		return dealDamage(target, user, damage, false, element, adventure);
+	}).filter(result => Boolean(result)).join(" ");
 }

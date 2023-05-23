@@ -7,7 +7,7 @@ module.exports = new ConsumableTemplate("Vitamins", "Increases the user's max HP
 	.setTargetTags("self", "delver")
 	.setFlavorText(["*Additional Notes*", "*Make sure to consume exactly the right number so your HP isn't divisible by 4*"]);
 
-function effect(target, user, isCrit, adventure) {
+function effect(targets, user, isCrit, adventure) {
 	// +50 max hp
 	const gains = 50;
 	user.maxHp += gains;

@@ -10,7 +10,7 @@ module.exports = new EquipmentTemplate("Heavy Blood Aegis", "*Pay @{hpCost} hp t
 	.setHpCost(25)
 	.setBlock(250);
 
-function effect(target, user, isCrit, adventure) {
+function effect([target], user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger], block, critBonus, hpCost } = module.exports;
 	if (user.element === element) {
 		removeModifier(target, elementStagger);

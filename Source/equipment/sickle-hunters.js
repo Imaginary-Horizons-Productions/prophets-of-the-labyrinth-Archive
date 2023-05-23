@@ -10,7 +10,11 @@ module.exports = new EquipmentTemplate("Hunter's Sickle", "*Strike a foe for @{d
 	.setDamage(75)
 	.setBonusDamage(15);
 
-function effect(target, user, isCrit, adventure) {
+function effect([target], user, isCrit, adventure) {
+	if (target.hp < 1) {
+		return ` ${getFullName(target, adventure.room.enemyTitles)} was already dead!`;
+	}
+
 	let { element, modifiers: [elementStagger], damage, critBonus, bonusDamage: bonusBounty } = module.exports;
 	damage += (0.05 * target.maxHp);
 	if (user.element === element) {

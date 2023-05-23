@@ -1,5 +1,5 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
-const { dealDamage } = require('../combatantDAO.js');
+const { dealDamage, getFullName } = require('../combatantDAO.js');
 
 module.exports = new EquipmentTemplate("Punch", "*Strike a foe for @{damage} @{element} damage*\nCritical Hit💥: Damage x@{critBonus}", "Untyped", effect, [])
 	.setCategory("Weapon")
@@ -9,7 +9,11 @@ module.exports = new EquipmentTemplate("Punch", "*Strike a foe for @{damage} @{e
 	.setUses(Infinity)
 	.setDamage(50);
 
-function effect(target, user, isCrit, adventure) {
+function effect([target], user, isCrit, adventure) {
+	if (target.hp < 1) {
+		return ` ${getFullName(target, adventure.room.enemyTitles)} was already dead!`;
+	}
+
 	let { damage, critBonus, element } = module.exports;
 	// No same element effect boost due to untyped
 	if (isCrit) {

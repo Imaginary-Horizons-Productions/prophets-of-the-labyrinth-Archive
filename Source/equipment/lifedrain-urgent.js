@@ -1,5 +1,5 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
-const { addModifier, dealDamage, gainHealth } = require('../combatantDAO.js');
+const { addModifier, dealDamage, gainHealth, getFullName } = require('../combatantDAO.js');
 
 module.exports = new EquipmentTemplate("Urgent Life Drain", "*Strike a foe for @{damage} @{element} damage, then gain @{healing} hp with priority*\nCritical Hit💥: Healing x@{critBonus}", "Water", effect, ["Flanking Life Drain", "Reactive Life Drain"])
 	.setCategory("Spell")
@@ -11,7 +11,11 @@ module.exports = new EquipmentTemplate("Urgent Life Drain", "*Strike a foe for @
 	.setHealing(25)
 	.markPriority();
 
-async function effect(target, user, isCrit, adventure) {
+async function effect([target], user, isCrit, adventure) {
+	if (target.hp < 1) {
+		return ` ${getFullName(target, adventure.room.enemyTitles)} was already dead!`;
+	}
+
 	let { element, modifiers: [elementStagger], damage, healing, critBonus } = module.exports;
 	if (user.element === element) {
 		addModifier(target, elementStagger);

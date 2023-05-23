@@ -7,7 +7,7 @@ module.exports = new ConsumableTemplate("Regen Root", "Grants the user 5 Regen",
 	.setTargetTags("self", "delver")
 	.setFlavorText([]);
 
-function effect(target, user, isCrit, adventure) {
+function effect(targets, user, isCrit, adventure) {
 	// +5 Regen
 	addModifier(user, { name: "Regen", stacks: 5 });
 	return `${getFullName(user, adventure.room.enemyTitles)} starts regenerating.`;

@@ -8,7 +8,7 @@ module.exports = new ConsumableTemplate("Earthen Potion", "Grants the user 1 Ear
 	.setTargetTags("self", "delver")
 	.setFlavorText(["*Legally Required Addtional Note*", "*Not to be confused with __Explosive Potion__.*"]);
 
-function effect(target, user, isCrit, adventure) {
+function effect(targets, user, isCrit, adventure) {
 	// +1 Earth Absorb
 	addModifier(user, { name: "Earth Absorb", stacks: 1 });
 	return `${getFullName(user, adventure.room.enemyTitles)} now absorbs ${getEmoji("Earth")} damage.`;

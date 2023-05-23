@@ -8,7 +8,7 @@ module.exports = new EquipmentTemplate("Soothing Inspiration", "Apply @{mod1Stac
 	.setCost(350)
 	.setUses(5);
 
-function effect(target, user, isCrit, adventure) {
+function effect([target], user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger, powerUp, regen, critPowerUp] } = module.exports;
 	if (user.element === element) {
 		removeModifier(target, elementStagger);

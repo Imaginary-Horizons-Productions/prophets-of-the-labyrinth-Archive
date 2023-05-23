@@ -9,13 +9,19 @@ module.exports = new EquipmentTemplate("Sweeping Spear", "*Strike all foes for @
 	.setUses(10)
 	.setDamage(75);
 
-function effect(target, user, isCrit, adventure) {
+function effect(targets, user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger, critStagger], damage } = module.exports;
-	if (user.element === element) {
-		addModifier(target, elementStagger);
-	}
-	if (isCrit) {
-		addModifier(target, critStagger);
-	}
-	return dealDamage(target, user, damage, false, element, adventure);
+	return targets.map(target => {
+		if (target.hp < 1) {
+			return "";
+		}
+
+		if (user.element === element) {
+			addModifier(target, elementStagger);
+		}
+		if (isCrit) {
+			addModifier(target, critStagger);
+		}
+		return dealDamage(target, user, damage, false, element, adventure);
+	}).filter(result => Boolean(result)).join(" ");
 }

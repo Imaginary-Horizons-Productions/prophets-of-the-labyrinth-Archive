@@ -7,7 +7,7 @@ module.exports = new ConsumableTemplate("Block Potion", "Adds 50 block to all al
 	.setTargetTags("all", "delver")
 	.setFlavorText([]);
 
-function effect(target, user, isCrit, adventure) {
+function effect([target], user, isCrit, adventure) {
 	// +50 block
 	addBlock(target, 50);
 	return "";

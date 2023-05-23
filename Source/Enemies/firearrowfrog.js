@@ -21,7 +21,7 @@ function firearrowFrogPattern(actionName) {
 	return PATTERN[actionName]
 }
 
-function venomCannonEffect(target, user, isCrit, adventure) {
+function venomCannonEffect([target], user, isCrit, adventure) {
 	let damage = 20;
 	if (isCrit) {
 		addModifier(target, { name: "Poison", stacks: 6 });
@@ -33,7 +33,7 @@ function venomCannonEffect(target, user, isCrit, adventure) {
 	});
 }
 
-function evadeEffect(target, user, isCrit, adventure) {
+function evadeEffect(targets, user, isCrit, adventure) {
 	let stacks = 2;
 	if (isCrit) {
 		stacks *= 3;
@@ -43,7 +43,7 @@ function evadeEffect(target, user, isCrit, adventure) {
 	return "";
 }
 
-function goopSprayEffect(target, user, isCrit, adventure) {
+function goopSprayEffect([target], user, isCrit, adventure) {
 	if (isCrit) {
 		addModifier(target, { name: "Slow", stacks: 3 });
 		addModifier(target, { name: "Stagger", stacks: 1 });

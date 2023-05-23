@@ -10,14 +10,16 @@ module.exports = new EquipmentTemplate("Sweeping Blood Aegis", "*Pay @{hpCost} h
 	.setHpCost(25)
 	.setBlock(100);
 
-function effect(target, user, isCrit, adventure) {
+function effect(targets, user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger], block, critBonus, hpCost } = module.exports;
-	if (user.element === element) {
-		removeModifier(target, elementStagger);
-	}
 	if (isCrit) {
 		block *= critBonus;
 	}
-	addBlock(target, block);
+	targets.forEach(target => {
+		if (user.element === element) {
+			removeModifier(target, elementStagger);
+		}
+		addBlock(target, block);
+	});
 	return dealDamage(user, null, hpCost, true, "Untyped", adventure); // user pays health
 }

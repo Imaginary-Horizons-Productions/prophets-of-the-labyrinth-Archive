@@ -10,7 +10,7 @@ module.exports = new EquipmentTemplate("Potion Kit", "*Add 1 random potion to lo
 .setCost(200)
 .setUses(10);
 
-function effect(target, user, isCrit, adventure) {
+function effect(targets, user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger] } = module.exports;
 	if (user.element === element) {
 		removeModifier(user, elementStagger);

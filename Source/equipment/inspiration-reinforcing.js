@@ -9,7 +9,7 @@ module.exports = new EquipmentTemplate("Reinforcing Inspiration", "Apply @{mod1S
 	.setCost(350)
 	.setUses(5);
 
-function effect(target, user, isCrit, adventure) {
+function effect([target], user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger, powerUp, critPowerUp], block } = module.exports;
 	if (user.element === element) {
 		removeModifier(target, elementStagger);

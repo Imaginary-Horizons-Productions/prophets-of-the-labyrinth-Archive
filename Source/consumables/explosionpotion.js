@@ -7,7 +7,7 @@ module.exports = new ConsumableTemplate("Explosion Potion", "Deal 75 damage to a
 	.setTargetTags("all", "enemy")
 	.setFlavorText(["*Additional Notes*", "*Not to be confused with __Fiery Potion__. DO NOT apply to self.*"]);
 
-function effect(target, user, isCrit, adventure) {
+function effect(targets, user, isCrit, adventure) {
 	// 75 damage
-	return dealDamage(target, user, 75, false, "Untyped", adventure);
+	return targets.map(target => dealDamage(target, user, 75, false, "Untyped", adventure)).join(" ");
 }

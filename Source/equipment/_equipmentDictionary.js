@@ -83,6 +83,9 @@ for (const file of [
 	"vigilancecharm-devoted.js",
 	"vigilancecharm-long.js",
 	"vigilancecharm-guarding.js",
+	"warcry-base.js",
+	"warcry-charging.js",
+	"warcry-tormenting.js",
 	"warhammer-base.js",
 	"warhammer-piercing.js"
 ]) {
