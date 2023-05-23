@@ -13,6 +13,7 @@ User gains Power Up modifier
 #### Available on
 - all Swords (Earth)
 - Blood Aegis (Water)
+- War Cry (Fire)
 
 ### Cursed
 User pays hp to use
@@ -177,6 +178,7 @@ Adds stacks to debuffs
 #### Avaialble on
 - Sun Flare (Fire)
 - Censer (Fire)
+- War Cry (Fire)
 
 ### Toxic
 Applies Poison

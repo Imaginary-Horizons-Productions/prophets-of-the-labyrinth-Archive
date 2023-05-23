@@ -30,7 +30,8 @@
    - Each delver will have a different pool of eligible artifacts in each adventure
 - Halved the effectiveness of *Hawk Tailfeather*
 - Boss balance: ||The Elkemist's Bubble's Progress gain is now (0 to 15) + 5 per buff removed + 10 on crit||
-- Fixed a bug where Devoted Vigilance Charm was always targeting the user
+- Fixed a bug where *Devoted Vigilance Charm* was always targeting the user
+- Added *War Cry*, *Charging War Cry*, and *Tormenting War Cry*
 
 #### Prophets of the Labyrinth Version 0.9.0:
 - Rebalanced predicts, they are now as follows
