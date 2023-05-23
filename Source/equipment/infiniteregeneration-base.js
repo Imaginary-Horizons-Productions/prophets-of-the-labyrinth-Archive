@@ -9,7 +9,7 @@ module.exports = new EquipmentTemplate("Infinite Regeneration", "*Pay @{hpCost} 
 	.setCost(200)
 	.setUses(5);
 
-function effect(target, user, isCrit, adventure) {
+function effect([target], user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger, regen], hpCost, critBonus } = module.exports;
 	if (user.element === element) {
 		removeModifier(target, elementStagger);

@@ -7,7 +7,7 @@ module.exports = new ConsumableTemplate("Strength Spinach", "Grants the user 50 
 	.setTargetTags("self", "delver")
 	.setFlavorText([]);
 
-function effect(target, user, isCrit, adventure) {
+function effect(targets, user, isCrit, adventure) {
 	// +50 Power Up
 	addModifier(user, { name: "Power Up", stacks: 50 });
 	return `${getFullName(user, adventure.room.enemyTitles)} gains Power Up.`;

@@ -7,7 +7,7 @@ module.exports = new ConsumableTemplate("Health Potion", "Heals the user by 25% 
 	.setTargetTags("self", "delver")
 	.setFlavorText([]);
 
-function effect(target, user, isCrit, adventure) {
+function effect(targets, user, isCrit, adventure) {
 	// +25% max hp
 	return gainHealth(user, Math.floor(user.maxHp * 0.25), adventure);
 }

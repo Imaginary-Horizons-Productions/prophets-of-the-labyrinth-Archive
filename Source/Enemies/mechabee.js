@@ -23,7 +23,7 @@ function mechabeePattern(actionName) {
 	return PATTERN[actionName]
 }
 
-function stingEffect(target, user, isCrit, adventure) {
+function stingEffect([target], user, isCrit, adventure) {
 	addModifier(target, { name: "Stagger", stacks: 1 });
 	if (isCrit) {
 		addModifier(target, { name: "Poison", stacks: 4 });
@@ -33,7 +33,7 @@ function stingEffect(target, user, isCrit, adventure) {
 	return dealDamage(target, user, 10, false, user.element, adventure);
 }
 
-function evadeEffect(target, user, isCrit, adventure) {
+function evadeEffect(targets, user, isCrit, adventure) {
 	let stacks = 2;
 	if (isCrit) {
 		stacks *= 3;
@@ -43,17 +43,20 @@ function evadeEffect(target, user, isCrit, adventure) {
 	return "";
 }
 
-function summonEffect(target, user, isCrit, adventure) {
+function summonEffect(targets, user, isCrit, adventure) {
 	spawnEnemy(adventure, module.exports, true);
 	return "Another mechabee arrives.";
 }
 
-function selfDestructEffect(target, user, isCrit, adventure) {
+function selfDestructEffect(targets, user, isCrit, adventure) {
 	let damage = 125;
 	if (isCrit) {
 		damage *= 2;
 	}
-	addModifier(target, { name: "Stagger", stacks: 1 });
 	user.hp = 0;
-	return dealDamage(target, user, damage, false, user.element, adventure);
+
+	return targets.map(target => {
+		addModifier(target, { name: "Stagger", stacks: 1 });
+		return dealDamage(target, user, damage, false, user.element, adventure);
+	}).join(" ");
 }

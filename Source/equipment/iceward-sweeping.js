@@ -9,15 +9,17 @@ module.exports = new EquipmentTemplate("Sweeping Ice Ward", "*Grant @{block} blo
 	.setUses(10)
 	.setBlock(50);
 
-function effect(target, user, isCrit, adventure) {
+function effect(targets, user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger], block, critBonus } = module.exports;
-	if (user.element === element) {
-		removeModifier(target, elementStagger);
-	}
 	if (isCrit) {
 		block *= critBonus;
 	}
-	addBlock(target, block);
-	addBlock(user, block / adventure.delvers.length); // effect is resolved once for each delver
+	addBlock(user, block);
+	targets.forEach(target => {
+		if (user.element === element) {
+			removeModifier(target, elementStagger);
+		}
+		addBlock(target, block);
+	})
 	return "";
 }

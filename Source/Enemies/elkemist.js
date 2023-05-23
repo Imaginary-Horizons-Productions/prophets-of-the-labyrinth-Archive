@@ -15,7 +15,7 @@ module.exports = new Enemy("Elkemist")
 	.setElement("Water")
 	.setStaggerThreshold(4);
 
-function toilEffect(target, user, isCrit, adventure) {
+function toilEffect(targets, user, isCrit, adventure) {
 	// Gain block and medium progress
 	removeModifier(user, { name: "Stagger", stacks: 1 });
 	if (isCrit) {
@@ -27,7 +27,7 @@ function toilEffect(target, user, isCrit, adventure) {
 	return "It succeeds at gathering some materials and fortifying its laboratory.";
 }
 
-function troubleEffect(target, user, isCrit, adventure) {
+function troubleEffect([target], user, isCrit, adventure) {
 	// Damage a single foe and small progress
 	let damage = 75 + (user.modifiers["Power Up"] || 0);
 	if (isCrit) {
@@ -40,26 +40,38 @@ function troubleEffect(target, user, isCrit, adventure) {
 	})
 }
 
-function boilEffect(target, user, isCrit, adventure) {
+function boilEffect(targets, user, isCrit, adventure) {
 	// Fire damage to all foes
 	let damage = 75;
 	if (isCrit) {
 		damage *= 2;
 	}
-	return dealDamage(target, user, damage, false, "Fire", adventure);
+	return targets.map(target => dealDamage(target, user, damage, false, "Fire", adventure)).join(" ");
 }
 
-function bubbleEffect(target, user, isCrit, adventure) {
-	// Remove buffs from all foes and big progress
+function bubbleEffect(targets, user, isCrit, adventure) {
+	// Remove buffs from all foes and gain progress per removed
+	let progressGained = generateRandomNumber(adventure, 16, "battle");
+	const affectedDelvers = new Set();
 	if (isCrit) {
-		addModifier(user, { name: "Progress", stacks: 30 + generateRandomNumber(adventure, 16, "battle") });
-	} else {
-		addModifier(user, { name: "Progress", stacks: 15 + generateRandomNumber(adventure, 16, "battle") });
+		progressGained += 10;
 	}
-	for (let modifier in target.modifiers) {
-		if (isBuff(modifier)) {
-			delete target.modifiers[modifier];
+	for (const target in targets) {
+		for (let modifier in target.modifiers) {
+			if (isBuff(modifier)) {
+				delete target.modifiers[modifier];
+				progressGained += 5;
+				if (!affectedDelvers.has(target.name)) {
+					affectedDelvers.add(target.name);
+				}
+			}
 		}
 	}
-	return `The Elkemist cackles as ${target.name}'s buffs are nullified.`;
+	addModifier(user, { name: "Progress", stacks: progressGained });
+
+	if (affectedDelvers.size > 0) {
+		return `It cackles as it nullifies buffs on ${Array(affectedDelvers).join(", ")}.`;
+	} else {
+		return "It's disappointed the party has no buffs to nullify.";
+	}
 }

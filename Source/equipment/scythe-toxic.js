@@ -10,7 +10,11 @@ module.exports = new EquipmentTemplate("Toxic Scythe", "*Strike a foe applying @
 	.setDamage(75)
 	.setBonusDamage(99);
 
-function effect(target, user, isCrit, adventure) {
+function effect([target], user, isCrit, adventure) {
+	if (target.hp < 1) {
+		return ` ${getFullName(target, adventure.room.enemyTitles)} was already dead!`;
+	}
+
 	let { element, modifiers: [elementStagger, poison], damage, bonusDamage: hpThreshold, critBonus } = module.exports;
 	if (user.element === element) {
 		addModifier(target, elementStagger);

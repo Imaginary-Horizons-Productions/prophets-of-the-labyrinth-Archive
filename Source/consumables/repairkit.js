@@ -7,7 +7,7 @@ module.exports = new ConsumableTemplate("Repair Kit", "Repairs all the user's eq
 	.setTargetTags("self", "delver")
 	.setFlavorText([]);
 
-function effect(target, user, isCrit, adventure) {
+function effect(targets, user, isCrit, adventure) {
 	// +25% max uses to all equipment
 	user.equipment.forEach((equip) => {
 		const maxUses = getEquipmentProperty(equip.name, "maxUses");

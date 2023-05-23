@@ -10,7 +10,7 @@ module.exports = new EquipmentTemplate("Urgent Barrier", "*Grant an ally @{block
 	.setBlock(1000)
 	.markPriority();
 
-function effect(target, user, isCrit, adventure) {
+function effect([target], user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger], block, critBonus } = module.exports;
 	if (user.element === element) {
 		removeModifier(user, elementStagger);

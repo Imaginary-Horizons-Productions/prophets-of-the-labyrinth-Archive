@@ -8,7 +8,7 @@ module.exports = new EquipmentTemplate("Devoted Vigilance Charm", "*Grant an all
 	.setCost(350)
 	.setUses(5);
 
-function effect(target, user, isCrit, adventure) {
+function effect([target], user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger, vigilance, critVigilance] } = module.exports;
 	if (user.element === element) {
 		removeModifier(target, elementStagger);

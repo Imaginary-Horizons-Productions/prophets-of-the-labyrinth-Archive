@@ -11,7 +11,7 @@ module.exports = new EquipmentTemplate("Guarding Potion Kit", "*Gain @{block} bl
 	.setUses(10)
 	.setBlock(75);
 
-function effect(target, user, isCrit, adventure) {
+function effect(targets, user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger], block } = module.exports;
 	if (user.element === element) {
 		removeModifier(user, elementStagger);

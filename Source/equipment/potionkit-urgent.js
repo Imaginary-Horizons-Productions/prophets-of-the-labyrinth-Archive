@@ -11,7 +11,7 @@ module.exports = new EquipmentTemplate("Urgent Potion Kit", "*Add 1 random potio
 .setUses(10)
 .markPriority();
 
-function effect(target, user, isCrit, adventure) {
+function effect(targets, user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger] } = module.exports;
 	if (user.element === element) {
 		removeModifier(user, elementStagger);

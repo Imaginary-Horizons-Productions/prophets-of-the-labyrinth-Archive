@@ -11,7 +11,7 @@ module.exports = new Enemy("Bloodtail Hawk")
 	.setStaggerThreshold(1)
 	.setCritDenominator(3);
 
-function rakeEffect(target, user, isCrit, adventure) {
+function rakeEffect([target], user, isCrit, adventure) {
 	let damage = 50;
 	if (isCrit) {
 		damage *= 2;

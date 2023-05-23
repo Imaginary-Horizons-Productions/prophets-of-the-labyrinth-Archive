@@ -1,5 +1,5 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
-const { dealDamage, addModifier, addBlock } = require('../combatantDAO.js');
+const { dealDamage, addModifier, addBlock, getFullName } = require('../combatantDAO.js');
 
 module.exports = new EquipmentTemplate("Guarding Sword", "*Strike a foe for @{damage} @{element} damage, then gain @{block} block and @{mod1Stacks} @{mod1}*\nCritical Hit💥: Damage x@{critBonus}", "Earth", effect, ["Accelerating Sword", "Reckless Sword"])
 	.setCategory("Weapon")
@@ -10,7 +10,11 @@ module.exports = new EquipmentTemplate("Guarding Sword", "*Strike a foe for @{da
 	.setDamage(75)
 	.setBlock(75);
 
-function effect(target, user, isCrit, adventure) {
+function effect([target], user, isCrit, adventure) {
+	if (target.hp < 1) {
+		return ` ${getFullName(target, adventure.room.enemyTitles)} was already dead!`;
+	}
+
 	let { element, modifiers: [elementStagger, powerUp], damage, block, critBonus } = module.exports;
 	if (user.element === element) {
 		addModifier(target, elementStagger);

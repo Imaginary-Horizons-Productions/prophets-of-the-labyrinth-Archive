@@ -7,7 +7,7 @@ module.exports = new ConsumableTemplate("Smoke Bomb", "Grants the user 2 Evade",
 	.setTargetTags("self", "delver")
 	.setFlavorText(["___'s Commentary", "Take advantage of an enemy being blinded to run away? Who would do that?"]);
 
-function effect(target, user, isCrit, adventure) {
+function effect(targets, user, isCrit, adventure) {
 	// +2 Evade
 	addModifier(user, { name: "Evade", stacks: 2 });
 	return `${getFullName(user, adventure.room.enemyTitles)} becomes more evasive.`;

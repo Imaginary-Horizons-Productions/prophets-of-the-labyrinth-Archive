@@ -11,7 +11,7 @@ module.exports = new Enemy("Geode Tortoise")
 	.setElement("Earth")
 	.setStaggerThreshold(5);
 
-function biteEffect(target, user, isCrit, adventure) {
+function biteEffect([target], user, isCrit, adventure) {
 	let damage = 50;
 	if (isCrit) {
 		damage *= 2;
@@ -20,7 +20,7 @@ function biteEffect(target, user, isCrit, adventure) {
 	return dealDamage(target, user, damage, false, user.element, adventure);
 }
 
-function crystallizeEffect(target, user, isCrit, adventure) {
+function crystallizeEffect(targets, user, isCrit, adventure) {
 	addBlock(user, 150);
 	if (isCrit) {
 		addModifier(user, { name: "Power Up", stacks: 50 });

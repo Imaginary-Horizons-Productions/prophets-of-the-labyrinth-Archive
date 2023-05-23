@@ -11,7 +11,7 @@ module.exports = new Enemy("@{adventureOpposite} Ooze")
 	.setElement("@{adventureOpposite}")
 	.setStaggerThreshold(5);
 
-function tackleEffect(target, user, isCrit, adventure) {
+function tackleEffect([target], user, isCrit, adventure) {
 	let damage = 25;
 	if (isCrit) {
 		damage *= 2;
@@ -20,7 +20,7 @@ function tackleEffect(target, user, isCrit, adventure) {
 	return dealDamage(target, user, damage, false, user.element, adventure);
 }
 
-function goopSprayEffect(target, user, isCrit, adventure) {
+function goopSprayEffect([target], user, isCrit, adventure) {
 	if (isCrit) {
 		addModifier(target, { name: "Slow", stacks: 3 });
 		addModifier(target, { name: "Stagger", stacks: 1 });

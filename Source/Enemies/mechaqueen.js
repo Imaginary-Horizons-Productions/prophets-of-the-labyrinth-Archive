@@ -28,7 +28,7 @@ function mechaQueenPattern(actionName) {
 	return PATTERN[actionName]
 }
 
-function missileEffect(target, user, isCrit, adventure) {
+function missileEffect([target], user, isCrit, adventure) {
 	addModifier(target, { name: "Stagger", stacks: 1 });
 	if (isCrit) {
 		addModifier(target, { name: "Poison", stacks: 5 });
@@ -38,13 +38,13 @@ function missileEffect(target, user, isCrit, adventure) {
 	return "";
 }
 
-function deployEffect(target, user, isCrit, adventure) {
+function deployEffect(targets, user, isCrit, adventure) {
 	spawnEnemy(adventure, mechabee, true);
 	return "Another mechabee arrives.";
 }
 
 // assumes mecha queen is at enemy index 0 and that all other enemies are mechabees
-function swarmEffect(target, user, isCrit, adventure) {
+function swarmEffect(targets, user, isCrit, adventure) {
 	adventure.room.moves.forEach(move => {
 		if (move.userReference.team === "enemy" && move.userReference.index !== 0) {
 			move.name = "Call for Help";
@@ -56,19 +56,19 @@ function swarmEffect(target, user, isCrit, adventure) {
 }
 
 // assumes mecha queen is at enemy index 0 and that all other enemies are mechabees
-function assaultEffect(target, user, isCrit, adventure) {
-	const { targets } = adventure.room.priorityMoves.find(move => move.userReference.team === "enemy" && move.userReference.index === 0)
+function assaultEffect(targets, user, isCrit, adventure) {
+	const { targets: mechaqueensTargets } = adventure.room.priorityMoves.find(move => move.userReference.team === "enemy" && move.userReference.index === 0)
 	adventure.room.moves.forEach(move => {
 		if (move.userReference.team === "enemy" && move.userReference.index !== 0) {
 			move.name = "Sting";
-			move.targets = targets;
+			move.targets = mechaqueensTargets;
 		}
 	});
 	addBlock(user, isCrit ? 200 : 100);
 	return "She braces herself and orders a full-on attack!";
 }
 
-function sacrificeEffect(target, user, isCrit, adventure) {
+function sacrificeEffect([target], user, isCrit, adventure) {
 	addBlock(user, isCrit ? 200 : 100);
 	if (target) {
 		const targetMove = adventure.room.moves.find(move => move.userReference.team === "enemy" && move.userReference.index === parseInt(target.title));

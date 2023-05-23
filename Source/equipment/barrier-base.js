@@ -9,7 +9,7 @@ module.exports = new EquipmentTemplate("Barrier", "*Grant an ally @{block} block
 	.setUses(1)
 	.setBlock(1000);
 
-function effect(target, user, isCrit, adventure) {
+function effect([target], user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger], block, critBonus } = module.exports;
 	if (user.element === element) {
 		removeModifier(user, elementStagger);

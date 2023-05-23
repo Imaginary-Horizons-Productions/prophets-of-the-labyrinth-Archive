@@ -20,6 +20,10 @@ exports.resolveMove = async function (move, adventure) {
 
 	let moveText = `**${getFullName(user, adventure.room.enemyTitles)}** `;
 	if (move.name !== "Stun" && user.getModifierStacks("Stun") < 1) {
+		if (move.isCrit) {
+			moveText = `💥${moveText}`;
+		}
+
 		let effect;
 		let targetAll = false;
 		let breakText = "";
@@ -64,30 +68,13 @@ exports.resolveMove = async function (move, adventure) {
 				break;
 		}
 
-		// An arry containing move result texts
-		let resultTexts = await Promise.all(move.targets.map(async (targetReference) => {
-			const target = adventure.getCombatant(targetReference);
-			// Missing target means targeting "none", so resolve effect anyways
-			if (!target || target.hp > 0) {
-				return await effect(target, user, move.isCrit, adventure);
-			} else {
-				if (!targetAll) {
-					return ` ${getFullName(target, adventure.room.enemyTitles)} was already dead!`;
-				} else {
-					// Omit "already dead" messages from AoE moves
-					return "";
-				}
-			}
-		}).filter(text => text !== ""));
+		const targets = move.targets.map(targetReference => adventure.getCombatant(targetReference)).filter(reference => !!reference);
+		const resultText = await effect(targets, adventure.getCombatant(move.userReference), move.isCrit, adventure);
 
-		if (move.isCrit) {
-			moveText = `💥${moveText}`;
-		}
-		moveText += `used ${move.name}. ${resultTexts.join(" ")}${breakText}`;
+		moveText += `used ${move.name}. ${resultText}${breakText}`;
 	} else {
 		removeModifier(user, { name: "Stun", stacks: "all" });
-		moveText = `💫 ${moveText}`;
-		moveText += "is Stunned!";
+		moveText = `💫 ${moveText} is Stunned!`;
 	}
 
 	// Poison/Regen

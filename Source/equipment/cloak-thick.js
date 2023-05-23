@@ -8,7 +8,7 @@ module.exports = new EquipmentTemplate("Thick Cloak", "*Gain @{mod1Stacks} @{mod
 	.setCost(350)
 	.setUses(20);
 
-function effect(target, user, isCrit, adventure) {
+function effect(targets, user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger, evade, critEvade] } = module.exports;
 	if (user.element === element) {
 		removeModifier(user, elementStagger);

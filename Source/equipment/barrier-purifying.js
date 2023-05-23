@@ -9,7 +9,7 @@ module.exports = new EquipmentTemplate("Purifying Barrier", "*Grant an ally @{bl
 	.setCost(350)
 	.setUses(1);
 
-function effect(target, user, isCrit, adventure) {
+function effect([target], user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger], block, critBonus } = module.exports;
 	if (user.element === element) {
 		removeModifier(user, elementStagger);
