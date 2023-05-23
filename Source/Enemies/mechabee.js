@@ -55,8 +55,10 @@ function selfDestructEffect(targets, user, isCrit, adventure) {
 	}
 	user.hp = 0;
 
-	return targets.map(target => {
-		addModifier(target, { name: "Stagger", stacks: 1 });
-		return dealDamage(target, user, damage, false, user.element, adventure);
-	}).join(" ");
+	return Promise.all(
+		targets.map(target => {
+			addModifier(target, { name: "Stagger", stacks: 1 });
+			return dealDamage(target, user, damage, false, user.element, adventure);
+		})
+	).then(results => results.join(" "));
 }
