@@ -1,7 +1,7 @@
-const Equipment = require('../../Classes/Equipment.js');
+const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addModifier, dealDamage, getFullName } = require('../combatantDAO.js');
 
-module.exports = new Equipment("Lethal Scythe", 2, "*Strike a foe for @{damage} @{element} damage; instant death if foe is at or below @{bonusDamage} hp*\nCritical Hit: Instant death threshold x@{critBonus}", "Wind", effect, ["Piercing Scythe", "Toxic Scythe"])
+module.exports = new EquipmentTemplate("Lethal Scythe", "*Strike a foe for @{damage} @{element} damage; instant death if foe is at or below @{bonusDamage} hp*\nCritical Hit💥: Instant death threshold x@{critBonus}", "Wind", effect, ["Piercing Scythe", "Toxic Scythe"])
 	.setCategory("Weapon")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
@@ -11,7 +11,11 @@ module.exports = new Equipment("Lethal Scythe", 2, "*Strike a foe for @{damage} 
 	.setBonusDamage(99)
 	.setCritBonus(3);
 
-function effect(target, user, isCrit, adventure) {
+function effect([target], user, isCrit, adventure) {
+	if (target.hp < 1) {
+		return ` ${getFullName(target, adventure.room.enemyTitles)} was already dead!`;
+	}
+
 	let { element, modifiers: [elementStagger], damage, bonusDamage: hpThreshold, critBonus } = module.exports;
 	if (user.element === element) {
 		addModifier(target, elementStagger);

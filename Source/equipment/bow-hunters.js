@@ -1,7 +1,7 @@
-const Equipment = require('../../Classes/Equipment.js');
-const { dealDamage, addModifier } = require('../combatantDAO.js');
+const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
+const { dealDamage, addModifier, getFullName } = require('../combatantDAO.js');
 
-module.exports = new Equipment("Hunter's Bow", 2, "*Strike a foe for @{damage} @{element} damage (+@{speedBonus} speed bonus), gain @{bonusDamage}g on kill*\nCritical Hit: Damage x@{critBonus}", "Wind", effect, ["Evasive Bow", "Mercurial Bow"])
+module.exports = new EquipmentTemplate("Hunter's Bow", "*Strike a foe for @{damage} @{element} damage with priority, gain @{bonusDamage}g on kill*\nCritical Hit💥: Damage x@{critBonus}", "Wind", effect, ["Evasive Bow", "Mercurial Bow"])
 	.setCategory("Weapon")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
@@ -9,9 +9,13 @@ module.exports = new Equipment("Hunter's Bow", 2, "*Strike a foe for @{damage} @
 	.setUses(10)
 	.setDamage(75)
 	.setBonusDamage(15)
-	.setSpeedBonus(10);
+	.markPriority();
 
-function effect(target, user, isCrit, adventure) {
+function effect([target], user, isCrit, adventure) {
+	if (target.hp < 1) {
+		return ` ${getFullName(target, adventure.room.enemyTitles)} was already dead!`;
+	}
+
 	let { element, modifiers: [elementStagger], damage, bonusDamage: bonusBounty, critBonus } = module.exports;
 	if (user.element === element) {
 		addModifier(target, elementStagger);

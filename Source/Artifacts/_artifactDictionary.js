@@ -18,7 +18,8 @@ for (const file of [
 	"hawktailfeather.js",
 	"negativeoneleafclover.js",
 	"oilpainting.js",
-	"phoenixfruitblossom.js"
+	"phoenixfruitblossom.js",
+	"spiralfunnel.js"
 ]) {
 	const artifact = require(`./${file}`);
 	ARTIFACTS[artifact.name] = artifact;
@@ -34,7 +35,10 @@ exports.getArtifactCounts = function () {
 }
 
 exports.rollArtifact = function (adventure) {
-	let elementPool = [...adventure.delvers.map(delver => delver.element), "Untyped"];
-	let artifactPool = elementPool.reduce((artifacts, element) => artifacts.concat(ROLL_TABLE[element]), []);
-	return artifactPool[generateRandomNumber(adventure, artifactPool.length, "general")];;
+	let artifactPool = adventure.getElementPool().reduce((artifacts, element) => artifacts.concat(ROLL_TABLE[element]), []);
+	return artifactPool[generateRandomNumber(adventure, artifactPool.length, "general")];
+}
+
+exports.getAllArtifactNames = function () {
+	return Object.keys(ARTIFACTS);
 }

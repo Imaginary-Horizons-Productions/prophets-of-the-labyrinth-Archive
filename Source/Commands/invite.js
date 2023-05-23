@@ -1,6 +1,6 @@
-const { MessageActionRow, MessageButton } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const Command = require('../../Classes/Command.js');
-const { SAFE_DELIMITER } = require('../../helpers.js');
+const { SAFE_DELIMITER } = require('../../constants.js');
 const { getAdventure } = require('../adventureDAO.js');
 
 const id = "invite";
@@ -17,10 +17,10 @@ module.exports.execute = (interaction) => {
 			const invitee = interaction.options.getUser(options[0].name);
 			invitee.send({
 				content: `${interaction.member} has invited you to join *${adventure.name}* in ${interaction.guild}!`,
-				components: [new MessageActionRow().addComponents(
-					new MessageButton().setCustomId(`join${SAFE_DELIMITER}${interaction.guildId}${SAFE_DELIMITER}${interaction.channelId}${SAFE_DELIMITER}invite`)
+				components: [new ActionRowBuilder().addComponents(
+					new ButtonBuilder().setCustomId(`join${SAFE_DELIMITER}${interaction.guildId}${SAFE_DELIMITER}${interaction.channelId}${SAFE_DELIMITER}invite`)
 						.setLabel("Join")
-						.setStyle("SUCCESS")
+						.setStyle(ButtonStyle.Success)
 				)]
 			});
 			interaction.reply({ content: "Invite sent!", ephemeral: true });

@@ -1,4 +1,5 @@
-const { parseCount } = require("../helpers");
+const { MAX_MESSAGE_ACTION_ROWS, MAX_BUTTONS_PER_ROW } = require("../constants.js");
+const { calculateTagContent } = require("../helpers");
 
 module.exports = class Artifact {
 	constructor(nameInput, descriptionInput) {
@@ -6,16 +7,15 @@ module.exports = class Artifact {
 		this.description = descriptionInput;
 	}
 	element = "";
-	flavorText = [];
+	/** @type {import("discord.js").EmbedField} */
+	flavorText;
 
 	dynamicDescription(copies) {
-		let description = this.description;
-		let copiesExpression = description.match(/@{(copies[\*\d]*)}/)?.[1].replace(/copies/g, "n");
-		if (copiesExpression) {
-			copies = parseCount(copiesExpression, copies);
-		}
-
-		return description.replace(/@{copies.*}/g, copies);
+		return calculateTagContent(this.description, [
+			{ tag: 'copies', count: copies },
+			{ tag: 'rows', count: MAX_MESSAGE_ACTION_ROWS },
+			{ tag: 'buttons', count: MAX_BUTTONS_PER_ROW }
+		]);
 	}
 
 	setElement(elementEnum) {
@@ -23,8 +23,8 @@ module.exports = class Artifact {
 		return this;
 	}
 
-	setFlavorText(fieldArray) {
-		this.flavorText = fieldArray;
+	setFlavorText(embedFieldData) {
+		this.flavorText = embedFieldData;
 		return this;
 	}
 }

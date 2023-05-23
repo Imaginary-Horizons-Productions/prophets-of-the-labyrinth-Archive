@@ -1,6 +1,6 @@
-const Equipment = require('../../Classes/Equipment.js');
+const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 
-module.exports = new Equipment("name", 1, "description", "element", effect, [])
+module.exports = new EquipmentTemplate("name", "description", "element", effect, [])
 	.setCategory("")
 	.setTargetingTags({ target: "", team: "" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }])

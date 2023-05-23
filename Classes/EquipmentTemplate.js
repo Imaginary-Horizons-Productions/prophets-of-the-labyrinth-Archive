@@ -1,8 +1,13 @@
-// A readonly template containing stats for a piece of equipment
-module.exports = class Equipment {
-	constructor(nameInput, tierInput, descriptionInput, elementInput, effectInput, upgradeNames) {
+module.exports = class EquipmentTemplate {
+	/** This read-only data class defines stats for a piece of equipment
+	 * @param {string} nameInput
+	 * @param {string} descriptionInput
+	 * @param {"Fire" | "Water" | "Earth" | "Wind" | "Untyped"} elementInput
+	 * @param {Function} effectInput
+	 * @param {Array<string>} upgradeNames
+	 */
+	constructor(nameInput, descriptionInput, elementInput, effectInput, upgradeNames) {
 		this.name = nameInput;
-		this.tier = tierInput;
 		this.description = descriptionInput;
 		this.element = elementInput;
 		this.effect = effectInput;
@@ -18,12 +23,12 @@ module.exports = class Equipment {
 	block = 0;
 	hpCost = 0;
 	healing = 0;
-	speedBonus = 0;
+	isPriority = false;
 	modifiers = []; //[{name, stacks}]
 
 	/** Sets the equipment's category and returns the category via builder pattern
-	 * @param {string} categoryEnum enum: "Weapon", "Armor", "Spell", "Pact", "Trinket"
-	 * @returns {Equipment}
+	 * @param {"Weapon" | "Armor" | "Spell" | "Pact" | "Trinket"} categoryEnum
+	 * @returns {EquipmentTemplate}
 	 */
 	setCategory(categoryEnum) {
 		this.category = categoryEnum;
@@ -32,9 +37,9 @@ module.exports = class Equipment {
 
 	/** Sets the equipment's targets and returns the equipment via builder pattern
 	 * @param {object} tagObject
-	 * @param {string} tagObject.target - enum: "single", "all", "random→x", "self", "none"
-	 * @param {string} tagObject.team - enum: "delver", "enemy", "any", "none"
-	 * @returns {Equipment}
+	 * @param {"single" | "all" | "random→x" | "self" | "none"} tagObject.target
+	 * @param {"delver" | "enemy" | "any" | "none"} tagObject.team
+	 * @returns {EquipmentTemplate}
 	 */
 	setTargetingTags(tagObject) {
 		this.targetingTags = tagObject;
@@ -43,7 +48,7 @@ module.exports = class Equipment {
 
 	/** Sets the equipment's cost and returns the equipment via builder pattern
 	 * @param {number} integer
-	 * @returns {Equipment}
+	 * @returns {EquipmentTemplate}
 	 */
 	setCost(integer) {
 		this.cost = integer;
@@ -85,8 +90,11 @@ module.exports = class Equipment {
 		return this;
 	}
 
-	setSpeedBonus(integer) {
-		this.speedBonus = integer;
+	/** Determines that this equipment adds moves to the priority queue
+	 * @returns {EquipmentTemplate}
+	 */
+	markPriority() {
+		this.isPriority = true;
 		return this;
 	}
 

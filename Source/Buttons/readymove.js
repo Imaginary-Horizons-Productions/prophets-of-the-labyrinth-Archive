@@ -1,12 +1,13 @@
 const Button = require('../../Classes/Button.js');
-const { MessageEmbed, MessageActionRow, MessageSelectMenu, MessageButton } = require('discord.js');
+const { EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const Delver = require('../../Classes/Delver.js');
-const { SAFE_DELIMITER } = require('../../helpers.js');
+const { SAFE_DELIMITER } = require('../../constants.js');
 const { getEmoji, getWeakness, getColor } = require('../elementHelpers.js');
 const { getAdventure } = require('../adventureDAO.js');
 const { getFullName } = require("../combatantDAO.js");
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
 const { equipmentToEmbedField } = require('../equipmentDAO.js');
+const { generateTextBar } = require('../../helpers.js');
 
 const id = "readymove";
 module.exports = new Button(id, (interaction, args) => {
@@ -14,8 +15,8 @@ module.exports = new Button(id, (interaction, args) => {
 	let adventure = getAdventure(interaction.channel.id);
 	let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 	if (delver) {
-		if (!delver.modifiers.Stun) { // Early out if stunned
-			let embed = new MessageEmbed().setColor(getColor(adventure.room.element))
+		if (delver.getModifierStacks("Stun") < 1) { // Early out if stunned
+			let embed = new EmbedBuilder().setColor(getColor(adventure.room.element))
 				.setTitle("Readying a Move")
 				.setDescription(`Your ${getEmoji(delver.element)} moves add 1 Stagger to enemies and remove 1 Stagger from allies.\n\nPick one option from below as your move for this round:`)
 				.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
@@ -36,51 +37,44 @@ module.exports = new Button(id, (interaction, args) => {
 					description: miniPredict(delver.predict, ally),
 					value: `delver${SAFE_DELIMITER}${i}`
 				}
-			})
-			let moveMenu = [];
-			let usableMoves = delver.equipment.filter(equip => equip.uses > 0);
-			if (usableMoves.length > 0) {
-				for (let i = 0; i < usableMoves.length; i++) {
-					const equip = usableMoves[i];
-					let elementEmoji = getEmoji(getEquipmentProperty(equip.name, "element"));
-					embed.addField(...equipmentToEmbedField(equip.name, equip.uses));
-					let { target, team } = getEquipmentProperty(equip.name, "targetingTags");
-					if (target === "single") {
-						// Select Menu
-						let targetOptions = [];
-						if (team === "enemy" || team === "any") {
-							targetOptions = targetOptions.concat(enemyOptions);
-						}
-
-						if (team === "delver" || team === "any") {
-							targetOptions = targetOptions.concat(delverOptions);
-						}
-						moveMenu.push(new MessageActionRow().addComponents(
-							new MessageSelectMenu().setCustomId(`targetmove${SAFE_DELIMITER}${equip.name}${SAFE_DELIMITER}${adventure.room.round}${SAFE_DELIMITER}${i}`)
-								.setPlaceholder(`${elementEmoji} Use ${equip.name} on...`)
-								.addOptions(targetOptions)
-						));
-					} else {
-						// Button
-						moveMenu.push(new MessageActionRow().addComponents(
-							new MessageButton().setCustomId(`nontargetmove${SAFE_DELIMITER}${equip.name}${SAFE_DELIMITER}${adventure.room.round}${SAFE_DELIMITER}${i}`)
-								.setLabel(`Use ${equip.name}`)
-								.setEmoji(elementEmoji)
-								.setStyle("SECONDARY")
-						))
-					}
-				}
-			} else {
-				// Default move is Punch
-				moveMenu.push(new MessageActionRow()
-					.addComponents(
-						new MessageSelectMenu()
-							.setCustomId(`targetmove${SAFE_DELIMITER}Punch${SAFE_DELIMITER}${adventure.room.round}${SAFE_DELIMITER}`)
-							.setPlaceholder(`Use Punch on...`)
-							.addOptions(enemyOptions)
-					));
+			});
+			const components = [];
+			const usableMoves = delver.equipment.filter(equip => equip.uses > 0);
+			const needsPunch = !usableMoves.some(move => getEquipmentProperty(move.name, 'category') === "Weapon");
+			if (needsPunch && usableMoves.length < adventure.getEquipmentCapacity()) {
+				usableMoves.unshift({ name: "Punch", uses: Infinity });
 			}
-			interaction.reply({ embeds: [embed], components: moveMenu, ephemeral: true })
+			for (let i = 0; i < usableMoves.length; i++) {
+				const { name: equipName, uses } = usableMoves[i];
+				embed.addFields(equipmentToEmbedField(equipName, uses));
+				const { target, team } = getEquipmentProperty(equipName, "targetingTags");
+				const elementEmoji = getEmoji(getEquipmentProperty(equipName, "element"));
+				if (target === "single") {
+					// Select Menu
+					let targetOptions = [];
+					if (team === "enemy" || team === "any") {
+						targetOptions = targetOptions.concat(enemyOptions);
+					}
+
+					if (team === "delver" || team === "any") {
+						targetOptions = targetOptions.concat(delverOptions);
+					}
+					components.push(new ActionRowBuilder().addComponents(
+						new StringSelectMenuBuilder().setCustomId(`movetarget${SAFE_DELIMITER}${equipName}${SAFE_DELIMITER}${adventure.room.round}${SAFE_DELIMITER}${i}`)
+							.setPlaceholder(`${elementEmoji} Use ${equipName} on...`)
+							.addOptions(targetOptions)
+					));
+				} else {
+					// Button
+					components.push(new ActionRowBuilder().addComponents(
+						new ButtonBuilder().setCustomId(`confirmmove${SAFE_DELIMITER}${equipName}${SAFE_DELIMITER}${adventure.room.round}${SAFE_DELIMITER}${i}`)
+							.setLabel(`Use ${equipName}`)
+							.setEmoji(elementEmoji)
+							.setStyle(ButtonStyle.Secondary)
+					));
+				}
+			}
+			interaction.reply({ embeds: [embed], components, ephemeral: true })
 				.catch(console.error);
 		} else {
 			interaction.reply({ content: "You cannot pick a move because you are stunned this round.", ephemeral: true });
@@ -93,16 +87,8 @@ module.exports = new Button(id, (interaction, args) => {
 function miniPredict(predictType, combatant) {
 	switch (predictType) {
 		case "Movements":
-			let staggerCount = combatant.modifiers.Stagger || 0;
-			let bar = "";
-			for (let i = 0; i < combatant.staggerThreshold; i++) {
-				if (staggerCount > i) {
-					bar += "▰";
-				} else {
-					bar += "▱";
-				}
-			}
-			return `Stagger: ${bar}`;
+			const staggerCount = combatant.getModifierStacks("Stagger");
+			return `Stagger: ${generateTextBar(staggerCount, combatant.staggerThreshold, combatant.staggerThreshold)}`;
 		case "Vulnerabilities":
 			return `Weakness: ${getEmoji(getWeakness(combatant.element))}`;
 		case "Intents":

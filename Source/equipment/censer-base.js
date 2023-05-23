@@ -1,7 +1,8 @@
-const Equipment = require('../../Classes/Equipment.js');
-const { dealDamage, addModifier } = require('../combatantDAO.js');
+const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
+const { dealDamage, addModifier, getFullName } = require('../combatantDAO.js');
+const { isDebuff } = require('../Modifiers/_modifierDictionary.js');
 
-module.exports = new Equipment("Censer", 1, "Burn a foe for @{damage} (+@{bonusDamage} if target has 0 block) @{element} damage*\nCritical Hit: Also apply @{mod1Stacks} @{mod1}", "Fire", effect, [])
+module.exports = new EquipmentTemplate("Censer", "Burn a foe for @{damage} (+@{bonusDamage} if target has any debuffs) @{element} damage*\nCritical Hit💥: Also apply @{mod1Stacks} @{mod1}", "Fire", effect, ["Thick Censer", "Tormenting Censor"])
 	.setCategory("Trinket")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Slow", stacks: 2 }])
@@ -10,12 +11,16 @@ module.exports = new Equipment("Censer", 1, "Burn a foe for @{damage} (+@{bonusD
 	.setCost(200)
 	.setUses(10);
 
-function effect(target, user, isCrit, adventure) {
+function effect([target], user, isCrit, adventure) {
+	if (target.hp < 1) {
+		return ` ${getFullName(target, adventure.room.enemyTitles)} was already dead!`;
+	}
+
 	let { element, modifiers: [elementStagger, slow], damage, bonusDamage } = module.exports;
 	if (user.element === element) {
 		addModifier(target, elementStagger);
 	}
-	if (target.block === 0) {
+	if (Object.keys(target.modifiers).some(modifier => isDebuff(modifier))) {
 		damage += bonusDamage;
 	}
 	if (isCrit) {

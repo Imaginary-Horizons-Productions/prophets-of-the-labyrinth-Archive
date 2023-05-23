@@ -1,19 +1,20 @@
-const { MessageActionRow, MessageButton } = require("discord.js");
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
+const ResourceTemplate = require("../../Classes/ResourceTemplate.js");
 const RoomTemplate = require("../../Classes/RoomTemplate.js")
 
-module.exports = new RoomTemplate()
-	.setTypes("Event", "Rest Site")
-	.setTitle("Rest Site")
-	.setDescription("The room contains a rest site... and a mysterious challenger hanging out in the corner.")
+module.exports = new RoomTemplate("Rest Site", [
+	new ResourceTemplate("roomAction", "n", "internal"),
+	new ResourceTemplate("challenge", "2", "internal")
+]).setDescription("The room contains a rest site... and a mysterious challenger hanging out in the corner.")
 	.setElement("@{adventure}");
 
-module.exports.uiRows.push(new MessageActionRow().addComponents(
-	new MessageButton().setCustomId("rest")
+module.exports.uiRows.push(new ActionRowBuilder().addComponents(
+	new ButtonBuilder().setCustomId("rest")
 		.setLabel("Rest [30% hp]")
-		.setStyle("PRIMARY"),
-	new MessageButton().setCustomId("viewchallenges")
+		.setEmoji("1️⃣")
+		.setStyle(ButtonStyle.Primary),
+	new ButtonBuilder().setCustomId("viewchallenges")
 		.setLabel("Take a challenge")
-		.setStyle("DANGER")
+		.setEmoji("1️⃣")
+		.setStyle(ButtonStyle.Danger)
 ))
-
-module.exports.resourceList = { "challenges": "2" };

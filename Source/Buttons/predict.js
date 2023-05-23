@@ -1,9 +1,11 @@
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const Button = require('../../Classes/Button.js');
-const { getAdventure, updateRoomHeader, setAdventure } = require('../adventureDAO.js');
+const { getAdventure, setAdventure } = require('../adventureDAO.js');
 const { getTargetList } = require('../moveDAO.js');
 const { getFullName, calculateTotalSpeed, modifiersToString } = require("../combatantDAO.js");
 const { getWeakness, getColor, getEmoji } = require('../elementHelpers.js');
+const { updateRoomHeader } = require('../roomDAO.js');
+const { generateTextBar } = require('../../helpers.js');
 
 const id = "predict";
 module.exports = new Button(id, (interaction, args) => {
@@ -22,44 +24,48 @@ module.exports = new Button(id, (interaction, args) => {
 		}
 	}
 	let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
-	let embed = new MessageEmbed().setColor(getColor(adventure.room.element))
+	let embed = new EmbedBuilder().setColor(getColor(adventure.room.element))
 		.setFooter({ text: `Room #${adventure.depth} - Round ${adventure.room.round}` });
 	let infoForNextRound = true;
-	let descriptionText = "";
 	switch (delver.predict) {
 		case "Movements": // Shows speed, stagger and poise of all combatants
-			let combatants = adventure.room.enemies.filter(combatant => combatant.hp > 0)
+			const activeCombatants = adventure.room.enemies.filter(enemy => enemy.hp > 0)
 				.concat(adventure.delvers)
 				.sort((first, second) => {
 					return calculateTotalSpeed(second) - calculateTotalSpeed(first);
 				});
-			for (const combatant of combatants) {
-				let staggerCount = combatant.modifiers.Stagger || 0;
-				let bar = "";
-				for (let i = 0; i < combatant.staggerThreshold; i++) {
-					if (staggerCount > i) {
-						bar += "▰";
-					} else {
-						bar += "▱";
-					}
-				}
-				descriptionText += `\n__${getFullName(combatant, adventure.room.enemyTitles)}__\nStagger: ${bar}\nSpeed: ${calculateTotalSpeed(combatant)}\n`;
+			for (const combatant of activeCombatants) {
+				const staggerCount = combatant.getModifierStacks("Stagger");
+				embed.addFields({ name: getFullName(combatant, adventure.room.enemyTitles), value: `Stagger: ${generateTextBar(staggerCount, combatant.staggerThreshold, combatant.staggerThreshold)}\nSpeed: ${calculateTotalSpeed(combatant)}` });
 			}
-			descriptionText += "\nCombatants tied in speed may act in any order.";
+			embed.setDescription("Combatants may act out of order if they have priority or they are tied in speed.");
 			break;
 		case "Vulnerabilities": // Shows elemental affinities and if critically hitting this turn for all combatants
 			infoForNextRound = false;
 			adventure.room.enemies.filter(combatant => combatant.hp > 0).concat(adventure.delvers).forEach(combatant => {
-				descriptionText += `\n__${getFullName(combatant, adventure.room.enemyTitles)}__ ${getEmoji(combatant.element)}\nCritical Hit: ${combatant.crit}\nWeakness: ${getEmoji(getWeakness(combatant.element))}\nResistance: ${getEmoji(combatant.element)}\n`;
+				embed.addFields({ name: `${getFullName(combatant, adventure.room.enemyTitles)} ${getEmoji(combatant.element)}}`, value: `Critical Hit: ${combatant.crit ? "💥" : "🚫"}\nWeakness: ${getEmoji(getWeakness(combatant.element))}\nResistance: ${getEmoji(combatant.element)}` });
 			});
 			break;
-		case "Intents": // Shows each enemy's target(s) in the next round and the names of the next two moves
-			adventure.room.moves.forEach(move => {
-				if (move.userTeam === "enemy") {
-					let enemy = adventure.room.enemies[move.userIndex];
+		case "Intents": // Shows each enemy's target(s) in the next round and the names of the next two moves and if their move has priority
+			adventure.room.priorityMoves.forEach(({ userReference, targets, name }) => {
+				if (userReference.team === "enemy") {
+					const enemy = adventure.getCombatant(userReference);
 					if (enemy.hp > 0) {
-						let targets = getTargetList(move.targets, adventure);
-						descriptionText += `\n__${getFullName(enemy, adventure.room.enemyTitles)}__\nRound ${adventure.room.round + 1}: ${move.name} (Targets: ${targets.length ? targets.join(", ") : "???"})\nRound ${adventure.room.round + 2}: ${enemy.nextAction}\n`;
+						const targetNames = getTargetList(targets, adventure);
+						embed.addFields({ name: getFullName(enemy, adventure.room.enemyTitles), value: `Round ${adventure.room.round + 1} (Priority): ${name} (Targets: ${targetNames.length ? targetNames.join(", ") : "???"})\nRound ${adventure.room.round + 2}: ${enemy.nextAction}` });
+					}
+				}
+			})
+			adventure.room.moves.forEach(({ userReference, targets, name }) => {
+				if (userReference.team === "enemy") {
+					const enemy = adventure.getCombatant(userReference);
+					if (enemy.hp > 0) {
+						const targetNames = getTargetList(targets, adventure);
+						if (name !== "@{clone}") {
+							embed.addFields({ name: getFullName(enemy, adventure.room.enemyTitles), value: `Round ${adventure.room.round + 1}: ${name} (Targets: ${targetNames.length ? targetNames.join(", ") : "???"})\nRound ${adventure.room.round + 2}: ${enemy.nextAction}` });
+						} else {
+							embed.addFields({ name: getFullName(enemy, adventure.room.enemyTitles), value: "Mirror Clones mimic your allies!" })
+						}
 					}
 				}
 			})
@@ -67,13 +73,12 @@ module.exports = new Button(id, (interaction, args) => {
 		case "Health": // Shows hp and modifiers for all combatants
 			infoForNextRound = false;
 			adventure.room.enemies.concat(adventure.delvers).filter(combatant => combatant.hp > 0).forEach(combatant => {
-				let modifiersText = modifiersToString(combatant, false);
-				descriptionText += `\n__${getFullName(combatant, adventure.room.enemyTitles)}__\n${combatant.hp}/${combatant.maxHp} HP${combatant.block ? `, ${combatant.block} Block` : ""}\n${modifiersText ? `${modifiersText}` : "No modifiers\n"}`;
+				let modifiersText = modifiersToString(combatant, false, adventure);
+				embed.addFields({ name: getFullName(combatant, adventure.room.enemyTitles), value: `${generateTextBar(combatant.hp, combatant.maxHp, 16)} ${combatant.hp}/${combatant.maxHp} HP${combatant.block ? `, ${combatant.block} Block` : ""}\n${modifiersText ? `${modifiersText}` : "No modifiers"}` });
 			})
 			break;
 	}
-	embed.setTitle(`${delver.predict} ${infoForNextRound ? "Predictions for" : "State of"} Round ${infoForNextRound ? adventure.room.round + 1 : adventure.room.round}`)
-		.setDescription(descriptionText);
+	embed.setTitle(`${delver.predict} ${infoForNextRound ? "Predictions for" : "State of"} Round ${infoForNextRound ? adventure.room.round + 1 : adventure.room.round}`);
 	interaction.reply({ embeds: [embed], ephemeral: true })
 		.catch(console.error);
 });

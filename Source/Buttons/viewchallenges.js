@@ -1,4 +1,4 @@
-const { MessageActionRow, MessageSelectMenu } = require('discord.js');
+const { ActionRowBuilder, StringSelectMenuBuilder } = require('discord.js');
 const Button = require('../../Classes/Button.js');
 const { getAdventure } = require('../adventureDAO.js');
 const { getChallenge } = require('../Challenges/_challengeDictionary.js');
@@ -11,14 +11,14 @@ module.exports = new Button(id, (interaction, args) => {
 		if (interaction.user.id === adventure.leaderId) {
 			let options = [];
 			Object.values(adventure.room.resources).forEach(resource => {
-				if (resource.resourceType === "challenges") {
+				if (resource.resourceType === "challenge") {
 					let challengeName = resource.name;
 					const challenge = getChallenge(challengeName);
 					options.push({ label: challengeName, description: challenge.dynamicDescription(challenge.intensity, challenge.duration, challenge.reward), value: challengeName });
 				}
 			})
-			let components = [new MessageActionRow().addComponents(
-				new MessageSelectMenu().setCustomId("challenge")
+			let components = [new ActionRowBuilder().addComponents(
+				new StringSelectMenuBuilder().setCustomId("challenge")
 					.setPlaceholder("Select a challenge...")
 					.addOptions(options)
 			)];

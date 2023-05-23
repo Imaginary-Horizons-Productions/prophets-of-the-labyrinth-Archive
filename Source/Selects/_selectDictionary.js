@@ -6,12 +6,14 @@ for (const file of [
 	"buyequipment.js",
 	"challenge.js",
 	"collectartifact.js",
+	"consumable.js",
 	"loot.js",
+	"movetarget.js",
 	"randomupgrade.js",
 	"repair.js",
 	"startingartifact.js",
 	"startingchallenges.js",
-	"targetmove.js"
+	"treasure.js"
 ]) {
 	const select = require(`./${file}`);
 	selectDictionary[select.name] = select;

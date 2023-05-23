@@ -1,7 +1,7 @@
-const Equipment = require('../../Classes/Equipment.js');
-const { addModifier, dealDamage } = require('../combatantDAO.js');
+const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
+const { addModifier, dealDamage, getFullName } = require('../combatantDAO.js');
 
-module.exports = new Equipment("Thick Battleaxe", 2, "Strike a foe for @{damage} (+@{bonusDamage} if you have 0 block) @{element} damage*\nCritical Hit: Damage x@{critBonus}", "Fire", effect, ["Prideful Battleaxe", "Thirsting Battleaxe"])
+module.exports = new EquipmentTemplate("Thick Battleaxe", "*Strike a foe for @{damage} (+@{bonusDamage} if you have 0 block) @{element} damage*\nCritical Hit💥: Damage x@{critBonus}", "Fire", effect, ["Prideful Battleaxe", "Thirsting Battleaxe"])
 	.setCategory("Weapon")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
@@ -10,7 +10,11 @@ module.exports = new Equipment("Thick Battleaxe", 2, "Strike a foe for @{damage}
 	.setDamage(75)
 	.setBonusDamage(75);
 
-function effect(target, user, isCrit, adventure) {
+function effect([target], user, isCrit, adventure) {
+	if (target.hp < 1) {
+		return ` ${getFullName(target, adventure.room.enemyTitles)} was already dead!`;
+	}
+
 	let { element, modifiers: [elementStagger], damage, bonusDamage, critBonus } = module.exports;
 	if (user.block === 0) {
 		damage += bonusDamage;

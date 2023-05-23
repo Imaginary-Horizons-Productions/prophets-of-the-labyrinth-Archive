@@ -1,7 +1,7 @@
-const Equipment = require('../../Classes/Equipment.js');
+const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addModifier, dealDamage, getFullName } = require('../combatantDAO.js');
 
-module.exports = new Equipment("Hunter's Sickle", 2, "*Strike a foe for @{damage} (+5% foe max hp) @{element} damage, gain @{bonusDamage}g on kill*\nCritical Hit: Damage x@{critBonus}", "Water", effect, ["Sharpened Sickle", "Thick Sickle"])
+module.exports = new EquipmentTemplate("Hunter's Sickle", "*Strike a foe for @{damage} (+5% foe max hp) @{element} damage, gain @{bonusDamage}g on kill*\nCritical Hit💥: Damage x@{critBonus}", "Water", effect, ["Sharpened Sickle", "Toxic Sickle"])
 	.setCategory("Weapon")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
@@ -10,7 +10,11 @@ module.exports = new Equipment("Hunter's Sickle", 2, "*Strike a foe for @{damage
 	.setDamage(75)
 	.setBonusDamage(15);
 
-function effect(target, user, isCrit, adventure) {
+function effect([target], user, isCrit, adventure) {
+	if (target.hp < 1) {
+		return ` ${getFullName(target, adventure.room.enemyTitles)} was already dead!`;
+	}
+
 	let { element, modifiers: [elementStagger], damage, critBonus, bonusDamage: bonusBounty } = module.exports;
 	damage += (0.05 * target.maxHp);
 	if (user.element === element) {

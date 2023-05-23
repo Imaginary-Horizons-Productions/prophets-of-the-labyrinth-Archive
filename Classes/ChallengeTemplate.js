@@ -1,4 +1,4 @@
-const { parseCount } = require("../helpers");
+const { calculateTagContent } = require("../helpers");
 
 module.exports = class ChallengeTemplate {
 	constructor(nameInput, descriptionInput) {
@@ -13,11 +13,11 @@ module.exports = class ChallengeTemplate {
 	complete(adventure, thread) { }
 
 	dynamicDescription(intensity, duration, reward) {
-		let intensityExpression = this.description.match(/@{(intensity[\*\d]*)}/)?.[1].replace(/intensity/g, "n");
-		if (intensityExpression) {
-			intensity = parseCount(intensityExpression, intensity);
-		}
-		return this.description.replace(/@{intensity[\d*]*}/g, intensity).replace(/@{duration}/g, duration).replace(/@{reward}/g, reward);
+		return calculateTagContent(this.description, [
+			{ tag: 'intensity', count: intensity },
+			{ tag: 'duration', count: duration },
+			{ tag: 'reward', count: reward }
+		]);
 	}
 
 	setIntensity(intensityInput) {

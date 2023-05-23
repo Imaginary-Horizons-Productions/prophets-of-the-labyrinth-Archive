@@ -1,10 +1,12 @@
+const { CombatantReference } = require('../../Classes/Adventure.js');
 const Button = require('../../Classes/Button.js');
-const Move = require('../../Classes/Move');
-const { SAFE_DELIMITER, generateRandomNumber } = require('../../helpers.js');
+const { Move } = require('../../Classes/Move');
+const { SAFE_DELIMITER } = require("../../constants.js");
+const { generateRandomNumber } = require('../../helpers.js');
 const { getAdventure, checkNextRound, endRound, setAdventure } = require('../adventureDAO');
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
 
-const id = "nontargetmove";
+const id = "confirmmove";
 module.exports = new Button(id, async (interaction, [moveName, round, index]) => {
 	// Add move object to adventure
 	let adventure = getAdventure(interaction.channel.id);
@@ -13,12 +15,12 @@ module.exports = new Button(id, async (interaction, [moveName, round, index]) =>
 		if (user.equipment.some(equip => equip.name === moveName && equip.uses > 0)) {
 			// Add move to round list (overwrite exisiting readied move)
 			let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
-			user.actionSpeed = getEquipmentProperty(moveName, "speedBonus") || 0;
 			let newMove = new Move()
-				.setSpeed(user)
+				.onSetMoveSpeed(user)
 				.setIsCrit(user.crit)
 				.setMoveName(moveName)
-				.setUser(user.team, userIndex);
+				.setType("equip")
+				.setUser(new CombatantReference(user.team, userIndex));
 
 			let targetText = "";
 			let { target, team } = getEquipmentProperty(moveName, "targetingTags");
@@ -32,7 +34,7 @@ module.exports = new Button(id, async (interaction, [moveName, round, index]) =>
 					targetText = "all enemies";
 				}
 				for (let i = 0; i < targetCount; i++) {
-					newMove.addTarget(team, i);
+					newMove.addTarget(new CombatantReference(team, i));
 				}
 			} else if (target.startsWith("random")) {
 				let targetCount = Number(target.split(SAFE_DELIMITER)[1]);
@@ -45,24 +47,35 @@ module.exports = new Button(id, async (interaction, [moveName, round, index]) =>
 					targetText = `${targetCount} random enem${targetCount === 1 ? "y" : "ies"}`;
 				}
 				for (let i = 0; i < targetCount; i++) {
-					newMove.addTarget(team, generateRandomNumber(adventure, poolSize, "Battle"));
+					newMove.addTarget(new CombatantReference(team, generateRandomNumber(adventure, poolSize, "battle")));
 				}
 			} else if (target === "self") {
-				newMove.addTarget(team, userIndex);
+				newMove.addTarget(new CombatantReference(team, userIndex));
 			} else if (target === "none") {
-				newMove.addTarget("none", "none");
+				newMove.addTarget(new CombatantReference("none", -1));
 			}
 
 			let overwritten = false;
 			for (let i = 0; i < adventure.room.moves.length; i++) {
-				let move = adventure.room.moves[i];
-				if (move.userTeam === user.team && move.userIndex === userIndex) {
-					await adventure.room.moves.splice(i, 1, newMove);
+				const { userReference } = adventure.room.moves[i];
+				if (userReference.team === user.team && userReference.index === userIndex) {
+					await adventure.room.moves.splice(i, 1);
 					overwritten = true;
 					break;
 				}
 			}
 			if (!overwritten) {
+				for (let i = 0; i < adventure.room.priorityMoves.length; i++) {
+					const { userReference } = adventure.room.priorityMoves[i];
+					if (userReference.team === user.team && userReference.index === userIndex) {
+						await adventure.room.priorityMoves.splice(i, 1);
+						break;
+					}
+				}
+			}
+			if (getEquipmentProperty(moveName, "isPriority")) {
+				await adventure.room.priorityMoves.push(newMove);
+			} else {
 				await adventure.room.moves.push(newMove);
 			}
 

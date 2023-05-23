@@ -1,20 +1,22 @@
 const { getEmoji, getColor } = require("./elementHelpers.js");
 const { getEquipmentProperty, buildEquipmentDescription } = require("./equipment/_equipmentDictionary");
 const { isBuff, isDebuff, isNonStacking } = require("./Modifiers/_modifierDictionary");
-const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
-const { SAFE_DELIMITER, ordinalSuffixEN } = require("../helpers.js");
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
+const { SAFE_DELIMITER, MAX_BUTTONS_PER_ROW } = require("../constants.js");
+const { ordinalSuffixEN } = require("../helpers.js");
 const { getFullName } = require("./combatantDAO.js");
 
 /** Seen in target selection embeds and /inspect-self equipment fields contain nearly all information about the equipment they represent
  * @param {string} equipmentName
  * @param {number} uses
- * @returns {string[2]} contents for a message embed field [heading, body]
+ * @returns {import("discord.js").EmbedField} contents for a message embed field [heading, body]
  */
 exports.equipmentToEmbedField = function (equipmentName, uses) {
-	return [
-		`${equipmentName} ${getEmoji(getEquipmentProperty(equipmentName, "element"))} (${uses}/${getEquipmentProperty(equipmentName, "maxUses")})`,
-		buildEquipmentDescription(equipmentName, true)
-	];
+	const usesText = uses === Infinity ? "∞ uses" : `${uses}/${getEquipmentProperty(equipmentName, "maxUses")} uses`;
+	return {
+		name: `${equipmentName} ${getEmoji(getEquipmentProperty(equipmentName, "element"))} (${usesText})`,
+		value: buildEquipmentDescription(equipmentName, true)
+	};
 }
 
 /** Generates an object to Discord.js's specification that corresponds with a delver's in-adventure stats
@@ -23,46 +25,46 @@ exports.equipmentToEmbedField = function (equipmentName, uses) {
  * @returns {MessageOptions}
  */
 exports.delverStatsPayload = function (delver, equipmentCapacity) {
-	let embed = new MessageEmbed().setColor(getColor(delver.element))
+	const embed = new EmbedBuilder().setColor(getColor(delver.element))
 		.setTitle(getFullName(delver, {}))
 		.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nPredicts: ${delver.predict}\nYour ${getEmoji(delver.element)} moves add 1 Stagger to enemies and remove 1 Stagger from allies.`)
 		.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
 	if (delver.block > 0) {
-		embed.addField("Block", delver.block.toString())
+		embed.addFields({ name: "Block", value: delver.block.toString() })
 	}
 	for (let index = 0; index < equipmentCapacity; index++) {
 		if (delver.equipment[index]) {
-			embed.addField(...exports.equipmentToEmbedField(delver.equipment[index].name, delver.equipment[index].uses));
+			embed.addFields(exports.equipmentToEmbedField(delver.equipment[index].name, delver.equipment[index].uses));
 		} else {
-			embed.addField(`${ordinalSuffixEN(index + 1)} Equipment Slot`, "No equipment yet...")
+			embed.addFields({ name: `${ordinalSuffixEN(index + 1)} Equipment Slot`, value: "No equipment yet..." })
 		}
 	}
 	let components = [];
 	if (Object.keys(delver.modifiers).length) {
 		let actionRow = [];
 		let modifiers = Object.keys(delver.modifiers);
-		let buttonCount = Math.min(modifiers.length, 4); // 5 buttons per row, save 1 spot for "and X more..." button
+		let buttonCount = Math.min(modifiers.length, MAX_BUTTONS_PER_ROW - 1); // save spot for "and X more..." button
 		for (let i = 0; i < buttonCount; i++) {
 			let modifierName = modifiers[i];
 			let style;
 			if (isBuff(modifierName)) {
-				style = "PRIMARY";
+				style = ButtonStyle.Primary;
 			} else if (isDebuff(modifierName)) {
-				style = "DANGER";
+				style = ButtonStyle.Danger;
 			} else {
-				style = "SECONDARY";
+				style = ButtonStyle.Secondary;
 			}
-			actionRow.push(new MessageButton().setCustomId(`modifier${SAFE_DELIMITER}${modifierName}${SAFE_DELIMITER}${i}`)
+			actionRow.push(new ButtonBuilder().setCustomId(`modifier${SAFE_DELIMITER}${modifierName}${SAFE_DELIMITER}${i}`)
 				.setLabel(`${modifierName}${isNonStacking(modifierName) ? "" : ` x ${delver.modifiers[modifierName]}`}`)
 				.setStyle(style))
 		}
 		if (modifiers.length > 4) {
-			actionRow.push(new MessageButton().setCustomId(`modifier${SAFE_DELIMITER}MORE`)
+			actionRow.push(new ButtonBuilder().setCustomId(`modifier${SAFE_DELIMITER}MORE`)
 				.setLabel(`${modifiers.length - 4} more...`)
-				.setStyle("SECONDARY")
+				.setStyle(ButtonStyle.Secondary)
 				.setDisabled(delver.predict !== "Modifiers"))
 		}
-		components.push(new MessageActionRow().addComponents(...actionRow));
+		components.push(new ActionRowBuilder().addComponents(...actionRow));
 	}
 	return { embeds: [embed], components, ephemeral: true };
 }

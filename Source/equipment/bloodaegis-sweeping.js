@@ -1,7 +1,7 @@
-const Equipment = require('../../Classes/Equipment.js');
+const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { removeModifier, addBlock, dealDamage } = require('../combatantDAO.js');
 
-module.exports = new Equipment("Sweeping Blood Aegis", 2, "*Pay @{hpCost} hp to grant all allies @{block} block*\nCritical Hit: Block x@{critBonus}", "Water", effect, ["Charging Blood Aegis", "Heavy Blood Aegis"])
+module.exports = new EquipmentTemplate("Sweeping Blood Aegis", "*Pay @{hpCost} hp to grant all allies @{block} block*\nCritical Hit💥: Block x@{critBonus}", "Water", effect, ["Charging Blood Aegis", "Heavy Blood Aegis"])
 	.setCategory("Pact")
 	.setTargetingTags({ target: "all", team: "delver" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
@@ -10,14 +10,16 @@ module.exports = new Equipment("Sweeping Blood Aegis", 2, "*Pay @{hpCost} hp to 
 	.setHpCost(25)
 	.setBlock(100);
 
-function effect(target, user, isCrit, adventure) {
+function effect(targets, user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger], block, critBonus, hpCost } = module.exports;
-	if (user.element === element) {
-		removeModifier(target, elementStagger);
-	}
 	if (isCrit) {
 		block *= critBonus;
 	}
-	addBlock(target, block);
+	targets.forEach(target => {
+		if (user.element === element) {
+			removeModifier(target, elementStagger);
+		}
+		addBlock(target, block);
+	});
 	return dealDamage(user, null, hpCost, true, "Untyped", adventure); // user pays health
 }

@@ -1,7 +1,9 @@
 const Enemy = require("../Classes/Enemy.js");
 const Delver = require("../Classes/Delver.js");
+const Combatant = require("../Classes/Combatant.js");
 const { getInverse, isNonStacking, getModifierDescription, isBuff, isDebuff } = require("./Modifiers/_modifierDictionary.js");
 const { getWeakness } = require("./elementHelpers.js");
+const Adventure = require("../Classes/Adventure.js");
 
 exports.getFullName = function (combatant, titleObject) {
 	if (combatant instanceof Enemy) {
@@ -11,17 +13,23 @@ exports.getFullName = function (combatant, titleObject) {
 			return combatant.name;
 		}
 	} else if (combatant instanceof Delver) {
-		return `${combatant.name} the ${combatant.title}`;
+		return `${combatant.name}`;
 	}
 }
 
+/** Speed is affected by `roundSpeed` and modifiers
+ * @param {Delver | Enemy} combatant
+ * @returns {number}
+ */
 exports.calculateTotalSpeed = function (combatant) {
-	let totalSpeed = combatant.speed + combatant.roundSpeed + combatant.actionSpeed;
+	let totalSpeed = combatant.speed + combatant.roundSpeed;
 	if ("Slow" in combatant.modifiers) {
-		totalSpeed -= 10;
+		const slowStacks = combatant.getModifierStacks("Slow");
+		totalSpeed -= slowStacks * 5;
 	}
 	if ("Quicken" in combatant.modifiers) {
-		totalSpeed += 10;
+		const quickenStacks = combatant.getModifierStacks("Quicken");
+		totalSpeed += quickenStacks * 5;
 	}
 	return Math.ceil(totalSpeed);
 }
@@ -60,9 +68,9 @@ exports.dealDamage = async function (target, user, damage, isUnblockable, elemen
 			let damageCap = 500 + limitBreak;
 			pendingDamage = Math.min(pendingDamage, damageCap);
 			target.hp -= pendingDamage;
-			let damageText = ` ${targetName} takes *${pendingDamage} damage*${blockedDamage > 0 ? ` (${blockedDamage} blocked)` : ""}${element === "Poison" ? " from Poison" : ""}${isWeakness ? "!!!" : isResistance ? "." : "!"}`;
+			let damageText = ` **${targetName}** takes ${pendingDamage} damage${blockedDamage > 0 ? ` (${blockedDamage} was blocked)` : ""}${element === "Poison" ? " from Poison" : ""}${isWeakness ? "!!!" : isResistance ? "." : "!"}`;
 			if (element !== "Poison" && targetModifiers.includes("Curse of Midas")) {
-				adventure.room.resources.gold.count += Math.floor(pendingDamage / 10);
+				adventure.gainGold(Math.floor(pendingDamage / 10));
 				damageText += ` Gold scatters about the room.`;
 			}
 			if (target.hp <= 0) {
@@ -146,16 +154,16 @@ exports.addModifier = function (combatant, { name: modifier, stacks: pendingStac
 		}
 
 		// Trigger threshold: Stagger to Stun
-		if (combatant.modifiers?.Stagger >= combatant.staggerThreshold) {
+		if (combatant.getModifierStacks("Stagger") >= combatant.staggerThreshold) {
 			combatant.modifiers.Stagger -= combatant.staggerThreshold;
 			combatant.modifiers.Stun = 1;
 			if ("Progress" in combatant.modifiers) {
-				combatant.modifiers.Progress = Math.ceil(combatant.modifiers.Progress * 0.8);
+				combatant.modifiers.Progress = Math.ceil(combatant.getModifierStacks("Progress") * 0.8);
 			}
 		}
 
 		// Trigger threshold: Progress
-		if (combatant.modifiers?.Progress >= 100) {
+		if (combatant.getModifierStacks("Progress") >= 100) {
 			combatant.modifiers.Progress -= 100;
 			exports.addModifier(combatant, { name: "Power Up", stacks: 100, force: true });
 			if ("Stasis" in combatant.modifiers) {
@@ -197,13 +205,13 @@ exports.removeModifier = function (combatant, { name: modifier, stacks, force = 
 /** Create a string containing the combatant's current modifiers
  * @param {Combatant} combatant
  * @param {boolean} includeStagger
- * @returns {string}
+ * @param {Adventure} adventure
  */
-exports.modifiersToString = function (combatant, includeStagger) {
+exports.modifiersToString = function (combatant, includeStagger, adventure) {
 	let modifiersText = "";
 	for (let modifier in combatant.modifiers) {
 		if (includeStagger || modifier !== "Stagger") {
-			modifiersText += `*${modifier}${isNonStacking(modifier) ? "" : ` x ${combatant.modifiers[modifier]}`}* - ${getModifierDescription(modifier, combatant)}\n`;
+			modifiersText += `*${modifier}${isNonStacking(modifier) ? "" : ` x ${combatant.modifiers[modifier]}`}* - ${getModifierDescription(modifier, combatant, adventure)}\n`;
 		}
 	}
 	return modifiersText;

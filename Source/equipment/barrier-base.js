@@ -1,7 +1,7 @@
-const Equipment = require('../../Classes/Equipment.js');
+const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addBlock, removeModifier } = require('../combatantDAO.js');
 
-module.exports = new Equipment("Barrier", 1, "*Grant an ally @{block} block*\nCritical Hit: Block x@{critBonus}", "Fire", effect, ["Purifiying Barrier", "Thick Barrier", "Urgent Barrier"])
+module.exports = new EquipmentTemplate("Barrier", "*Grant an ally @{block} block*\nCritical Hit💥: Block x@{critBonus}", "Fire", effect, ["Purifiying Barrier", "Thick Barrier", "Urgent Barrier"])
 	.setCategory("Spell")
 	.setTargetingTags({ target: "single", team: "delver" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
@@ -9,7 +9,7 @@ module.exports = new Equipment("Barrier", 1, "*Grant an ally @{block} block*\nCr
 	.setUses(1)
 	.setBlock(1000);
 
-function effect(target, user, isCrit, adventure) {
+function effect([target], user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger], block, critBonus } = module.exports;
 	if (user.element === element) {
 		removeModifier(user, elementStagger);

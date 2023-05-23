@@ -1,4 +1,38 @@
 # Prophets of the Labyrinth Change Log
+#### Prophets of the Labyrinth Version 0.10.0:
+- Added **Consumables**: these resources can be used by any party member during combat at priority speed
+   1. Vitamins
+   2. Health Potion
+   3. Repair Kit
+   4. Smoke Bomb
+   5. Explosion Potion
+   6. Earthen Potion
+   7. Fiery Potion
+   8. Salt of Oblivion
+   9. Quick Pepper
+   10. Regen Root
+   11. Stasis Quartz
+   12. Strength Spinach
+   13. Watery Potion
+   14. Windy Potion
+   15. Block Potion
+- New command: `/consumables-info` for looking up information on consumables
+- Reworked *Urgent* weapon variant: it now adds priority to the move
+- Reworked *Unfinished Potion* to *Potion Kit*: it now adds a random "potion" consumable to loot (upgrades: Guarding, Urgent)
+- Renamed *Swift* weapon variant to *Accelerating*
+- The *Quicken* and *Slow* modifiers now grant/penalize speed scaling with their number of stacks
+- Delvers can now use the default Punch move when they don't have a usable weapon (previously had to have no usable equipment)
+- *Censer*s now gain their bonus when their targets have debuffs (instead of 0 block)
+- Added *Tormenting Censer*
+- Reworked Starting Artifact selections:
+   - When starting an adventure, a pool of eligible artifacts will be rolled for each delver
+   - Delvers will be able to bring an artifact from that pool if they've rolled it before
+   - Each delver will have a different pool of eligible artifacts in each adventure
+- Halved the effectiveness of *Hawk Tailfeather*
+- Boss balance: ||The Elkemist's Bubble's Progress gain is now (0 to 15) + 5 per buff removed + 10 on crit||
+- Fixed a bug where *Devoted Vigilance Charm* was always targeting the user
+- Added *War Cry*, *Charging War Cry*, and *Tormenting War Cry*
+
 #### Prophets of the Labyrinth Version 0.9.0:
 - Rebalanced predicts, they are now as follows
    1. Movements - Speed, Stagger, and Poise for each combatant

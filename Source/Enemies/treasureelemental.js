@@ -4,13 +4,12 @@ const { selectSelf, selectNone, selectAllFoes, selectRandomFoe } = require("../e
 
 module.exports = new Enemy("Treasure Elemental")
 	.setFirstAction("Guarding Slam")
-	.addAction({ name: "Guarding Slam", effect: guardingSlamEffect, selector: selectRandomFoe, next: treasureElementalPattern })
-	.addAction({ name: "Evade", effect: evadeEffect, selector: selectSelf, next: treasureElementalPattern })
-	.addAction({ name: "Eyes of Greed", effect: eyesOfGreedEffect, selector: selectAllFoes, next: treasureElementalPattern })
-	.addAction({ name: "Heavy Pockets", effect: heavyPocketsEffect, selector: selectAllFoes, next: treasureElementalPattern })
-	.addAction({ name: "Escape", effect: escapeEffect, selector: selectNone, next: treasureElementalPattern })
+	.addAction({ name: "Guarding Slam", element: "Earth", isPriority: false, effect: guardingSlamEffect, selector: selectRandomFoe, next: treasureElementalPattern })
+	.addAction({ name: "Evade", element: "Untyped", isPriority: false, effect: evadeEffect, selector: selectSelf, next: treasureElementalPattern })
+	.addAction({ name: "Eyes of Greed", element: "Untyped", isPriority: false, effect: eyesOfGreedEffect, selector: selectAllFoes, next: treasureElementalPattern })
+	.addAction({ name: "Heavy Pockets", element: "Untyped", isPriority: false, effect: heavyPocketsEffect, selector: selectAllFoes, next: treasureElementalPattern })
+	.addAction({ name: "Escape", element: "Untyped", isPriority: false, effect: escapeEffect, selector: selectNone, next: treasureElementalPattern })
 	.addStartingModifier("Curse of Midas", 1)
-	.setBounty(0)
 	.setHp(99999)
 	.setSpeed(100)
 	.setElement("Earth")
@@ -27,7 +26,7 @@ function treasureElementalPattern(actionName) {
 	return PATTERN[actionName]
 }
 
-function guardingSlamEffect(target, user, isCrit, adventure) {
+function guardingSlamEffect([target], user, isCrit, adventure) {
 	let block = 100;
 	if (isCrit) {
 		block *= 2;
@@ -47,27 +46,31 @@ function evadeEffect(target, user, isCrit, adventure) {
 	return "";
 }
 
-function eyesOfGreedEffect(target, user, isCrit, adventure) {
+function eyesOfGreedEffect(targets, user, isCrit, adventure) {
 	let stacks = 25;
 	if (isCrit) {
 		stacks *= 2;
 	}
-	addModifier(target, { name: "Power Down", stacks });
-	addModifier(target, { name: "Stagger", stacks: 1 });
 	addModifier(user, { name: "Curse of Midas", stacks: 1 });
+	targets.forEach(target => {
+		addModifier(target, { name: "Power Down", stacks });
+		addModifier(target, { name: "Stagger", stacks: 1 });
+	});
 	return "";
 }
 
-function heavyPocketsEffect(target, user, isCrit, adventure) {
+function heavyPocketsEffect(targets, user, isCrit, adventure) {
 	let stacks = 2;
 	if (isCrit) {
 		stacks *= 2;
 	}
-	addModifier(target, { name: "Slow", stacks });
+	targets.forEach(target => {
+		addModifier(target, { name: "Slow", stacks });
+	});
 	return "";
 }
 
-function escapeEffect(target, user, isCrit, adventure) {
+function escapeEffect(targets, user, isCrit, adventure) {
 	user.hp = 0;
 	return "The treasure elemental makes its escape!";
 }

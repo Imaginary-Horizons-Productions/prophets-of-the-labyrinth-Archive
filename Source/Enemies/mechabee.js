@@ -4,11 +4,10 @@ const { selectRandomFoe, selectSelf, selectNone, selectAllFoes, spawnEnemy } = r
 
 module.exports = new Enemy("Mechabee")
 	.setFirstAction("Sting")
-	.addAction({ name: "Sting", effect: stingEffect, selector: selectRandomFoe, next: mechabeePattern })
-	.addAction({ name: "Evade", effect: evadeEffect, selector: selectSelf, next: mechabeePattern })
-	.addAction({ name: "Call for Help", effect: summonEffect, selector: selectNone, next: mechabeePattern })
-	.addAction({ name: "Self-Destruct", effect: selfDestructEffect, selector: selectAllFoes, next: mechabeePattern })
-	.setBounty(25)
+	.addAction({ name: "Sting", element: "Earth", isPriority: false, effect: stingEffect, selector: selectRandomFoe, next: mechabeePattern })
+	.addAction({ name: "Evade", element: "Untyped", isPriority: false, effect: evadeEffect, selector: selectSelf, next: mechabeePattern })
+	.addAction({ name: "Call for Help", element: "Untyped", isPriority: false, effect: summonEffect, selector: selectNone, next: mechabeePattern })
+	.addAction({ name: "Self-Destruct", element: "Earth", isPriority: false, effect: selfDestructEffect, selector: selectAllFoes, next: mechabeePattern })
 	.setHp(200)
 	.setSpeed(100)
 	.setElement("Earth")
@@ -24,7 +23,7 @@ function mechabeePattern(actionName) {
 	return PATTERN[actionName]
 }
 
-function stingEffect(target, user, isCrit, adventure) {
+function stingEffect([target], user, isCrit, adventure) {
 	addModifier(target, { name: "Stagger", stacks: 1 });
 	if (isCrit) {
 		addModifier(target, { name: "Poison", stacks: 4 });
@@ -34,7 +33,7 @@ function stingEffect(target, user, isCrit, adventure) {
 	return dealDamage(target, user, 10, false, user.element, adventure);
 }
 
-function evadeEffect(target, user, isCrit, adventure) {
+function evadeEffect(targets, user, isCrit, adventure) {
 	let stacks = 2;
 	if (isCrit) {
 		stacks *= 3;
@@ -44,17 +43,22 @@ function evadeEffect(target, user, isCrit, adventure) {
 	return "";
 }
 
-function summonEffect(target, user, isCrit, adventure) {
+function summonEffect(targets, user, isCrit, adventure) {
 	spawnEnemy(adventure, module.exports, true);
 	return "Another mechabee arrives.";
 }
 
-function selfDestructEffect(target, user, isCrit, adventure) {
+function selfDestructEffect(targets, user, isCrit, adventure) {
 	let damage = 125;
 	if (isCrit) {
 		damage *= 2;
 	}
-	addModifier(target, { name: "Stagger", stacks: 1 });
 	user.hp = 0;
-	return dealDamage(target, user, damage, false, user.element, adventure);
+
+	return Promise.all(
+		targets.map(target => {
+			addModifier(target, { name: "Stagger", stacks: 1 });
+			return dealDamage(target, user, damage, false, user.element, adventure);
+		})
+	).then(results => results.join(" "));
 }

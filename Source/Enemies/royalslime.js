@@ -6,17 +6,16 @@ const { nextRandom, selectSelf, selectAllFoes, selectRandomFoe } = require("../e
 
 module.exports = new Enemy("Royal Slime")
 	.setFirstAction("Element Shift")
-	.addAction({ name: "Element Shift", effect: elementShift, selector: selectSelf, next: nextRandom })
-	.addAction({ name: "Rolling Tackle", effect: rollingTackleEffect, selector: selectAllFoes, next: nextRandom })
-	.addAction({ name: "Goop Deluge", effect: goopDelugeEffect, selector: selectAllFoes, next: nextRandom })
-	.addAction({ name: "Toxic Spike Shot", effect: toxicSpikeShotEffect, selector: selectRandomFoe, next: nextRandom })
-	.setBounty(100)
+	.addAction({ name: "Element Shift", element: "Untyped", isPriority: false, effect: elementShift, selector: selectSelf, next: nextRandom })
+	.addAction({ name: "Rolling Tackle", element: "@{adventure}", isPriority: false, effect: rollingTackleEffect, selector: selectAllFoes, next: nextRandom })
+	.addAction({ name: "Goop Deluge", element: "Untyped", isPriority: false, effect: goopDelugeEffect, selector: selectAllFoes, next: nextRandom })
+	.addAction({ name: "Toxic Spike Shot", element: "@{adventure}", isPriority: false, effect: toxicSpikeShotEffect, selector: selectRandomFoe, next: nextRandom })
 	.setHp(600)
 	.setSpeed(90)
 	.setElement("@{adventure}")
 	.setStaggerThreshold(5);
 
-function elementShift(target, user, isCrit, adventure) {
+function elementShift(targets, user, isCrit, adventure) {
 	user.element = elementsList()[generateRandomNumber(adventure, elementsList().length, "battle")];
 	if (isCrit) {
 		addModifier(user, { name: `${user.element} Absorb`, stacks: 5 });
@@ -27,26 +26,32 @@ function elementShift(target, user, isCrit, adventure) {
 	return "";
 }
 
-function rollingTackleEffect(target, user, isCrit, adventure) {
+function rollingTackleEffect(targets, user, isCrit, adventure) {
 	let damage = 75;
 	if (isCrit) {
 		damage *= 2;
 	}
-	addModifier(target, { name: "Stagger", stacks: 1 });
-	return dealDamage(target, user, damage, false, user.element, adventure);
+	return Promise.all(
+		targets.map(target => {
+			addModifier(target, { name: "Stagger", stacks: 1 });
+			return dealDamage(target, user, damage, false, user.element, adventure);
+		})
+	).then(results => results.join(" "));
 }
 
-function goopDelugeEffect(target, user, isCrit, adventure) {
-	if (isCrit) {
-		addModifier(target, { name: "Slow", stacks: 3 });
-		addModifier(target, { name: "Stagger", stacks: 1 });
-	} else {
-		addModifier(target, { name: "Slow", stacks: 2 });
-	}
+function goopDelugeEffect(targets, user, isCrit, adventure) {
+	targets.forEach(target => {
+		if (isCrit) {
+			addModifier(target, { name: "Slow", stacks: 3 });
+			addModifier(target, { name: "Stagger", stacks: 1 });
+		} else {
+			addModifier(target, { name: "Slow", stacks: 2 });
+		}
+	});
 	return "";
 }
 
-function toxicSpikeShotEffect(target, user, isCrit, adventure) {
+function toxicSpikeShotEffect([target], user, isCrit, adventure) {
 	let damage = 25;
 	if (isCrit) {
 		damage *= 2;

@@ -1,16 +1,16 @@
-const Equipment = require('../../Classes/Equipment.js');
+const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addBlock, removeModifier } = require('../combatantDAO.js');
 
-module.exports = new Equipment("Urgent Buckler", 2, "*Grant an ally @{block} block (+@{speedBonus} speed bonus)*\nCritical Hit: Block x@{critBonus}", "Earth", effect, ["Guarding Buckler", "Heavy Buckler"])
+module.exports = new EquipmentTemplate("Urgent Buckler", "*Grant an ally @{block} block with priority*\nCritical Hit💥: Block x@{critBonus}", "Earth", effect, ["Guarding Buckler", "Heavy Buckler"])
 	.setCategory("Armor")
 	.setTargetingTags({ target: "single", team: "delver" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(350)
 	.setUses(10)
 	.setBlock(75)
-	.setSpeedBonus(5);
+	.markPriority();
 
-function effect(target, user, isCrit, adventure) {
+function effect([target], user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger], block, critBonus } = module.exports;
 	if (user.element === element) {
 		removeModifier(target, elementStagger);

@@ -1,38 +1,50 @@
-const Move = require('../../Classes/Move');
+const { Move } = require('../../Classes/Move');
 const Select = require('../../Classes/Select.js');
-const { SAFE_DELIMITER } = require('../../helpers.js');
+const { CombatantReference } = require('../../Classes/Adventure');
+const { SAFE_DELIMITER } = require('../../constants.js');
 const { getAdventure, checkNextRound, endRound, setAdventure } = require('../adventureDAO');
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary');
 const { getFullName } = require("../combatantDAO.js");
 
-const id = "targetmove";
+const id = "movetarget";
 module.exports = new Select(id, async (interaction, [moveName, round, index]) => {
 	// Add move object to adventure
-	let adventure = getAdventure(interaction.channel.id);
+	let adventure = getAdventure(interaction.channelId);
 	if (adventure.room.round === Number(round)) {
 		let user = adventure.delvers.find(delver => delver.id === interaction.user.id);
 		if (moveName === "Punch" || user.equipment.some(equip => equip.name === moveName && equip.uses > 0)) {
 			// Add move to round list (overwrite exisiting readied move)
 			let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
 			let [targetTeam, targetIndex] = interaction.values[0].split(SAFE_DELIMITER);
-			user.actionSpeed = getEquipmentProperty(moveName, "speedBonus") || 0;
 			let newMove = new Move()
-				.setSpeed(user)
+				.onSetMoveSpeed(user)
 				.setIsCrit(user.crit)
 				.setMoveName(moveName)
-				.setUser(user.team, userIndex)
-				.addTarget(targetTeam, targetIndex);
+				.setType("equip")
+				.setUser(new CombatantReference(user.team, userIndex))
+				.addTarget(new CombatantReference(targetTeam, targetIndex));
 
 			let overwritten = false;
 			for (let i = 0; i < adventure.room.moves.length; i++) {
-				let move = adventure.room.moves[i];
-				if (move.userTeam === user.team && move.userIndex === userIndex) {
-					await adventure.room.moves.splice(i, 1, newMove);
+				const { userReference } = adventure.room.moves[i];
+				if (userReference.team === user.team && userReference.index === userIndex) {
+					await adventure.room.moves.splice(i, 1);
 					overwritten = true;
 					break;
 				}
 			}
 			if (!overwritten) {
+				for (let i = 0; i < adventure.room.priorityMoves.length; i++) {
+					const { userReference } = adventure.room.priorityMoves[i];
+					if (userReference.team === user.team && userReference.index === userIndex) {
+						await adventure.room.priorityMoves.splice(i, 1);
+						break;
+					}
+				}
+			}
+			if (getEquipmentProperty(moveName, "isPriority")) {
+				await adventure.room.priorityMoves.push(newMove);
+			} else {
 				await adventure.room.moves.push(newMove);
 			}
 

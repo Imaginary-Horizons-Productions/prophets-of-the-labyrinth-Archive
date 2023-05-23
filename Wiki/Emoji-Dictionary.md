@@ -13,3 +13,5 @@ Here is a list of reserved emoji and their meanings:
 * 👑 Only the leader can interact with this
 * 🔮 Battle Predicts
 * 💎 Premium
+* 💫 Stun
+* 💥 Critical Hit

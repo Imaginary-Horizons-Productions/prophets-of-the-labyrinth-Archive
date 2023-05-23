@@ -1,4 +1,6 @@
-const { parseCount } = require("../../helpers");
+const Adventure = require("../../Classes/Adventure");
+const Combatant = require("../../Classes/Combatant");
+const { calculateTagContent } = require("../../helpers");
 
 const modifierDictionary = {};
 
@@ -27,14 +29,18 @@ for (const file of [
 	modifierDictionary[modifier.name] = modifier;
 }
 
-exports.getModifierDescription = function (modifierName, bearer) {
-	let description = modifierDictionary[modifierName].description;
-	let stackCountExpression = description.match(/@{(stackCount[\*\d]*)}/)?.[1].replace(/stackCount/g, "n");
-	if (stackCountExpression) {
-		description = description.replace(/@{stackCount[\d*]*}/g, parseCount(stackCountExpression, bearer.modifiers[modifierName]));
-	}
-	return description.replace(/@{poise}/g, bearer.staggerThreshold)
-		.replace(/@{roundDecrement}/g, exports.getTurnDecrement(modifierName));
+/**
+ * @param {string} modifierName
+ * @param {Combatant} bearer
+ * @param {Adventure} adventure
+ */
+exports.getModifierDescription = function (modifierName, bearer, adventure) {
+	return calculateTagContent(modifierDictionary[modifierName].description, [
+		{ tag: 'stackCount', count: bearer.modifiers[modifierName] },
+		{ tag: 'poise', count: bearer.staggerThreshold },
+		{ tag: 'funnelCount', count: adventure.getArtifactCount("Spiral Funnel") },
+		{ tag: 'roundDecrement', count: exports.getTurnDecrement(modifierName) }
+	]);
 }
 
 exports.getTurnDecrement = (modifierName) => {

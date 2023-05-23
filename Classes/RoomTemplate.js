@@ -1,24 +1,15 @@
-// A readonly object containing stats for a room
 module.exports = class RoomTemplate {
-	constructor() { }
-	types = []; // enum: "Battle", "Merchant", "Event", "Rest Site", "Final Battle", "Artifact Guardian", "Forge"
-	title = "";
+	/** This read-only data class defines stats for a room
+	 * @param {string} titleText room titles double as the id, so must be unique (likely to change for localization)
+	 */
+	constructor(titleText, resourceArray) {
+		this.title = titleText;
+		this.resourceList = resourceArray;
+	}
 	description = "";
 	element = "";
 	uiRows = [];
 	enemyList = {};
-	resourceList = {};
-	saleList = {};
-
-	setTypes(...typeEnum) {
-		this.types = typeEnum;
-		return this;
-	}
-
-	setTitle(titleText) {
-		this.title = titleText;
-		return this;
-	}
 
 	setDescription(descriptionText) {
 		this.description = descriptionText;

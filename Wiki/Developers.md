@@ -9,6 +9,20 @@ Welcome prospective developers! We're so glad you've interested in helping out.
    1. Run `npm install`
    2. Run `npm start`
 
+## Procedure
+- Stories start as Discussions, where they are developed until they achieve Story Completion
+- Restricting creating Issues until Story Completion (aka Story Approval) is intended to allow developers to confidently asynchronously select work on any Issue knowing that
+   - The Issue is not a duplicate
+   - The Issue's requirements are defined enough to complete the Story
+   - The Issue is unlikely to be in conflict with other work
+- When a Discussion achieves Story Completion, it is promoted to an Issue and the corresponding Discussion is deleted
+- Issues may futher be grouped into Milestones, which represent the minimum Issues required to release the next version
+- Issues not grouped into a Milestone can be added to any Milestone upon completion
+- Each Issue should have its own Feature Branch
+- When work on an Issue is complete, a Pull Request is opened to the relevant release branch (`main` is live)
+- Pull Requests are to require `log10(active developers)` reviews
+- Feature Branches are to be deleted after their Pull Requests are merged or rejected
+
 ## Style
 - This project uses tabs for indentation to reduce file size and keypresses during code navigation
 - Bot feedback messages should be written in 3rd-person passive tense and make requests in polite language

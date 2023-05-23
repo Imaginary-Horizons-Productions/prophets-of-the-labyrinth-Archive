@@ -1,9 +1,19 @@
+### Accelerating
+Grants the user the Quicken modifier
+
+#### Available on
+- Sun Flare (Fire)
+- Cloak (Wind)
+- Sword (Earth)
+- Midas Staff (Water)
+
 ### Charging
 User gains Power Up modifier
 
 #### Available on
 - all Swords (Earth)
 - Blood Aegis (Water)
+- War Cry (Fire)
 
 ### Cursed
 User pays hp to use
@@ -16,12 +26,6 @@ Can target allies (beyond self)
 
 #### Available on
 - Vigilance Charm (Earth)
-
-### Earthen
-Affects Earth element combatants
-
-#### Available on
-- Potion (Water)
 
 ### Evasive
 User gains Evade
@@ -45,6 +49,7 @@ Adds block on the user
 - Sword (Earth)
 - all Ice Ward (Water)
 - Vigilance Charm (Earth)
+- Potion Kit (Water)
 
 ### Heavy
 Increased base block
@@ -152,22 +157,13 @@ Hits all enemes/allies
 - Inspiration (Wind)
 - Ice Ward (Water)
 
-### Swift
-Grants the user the Quicken modifier
-
-#### Available on
-- Sun Flare (Fire)
-- Cloak (Wind)
-- Sword (Earth)
-- Midas Staff (Water)
-
 ### Thick
 Increased durability, grants the differences in uses when upgraded.
 
 #### Available on
 - Barrier (Fire)
 - Cloak (Wind)
-- Sickle (Water)
+- Censer (Fire)
 - Battleaxe (Fire)
 
 ### Thirsting
@@ -181,6 +177,8 @@ Adds stacks to debuffs
 
 #### Avaialble on
 - Sun Flare (Fire)
+- Censer (Fire)
+- War Cry (Fire)
 
 ### Toxic
 Applies Poison
@@ -188,9 +186,10 @@ Applies Poison
 #### Avaialble on
 - Fire Cracker (Fire)
 - Scythe (Wind)
+- Sickle (Water)
 
 ### Urgent
-Bonus speed
+Using this equipment puts moves in the priority queue
 
 #### Avaialble on
 - all Bows (Wind)
@@ -198,24 +197,19 @@ Bonus speed
 - Barrier (Fire)
 - Buckler (Earth)
 - Life Drain (Water)
+- Potion Kit (Water)
 
-### Watery
-Affects Water element combatants
+### Vexing
+Bonus damage if target has has debuffs
 
 #### Available on
-- Potion (Water)
+ - all Censer (Fire)
 
 ### Wicked
 Increased damage against enemies with 0 block
 
 #### Available on
 - Dagger (Wind)
-
-### Windy
-Affects Wind element combatants
-
-#### Available on
-- Potion (Water)
 
 ## Unnamed
 - Spear (add stagger on crit)
@@ -226,3 +220,4 @@ Affects Wind element combatants
 - Corrosion (power down to enemy)
 - Midas Staff (apply Curse of Midas)
 - Pact of Healing (pay hp to apply regen)
+- Potion Kit (add potion consumable to loot)
