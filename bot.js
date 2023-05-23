@@ -51,9 +51,9 @@ client.on(Events.ClientReady, () => {
 			let [currentFull, currentMajor, currentMinor, currentPatch] = data.match(/(\d+)\.(\d+)\.(\d+)/);
 			let [_lastFull, lastMajor, lastMinor, lastPatch] = versionData.lastPostedVersion.match(/(\d+)\.(\d+)\.(\d+)/);
 
-			if (currentMajor <= lastMajor) {
-				if (currentMinor <= lastMinor) {
-					if (currentPatch <= lastPatch) {
+			if (parseInt(currentMajor) <= parseInt(lastMajor)) {
+				if (parseInt(currentMinor) <= parseInt(lastMinor)) {
+					if (parseInt(currentPatch) <= parseInt(lastPatch)) {
 						return;
 					}
 				}
