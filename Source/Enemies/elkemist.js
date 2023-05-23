@@ -70,7 +70,7 @@ function bubbleEffect(targets, user, isCrit, adventure) {
 	addModifier(user, { name: "Progress", stacks: progressGained });
 
 	if (affectedDelvers.size > 0) {
-		return `It cackles as it nullifies buffs on ${Array(affectedDelvers).join(", ")}.`;
+		return `It cackles as it nullifies buffs on ${[...affectedDelvers].join(", ")}.`;
 	} else {
 		return "It's disappointed the party has no buffs to nullify.";
 	}

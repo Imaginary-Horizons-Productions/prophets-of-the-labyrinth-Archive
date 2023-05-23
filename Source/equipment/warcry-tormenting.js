@@ -10,7 +10,7 @@ module.exports = new EquipmentTemplate("Tormenting War Cry", "*Inflict @{mod1Sta
 	.markPriority();
 
 function effect([initialTarget], user, isCrit, adventure) {
-	const targetSet = new Set(getFullName(initialTarget, adventure.room.enemyTitles));
+	const targetSet = new Set().add(getFullName(initialTarget, adventure.room.enemyTitles));
 	const targetArray = [initialTarget];
 	adventure.room.enemies.forEach(enemy => {
 		if (enemy.getModifierStacks("Exposed") > 0 && !targetSet.has(getFullName(enemy, adventure.room.enemyTitles))) {
@@ -37,5 +37,5 @@ function effect([initialTarget], user, isCrit, adventure) {
 			}
 		}
 	})
-	return `${Array(targetSet).join(", ")} ${targetArray.length === 1 ? "is" : "are"} staggered by the fierce war cry.`;
+	return `${[...targetSet].join(", ")} ${targetArray.length === 1 ? "is" : "are"} staggered by the fierce war cry.`;
 }
