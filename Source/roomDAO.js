@@ -35,14 +35,15 @@ exports.renderRoom = function (adventure, thread, descriptionOverride) {
 	if (adventure.depth <= getLabyrinthProperty(adventure.labyrinth, "maxDepth")) {
 		if (adventure.state !== "completed") {
 			// Continue
+			const roomActionCount = adventure.room.resources.roomAction?.count;
 			if ("roomAction" in adventure.room.resources) {
-				roomEmbed.addFields({ name: "Room Actions", value: adventure.room.resources.roomAction.count.toString() });
+				roomEmbed.addFields({ name: "Room Actions", value: roomActionCount.toString() });
 			}
 
 			if (roomTemplate) {
 				components.push(...roomTemplate.uiRows);
 			}
-			if (adventure.room.title === "Treasure!") {
+			if (adventure.room.title === "Treasure!" && roomActionCount > 0) {
 				components.push(generateTreasureRow(adventure));
 			}
 			components.push(...generateMerchantRows(adventure));
