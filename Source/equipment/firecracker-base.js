@@ -13,7 +13,10 @@ module.exports = new EquipmentTemplate("Firecracker", "*Strike 3 random foes for
 
 function effect(targets, user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger], damage, critBonus } = module.exports;
-	return targets.map(target => {
+	if (isCrit) {
+		damage *= critBonus;
+	}
+	return Promise.all(targets.map(target => {
 		if (target.hp < 1) {
 			return "";
 		}
@@ -21,9 +24,6 @@ function effect(targets, user, isCrit, adventure) {
 		if (user.element === element) {
 			addModifier(target, elementStagger);
 		}
-		if (isCrit) {
-			damage *= critBonus;
-		}
-		dealDamage(target, user, damage, false, element, adventure)
-	}).filter(result => Boolean(result)).join(" ");
+		return dealDamage(target, user, damage, false, element, adventure);
+	})).then(results => results.filter(result => Boolean(result)).join(" "));
 }

@@ -7,6 +7,7 @@ const { getAdventure } = require('../adventureDAO.js');
 const { getFullName } = require("../combatantDAO.js");
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
 const { equipmentToEmbedField } = require('../equipmentDAO.js');
+const { generateTextBar } = require('../../helpers.js');
 
 const id = "readymove";
 module.exports = new Button(id, (interaction, args) => {
@@ -86,16 +87,8 @@ module.exports = new Button(id, (interaction, args) => {
 function miniPredict(predictType, combatant) {
 	switch (predictType) {
 		case "Movements":
-			let staggerCount = combatant.getModifierStacks("Stagger");
-			let bar = "";
-			for (let i = 0; i < combatant.staggerThreshold; i++) {
-				if (staggerCount > i) {
-					bar += "▰";
-				} else {
-					bar += "▱";
-				}
-			}
-			return `Stagger: ${bar}`;
+			const staggerCount = combatant.getModifierStacks("Stagger");
+			return `Stagger: ${generateTextBar(staggerCount, combatant.staggerThreshold, combatant.staggerThreshold)}`;
 		case "Vulnerabilities":
 			return `Weakness: ${getEmoji(getWeakness(combatant.element))}`;
 		case "Intents":

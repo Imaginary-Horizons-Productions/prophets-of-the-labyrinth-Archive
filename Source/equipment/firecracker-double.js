@@ -16,14 +16,16 @@ function effect(targets, user, isCrit, adventure) {
 	if (isCrit) {
 		damage *= critBonus;
 	}
-	return targets.map(target => {
-		if (target.hp < 1) {
-			return "";
-		}
+	return Promise.all(
+		targets.map(target => {
+			if (target.hp < 1) {
+				return "";
+			}
 
-		if (user.element === element) {
-			addModifier(target, elementStagger);
-		}
-		return dealDamage(target, user, damage, false, element, adventure);
-	}).filter(result => Boolean(result)).join(" ");
+			if (user.element === element) {
+				addModifier(target, elementStagger);
+			}
+			return dealDamage(target, user, damage, false, element, adventure);
+		})
+	).then(results => results.filter(result => Boolean(result)).join(" "));
 }

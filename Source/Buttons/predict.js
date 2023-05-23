@@ -5,6 +5,7 @@ const { getTargetList } = require('../moveDAO.js');
 const { getFullName, calculateTotalSpeed, modifiersToString } = require("../combatantDAO.js");
 const { getWeakness, getColor, getEmoji } = require('../elementHelpers.js');
 const { updateRoomHeader } = require('../roomDAO.js');
+const { generateTextBar } = require('../../helpers.js');
 
 const id = "predict";
 module.exports = new Button(id, (interaction, args) => {
@@ -26,7 +27,6 @@ module.exports = new Button(id, (interaction, args) => {
 	let embed = new EmbedBuilder().setColor(getColor(adventure.room.element))
 		.setFooter({ text: `Room #${adventure.depth} - Round ${adventure.room.round}` });
 	let infoForNextRound = true;
-	let descriptionText = "";
 	switch (delver.predict) {
 		case "Movements": // Shows speed, stagger and poise of all combatants
 			const activeCombatants = adventure.room.enemies.filter(enemy => enemy.hp > 0)
@@ -36,22 +36,14 @@ module.exports = new Button(id, (interaction, args) => {
 				});
 			for (const combatant of activeCombatants) {
 				const staggerCount = combatant.getModifierStacks("Stagger");
-				let bar = "";
-				for (let i = 0; i < combatant.staggerThreshold; i++) {
-					if (staggerCount > i) {
-						bar += "▰";
-					} else {
-						bar += "▱";
-					}
-				}
-				descriptionText += `\n__${getFullName(combatant, adventure.room.enemyTitles)}__\nStagger: ${bar}\nSpeed: ${calculateTotalSpeed(combatant)}\n`;
+				embed.addFields({ name: getFullName(combatant, adventure.room.enemyTitles), value: `Stagger: ${generateTextBar(staggerCount, combatant.staggerThreshold, combatant.staggerThreshold)}\nSpeed: ${calculateTotalSpeed(combatant)}` });
 			}
-			descriptionText += "\nCombatants may act out of order if they have priority or they are tied in speed.";
+			embed.setDescription("Combatants may act out of order if they have priority or they are tied in speed.");
 			break;
 		case "Vulnerabilities": // Shows elemental affinities and if critically hitting this turn for all combatants
 			infoForNextRound = false;
 			adventure.room.enemies.filter(combatant => combatant.hp > 0).concat(adventure.delvers).forEach(combatant => {
-				descriptionText += `\n__${getFullName(combatant, adventure.room.enemyTitles)}__ ${getEmoji(combatant.element)}\nCritical Hit: ${combatant.crit ? "💥" : "🚫"}\nWeakness: ${getEmoji(getWeakness(combatant.element))}\nResistance: ${getEmoji(combatant.element)}\n`;
+				embed.addFields({ name: `${getFullName(combatant, adventure.room.enemyTitles)} ${getEmoji(combatant.element)}}`, value: `Critical Hit: ${combatant.crit ? "💥" : "🚫"}\nWeakness: ${getEmoji(getWeakness(combatant.element))}\nResistance: ${getEmoji(combatant.element)}` });
 			});
 			break;
 		case "Intents": // Shows each enemy's target(s) in the next round and the names of the next two moves and if their move has priority
@@ -60,7 +52,7 @@ module.exports = new Button(id, (interaction, args) => {
 					const enemy = adventure.getCombatant(userReference);
 					if (enemy.hp > 0) {
 						const targetNames = getTargetList(targets, adventure);
-						descriptionText += `\n__${getFullName(enemy, adventure.room.enemyTitles)}__\nRound ${adventure.room.round + 1} (Priority): ${name} (Targets: ${targetNames.length ? targetNames.join(", ") : "???"})\nRound ${adventure.room.round + 2}: ${enemy.nextAction}\n`;
+						embed.addFields({ name: getFullName(enemy, adventure.room.enemyTitles), value: `Round ${adventure.room.round + 1} (Priority): ${name} (Targets: ${targetNames.length ? targetNames.join(", ") : "???"})\nRound ${adventure.room.round + 2}: ${enemy.nextAction}` });
 					}
 				}
 			})
@@ -70,9 +62,9 @@ module.exports = new Button(id, (interaction, args) => {
 					if (enemy.hp > 0) {
 						const targetNames = getTargetList(targets, adventure);
 						if (name !== "@{clone}") {
-							descriptionText += `\n__${getFullName(enemy, adventure.room.enemyTitles)}__\nRound ${adventure.room.round + 1}: ${name} (Targets: ${targetNames.length ? targetNames.join(", ") : "???"})\nRound ${adventure.room.round + 2}: ${enemy.nextAction}\n`;
+							embed.addFields({ name: getFullName(enemy, adventure.room.enemyTitles), value: `Round ${adventure.room.round + 1}: ${name} (Targets: ${targetNames.length ? targetNames.join(", ") : "???"})\nRound ${adventure.room.round + 2}: ${enemy.nextAction}` });
 						} else {
-							descriptionText += `\n__${getFullName(enemy, adventure.room.enemyTitles)}__\nMirror Clones mimic your allies!\n`;
+							embed.addFields({ name: getFullName(enemy, adventure.room.enemyTitles), value: "Mirror Clones mimic your allies!" })
 						}
 					}
 				}
@@ -82,12 +74,11 @@ module.exports = new Button(id, (interaction, args) => {
 			infoForNextRound = false;
 			adventure.room.enemies.concat(adventure.delvers).filter(combatant => combatant.hp > 0).forEach(combatant => {
 				let modifiersText = modifiersToString(combatant, false, adventure);
-				descriptionText += `\n__${getFullName(combatant, adventure.room.enemyTitles)}__\n${combatant.hp}/${combatant.maxHp} HP${combatant.block ? `, ${combatant.block} Block` : ""}\n${modifiersText ? `${modifiersText}` : "No modifiers\n"}`;
+				embed.addFields({ name: getFullName(combatant, adventure.room.enemyTitles), value: `${generateTextBar(combatant.hp, combatant.maxHp, 16)} ${combatant.hp}/${combatant.maxHp} HP${combatant.block ? `, ${combatant.block} Block` : ""}\n${modifiersText ? `${modifiersText}` : "No modifiers"}` });
 			})
 			break;
 	}
-	embed.setTitle(`${delver.predict} ${infoForNextRound ? "Predictions for" : "State of"} Round ${infoForNextRound ? adventure.room.round + 1 : adventure.room.round}`)
-		.setDescription(descriptionText);
+	embed.setTitle(`${delver.predict} ${infoForNextRound ? "Predictions for" : "State of"} Round ${infoForNextRound ? adventure.room.round + 1 : adventure.room.round}`);
 	interaction.reply({ embeds: [embed], ephemeral: true })
 		.catch(console.error);
 });

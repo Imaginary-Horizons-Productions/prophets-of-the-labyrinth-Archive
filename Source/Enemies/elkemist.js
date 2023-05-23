@@ -46,7 +46,9 @@ function boilEffect(targets, user, isCrit, adventure) {
 	if (isCrit) {
 		damage *= 2;
 	}
-	return targets.map(target => dealDamage(target, user, damage, false, "Fire", adventure)).join(" ");
+	return Promise.all(
+		targets.map(target => dealDamage(target, user, damage, false, "Fire", adventure))
+	).then(results => results.join(" "));
 }
 
 function bubbleEffect(targets, user, isCrit, adventure) {

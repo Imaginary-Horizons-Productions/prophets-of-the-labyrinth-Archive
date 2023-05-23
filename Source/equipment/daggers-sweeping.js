@@ -12,16 +12,18 @@ module.exports = new EquipmentTemplate("Sweeping Daggers", "*Strike all foes for
 
 function effect(targets, user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger], damage, critBonus } = module.exports;
-	return targets.map(target => {
-		if (target.hp < 1) {
-			return "";
-		}
-		if (user.element === element) {
-			addModifier(target, elementStagger);
-		}
-		if (isCrit) {
-			damage *= critBonus;
-		}
-		dealDamage(target, user, damage, false, element, adventure)
-	}).filter(result => Boolean(result)).join(" ");
+	return Promise.all(
+		targets.map(target => {
+			if (target.hp < 1) {
+				return "";
+			}
+			if (user.element === element) {
+				addModifier(target, elementStagger);
+			}
+			if (isCrit) {
+				damage *= critBonus;
+			}
+			return dealDamage(target, user, damage, false, element, adventure);
+		})
+	).then(results => results.filter(result => Boolean(result)).join(" "));
 }
