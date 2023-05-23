@@ -11,12 +11,12 @@ module.exports = new EquipmentTemplate("Devoted Vigilance Charm", "*Grant an all
 function effect(target, user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger, vigilance, critVigilance] } = module.exports;
 	if (user.element === element) {
-		removeModifier(user, elementStagger);
+		removeModifier(target, elementStagger);
 	}
 	if (isCrit) {
-		addModifier(user, critVigilance);
+		addModifier(target, critVigilance);
 	} else {
-		addModifier(user, vigilance);
+		addModifier(target, vigilance);
 	}
 	return ""; // result as text
 }
