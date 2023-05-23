@@ -1,4 +1,4 @@
-const { ActionRowBuilder, ButtonBuilder, EmbedBuilder, StringSelectMenuBuilder, ButtonStyle, ChannelType } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder, EmbedBuilder, StringSelectMenuBuilder, ButtonStyle, ChannelType, MessageFlags } = require('discord.js');
 const { Adventure } = require('../../Classes/Adventure.js');
 const Command = require('../../Classes/Command.js');
 const Delver = require('../../Classes/Delver.js');
@@ -82,7 +82,7 @@ module.exports.execute = (interaction) => {
 							adventure.setId(thread.id)
 								.setLeaderId(interaction.user.id);
 							adventure.messageIds.leaderNotice = leaderMessage.id;
-							return thread.send({ content: "The adventure will begin when everyone has picked an archetype and the leader clicks the \"Ready!\" button. Each player can optionally select a starting artifact.", components: [ready] });
+							return thread.send({ content: "The adventure will begin when everyone has picked an archetype and the leader clicks the \"Ready!\" button. Each player can optionally select a starting artifact.", components: [ready], flags: MessageFlags.SuppressNotifications });
 						}).then(deployMessage => {
 							adventure.messageIds.deploy = deployMessage.id;
 							setAdventure(adventure);
