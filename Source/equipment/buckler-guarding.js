@@ -1,7 +1,7 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addBlock, removeModifier } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Guarding Buckler", "*Grant @{block} block to an ally and yourself*\nCritical Hit💥: Block x@{critBonus}", "Earth", effect, ["Heavy Buckler", "Urgent Buckler"])
+module.exports = new EquipmentTemplate("Guarding Buckler", "Grant @{block} block to an ally and yourself", "Block x@{critBonus}", "Earth", effect, ["Heavy Buckler", "Urgent Buckler"])
 	.setCategory("Armor")
 	.setTargetingTags({ target: "single", team: "delver" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }])

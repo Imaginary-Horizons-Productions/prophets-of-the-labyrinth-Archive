@@ -1,7 +1,7 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addModifier, getFullName } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Charging War Cry", "*Inflict @{mod1Stacks} @{mod1} on a foe and all foes with Exposed then gain @{mod3Stacks} @{mod3}*\nCritical Hit💥: Inflict @{mod2Stacks} @{mod2} instead", "Fire", effect, ["Tormenting War Cry"])
+module.exports = new EquipmentTemplate("Charging War Cry", "Inflict @{mod1Stacks} @{mod1} on a foe and all foes with Exposed then gain @{mod3Stacks} @{mod3}", "@{mod2} x@{critBonus}", "Fire", effect, ["Tormenting War Cry"])
 	.setCategory("Spell")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Stagger", stacks: 1 }, { name: "Stagger", stacks: 2 }, { name: "Power Up", stacks: 25 }])

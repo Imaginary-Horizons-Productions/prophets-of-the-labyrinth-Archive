@@ -2,13 +2,15 @@ module.exports = class EquipmentTemplate {
 	/** This read-only data class defines stats for a piece of equipment
 	 * @param {string} nameInput
 	 * @param {string} descriptionInput
+	 * @param {string} critDescriptionInput
 	 * @param {"Fire" | "Water" | "Earth" | "Wind" | "Untyped"} elementInput
 	 * @param {Function} effectInput
 	 * @param {Array<string>} upgradeNames
 	 */
-	constructor(nameInput, descriptionInput, elementInput, effectInput, upgradeNames) {
+	constructor(nameInput, descriptionInput, critDescriptionInput, elementInput, effectInput, upgradeNames) {
 		this.name = nameInput;
 		this.description = descriptionInput;
+		this.critDescription = critDescriptionInput;
 		this.element = elementInput;
 		this.effect = effectInput;
 		this.upgrades = upgradeNames;
