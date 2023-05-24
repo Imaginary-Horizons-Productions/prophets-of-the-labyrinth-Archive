@@ -7,7 +7,7 @@ module.exports = new EquipmentTemplate("Prideful Battleaxe", "Strike a foe for @
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(350)
 	.setUses(10)
-	.setDamage(100)
+	.setDamage(75)
 	.setBonusDamage(100);
 
 function effect([target], user, isCrit, adventure) {

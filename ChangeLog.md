@@ -1,4 +1,9 @@
 # Prophets of the Labyrinth Change Log
+#### Prophets of the Labyrinth Verison 0.11.0:
+- Reworked the Knight
+   - Sword now double benefits from Power Up instead of granting it (upgrades: Accelerating, Piercing, Vigilant)
+   - Buckler now grants Power Up (Urgent upgrade changed to Devoted)
+   - Old Sword (weapon that grants user Power Up) has been renamed to Lance (Accelerating changed to Slowing)
 #### Prophets of the Labyrinth Version 0.10.0:
 - Added **Consumables**: these resources can be used by any party member during combat at priority speed
    1. Vitamins

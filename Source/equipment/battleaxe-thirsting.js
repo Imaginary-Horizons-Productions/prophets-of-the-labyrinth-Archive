@@ -7,8 +7,8 @@ module.exports = new EquipmentTemplate("Thirsting Battleaxe", "Strike a foe for 
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(350)
 	.setUses(10)
-	.setDamage(75)
-	.setBonusDamage(75)
+	.setDamage(50)
+	.setBonusDamage(100)
 	.setHealing(60);
 
 function effect([target], user, isCrit, adventure) {

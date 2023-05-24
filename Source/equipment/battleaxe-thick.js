@@ -7,8 +7,8 @@ module.exports = new EquipmentTemplate("Thick Battleaxe", "Strike a foe for @{da
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(350)
 	.setUses(20)
-	.setDamage(75)
-	.setBonusDamage(75);
+	.setDamage(50)
+	.setBonusDamage(100);
 
 function effect([target], user, isCrit, adventure) {
 	if (target.hp < 1) {

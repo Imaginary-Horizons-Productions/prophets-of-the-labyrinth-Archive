@@ -11,7 +11,6 @@ Grants the user the Quicken modifier
 User gains Power Up modifier
 
 #### Available on
-- all Swords (Earth)
 - Blood Aegis (Water)
 - War Cry (Fire)
 
@@ -26,6 +25,7 @@ Can target allies (beyond self)
 
 #### Available on
 - Vigilance Charm (Earth)
+- Buckler (Earth)
 
 ### Evasive
 User gains Evade
@@ -46,10 +46,10 @@ Adds block on the user
 
 #### Available on
 - Buckler (Earth)
-- Sword (Earth)
 - all Ice Ward (Water)
 - Vigilance Charm (Earth)
 - Potion Kit (Water)
+- Lance (Earth)
 
 ### Heavy
 Increased base block
@@ -94,6 +94,7 @@ Deals unblockable damage
 #### Available on
 - Warhammer (Earth)
 - Scythe (Wind)
+- Sword (Earth)
 
 ### Prideful
 High value non-elemental damage
@@ -121,11 +122,11 @@ Instant death if target is below hp threshold
 - all Scythes (Water)
 
 ### Reckless
-Increased damage if user has 0 block
+Reduced base damage, increased damage if user has 0 block
 
 #### Available on
 - all Battleaxes (Fire)
-- Sword (Earth)
+- Lance (Earth)
 
 ### Reinforcing
 Adds block to target
@@ -140,6 +141,12 @@ Increased base damage
 - Dagger (Wind)
 - Sickle (Water)
 
+### Slowing
+Adds Slow to target
+
+#### Available on
+- Lance (Earth)
+
 ### Soothing
 Applies Regen
 
@@ -148,7 +155,7 @@ Applies Regen
 - Inspiration (Wind)
 
 ### Sweeping
-Hits all enemes/allies
+Reduce base damage, hits all enemies/allies
 
 #### Available on
 - Dagger (Wind)
@@ -195,7 +202,6 @@ Using this equipment puts moves in the priority queue
 - all Bows (Wind)
 - all Sun Flare (Fire)
 - Barrier (Fire)
-- Buckler (Earth)
 - Life Drain (Water)
 - Potion Kit (Water)
 
@@ -205,6 +211,12 @@ Bonus damage if target has has debuffs
 #### Available on
  - all Censer (Fire)
 
+### Vigilant
+Grants Vigilant to user
+
+#### Available on
+- Sword (Earth)
+
 ### Wicked
 Increased damage against enemies with 0 block
 
@@ -212,6 +224,7 @@ Increased damage against enemies with 0 block
 - Dagger (Wind)
 
 ## Unnamed
+- Sword (double upgrade from Power Up)
 - Spear (add stagger on crit)
 - Sickle (5% max hp bonus damage)
 - Life Drain (attack a foe and gain hp)
