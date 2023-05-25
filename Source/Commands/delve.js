@@ -43,6 +43,7 @@ module.exports.execute = (interaction) => {
 					.setDescription("A new adventure is starting!")
 					.addFields({ name: "1 Party Member", value: `${interaction.member} 👑` })
 				interaction.reply({ embeds: [embed], fetchReply: true }).then(recruitMessage => {
+					adventure.messageIds.recruit = recruitMessage.id;
 					interaction.channel.threads.create({
 						name: adventure.name,
 						type: ChannelType.PrivateThread,
