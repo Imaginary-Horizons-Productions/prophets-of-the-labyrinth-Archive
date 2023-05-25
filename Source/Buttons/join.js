@@ -4,7 +4,7 @@ const Delver = require('../../Classes/Delver.js');
 const { maxDelverCount } = require("../../constants.js");
 const { isSponsor } = require('../../helpers.js');
 const { getGuild } = require('../guildDAO.js');
-const { getAdventure, setAdventure } = require("./../adventureDAO.js");
+const { getAdventure, setAdventure, fetchRecruitMessage } = require("./../adventureDAO.js");
 
 const id = "join";
 module.exports = new Button(id, async (interaction, [guildId, adventureId, context]) => {
@@ -15,12 +15,10 @@ module.exports = new Button(id, async (interaction, [guildId, adventureId, conte
 		if (adventure) {
 			if (adventure.state === "config") {
 				let recruitMessage = interaction.message;
-				if (context === "aux") {
-					recruitMessage = await interaction.channel.fetchStarterMessage();
-				} else if (context === "invite") {
+				if (context === "invite") {
 					const guild = await interaction.client.guilds.fetch(guildId);
 					const thread = await guild.channels.fetch(adventureId);
-					recruitMessage = await thread.fetchStarterMessage();
+					recruitMessage = await fetchRecruitMessage(thread, adventure.messageIds.recruit);
 				}
 				if (adventure.delvers.length < maxDelverCount) {
 					if (!adventure.delvers.some(delver => delver.id == interaction.user.id)) {
@@ -57,7 +55,7 @@ module.exports = new Button(id, async (interaction, [guildId, adventureId, conte
 							components = [];
 						}
 						recruitMessage.edit({ embeds, components });
-						if (["aux", "invite"].includes(context)) {
+						if (context === "invite") {
 							interaction.update({ components: [] })
 						} else {
 							interaction.update({ content: "\u200B" })

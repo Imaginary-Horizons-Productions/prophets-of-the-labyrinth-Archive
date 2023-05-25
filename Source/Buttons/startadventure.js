@@ -1,4 +1,4 @@
-const { getAdventure, nextRoom } = require('../adventureDAO.js');
+const { getAdventure, nextRoom, fetchRecruitMessage } = require('../adventureDAO.js');
 const Button = require('../../Classes/Button.js');
 
 const id = "startadventure";
@@ -7,7 +7,7 @@ module.exports = new Button(id, (interaction, args) => {
 	let adventure = getAdventure(interaction.channel.id);
 	if (interaction.user.id === adventure.leaderId) {
 		// Clear components from recruitment, start, and deploy messages
-		interaction.channel.fetchStarterMessage().then(recruitMessage => {
+		fetchRecruitMessage(interaction.channel, adventure.messageIds.recruit).then(recruitMessage => {
 			recruitMessage.edit({ components: [] });
 		}).catch(console.error);
 		if (adventure.messageIds.deploy) {

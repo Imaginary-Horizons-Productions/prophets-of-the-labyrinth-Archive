@@ -22,6 +22,7 @@ module.exports.Adventure = class {
 	static endStates = ["success", "defeat", "giveup"];
 	element;
 	messageIds = {
+		recruit: "",
 		start: "",
 		leaderNotice: "",
 		deploy: "",
