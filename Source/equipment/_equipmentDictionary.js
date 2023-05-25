@@ -89,9 +89,11 @@ for (const file of [
 	"vigilancecharm-guarding.js",
 	"warcry-base.js",
 	"warcry-charging.js",
+	"warcry-slowing.js",
 	"warcry-tormenting.js",
 	"warhammer-base.js",
-	"warhammer-piercing.js"
+	"warhammer-piercing.js",
+	"warhammer-slowing.js"
 ]) {
 	const equip = require(`./${file}`);
 	EQUIPMENT[equip.name] = equip;
@@ -137,7 +139,7 @@ exports.buildEquipmentDescription = function (equipmentName, buildFullDescriptio
 		description = description.replace("@{element}", getEmoji(exports.getEquipmentProperty(equipmentName, "element")))
 			.replace("@{critBonus}", exports.getEquipmentProperty(equipmentName, "critBonus"))
 			.replace("@{damage}", exports.getEquipmentProperty(equipmentName, "damage"))
-			.replace("@{bonusDamage}", exports.getEquipmentProperty(equipmentName, "bonusDamage"))
+			.replace("@{bonus}", exports.getEquipmentProperty(equipmentName, "bonus"))
 			.replace("@{block}", exports.getEquipmentProperty(equipmentName, "block"))
 			.replace("@{hpCost}", exports.getEquipmentProperty(equipmentName, "hpCost"))
 			.replace("@{healing}", exports.getEquipmentProperty(equipmentName, "healing"));

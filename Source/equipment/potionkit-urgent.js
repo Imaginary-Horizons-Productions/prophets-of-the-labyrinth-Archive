@@ -12,13 +12,13 @@ module.exports = new EquipmentTemplate("Urgent Potion Kit", "Add 1 random potion
 .markPriority();
 
 function effect(targets, user, isCrit, adventure) {
-	let { element, modifiers: [elementStagger] } = module.exports;
+	let { element, modifiers: [elementStagger], critBonus } = module.exports;
 	if (user.element === element) {
 		removeModifier(user, elementStagger);
 	}
 	const randomPotion = rollConsumable(adventure, "Potion");
 	if (isCrit) {
-		adventure.addResource(new Resource(randomPotion, "consumable", 2, "loot", 0));
+		adventure.addResource(new Resource(randomPotion, "consumable", critBonus, "loot", 0));
 		return `${getFullName(user, adventure.room.enemyTitles)} sets a double-batch of ${randomPotion} simmering.`;
 	} else {
 		adventure.addResource(new Resource(randomPotion, "consumable", 1, "loot", 0));

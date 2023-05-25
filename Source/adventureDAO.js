@@ -387,7 +387,7 @@ exports.endRound = async function (adventure, thread) {
 		lastRoundText += await resolveMove(move, adventure);
 		// Check for end of combat
 		if (adventure.lives <= 0) {
-			return thread.send(exports.completeAdventure(adventure, thread, "defeat", lastRoundText));
+			return thread.send(exports.completeAdventure(adventure, thread, "defeat", lastRoundText)); //TODONOW double new round on defeat
 		}
 
 		if (adventure.room.enemies.every(enemy => enemy.hp === 0)) {

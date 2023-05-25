@@ -1,12 +1,12 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addModifier, getFullName } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Tormenting War Cry", "Inflict @{mod1Stacks} @{mod1} and 1 of each of a the foe's debuffs on a foe and all foes with Exposed", "@{mod1} +@{bonus}", "Fire", effect, ["Charging War Cry", "Slowing War Cry"])
+module.exports = new EquipmentTemplate("Slowing War Cry", "Inflict @{mod1Stacks} @{mod1} and @{mod2Stacks} @{mod2} on a foe and all foes with Exposed", "@{mod1} +@{bonus}", "Fire", effect, ["Charging War Cry", "Tormenting War Cry"])
 	.setCategory("Spell")
 	.setTargetingTags({ target: "single", team: "enemy" })
-	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Stagger", stacks: 1 }])
+	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Stagger", stacks: 1 }], { name: "Slow", stacks: 1 })
 	.setBonus(1) // Stagger stacks
-	.setCost(350)
+	.setCost(200)
 	.setUses(10)
 	.markPriority();
 
@@ -20,7 +20,7 @@ function effect([initialTarget], user, isCrit, adventure) {
 		}
 	})
 
-	let { element, modifiers: [elementStagger, stagger], bonus } = module.exports;
+	let { element, modifiers: [elementStagger, stagger, slow], bonus } = module.exports;
 	let pendingStaggerStacks = stagger.stacks;
 	if (user.element === element) {
 		pendingStaggerStacks += elementStagger.stacks;
@@ -30,11 +30,7 @@ function effect([initialTarget], user, isCrit, adventure) {
 	}
 	targetArray.forEach(target => {
 		addModifier(target, { name: "Stagger", stacks: pendingStaggerStacks });
-		for (const modifier in target.modifiers) {
-			if (isDebuff(modifier)) {
-				addModifier(target, { name: modifier, stacks: 1 });
-			}
-		}
+		addModifier(target, slow);
 	})
-	return `${[...targetSet].join(", ")} ${targetArray.length === 1 ? "is" : "are"} staggered by the fierce war cry.`;
+	return `${[...targetSet].join(", ")} ${targetArray.length === 1 ? "is" : "are"} staggered and slowed by the fierce war cry.`;
 }

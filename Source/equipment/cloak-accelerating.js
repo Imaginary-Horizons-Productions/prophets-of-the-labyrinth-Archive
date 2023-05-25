@@ -1,24 +1,21 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addModifier, removeModifier } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Accelerating Cloak", "Gain @{mod1Stacks} @{mod1} and @{mod2Stacks} @{mod2}", "Instead gain @{mod3Stacks} @{mod3} and @{mod4Stacks} @{mod4}", "Wind", effect, ["Long Cloak", "Thick Cloak"])
+module.exports = new EquipmentTemplate("Accelerating Cloak", "Gain @{mod1Stacks} @{mod1} and @{mod2Stacks} @{mod2}", "@{mod1} +@{bonus} and @{mod2} +@{bonus}", "Wind", effect, ["Long Cloak", "Thick Cloak"])
 	.setCategory("Armor")
 	.setTargetingTags({ target: "self", team: "self" })
-	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Evade", stacks: 2 }, { name: "Quicken", stacks: 1 }, { name: "Evade", stacks: 3 }, { name: "Quicken", stacks: 2 }])
+	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Evade", stacks: 2 }, { name: "Quicken", stacks: 1 }])
 	.setCost(350)
 	.setUses(10);
 
 function effect(targets, user, isCrit, adventure) {
-	let { element, modifiers: [elementStagger, evade, quicken, critEvade, critQuicken] } = module.exports;
+	let { element, modifiers: [elementStagger, evade, quicken], bonus } = module.exports;
+	const pendingEvade = { ...evade, stacks: evade.stacks + (isCrit ? bonus : 0) };
+	const pendingQuicken = { ...quicken, stacks: quicken.stacks + (isCrit ? bonus : 0) };
 	if (user.element === element) {
 		removeModifier(user, elementStagger);
 	}
-	if (isCrit) {
-		addModifier(user, critEvade);
-		addModifier(user, critQuicken);
-	} else {
-		addModifier(user, evade);
-		addModifier(user, quicken);
-	}
+	addModifier(user, pendingEvade);
+	addModifier(user, pendingQuicken);
 	return "";
 }

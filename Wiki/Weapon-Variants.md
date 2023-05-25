@@ -146,6 +146,8 @@ Adds Slow to target
 
 #### Available on
 - Lance (Earth)
+- Warhammer (Earth)
+- War Cry (Fire)
 
 ### Soothing
 Applies Regen

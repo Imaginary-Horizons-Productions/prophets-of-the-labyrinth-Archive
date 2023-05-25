@@ -5,6 +5,9 @@
    - Buckler now grants Power Up (Urgent upgrade changed to Devoted)
    - Old Sword (weapon that grants user Power Up) has been renamed to Lance (Accelerating changed to Slowing)
 - Adventures that end by `/give-up` no longer provide score to player profiles
+- Reduced base damage of *Warhammer* (and upgrades) from 100 to 75
+- Added *Slowing Warhammer* and *Slowing War Cry*
+
 #### Prophets of the Labyrinth Version 0.10.0:
 - Added **Consumables**: these resources can be used by any party member during combat at priority speed
    1. Vitamins

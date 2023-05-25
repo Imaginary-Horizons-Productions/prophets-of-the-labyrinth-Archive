@@ -1,14 +1,14 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addModifier, dealDamage, getFullName } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Piercing Scythe", "Strike a foe for @{damage} @{element} unblockable damage; instant death if foe is at or below @{bonusDamage} hp", "Instant death threshold x@{critBonus}", "Wind", effect, ["Lethal Scythe", "Toxic Scythe"])
+module.exports = new EquipmentTemplate("Piercing Scythe", "Strike a foe for @{damage} @{element} unblockable damage; instant death if foe is at or below @{bonus} hp", "Instant death threshold x@{critBonus}", "Wind", effect, ["Lethal Scythe", "Toxic Scythe"])
 	.setCategory("Weapon")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(350)
 	.setUses(10)
 	.setDamage(75)
-	.setBonusDamage(99);
+	.setBonus(99); // execute threshold
 
 function effect([target], user, isCrit, adventure) {
 	if (target.hp < 1) {
