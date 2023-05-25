@@ -18,7 +18,7 @@ module.exports = new Button(id, (interaction, args) => {
 				const resultText = `${interaction.user} reaches in to grab some coin. Oh no! The gold burst into flames ${damageText}`;
 				if (adventure.lives < 1) {
 					interaction.update({ components: [] });
-					interaction.channel.send(completeAdventure(adventure, interaction.channel, resultText));
+					interaction.channel.send(completeAdventure(adventure, interaction.channel, "defeat", resultText));
 				} else {
 					interaction.update({ components: editButtons(interaction.message.components, { [id]: { preventUse: true, label: `+${goldCount} gold`, emoji: "✔️" } }) })
 					interaction.channel.send(resultText);

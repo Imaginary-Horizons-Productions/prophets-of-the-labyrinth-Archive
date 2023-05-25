@@ -20,7 +20,7 @@ module.exports = new Button(id, (interaction, args) => {
 				})
 				if (adventure.lives < 1) {
 					interaction.update({ components: [] });
-					interaction.channel.send(completeAdventure(adventure, interaction.channel, resultText));
+					interaction.channel.send(completeAdventure(adventure, interaction.channel, "defeat", resultText));
 				} else {
 					interaction.update({ components: editButtons(interaction.message.components, { [id]: { preventUse: true, label: `${interaction.member.displayName} shared HP.`, emoji: "✔️" } }) });
 					interaction.channel.send(resultText);

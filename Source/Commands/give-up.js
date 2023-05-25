@@ -1,3 +1,4 @@
+const { Adventure } = require('../../Classes/Adventure.js');
 const Command = require('../../Classes/Command.js');
 const { completeAdventure, getAdventure } = require('../adventureDAO.js');
 
@@ -8,9 +9,9 @@ module.exports = new Command(id, "Lets the adventure leader end the adventure", 
 module.exports.execute = (interaction) => {
 	// Give up on the current adventure
 	const adventure = getAdventure(interaction.channelId);
-	if (adventure && adventure.state !== "completed") {
+	if (adventure && !Adventure.endStates.includes(adventure.state)) {
 		if (interaction.user.id === adventure.leaderId) {
-			interaction.reply(completeAdventure(adventure, interaction.channel));
+			interaction.reply(completeAdventure(adventure, interaction.channel, "giveup"));
 		} else {
 			interaction.reply({ content: "Please ask the leader to end the adventure.", ephemeral: true });
 		}
