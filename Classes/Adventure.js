@@ -17,8 +17,9 @@ module.exports.Adventure = class {
 	id;
 	name;
 	labyrinth = "Debug Dungeon"; //TODO #462 generate/take labyrinth as input
-	/** @type {"config" | "ongoing" | "completed"} */
+	/** @type {"config" | "ongoing" | "success" | "defeat" | "giveup"} */
 	state = "config";
+	static endStates = ["success", "defeat", "giveup"];
 	element;
 	messageIds = {
 		recruit: "",

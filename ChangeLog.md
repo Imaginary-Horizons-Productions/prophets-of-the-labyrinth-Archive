@@ -4,6 +4,7 @@
    - Sword now double benefits from Power Up instead of granting it (upgrades: Accelerating, Piercing, Vigilant)
    - Buckler now grants Power Up (Urgent upgrade changed to Devoted)
    - Old Sword (weapon that grants user Power Up) has been renamed to Lance (Accelerating changed to Slowing)
+- Adventures that end by `/give-up` no longer provide score to player profiles
 #### Prophets of the Labyrinth Version 0.10.0:
 - Added **Consumables**: these resources can be used by any party member during combat at priority speed
    1. Vitamins

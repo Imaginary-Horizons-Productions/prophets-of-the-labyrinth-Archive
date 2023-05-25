@@ -33,7 +33,7 @@ exports.renderRoom = function (adventure, thread, descriptionOverride) {
 	let components = [];
 
 	if (adventure.depth <= getLabyrinthProperty(adventure.labyrinth, "maxDepth")) {
-		if (adventure.state !== "completed") {
+		if (!Adventure.endStates.includes(adventure.state)) {
 			// Continue
 			const roomActionCount = adventure.room.resources.roomAction?.count;
 			if ("roomAction" in adventure.room.resources) {
@@ -99,7 +99,6 @@ exports.renderRoom = function (adventure, thread, descriptionOverride) {
  * @param {Adventure} adventure
  */
 function addScoreField(embed, adventure) {
-	const isSuccess = adventure.lives > 0 && adventure.depth > getLabyrinthProperty(adventure.labyrinth, "maxDepth");
 	const livesScore = adventure.lives * 10;
 	const goldScore = Math.floor(Math.log10(adventure.peakGold)) * 5;
 	let score = adventure.accumulatedScore + livesScore + goldScore + adventure.depth;
@@ -109,22 +108,30 @@ function addScoreField(embed, adventure) {
 		challengeMultiplier *= challenge.scoreMultiplier;
 	})
 	score *= challengeMultiplier;
-	if (!isSuccess) {
-		embed.setTitle(`Defeated${adventure.room.title ? ` in ${adventure.room.title}` : " before even starting"}`);
-		score = Math.floor(score / 2);
-	} else {
-		embed.setTitle(`Success in ${adventure.labyrinth}`);
-	}
 	const skippedArtifactsMultiplier = 1 + (adventure.delvers.reduce((count, delver) => delver.startingArtifact ? count : count + 1, 0) / adventure.delvers.length);
 	score = Math.max(1, score * skippedArtifactsMultiplier);
+	switch (adventure.state) {
+		case "success":
+			embed.setTitle(`Success in ${adventure.labyrinth}`);
+			break;
+		case "defeat":
+			embed.setTitle(`Defeated${adventure.room.title ? ` in ${adventure.room.title}` : " before even starting"}`);
+			score = Math.floor(score / 2);
+			break;
+		case "giveup":
+			embed.setTitle(`Gave up${adventure.room.title ? ` in ${adventure.room.title}` : " before even starting"}`);
+			score = 0;
+			break;
+	}
 	const depthScoreLine = generateScoreline("additive", "Depth", adventure.depth);
 	const livesScoreLine = generateScoreline("additive", "Lives", livesScore);
 	const goldScoreline = generateScoreline("additive", "Gold", goldScore);
 	const bonusScoreline = generateScoreline("additive", "Bonus", adventure.accumulatedScore);
 	const challengesScoreline = generateScoreline("multiplicative", "Challenges Multiplier", challengeMultiplier);
 	const skippedArtifactScoreline = generateScoreline("multiplicative", "Artifact Skip Multiplier", skippedArtifactsMultiplier);
-	const defeatScoreline = generateScoreline("multiplicative", "Defeat", isSuccess ? 1 : 0.5);
-	embed.addFields({ name: "Score Breakdown", value: `${depthScoreLine}${livesScoreLine}${goldScoreline}${bonusScoreline}${challengesScoreline}${skippedArtifactScoreline}${defeatScoreline}\n__Total__: ${score}` });
+	const defeatScoreline = generateScoreline("multiplicative", "Defeat", adventure.state === "success" ? 1 : 0.5);
+	const giveupScoreline = generateScoreline("multiplicative", "Give Up", adventure.state === "giveup" ? 0 : 1);
+	embed.addFields({ name: "Score Breakdown", value: `${depthScoreLine}${livesScoreLine}${goldScoreline}${bonusScoreline}${challengesScoreline}${skippedArtifactScoreline}${defeatScoreline}${giveupScoreline}\n__Total__: ${score}` });
 	adventure.accumulatedScore = score;
 }
 

@@ -37,7 +37,7 @@ exports.loadAdventures = async function () {
 		const adventures = require(requirePath);
 		let loaded = 0;
 		adventures.forEach(adventure => {
-			if (adventure.state !== "completed") {
+			if (!Adventure.endStates.includes(adventure.state)) {
 				loaded++;
 				// Cast delvers into Delver class
 				let castDelvers = [];
@@ -386,41 +386,39 @@ exports.endRound = async function (adventure, thread) {
 	for (const move of adventure.room.priorityMoves.concat(adventure.room.moves)) {
 		lastRoundText += await resolveMove(move, adventure);
 		// Check for end of combat
-		const outOfLives = adventure.lives <= 0;
-		const allEnemiesAreDead = adventure.room.enemies.every(enemy => enemy.hp === 0);
-		const atMaxDepth = adventure.depth === getLabyrinthProperty(adventure.labyrinth, "maxDepth");
-		if (outOfLives || allEnemiesAreDead) {
-			if (outOfLives || atMaxDepth) {
-				if (allEnemiesAreDead && atMaxDepth) {
-					adventure.depth++;
-				}
-				return thread.send(exports.completeAdventure(adventure, thread, lastRoundText));
-			} else {
-				// Equipment drops
-				const gearThreshold = 1;
-				const gearMax = 16;
-				if (generateRandomNumber(adventure, gearMax, "general") < gearThreshold) {
-					const cloverCount = adventure.getArtifactCount("Negative-One Leaf Clover");
-					let tier = "Common";
-					const upgradeThreshold = 1 + cloverCount;
-					const upgradeMax = 8 + cloverCount;
-					adventure.updateArtifactStat("Negative-One Leaf Clover", "Expected Extra Rare Equipment", (upgradeThreshold / upgradeMax) - (1 / 8));
-					if (generateRandomNumber(adventure, upgradeMax, "general") < upgradeThreshold) {
-						tier = "Rare";
-					}
-					const droppedEquip = rollEquipmentDrop(tier, adventure);
-					adventure.addResource(new Resource(droppedEquip, "equipment", 1, "loot", 0));
-				}
+		if (adventure.lives <= 0) {
+			return thread.send(exports.completeAdventure(adventure, thread, "defeat", lastRoundText));
+		}
 
-				// Consumable drops
-				const consumableThreshold = 1;
-				const consumableMax = 8;
-				if (generateRandomNumber(adventure, consumableMax, "general") < consumableThreshold) {
-					adventure.addResource(new Resource(rollConsumable(adventure), "consumable", 1, "loot", 0));
-				}
-
-				return thread.send(renderRoom(adventure, thread, lastRoundText));
+		if (adventure.room.enemies.every(enemy => enemy.hp === 0)) {
+			if (adventure.depth === getLabyrinthProperty(adventure.labyrinth, "maxDepth")) {
+				return thread.send(exports.completeAdventure(adventure, thread, "success", lastRoundText));
 			}
+
+			// Equipment drops
+			const gearThreshold = 1;
+			const gearMax = 16;
+			if (generateRandomNumber(adventure, gearMax, "general") < gearThreshold) {
+				const cloverCount = adventure.getArtifactCount("Negative-One Leaf Clover");
+				let tier = "Common";
+				const upgradeThreshold = 1 + cloverCount;
+				const upgradeMax = 8 + cloverCount;
+				adventure.updateArtifactStat("Negative-One Leaf Clover", "Expected Extra Rare Equipment", (upgradeThreshold / upgradeMax) - (1 / 8));
+				if (generateRandomNumber(adventure, upgradeMax, "general") < upgradeThreshold) {
+					tier = "Rare";
+				}
+				const droppedEquip = rollEquipmentDrop(tier, adventure);
+				adventure.addResource(new Resource(droppedEquip, "equipment", 1, "loot", 0));
+			}
+
+			// Consumable drops
+			const consumableThreshold = 1;
+			const consumableMax = 8;
+			if (generateRandomNumber(adventure, consumableMax, "general") < consumableThreshold) {
+				adventure.addResource(new Resource(rollConsumable(adventure), "consumable", 1, "loot", 0));
+			}
+
+			return thread.send(renderRoom(adventure, thread, lastRoundText));
 		}
 	}
 	adventure.room.priorityMoves = [];
@@ -448,17 +446,25 @@ exports.fetchRecruitMessage = async function (thread, messageId) {
 	return channel.messages.fetch(messageId);
 }
 
-exports.completeAdventure = function (adventure, thread, descriptionOverride) {
+/**
+ * @param {Adventure} adventure
+ * @param {ThreadChannel} thread
+ * @param {"success" | "defeat" | "giveup"} endState
+ * @param {string?} descriptionOverride
+ */
+exports.completeAdventure = function (adventure, thread, endState, descriptionOverride) {
 	const { guildId, messages: messageManager } = thread;
 	const guildProfile = getGuild(guildId);
 	adventure.delvers.forEach(delver => {
-		let player = getPlayer(delver.id, guildId);
-		if (player.scores[guildId]) {
-			player.scores[guildId] += adventure.accumulatedScore;
-		} else {
-			player.scores[guildId] = adventure.accumulatedScore;
+		if (endState !== "giveup") {
+			const player = getPlayer(delver.id, guildId);
+			if (player.scores[guildId]) {
+				player.scores[guildId] += adventure.accumulatedScore;
+			} else {
+				player.scores[guildId] = adventure.accumulatedScore;
+			}
+			setPlayer(player);
 		}
-		setPlayer(player);
 		guildProfile.adventuring.delete(delver.id);
 	})
 
@@ -481,7 +487,7 @@ exports.completeAdventure = function (adventure, thread, descriptionOverride) {
 		}
 	})
 
-	adventure.state = "completed";
+	adventure.state = endState;
 	exports.setAdventure(adventure);
 	return renderRoom(adventure, thread, descriptionOverride);
 }

@@ -1,3 +1,4 @@
+const { Adventure } = require('../../Classes/Adventure.js');
 const Command = require('../../Classes/Command.js');
 const { getAdventure } = require('../adventureDAO.js');
 
@@ -8,7 +9,7 @@ module.exports = new Command(id, "Remind delvers to input their vote or move", f
 module.exports.execute = (interaction) => {
 	// Remind delvers to input their vote or move
 	const adventure = getAdventure(interaction.channelId);
-	if (adventure && adventure.state !== "completed") {
+	if (adventure && !Adventure.endStates.includes(adventure.state)) {
 		let mentions = adventure.delvers.reduce((ids, delver) => ids.add(delver.id), new Set());
 		let inCombat = adventure.room.enemies && !adventure.room.enemies.every(enemy => enemy.hp === 0);
 		if (inCombat) {
