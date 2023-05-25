@@ -10,7 +10,7 @@ const { getEquipmentProperty } = require("./equipment/_equipmentDictionary.js");
 /** Updates game state with the move's effect AND returns the game's description of what happened
  * @param {Move} move
  * @param {Adventure} adventure
- * @returns {string} result text
+ * @returns {Promise<string>} result text
  */
 exports.resolveMove = async function (move, adventure) {
 	const user = adventure.getCombatant(move.userReference);
