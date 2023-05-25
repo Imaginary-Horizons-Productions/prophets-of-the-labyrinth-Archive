@@ -23,12 +23,12 @@ module.exports = new Button(id, (interaction, args) => {
 		const sectionLength = max / artifactPool.length;
 		const roll = parseInt(adventure.rnTable.slice(start, end), 12);
 		const rolledArtifact = artifactPool[Math.floor(roll / sectionLength)];
-		if (!artifactsRolledSoFar.has(rolledArtifact) && playerArtifactCollection.includes(artifact)) {
+		if (!artifactsRolledSoFar.has(rolledArtifact) && playerArtifactCollection.includes(rolledArtifact)) {
 			artifactsRolledSoFar.add(rolledArtifact);
 			options.push({
-				label: artifact,
-				description: getArtifact(artifact).dynamicDescription(1),
-				value: artifact
+				label: rolledArtifact,
+				description: getArtifact(rolledArtifact).dynamicDescription(1),
+				value: rolledArtifact
 			})
 		}
 		start++;
