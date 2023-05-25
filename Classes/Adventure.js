@@ -21,6 +21,7 @@ module.exports.Adventure = class {
 	state = "config";
 	element;
 	messageIds = {
+		recruit: "",
 		start: "",
 		leaderNotice: "",
 		deploy: "",

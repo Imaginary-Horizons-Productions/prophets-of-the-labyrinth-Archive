@@ -1,5 +1,5 @@
 const fs = require("fs");
-const { ThreadChannel, EmbedBuilder } = require("discord.js");
+const { ThreadChannel, EmbedBuilder, Message } = require("discord.js");
 const { Adventure, CombatantReference } = require("../Classes/Adventure.js");
 const Resource = require("../Classes/Resource.js");
 const { Move } = require("../Classes/Move.js");
@@ -438,6 +438,16 @@ exports.checkNextRound = function ({ room, delvers }) {
 	return readiedMoves === movesThisRound;
 }
 
+/** The recruit message solicits new delvers to join (until the adventure starts) and shows the state of the adventure publically thereafter
+ * @param {ThreadChannel} thread the adventure's thread
+ * @param {string} messageId usually stored in `adventure.messageIds.recruit`
+ * @returns {Promise<Message>}
+ */
+exports.fetchRecruitMessage = async function (thread, messageId) {
+	const channel = await thread.guild.channels.fetch(thread.parentId);
+	return channel.messages.fetch(messageId);
+}
+
 exports.completeAdventure = function (adventure, thread, descriptionOverride) {
 	const { guildId, messages: messageManager } = thread;
 	const guildProfile = getGuild(guildId);
@@ -452,7 +462,7 @@ exports.completeAdventure = function (adventure, thread, descriptionOverride) {
 		guildProfile.adventuring.delete(delver.id);
 	})
 
-	thread.fetchStarterMessage({ cache: false, force: true }).then(recruitMessage => {
+	exports.fetchRecruitMessage(thread, adventure.messageIds.recruit).then(recruitMessage => {
 		const [{ data: recruitEmbed }] = recruitMessage.embeds;
 		recruitMessage.edit({
 			embeds: [
