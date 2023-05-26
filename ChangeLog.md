@@ -1,9 +1,9 @@
 # Prophets of the Labyrinth Change Log
 #### Prophets of the Labyrinth Verison 0.11.0:
 - Reworked the Knight
-   - Sword now double benefits from Power Up instead of granting it (upgrades: Accelerating, Piercing, Vigilant)
+   - Sword renamed to Lance and now double benefits from Power Up instead of granting it (upgrades: Accelerating, Piercing, Vigilant)
    - Buckler now grants Power Up (Urgent upgrade changed to Devoted)
-   - Old Sword (weapon that grants user Power Up) has been renamed to Lance (Accelerating changed to Slowing)
+   - Old Sword (weapon that grants user Power Up) has been reworked to Pact: Certain Victory (upgrades: Hunter's, Lethal, Reckless)
 - Adventures that end by `/give-up` no longer provide score to player profiles
 - Reduced base damage of *Warhammer* (and upgrades) from 100 to 75
 - New Gear Variants: *Slowing Warhammer*, *Slowing War Cry*, and *Organic Potion Kit*

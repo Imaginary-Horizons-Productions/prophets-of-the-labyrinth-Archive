@@ -1,5 +1,5 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
-const { removeModifier, addBlock, dealDamage } = require('../combatantDAO.js');
+const { removeModifier, addBlock, payHP } = require('../combatantDAO.js');
 
 module.exports = new EquipmentTemplate("Blood Aegis", "Pay @{hpCost} hp to grant an ally @{block} block", "Block x@{critBonus}", "Water", effect, ["Charging Blood Aegis", "Heavy Blood Aegis", "Sweeping Blood Aegis"])
 	.setCategory("Pact")
@@ -19,5 +19,5 @@ function effect([target], user, isCrit, adventure) {
 		block *= critBonus;
 	}
 	addBlock(target, block);
-	return dealDamage(user, null, hpCost, true, "Untyped", adventure); // user pays health
+	return payHP(user, hpCost, adventure);
 }

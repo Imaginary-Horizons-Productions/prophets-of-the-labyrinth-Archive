@@ -4,7 +4,7 @@ Grants the user the Quicken modifier
 #### Available on
 - Sun Flare (Fire)
 - Cloak (Wind)
-- Sword (Earth)
+- Lance (Earth)
 - Midas Staff (Water)
 
 ### Charging
@@ -49,7 +49,6 @@ Adds block on the user
 - all Ice Ward (Water)
 - Vigilance Charm (Earth)
 - Potion Kit (Water)
-- Lance (Earth)
 
 ### Heavy
 Increased base block
@@ -65,6 +64,7 @@ Gain gold on kill
 #### Available on
 - Sickle (Water)
 - Bow (Wind)
+- Certain Victory (Earth)
 
 ### Lethal
 Increased crit damage
@@ -73,6 +73,7 @@ Increased crit damage
 - all Daggers (Wind)
 - Spear (Fire)
 - Scythe (Wind)
+- Certain Victory (Earth)
 
 ### Long
 Increased stack count of buff/debuff applied
@@ -100,7 +101,7 @@ Deals unblockable damage
 #### Available on
 - Warhammer (Earth)
 - Scythe (Wind)
-- Sword (Earth)
+- Lance (Earth)
 
 ### Prideful
 High value non-elemental damage
@@ -132,7 +133,7 @@ Reduced base damage, increased damage if user has 0 block
 
 #### Available on
 - all Battleaxes (Fire)
-- Lance (Earth)
+- Certain Victory (Earth)
 
 ### Reinforcing
 Adds block to target
@@ -151,7 +152,6 @@ Increased base damage
 Adds Slow to target
 
 #### Available on
-- Lance (Earth)
 - Warhammer (Earth)
 - War Cry (Fire)
 
@@ -223,7 +223,7 @@ Bonus damage if target has has debuffs
 Grants Vigilant to user
 
 #### Available on
-- Sword (Earth)
+- Lance (Earth)
 
 ### Wicked
 Increased damage against enemies with 0 block
@@ -232,7 +232,7 @@ Increased damage against enemies with 0 block
 - Dagger (Wind)
 
 ## Unnamed
-- Sword (double upgrade from Power Up)
+- Lance (double upgrade from Power Up)
 - Spear (add stagger on crit)
 - Sickle (5% max hp bonus damage)
 - Life Drain (attack a foe and gain hp)
