@@ -34,6 +34,12 @@ User gains Evade
 - Sun Flare (Fire)
 - Bow (Wind)
 
+### Fate Sealing
+Apply Stasis to target on crit
+
+#### Available on
+- Censer (Fire)
+
 ### Flanking
 Applies Exposed to target
 

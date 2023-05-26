@@ -6,7 +6,7 @@
    - Old Sword (weapon that grants user Power Up) has been reworked to Pact: Certain Victory (upgrades: Hunter's, Lethal, Reckless)
 - Adventures that end by `/give-up` no longer provide score to player profiles
 - Reduced base damage of *Warhammer* (and upgrades) from 100 to 75
-- New Gear Variants: *Slowing Warhammer*, *Slowing War Cry*, and *Organic Potion Kit*
+- New Gear Variants: *Fate Sealing Censer*, *Slowing Warhammer*, *Slowing War Cry*, and *Organic Potion Kit*
 - New Artifact: *Piggy Bank*
 - Fixed Potion Kit upgrades cost being the same as the unupgraded Potion Kit
 

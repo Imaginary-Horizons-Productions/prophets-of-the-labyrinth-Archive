@@ -25,6 +25,7 @@ for (const file of [
 	"buckler-guarding.js",
 	"buckler-heavy.js",
 	"censer-base.js",
+	"censer-fatesealing.js",
 	"censer-thick.js",
 	"censer-tormenting.js",
 	"certainvictory-base.js",
