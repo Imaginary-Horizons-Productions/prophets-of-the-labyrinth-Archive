@@ -88,6 +88,12 @@ Damage type matches user
 - Fire Cracker (Fire)
 - Bow (Wind)
 
+### Organic
+Regain durability when entering new rooms
+
+#### Available on
+- Potion Kit (water)
+
 ### Piercing
 Deals unblockable damage
 

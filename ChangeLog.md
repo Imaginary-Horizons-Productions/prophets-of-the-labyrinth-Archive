@@ -6,8 +6,9 @@
    - Old Sword (weapon that grants user Power Up) has been renamed to Lance (Accelerating changed to Slowing)
 - Adventures that end by `/give-up` no longer provide score to player profiles
 - Reduced base damage of *Warhammer* (and upgrades) from 100 to 75
-- New Gear Variants: *Slowing Warhammer* and *Slowing War Cry*
+- New Gear Variants: *Slowing Warhammer*, *Slowing War Cry*, and *Organic Potion Kit*
 - New Artifact: *Piggy Bank*
+- Fixed Potion Kit upgrades cost being the same as the unupgraded Potion Kit
 
 #### Prophets of the Labyrinth Version 0.10.0:
 - Added **Consumables**: these resources can be used by any party member during combat at priority speed
