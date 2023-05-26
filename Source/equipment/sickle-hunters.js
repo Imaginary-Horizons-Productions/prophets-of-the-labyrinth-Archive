@@ -1,14 +1,14 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addModifier, dealDamage, getFullName } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Hunter's Sickle", "Strike a foe for @{damage} (+5% foe max hp) @{element} damage, gain @{bonusDamage}g on kill", "Damage x@{critBonus}", "Water", effect, ["Sharpened Sickle", "Toxic Sickle"])
+module.exports = new EquipmentTemplate("Hunter's Sickle", "Strike a foe for @{damage} (+5% foe max hp) @{element} damage, gain @{bonus}g on kill", "Damage x@{critBonus}", "Water", effect, ["Sharpened Sickle", "Toxic Sickle"])
 	.setCategory("Weapon")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(350)
 	.setUses(10)
 	.setDamage(75)
-	.setBonusDamage(15);
+	.setBonus(15); // gold
 
 function effect([target], user, isCrit, adventure) {
 	if (target.hp < 1) {

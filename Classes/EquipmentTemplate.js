@@ -21,7 +21,7 @@ module.exports = class EquipmentTemplate {
 	maxUses = 10;
 	critBonus = 2;
 	damage = 0;
-	bonusDamage = 0;
+	bonus = 0;
 	block = 0;
 	hpCost = 0;
 	healing = 0;
@@ -67,8 +67,8 @@ module.exports = class EquipmentTemplate {
 		return this;
 	}
 
-	setBonusDamage(integer) {
-		this.bonusDamage = integer;
+	setBonus(integer) {
+		this.bonus = integer;
 		return this;
 	}
 

@@ -387,6 +387,7 @@ exports.endRound = async function (adventure, thread) {
 		lastRoundText += await resolveMove(move, adventure);
 		// Check for end of combat
 		if (adventure.lives <= 0) {
+			adventure.room.round++;
 			return thread.send(exports.completeAdventure(adventure, thread, "defeat", lastRoundText));
 		}
 
