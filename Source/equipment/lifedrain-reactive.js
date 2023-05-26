@@ -16,9 +16,9 @@ async function effect([target], user, isCrit, adventure) {
 		return ` ${getFullName(target, adventure.room.enemyTitles)} was already dead!`;
 	}
 
-	let { element, modifiers: [elementStagger], damage, bonusDamage, healing, critBonus } = module.exports;
+	let { element, modifiers: [elementStagger], damage, bonus, healing, critBonus } = module.exports;
 	if (calculateTotalSpeed(target) > calculateTotalSpeed(user)) {
-		damage += bonusDamage;
+		damage += bonus;
 	}
 	if (user.element === element) {
 		addModifier(target, elementStagger);

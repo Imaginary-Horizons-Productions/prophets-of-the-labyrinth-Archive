@@ -16,7 +16,7 @@ function effect([target], user, isCrit, adventure) {
 		return ` ${getFullName(target, adventure.room.enemyTitles)} was already dead!`;
 	}
 
-	let { element, modifiers: [elementStagger], damage, bonusDamage: hpThreshold, critBonus } = module.exports;
+	let { element, modifiers: [elementStagger], damage, bonus: hpThreshold, critBonus } = module.exports;
 	if (user.element === element) {
 		addModifier(target, elementStagger);
 	}
