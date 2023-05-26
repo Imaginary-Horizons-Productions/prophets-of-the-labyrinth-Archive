@@ -115,6 +115,13 @@ exports.nextRoom = function (roomType, thread) {
 		delver.modifiers = {};
 	})
 
+	const piggyBankCount = adventure.getArtifactCount("Piggy Bank");
+	const interest = adventure.gold * piggyBankCount * 0.05;
+	if (piggyBankCount > 0) {
+		adventure.gainGold(interest);
+		adventure.updateArtifactStat("Piggy Bank", "Interest Accrued", interest);
+	}
+
 	// Roll options for next room type
 	if (!getLabyrinthProperty(adventure.labyrinth, "bossRoomDepths").includes(adventure.depth + 1)) {
 		const mapCount = adventure.getArtifactCount("Enchanted Map");

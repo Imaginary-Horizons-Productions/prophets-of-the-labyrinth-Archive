@@ -146,6 +146,11 @@ module.exports.Adventure = class {
 		}
 	}
 
+	/**
+	 * @param {string} artifactName
+	 * @param {string} statName the stat to add to (in case of multiple stats per artifact)
+	 * @param {number} stat the amount to be added
+	 */
 	updateArtifactStat(artifactName, statName, stat) {
 		if (this.artifacts[artifactName]) {
 			if (statName in this.artifacts[artifactName]) {
