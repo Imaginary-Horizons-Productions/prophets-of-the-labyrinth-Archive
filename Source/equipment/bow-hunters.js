@@ -26,7 +26,7 @@ function effect([target], user, isCrit, adventure) {
 	return dealDamage(target, user, damage, false, element, adventure).then(damageText => {
 		if (target.hp < 1) {
 			adventure.gainGold(bonusBounty);
-			damageText += ` ${getFullName(user, adventure.room.enemyTitles)} harvests ${bonusBounty}g of alchemical reagents.`;
+			damageText += ` ${getFullName(user, adventure.room.enemyTitles)} forages ${bonusBounty}g of hunting trophies.`;
 		}
 		return damageText;
 	});
