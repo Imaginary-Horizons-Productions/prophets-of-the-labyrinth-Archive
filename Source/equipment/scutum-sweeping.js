@@ -1,13 +1,13 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addBlock, removeModifier } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Sweeping Ice Ward", "Grant @{block} block to all allies (including yourself)", "Block x@{critBonus}", "Water", effect, ["Heavy Ice Ward"])
-	.setCategory("Spell")
+module.exports = new EquipmentTemplate("Sweeping Scutum", "Grant @{block} block to all allies (including yourself)", "Block x@{critBonus}", "Fire", effect, ["Heavy Scutum"])
+	.setCategory("Armor")
 	.setTargetingTags({ target: "all", team: "delver" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(350)
 	.setUses(10)
-	.setBlock(50);
+	.setBlock(75);
 
 function effect(targets, user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger], block, critBonus } = module.exports;

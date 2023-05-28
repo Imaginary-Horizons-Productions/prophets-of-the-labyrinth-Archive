@@ -1,7 +1,7 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addModifier, getFullName } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Sun Flare", "Inflict @{mod1Stacks} @{mod1} on a foe with priority", "Also inflict @{mod2Stacks} @{mod2}", "Fire", effect, ["Accelerating Sun Flare", "Evasive Sun Flare", "Tormenting Sun Flare"])
+module.exports = new EquipmentTemplate("Sun Flare", "Inflict @{mod1Stacks} @{mod1} on a foe with priority", "Also inflict @{mod2Stacks} @{mod2}", "Wind", effect, ["Accelerating Sun Flare", "Evasive Sun Flare", "Tormenting Sun Flare"])
 	.setCategory("Spell")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Stagger", stacks: 1 }, { name: "Slow", stacks: 2 }])

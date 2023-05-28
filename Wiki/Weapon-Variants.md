@@ -2,10 +2,11 @@
 Grants the user the Quicken modifier
 
 #### Available on
-- Sun Flare (Fire)
+- Sun Flare (Wind)
 - Cloak (Wind)
 - Lance (Earth)
 - Midas Staff (Water)
+- Shortsword (Fire)
 
 ### Charging
 User gains Power Up modifier
@@ -27,11 +28,17 @@ Can target allies (beyond self)
 - Vigilance Charm (Earth)
 - Buckler (Earth)
 
+### Duelist's
+Apply Exposed to both target and self
+
+#### Available on
+- all Shortsword (Fire)
+
 ### Evasive
 User gains Evade
 
 #### Available on
-- Sun Flare (Fire)
+- Sun Flare (Wind)
 - Bow (Wind)
 
 ### Fate Sealing
@@ -52,7 +59,7 @@ Adds block on the user
 
 #### Available on
 - Buckler (Earth)
-- all Ice Ward (Water)
+- all Scutum (Fire)
 - Vigilance Charm (Earth)
 - Potion Kit (Water)
 
@@ -62,7 +69,7 @@ Increased base block
 #### Available on
 - Buckler (Earth)
 - Blood Aegis (Water)
-- Ice Ward (Water)
+- Scutum (Fire)
 
 ### Hunter's
 Gain gold on kill
@@ -77,7 +84,7 @@ Increased crit damage
 
 #### Avaialble on
 - all Daggers (Wind)
-- Spear (Fire)
+- Spear (Wind)
 - Scythe (Wind)
 - Certain Victory (Earth)
 
@@ -125,7 +132,7 @@ Removes all debuffs on target
 Increased damage against a foe with higher speed
 
 #### Available on
-- Spear (Fire)
+- Spear (Wind)
 - Life Drain (Water)
 
 ### Reaper's
@@ -173,10 +180,10 @@ Reduce base damage, hits all enemies/allies
 
 #### Available on
 - Dagger (Wind)
-- Spear (Fire)
+- Spear (Wind)
 - Blood Aegis (Water)
 - Inspiration (Wind)
-- Ice Ward (Water)
+- Scutum (Fire)
 
 ### Thick
 Increased durability, grants the differences in uses when upgraded.
@@ -197,7 +204,7 @@ User regains hp on kill
 Adds stacks to debuffs
 
 #### Avaialble on
-- Sun Flare (Fire)
+- Sun Flare (Wind)
 - Censer (Fire)
 - War Cry (Fire)
 
@@ -208,13 +215,14 @@ Applies Poison
 - Fire Cracker (Fire)
 - Scythe (Wind)
 - Sickle (Water)
+- Shortsword (Fire)
 
 ### Urgent
 Using this equipment puts moves in the priority queue
 
 #### Avaialble on
 - all Bows (Wind)
-- all Sun Flare (Fire)
+- all Sun Flare (Wind)
 - Barrier (Fire)
 - Life Drain (Water)
 - Potion Kit (Water)
@@ -246,5 +254,5 @@ Increased damage against enemies with 0 block
 - Inspire (power up to ally)
 - Corrosion (power down to enemy)
 - Midas Staff (apply Curse of Midas)
-- Pact of Healing (pay hp to apply regen)
+- Infinite Regeneration (pay hp to apply regen)
 - Potion Kit (add potion consumable to loot)
