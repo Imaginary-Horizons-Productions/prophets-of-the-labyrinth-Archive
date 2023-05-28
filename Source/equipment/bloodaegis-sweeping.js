@@ -1,9 +1,9 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
-const { removeModifier, addBlock, dealDamage } = require('../combatantDAO.js');
+const { removeModifier, addBlock, payHP } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Sweeping Blood Aegis", "Pay @{hpCost} hp to grant all allies @{block} block", "Block x@{critBonus}", "Water", effect, ["Charging Blood Aegis", "Heavy Blood Aegis"])
+module.exports = new EquipmentTemplate("Sweeping Blood Aegis", "Pay @{hpCost} hp to gain @{block} block and force all enemies using single target moves to target you if they move after you", "Block x@{critBonus}", "Water", effect, ["Charging Blood Aegis", "Heavy Blood Aegis"])
 	.setCategory("Pact")
-	.setTargetingTags({ target: "all", team: "delver" })
+	.setTargetingTags({ target: "all", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(350)
 	.setUses(10)
@@ -12,14 +12,29 @@ module.exports = new EquipmentTemplate("Sweeping Blood Aegis", "Pay @{hpCost} hp
 
 function effect(targets, user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger], block, critBonus, hpCost } = module.exports;
+	if (user.element === element) {
+		removeModifier(user, elementStagger);
+	}
 	if (isCrit) {
 		block *= critBonus;
 	}
-	targets.forEach(target => {
-		if (user.element === element) {
-			removeModifier(target, elementStagger);
+	addBlock(user, block);
+
+	const userIndex = adventure.delvers.findIndex(delver => delver.id === user.id);
+	const provokedEnemies = [];
+	adventure.moves.forEach(move => {
+		if (move.userReference.team === "enemy" && move.targets.length === 1) {
+			const enemy = adventure.getCombatant(move.userReference);
+			if (enemy.hp > 0) {
+				move.targets = [{ team: "delver", index: userIndex }];
+				provokedEnemies.push(getFullName(enemy, adventure.room.enemyTitles));
+			}
 		}
-		addBlock(target, block);
-	});
-	return dealDamage(user, null, hpCost, true, "Untyped", adventure); // user pays health
+	})
+
+	if (provokedEnemies.length > 0) {
+		return `${payHP(user, hpCost, adventure)} ${provokedEnemies.join(", ")} fall(s) for the provocation.`;
+	} else {
+		return payHP(user, hpCost, adventure);
+	}
 }

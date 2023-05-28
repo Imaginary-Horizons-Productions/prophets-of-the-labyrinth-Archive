@@ -1,9 +1,9 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
-const { removeModifier, addBlock, dealDamage } = require('../combatantDAO.js');
+const { removeModifier, addBlock, payHP } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Heavy Blood Aegis", "Pay @{hpCost} hp to grant an ally @{block} block", "Block x@{critBonus}", "Water", effect, ["Charging Blood Aegis", "Sweeping Blood Aegis"])
+module.exports = new EquipmentTemplate("Heavy Blood Aegis", "Pay @{hpCost} hp, gain @{block} block and force an enemy to target you if they move after you and are using a single target move", "Block x@{critBonus}", "Water", effect, ["Charging Blood Aegis", "Sweeping Blood Aegis"])
 	.setCategory("Pact")
-	.setTargetingTags({ target: "single", team: "delver" })
+	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(350)
 	.setUses(10)
@@ -13,11 +13,21 @@ module.exports = new EquipmentTemplate("Heavy Blood Aegis", "Pay @{hpCost} hp to
 function effect([target], user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger], block, critBonus, hpCost } = module.exports;
 	if (user.element === element) {
-		removeModifier(target, elementStagger);
+		removeModifier(user, elementStagger);
 	}
 	if (isCrit) {
 		block *= critBonus;
 	}
-	addBlock(target, block);
-	return dealDamage(user, null, hpCost, true, "Untyped", adventure); // user pays health
+	addBlock(user, block);
+	const targetMove = adventure.room.moves.find(move => {
+		const moveUser = adventure.getCombatant(move.userReference);
+		return moveUser.name === target.name && moveUser.title === target.title;
+	});
+	if (targetMove.targets.length === 1) {
+		const userIndex = adventure.delvers.findIndex(delver => delver.id === user.id);
+		targetMove.targets = [{ team: "delver", index: userIndex }];
+		return `${payHP(user, hpCost, adventure)} ${getFullName(target, adventure.room.enemyTitles)} falls for the provocation.`;
+	} else {
+		return payHP(user, hpCost, adventure);
+	}
 }

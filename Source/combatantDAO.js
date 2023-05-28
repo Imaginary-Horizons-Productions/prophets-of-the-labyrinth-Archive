@@ -96,6 +96,28 @@ exports.dealDamage = async function (target, user, damage, isUnblockable, elemen
 	}
 }
 
+/**
+ * @param {Combatant} user
+ * @param {number} damage
+ * @param {Adventure} adventure
+ */
+exports.payHP = function (user, damage, adventure) {
+	user.hp -= damage;
+	let userName = exports.getFullName(user, adventure.room.enemyTitles);
+	let resultText = ` **${userName}** pays ${damage} hp.`;
+	if (user.hp <= 0) {
+		if (user.team === "delver") {
+			user.hp = user.maxHp;
+			adventure.lives -= 1;
+			resultText += ` *${userName} has died* and been revived. ***${adventure.lives} lives remain.***`;
+		} else {
+			user.hp = 0;
+			resultText += ` *${userName} has died*.`;
+		}
+	}
+	return resultText;
+}
+
 exports.gainHealth = function (combatant, healing, adventure, inCombat = true) {
 	combatant.hp += healing;
 	let excessHealing = 0;

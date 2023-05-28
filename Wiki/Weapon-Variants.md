@@ -2,10 +2,11 @@
 Grants the user the Quicken modifier
 
 #### Available on
-- Sun Flare (Fire)
+- Sun Flare (Wind)
 - Cloak (Wind)
-- Sword (Earth)
+- Lance (Earth)
 - Midas Staff (Water)
+- Shortsword (Fire)
 
 ### Charging
 User gains Power Up modifier
@@ -27,12 +28,24 @@ Can target allies (beyond self)
 - Vigilance Charm (Earth)
 - Buckler (Earth)
 
+### Duelist's
+Apply Exposed to both target and self
+
+#### Available on
+- all Shortsword (Fire)
+
 ### Evasive
 User gains Evade
 
 #### Available on
-- Sun Flare (Fire)
+- Sun Flare (Wind)
 - Bow (Wind)
+
+### Fate Sealing
+Apply Stasis to target on crit
+
+#### Available on
+- Censer (Fire)
 
 ### Flanking
 Applies Exposed to target
@@ -46,10 +59,9 @@ Adds block on the user
 
 #### Available on
 - Buckler (Earth)
-- all Ice Ward (Water)
+- all Scutum (Fire)
 - Vigilance Charm (Earth)
 - Potion Kit (Water)
-- Lance (Earth)
 
 ### Heavy
 Increased base block
@@ -57,7 +69,7 @@ Increased base block
 #### Available on
 - Buckler (Earth)
 - Blood Aegis (Water)
-- Ice Ward (Water)
+- Scutum (Fire)
 
 ### Hunter's
 Gain gold on kill
@@ -65,14 +77,16 @@ Gain gold on kill
 #### Available on
 - Sickle (Water)
 - Bow (Wind)
+- Certain Victory (Earth)
 
 ### Lethal
 Increased crit damage
 
 #### Avaialble on
 - all Daggers (Wind)
-- Spear (Fire)
+- Spear (Wind)
 - Scythe (Wind)
+- Certain Victory (Earth)
 
 ### Long
 Increased stack count of buff/debuff applied
@@ -88,13 +102,19 @@ Damage type matches user
 - Fire Cracker (Fire)
 - Bow (Wind)
 
+### Organic
+Regain durability when entering new rooms
+
+#### Available on
+- Potion Kit (water)
+
 ### Piercing
 Deals unblockable damage
 
 #### Available on
 - Warhammer (Earth)
 - Scythe (Wind)
-- Sword (Earth)
+- Lance (Earth)
 
 ### Prideful
 High value non-elemental damage
@@ -112,7 +132,7 @@ Removes all debuffs on target
 Increased damage against a foe with higher speed
 
 #### Available on
-- Spear (Fire)
+- Spear (Wind)
 - Life Drain (Water)
 
 ### Reaper's
@@ -126,7 +146,7 @@ Reduced base damage, increased damage if user has 0 block
 
 #### Available on
 - all Battleaxes (Fire)
-- Lance (Earth)
+- Certain Victory (Earth)
 
 ### Reinforcing
 Adds block to target
@@ -145,7 +165,6 @@ Increased base damage
 Adds Slow to target
 
 #### Available on
-- Lance (Earth)
 - Warhammer (Earth)
 - War Cry (Fire)
 
@@ -161,10 +180,10 @@ Reduce base damage, hits all enemies/allies
 
 #### Available on
 - Dagger (Wind)
-- Spear (Fire)
+- Spear (Wind)
 - Blood Aegis (Water)
 - Inspiration (Wind)
-- Ice Ward (Water)
+- Scutum (Fire)
 
 ### Thick
 Increased durability, grants the differences in uses when upgraded.
@@ -185,7 +204,7 @@ User regains hp on kill
 Adds stacks to debuffs
 
 #### Avaialble on
-- Sun Flare (Fire)
+- Sun Flare (Wind)
 - Censer (Fire)
 - War Cry (Fire)
 
@@ -196,13 +215,14 @@ Applies Poison
 - Fire Cracker (Fire)
 - Scythe (Wind)
 - Sickle (Water)
+- Shortsword (Fire)
 
 ### Urgent
 Using this equipment puts moves in the priority queue
 
 #### Avaialble on
 - all Bows (Wind)
-- all Sun Flare (Fire)
+- all Sun Flare (Wind)
 - Barrier (Fire)
 - Life Drain (Water)
 - Potion Kit (Water)
@@ -217,7 +237,7 @@ Bonus damage if target has has debuffs
 Grants Vigilant to user
 
 #### Available on
-- Sword (Earth)
+- Lance (Earth)
 
 ### Wicked
 Increased damage against enemies with 0 block
@@ -226,7 +246,7 @@ Increased damage against enemies with 0 block
 - Dagger (Wind)
 
 ## Unnamed
-- Sword (double upgrade from Power Up)
+- Lance (double upgrade from Power Up)
 - Spear (add stagger on crit)
 - Sickle (5% max hp bonus damage)
 - Life Drain (attack a foe and gain hp)
@@ -234,5 +254,5 @@ Increased damage against enemies with 0 block
 - Inspire (power up to ally)
 - Corrosion (power down to enemy)
 - Midas Staff (apply Curse of Midas)
-- Pact of Healing (pay hp to apply regen)
+- Infinite Regeneration (pay hp to apply regen)
 - Potion Kit (add potion consumable to loot)

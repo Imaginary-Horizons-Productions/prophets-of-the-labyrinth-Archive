@@ -1,13 +1,19 @@
 # Prophets of the Labyrinth Change Log
 #### Prophets of the Labyrinth Verison 0.11.0:
+- New Archetype: Legionnaire
+   - Element: Fire; Predicts: Intents
+   - Martial Artist changed to Wind
+   - Converted *Spell: Ice Ward* to *Scutum* (Legionnaire's starting defensive gear)
 - Reworked the Knight
-   - Sword now double benefits from Power Up instead of granting it (upgrades: Accelerating, Piercing, Vigilant)
+   - Sword renamed to Lance and now double benefits from Power Up instead of granting it (upgrades: Accelerating, Piercing, Vigilant)
    - Buckler now grants Power Up (Urgent upgrade changed to Devoted)
-   - Old Sword (weapon that grants user Power Up) has been renamed to Lance (Accelerating changed to Slowing)
+   - Old Sword (weapon that grants user Power Up) has been reworked to Pact: Certain Victory (upgrades: Hunter's, Lethal, Reckless)
+- Reworked *Blood Aegis*: now always adds block to self and forces an enemy to target the user if the enemy is using a single target move after the user
 - Adventures that end by `/give-up` no longer provide score to player profiles
 - Reduced base damage of *Warhammer* (and upgrades) from 100 to 75
-- New Gear Variants: *Slowing Warhammer* and *Slowing War Cry*
+- New Gear Variants: *Fate Sealing Censer*, *Slowing Warhammer*, *Slowing War Cry*, and *Organic Potion Kit*
 - New Artifact: *Piggy Bank*
+- Fixed Potion Kit upgrades cost being the same as the unupgraded Potion Kit
 
 #### Prophets of the Labyrinth Version 0.10.0:
 - Added **Consumables**: these resources can be used by any party member during combat at priority speed

@@ -16,7 +16,7 @@ function effect([target], user, isCrit, adventure) {
 		return ` ${getFullName(target, adventure.room.enemyTitles)} was already dead!`;
 	}
 
-	let { element, modifiers: [elementStagger], damage, bonusDamage: bonusBounty, critBonus } = module.exports;
+	let { element, modifiers: [elementStagger], damage, bonus: bonusBounty, critBonus } = module.exports;
 	if (user.element === element) {
 		addModifier(target, elementStagger);
 	}
@@ -26,7 +26,7 @@ function effect([target], user, isCrit, adventure) {
 	return dealDamage(target, user, damage, false, element, adventure).then(damageText => {
 		if (target.hp < 1) {
 			adventure.gainGold(bonusBounty);
-			damageText += ` ${getFullName(user, adventure.room.enemyTitles)} harvests ${bonusBounty}g of alchemical reagents.`;
+			damageText += ` ${getFullName(user, adventure.room.enemyTitles)} forages ${bonusBounty}g of hunting trophies.`;
 		}
 		return damageText;
 	});

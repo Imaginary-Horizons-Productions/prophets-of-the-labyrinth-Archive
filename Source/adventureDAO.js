@@ -113,6 +113,11 @@ exports.nextRoom = function (roomType, thread) {
 
 	adventure.delvers.forEach(delver => {
 		delver.modifiers = {};
+		delver.equipment.forEach(equipment => {
+			if (equipment.name.startsWith("Organic")) {
+				equipment.uses++;
+			}
+		})
 	})
 
 	const piggyBankCount = adventure.getArtifactCount("Piggy Bank");

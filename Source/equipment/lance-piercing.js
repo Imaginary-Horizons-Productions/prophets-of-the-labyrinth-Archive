@@ -1,10 +1,10 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { dealDamage, addModifier, getFullName } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Accelerating Sword", "Strike a foe for @{damage} @{element} damage (double increase from Power Up), then gain @{mod1Stacks} @{mod1}", "Damage x@{critBonus}", "Earth", effect, ["Piercing Sword", "Vigilant Sword"])
+module.exports = new EquipmentTemplate("Piercing Sword", "Strike a foe for @{damage} @{element} unblockable damage (double increase from Power Up)", "Damage x@{critBonus}", "Earth", effect, ["Accelerating Lance", "Vigilant Lance"])
 	.setCategory("Weapon")
 	.setTargetingTags({ target: "single", team: "enemy" })
-	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Quicken", stacks: 1 }])
+	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(350)
 	.setUses(10)
 	.setDamage(75);
@@ -14,7 +14,7 @@ function effect([target], user, isCrit, adventure) {
 		return ` ${getFullName(target, adventure.room.enemyTitles)} was already dead!`;
 	}
 
-	let { element, modifiers: [elementStagger, quicken], damage, critBonus } = module.exports;
+	let { element, modifiers: [elementStagger], damage, critBonus } = module.exports;
 	if (user.element === element) {
 		addModifier(target, elementStagger);
 	}
@@ -24,6 +24,5 @@ function effect([target], user, isCrit, adventure) {
 		damage *= critBonus;
 		damage += powerUpStacks;
 	}
-	addModifier(user, quicken);
-	return dealDamage(target, user, damage, false, element, adventure);
+	return dealDamage(target, user, damage, true, element, adventure);
 }

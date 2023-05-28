@@ -5,6 +5,7 @@ for (const file of [
 	"chemist.js",
 	"hemomancer.js",
 	"knight.js",
+	"legionnaire.js",
 	"martialartist.js",
 	"ritualist.js"
 ]) {
