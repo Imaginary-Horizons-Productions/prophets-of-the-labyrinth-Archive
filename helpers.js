@@ -96,19 +96,27 @@ exports.generateTextBar = function (numerator, denominator, barLength) {
 	return bar;
 }
 
-/** Calculate the value represented by a mathematical expression (supported operations: multiplication)
- * @param {string} countExpression
+const operationMap = {
+	'+': (first, second) => Number(first) + second,
+	'-': (first, second) => first - second,
+	'*': (first, second) => first * second,
+	'/': (first, second) => first / second,
+	'^': (first, second) => first ** second,
+};
+
+/** Calculate the value represented by a mathematical expression (supported operations: addition, subtration, multiplication, division, power)
+ * @param {string} expression
  * @param {number} nValue - the value to replace "n" with
- * @returns {number} the calculated value
  */
-exports.parseCount = function (countExpression, nValue) {
-	return Math.ceil(countExpression.split("*").reduce((total, term) => {
+exports.parseExpression = function (expression, nValue) {
+	const operations = expression.replace(/[^\+\-\*/\^]/g, "");
+	return Math.ceil(expression.split(/[\+\-\*/\^]/g).reduce((total, term, index) => {
 		if (term === "n") {
-			return total * nValue;
+			return operationMap[operations[index - 1]](total, nValue);
 		} else {
-			return total * Number(term);
+			return operationMap[operations[index - 1]](total, Number(term));
 		}
-	}, 1));
+	}));
 }
 
 /** Replace all @{tag}s in the text with the evaluation of the expression in the tag with n as count
@@ -124,7 +132,7 @@ exports.calculateTagContent = function (text, tags) {
 		for (const match of text.matchAll(taggedGlobal)) {
 			const countExpression = match?.[1].replace(untagged, "n");
 			if (countExpression) {
-				text = text.replace(taggedSingle, exports.parseCount(countExpression, count));
+				text = text.replace(taggedSingle, exports.parseExpression(countExpression, count));
 			}
 		}
 	}

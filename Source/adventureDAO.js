@@ -8,7 +8,7 @@ const Delver = require("../Classes/Delver.js");
 const { Room } = require("../Classes/Room.js");
 
 const { SAFE_DELIMITER, MAX_SELECT_OPTIONS, MAX_MESSAGE_ACTION_ROWS } = require("../constants.js");
-const { ensuredPathSave, generateRandomNumber, parseCount, clearComponents } = require("../helpers.js");
+const { ensuredPathSave, generateRandomNumber, parseExpression, clearComponents } = require("../helpers.js");
 const { getWeakness } = require("./elementHelpers.js");
 
 const { rollArtifact } = require("./Artifacts/_artifactDictionary.js");
@@ -171,7 +171,7 @@ exports.nextRoom = function (roomType, thread) {
 	// Initialize Resources
 	const cloverCount = adventure.getArtifactCount("Negative-One Leaf Clover");
 	for (const { resourceType: resource, count: unparsedCount, tier: unparsedTier, visibility, cost: unparsedCost, uiGroup } of roomTemplate.resourceList) {
-		const count = parseCount(unparsedCount, adventure.delvers.length);
+		const count = parseExpression(unparsedCount, adventure.delvers.length);
 		switch (resource) {
 			case "challenge":
 				rollChallenges(Math.min(MAX_SELECT_OPTIONS, count), adventure).forEach(challengeName => {
@@ -192,7 +192,7 @@ exports.nextRoom = function (roomType, thread) {
 						}
 					}
 					const equipName = rollEquipmentDrop(tier, adventure);
-					adventure.addResource(new Resource(equipName, resource, 1, visibility, parseCount(unparsedCost, getEquipmentProperty(equipName, "cost", resource)), uiGroup));
+					adventure.addResource(new Resource(equipName, resource, 1, visibility, parseExpression(unparsedCost, getEquipmentProperty(equipName, "cost", resource)), uiGroup));
 				}
 				break;
 			case "scouting":
@@ -225,7 +225,7 @@ exports.nextRoom = function (roomType, thread) {
 		}
 
 		for (const enemyName in roomTemplate.enemyList) {
-			for (let i = 0; i < parseCount(roomTemplate.enemyList[enemyName], adventure.delvers.length); i++) {
+			for (let i = 0; i < parseExpression(roomTemplate.enemyList[enemyName], adventure.delvers.length); i++) {
 				spawnEnemy(adventure, getEnemy(enemyName));
 			}
 		}
