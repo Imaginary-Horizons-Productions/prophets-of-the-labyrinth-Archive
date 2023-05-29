@@ -15,12 +15,6 @@ User gains Power Up modifier
 - Blood Aegis (Water)
 - War Cry (Fire)
 
-### Cursed
-User pays hp to use
-
-#### Available on
-- all Blood Aegis (Water)
-
 ### Devoted
 Can target allies (beyond self)
 
@@ -142,7 +136,7 @@ Instant death if target is below hp threshold
 - all Scythes (Water)
 
 ### Reckless
-Reduced base damage, increased damage if user has 0 block
+Very high base damage, applies Exposed to user
 
 #### Available on
 - all Battleaxes (Fire)
@@ -167,6 +161,7 @@ Adds Slow to target
 #### Available on
 - Warhammer (Earth)
 - War Cry (Fire)
+- Daggers (Wind)
 
 ### Soothing
 Applies Regen
@@ -184,6 +179,12 @@ Reduce base damage, hits all enemies/allies
 - Blood Aegis (Water)
 - Inspiration (Wind)
 - Scutum (Fire)
+
+### Taunting
+Forces target to target the user if using single-target move and going after user
+
+#### Available on
+- all Blood Aegis (Water)
 
 ### Thick
 Increased durability, grants the differences in uses when upgraded.
@@ -228,7 +229,7 @@ Using this equipment puts moves in the priority queue
 - Potion Kit (Water)
 
 ### Vexing
-Bonus damage if target has has debuffs
+Bonus damage if target has debuffs
 
 #### Available on
  - all Censer (Fire)
@@ -238,12 +239,6 @@ Grants Vigilant to user
 
 #### Available on
 - Lance (Earth)
-
-### Wicked
-Increased damage against enemies with 0 block
-
-#### Available on
-- Dagger (Wind)
 
 ## Unnamed
 - Lance (double upgrade from Power Up)
