@@ -8,12 +8,13 @@
    - Sword renamed to Lance and now double benefits from Power Up instead of granting it (upgrades: Accelerating, Piercing, Vigilant)
    - Buckler now grants Power Up (Urgent upgrade changed to Devoted)
    - Old Sword (weapon that grants user Power Up) has been reworked to Pact: Certain Victory (upgrades: Hunter's, Lethal, Reckless)
-- Reworked *Blood Aegis*: now always adds block to self and forces an enemy to target the user if the enemy is using a single target move after the user
-- Adventures that end by `/give-up` no longer provide score to player profiles
+- New Artifact: *Piggy Bank*
 - Reduced base damage of *Warhammer* (and upgrades) from 100 to 75
 - New Gear Variants: *Fate Sealing Censer*, *Slowing Warhammer*, *Slowing War Cry*, and *Organic Potion Kit*
-- New Artifact: *Piggy Bank*
+- Reworked *Blood Aegis*: now always adds block to self and forces an enemy to target the user if the enemy is using a single target move after the user
 - Fixed Potion Kit upgrades cost being the same as the unupgraded Potion Kit
+- *Daggers* can now upgrade to *Slowing Daggers* instead of *Wicked Daggers*
+- Adventures that end by `/give-up` no longer provide score to player profiles
 
 #### Prophets of the Labyrinth Version 0.10.0:
 - Added **Consumables**: these resources can be used by any party member during combat at priority speed
