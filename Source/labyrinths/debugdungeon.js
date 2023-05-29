@@ -32,22 +32,28 @@ module.exports = new Labyrinth("Debug Dungeon", "Untyped", 10, [10])
 				],
 				Common: [
 					"Buckler",
+					"Certain Victory",
 					"Infinite Regeneration",
-					"Sword",
+					"Lance",
 					"Vigilance Charm",
 					"Warhammer"
 				],
 				Rare: [
-					"Guarding Buckler",
+					"Devoted Buckler",
 					"Heavy Buckler",
 					"Urgent Buckler",
-					"Guarding Sword",
-					"Reckless Sword",
-					"Accelerating Sword",
+					"Hunter's Certain Victory",
+					"Lethal Certain Victory",
+					"Reckless Certain Victory",
+					"Fate Sealing Infinite Regeneration",
+					"Accelerating Lance",
+					"Piercing Lance",
+					"Vigilant Lance",
 					"Devoted Vigilance Charm",
 					"Long Vigilance Charm",
 					"Guarding Vigilance Charm",
-					"Piercing Warhammer"
+					"Piercing Warhammer",
+					"Slowing Warhammer"
 				]
 			},
 			Wind: {
@@ -58,24 +64,32 @@ module.exports = new Labyrinth("Debug Dungeon", "Untyped", 10, [10])
 					"Cloak",
 					"Daggers",
 					"Inspiration",
-					"Scythe"
+					"Scythe",
+					"Spear",
+					"Sun Flare"
 				],
 				Rare: [
 					"Evasive Bow",
 					"Hunter's Bow",
 					"Mercurial Bow",
-					"Long Cloak",
 					"Accelerating Cloak",
+					"Long Cloak",
 					"Thick Cloak",
 					"Sharpened Daggers",
+					"Slowing Daggers",
 					"Sweeping Daggers",
-					"Wicked Daggers",
 					"Reinforcing Inspiration",
 					"Soothing Inspiration",
 					"Sweeping Inspiration",
 					"Lethal Scythe",
 					"Piercing Scythe",
-					"Toxic Scythe"
+					"Toxic Scythe",
+					"Lethal Spear",
+					"Reactive Spear",
+					"Sweeping Spear",
+					"Evasive Sun Flare",
+					"Accelerating Sun Flare",
+					"Tormenting Sun Flare"
 				]
 			},
 			Water: {
@@ -83,7 +97,6 @@ module.exports = new Labyrinth("Debug Dungeon", "Untyped", 10, [10])
 				],
 				Common: [
 					"Blood Aegis",
-					"Ice Ward",
 					"Life Drain",
 					"Midas Staff",
 					"Potion Kit",
@@ -93,13 +106,13 @@ module.exports = new Labyrinth("Debug Dungeon", "Untyped", 10, [10])
 					"Charging Blood Aegis",
 					"Heavy Blood Aegis",
 					"Sweeping Blood Aegis",
-					"Heavy Ice Ward",
-					"Sweeping Ice Ward",
 					"Flanking Life Drain",
 					"Reactive Life Drain",
 					"Urgent Life Drain",
 					"Soothing Midas Staff",
 					"Accelerating Midas Staff",
+					"Guarding Potion Kit",
+					"Organic Potion Kit",
 					"Urgent Potion Kit",
 					"Hunter's Sickle",
 					"Sharpened Sickle",
@@ -115,8 +128,9 @@ module.exports = new Labyrinth("Debug Dungeon", "Untyped", 10, [10])
 					"Censer",
 					"Corrosion",
 					"Firecracker",
-					"Spear",
-					"Sun Flare"
+					"Scutum",
+					"Shortsword",
+					"War Cry"
 				],
 				Rare: [
 					"Purifying Barrier",
@@ -125,16 +139,21 @@ module.exports = new Labyrinth("Debug Dungeon", "Untyped", 10, [10])
 					"Prideful Battleaxe",
 					"Thick Battleaxe",
 					"Thirsting Battleaxe",
+					"Fate Sealing Censer",
+					"Thick Censer",
+					"Tormenting Censer",
 					"Flanking Corrosion",
 					"Double Firecracker",
 					"Mercurial Firecracker",
 					"Toxic Firecracker",
-					"Lethal Spear",
-					"Reactive Spear",
-					"Sweeping Spear",
-					"Evasive Sun Flare",
-					"Accelerating Sun Flare",
-					"Tormenting Sun Flare"
+					"Heavy Scutum",
+					"Sweeping Scutum",
+					"Vigilant Scutum",
+					"Accelerating Shortsword",
+					"Toxic Shortsword",
+					"Charging War Cry",
+					"Slowing War Cry",
+					"Tormenting War Cry"
 				]
 			},
 			Untyped: {
