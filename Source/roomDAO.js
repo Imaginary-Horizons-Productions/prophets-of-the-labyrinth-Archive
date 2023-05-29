@@ -234,7 +234,7 @@ function generateLootRow(adventure) {
 function generateTreasureRow(adventure) {
 	let options = [];
 	for (const { name, resourceType: type, count, visibility } of Object.values(adventure.room.resources)) {
-		if (visibility === "internal" && type !== "roomAction") {
+		if (visibility === "always") {
 			if (count > 0) {
 				let option = { value: `${name}${SAFE_DELIMITER}${options.length}` };
 

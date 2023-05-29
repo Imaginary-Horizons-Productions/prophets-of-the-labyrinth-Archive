@@ -171,16 +171,16 @@ exports.nextRoom = function (roomType, thread) {
 	// Initialize Resources
 	const cloverCount = adventure.getArtifactCount("Negative-One Leaf Clover");
 	for (const { resourceType: resource, count: unparsedCount, tier: unparsedTier, visibility, cost: unparsedCost, uiGroup } of roomTemplate.resourceList) {
-		const count = Math.min(MAX_SELECT_OPTIONS, parseCount(unparsedCount, adventure.delvers.length));
+		const count = parseCount(unparsedCount, adventure.delvers.length);
 		switch (resource) {
 			case "challenge":
-				rollChallenges(count, adventure).forEach(challengeName => {
+				rollChallenges(Math.min(MAX_SELECT_OPTIONS, count), adventure).forEach(challengeName => {
 					adventure.addResource(new Resource(challengeName, resource, true, visibility, 0, uiGroup));
 				})
 				break;
 			case "equipment":
 				let tier = unparsedTier;
-				for (let i = 0; i < count; i++) {
+				for (let i = 0; i < Math.min(MAX_SELECT_OPTIONS, count); i++) {
 					if (unparsedTier === "?") {
 						const threshold = 1 + cloverCount;
 						const max = 8 + cloverCount;
@@ -209,7 +209,8 @@ exports.nextRoom = function (roomType, thread) {
 				break;
 			case "gold":
 				// Randomize loot gold
-				adventure.addResource(new Resource(resource, resource, visibility === "loot" ? Math.ceil(count * (90 + generateRandomNumber(adventure, 21, "general")) / 100) : count, visibility, "0", uiGroup));
+				adventure.addResource(new Resource(resource, resource, visibility !== "internal" ? Math.ceil(count * (90 + generateRandomNumber(adventure, 21, "general")) / 100) : count, visibility, "0", uiGroup));
+				break;
 			default:
 				adventure.addResource(new Resource(resource, resource, count, visibility, "0", uiGroup));
 		}
