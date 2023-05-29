@@ -15,24 +15,12 @@ User gains Power Up modifier
 - Blood Aegis (Water)
 - War Cry (Fire)
 
-### Cursed
-User pays hp to use
-
-#### Available on
-- all Blood Aegis (Water)
-
 ### Devoted
 Can target allies (beyond self)
 
 #### Available on
 - Vigilance Charm (Earth)
 - Buckler (Earth)
-
-### Duelist's
-Apply Exposed to both target and self
-
-#### Available on
-- all Shortsword (Fire)
 
 ### Evasive
 User gains Evade
@@ -46,6 +34,7 @@ Apply Stasis to target on crit
 
 #### Available on
 - Censer (Fire)
+- Infinite Regeneration (Water)
 
 ### Flanking
 Applies Exposed to target
@@ -142,7 +131,7 @@ Instant death if target is below hp threshold
 - all Scythes (Water)
 
 ### Reckless
-Reduced base damage, increased damage if user has 0 block
+Very high base damage, applies Exposed to user
 
 #### Available on
 - all Battleaxes (Fire)
@@ -167,6 +156,7 @@ Adds Slow to target
 #### Available on
 - Warhammer (Earth)
 - War Cry (Fire)
+- Daggers (Wind)
 
 ### Soothing
 Applies Regen
@@ -184,6 +174,12 @@ Reduce base damage, hits all enemies/allies
 - Blood Aegis (Water)
 - Inspiration (Wind)
 - Scutum (Fire)
+
+### Taunting
+Forces target to target the user if using single-target move and going after user
+
+#### Available on
+- all Blood Aegis (Water)
 
 ### Thick
 Increased durability, grants the differences in uses when upgraded.
@@ -227,8 +223,14 @@ Using this equipment puts moves in the priority queue
 - Life Drain (Water)
 - Potion Kit (Water)
 
+### Vanguard's
+Apply Exposed to both target and self
+
+#### Available on
+- all Shortsword (Fire)
+
 ### Vexing
-Bonus damage if target has has debuffs
+Bonus damage if target has debuffs
 
 #### Available on
  - all Censer (Fire)
@@ -238,12 +240,17 @@ Grants Vigilant to user
 
 #### Available on
 - Lance (Earth)
+- Scutum (Fire)
+
+## Yet Unused Variants
+### Duelist's
+Bonus damage if no allies are targeting the same enemy
+
+### Opportunist's
+Bonus damage if at least one other ally is targetting the same enemy
 
 ### Wicked
-Increased damage against enemies with 0 block
-
-#### Available on
-- Dagger (Wind)
+Bonus damage if target has no block
 
 ## Unnamed
 - Lance (double upgrade from Power Up)
