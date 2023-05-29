@@ -2,7 +2,7 @@ const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addModifier, getFullName } = require('../combatantDAO.js');
 const { isDebuff } = require('../Modifiers/_modifierDictionary.js');
 
-module.exports = new EquipmentTemplate("Tormenting Sun Flare", "Inflict @{mod1Stacks} @{mod1} and 1 of each of a foe's debuffs on that foe with priority", "Also inflict @{mod2Stacks} @{mod2}", "Wind", effect, ["Accelerating Sun Flare", "Evasive Sun Flare"])
+module.exports = new EquipmentTemplate("Tormenting Sun Flare", "Inflict @{mod1Stacks} @{mod1} and duplicate its debuffs with priority", "Also inflict @{mod2Stacks} @{mod2}", "Wind", effect, ["Accelerating Sun Flare", "Evasive Sun Flare"])
 	.setCategory("Spell")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Stagger", stacks: 1 }, { name: "Slow", stacks: 2 }])

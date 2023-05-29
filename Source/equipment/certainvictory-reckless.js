@@ -1,7 +1,7 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { dealDamage, addModifier, getFullName, payHP } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Reckless Certain Victory", "Strike a foe for @{damage} @{element} damage, gain @{mod1Stacks} @{mod1} and @{mod2Stacks} @{mod2} and pay HP equal to your @{mod1}", "Damage x@{critBonus}", "Earth", effect, ["Hunter's Certain Victory", "Lethal Certain Victory"])
+module.exports = new EquipmentTemplate("Reckless Certain Victory", "Strike a foe for @{damage} @{element} damage, gain @{mod1Stacks} @{mod1} and @{mod2Stacks} @{mod2}; pay HP for your @{mod1}", "Damage x@{critBonus}", "Earth", effect, ["Hunter's Certain Victory", "Lethal Certain Victory"])
 	.setCategory("Pact")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Power Up", stacks: 25 }, { name: "Exposed", stacks: 1 }])
