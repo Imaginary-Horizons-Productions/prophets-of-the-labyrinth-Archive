@@ -22,12 +22,6 @@ Can target allies (beyond self)
 - Vigilance Charm (Earth)
 - Buckler (Earth)
 
-### Duelist's
-Apply Exposed to both target and self
-
-#### Available on
-- all Shortsword (Fire)
-
 ### Evasive
 User gains Evade
 
@@ -40,6 +34,7 @@ Apply Stasis to target on crit
 
 #### Available on
 - Censer (Fire)
+- Infinite Regeneration (Water)
 
 ### Flanking
 Applies Exposed to target
@@ -228,6 +223,12 @@ Using this equipment puts moves in the priority queue
 - Life Drain (Water)
 - Potion Kit (Water)
 
+### Vanguard's
+Apply Exposed to both target and self
+
+#### Available on
+- all Shortsword (Fire)
+
 ### Vexing
 Bonus damage if target has debuffs
 
@@ -239,6 +240,17 @@ Grants Vigilant to user
 
 #### Available on
 - Lance (Earth)
+- Scutum (Fire)
+
+## Yet Unused Variants
+### Duelist's
+Bonus damage if no allies are targeting the same enemy
+
+### Opportunist's
+Bonus damage if at least one other ally is targetting the same enemy
+
+### Wicked
+Bonus damage if target has no block
 
 ## Unnamed
 - Lance (double upgrade from Power Up)
