@@ -13,7 +13,8 @@ module.exports = new Enemy("Treasure Elemental")
 	.setHp(99999)
 	.setSpeed(100)
 	.setElement("Earth")
-	.setStaggerThreshold(3);
+	.setStaggerThreshold(3)
+	.markAsBoss();
 
 const PATTERN = {
 	"Guarding Slam": "Evade",

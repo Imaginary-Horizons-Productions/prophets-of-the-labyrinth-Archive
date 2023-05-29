@@ -13,6 +13,7 @@ module.exports = class Enemy extends Combatant {
 	nextAction = "";
 	/** @type {[modifierName: string]: number} */
 	startingModifiers = {};
+	shouldRandomizeHP = true;
 
 	setHp = super.setHp;
 	setTitle = super.setTitle;
@@ -62,6 +63,12 @@ module.exports = class Enemy extends Combatant {
 	 */
 	setCritDenominator(denominatorInput) {
 		this.critDenominator = denominatorInput;
+		return this;
+	}
+
+	/** Marks the enemy as an artifact guardian or final boss, which shouldn't randomize hp */
+	markAsBoss() {
+		this.shouldRandomizeHP = false;
 		return this;
 	}
 

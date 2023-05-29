@@ -15,7 +15,8 @@ module.exports = new Enemy("Mecha Queen")
 	.setHp(500)
 	.setSpeed(100)
 	.setElement("Earth")
-	.setStaggerThreshold(4);
+	.setStaggerThreshold(4)
+	.markAsBoss();
 
 const PATTERN = {
 	"Swarm Protocol": "V.E.N.O.Missile",
@@ -39,7 +40,7 @@ function missileEffect([target], user, isCrit, adventure) {
 }
 
 function deployEffect(targets, user, isCrit, adventure) {
-	spawnEnemy(adventure, mechabee, true);
+	spawnEnemy(adventure, mechabee);
 	return "Another mechabee arrives.";
 }
 

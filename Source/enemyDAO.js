@@ -3,11 +3,12 @@ const Enemy = require("../Classes/Enemy.js");
 const { generateRandomNumber } = require("../helpers.js");
 const { getOpposite } = require("./elementHelpers.js");
 
-module.exports.spawnEnemy = function (adventure, enemyTemplate, randomizeHp) {
-	let enemy = Object.assign(new Enemy(), enemyTemplate);
+module.exports.spawnEnemy = function (adventure, enemyTemplate) {
+	/** @type {Enemy} */
+	const enemy = Object.assign(new Enemy(), enemyTemplate);
 	enemy.modifiers = { ...enemyTemplate.startingModifiers }; // breaks shared reference to modifiers object by enemies of same name
 	let hpPercent = 85 + 15 * adventure.delvers.length;
-	if (randomizeHp) {
+	if (enemy.shouldRandomizeHP) {
 		hpPercent += 10 * (2 - generateRandomNumber(adventure, 5, "battle"));
 	}
 	enemy.setHp(Math.ceil(enemy.maxHp * hpPercent / 100));

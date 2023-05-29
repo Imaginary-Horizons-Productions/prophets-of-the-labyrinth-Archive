@@ -13,7 +13,8 @@ module.exports = new Enemy("Elkemist")
 	.setHp(2000)
 	.setSpeed(100)
 	.setElement("Water")
-	.setStaggerThreshold(4);
+	.setStaggerThreshold(4)
+	.markAsBoss();
 
 function toilEffect(targets, user, isCrit, adventure) {
 	// Gain block and medium progress

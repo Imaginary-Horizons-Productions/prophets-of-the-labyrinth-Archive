@@ -223,10 +223,9 @@ exports.nextRoom = function (roomType, thread) {
 			}
 		}
 
-		const randomizeHp = roomType === "Battle";
 		for (const enemyName in roomTemplate.enemyList) {
 			for (let i = 0; i < parseCount(roomTemplate.enemyList[enemyName], adventure.delvers.length); i++) {
-				spawnEnemy(adventure, getEnemy(enemyName), randomizeHp);
+				spawnEnemy(adventure, getEnemy(enemyName));
 			}
 		}
 		exports.newRound(adventure, thread);

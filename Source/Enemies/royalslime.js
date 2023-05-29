@@ -13,7 +13,8 @@ module.exports = new Enemy("Royal Slime")
 	.setHp(600)
 	.setSpeed(90)
 	.setElement("@{adventure}")
-	.setStaggerThreshold(5);
+	.setStaggerThreshold(5)
+	.markAsBoss();
 
 function elementShift(targets, user, isCrit, adventure) {
 	user.element = elementsList()[generateRandomNumber(adventure, elementsList().length, "battle")];
