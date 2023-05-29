@@ -43,8 +43,7 @@ module.exports = new Button(id, (interaction, args) => {
 							.setCustomId("collectartifact")
 							.setPlaceholder("Select an artifact...")
 							.addOptions([{
-								label: "If the menu is stuck, close and reopen the thread.",
-								description: "",
+								label: "If the menu is stuck, switch channels and come back.",
 								value: "placeholder"
 							}])
 							.setDisabled(true)

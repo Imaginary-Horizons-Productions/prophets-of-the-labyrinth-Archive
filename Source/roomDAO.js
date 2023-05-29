@@ -225,7 +225,7 @@ function generateLootRow(adventure) {
 		return new ActionRowBuilder().addComponents(
 			new StringSelectMenuBuilder().setCustomId("loot")
 				.setPlaceholder("No loot")
-				.setOptions([{ label: "If the menu is stuck, close and reopen the thread.", description: "This usually happens when two players try to take the last thing at the same time.", value: "placeholder" }])
+				.setOptions([{ label: "If the menu is stuck, switch channels and come back.", description: "This usually happens when two players try to take the last thing at the same time.", value: "placeholder" }])
 				.setDisabled(true)
 		)
 	}
@@ -268,7 +268,7 @@ function generateTreasureRow(adventure) {
 		return new ActionRowBuilder().addComponents(
 			new StringSelectMenuBuilder().setCustomId("treasure")
 				.setPlaceholder("No treasure")
-				.setOptions([{ label: "If the menu is stuck, close and reopen the thread.", description: "This usually happens when two players try to take the last thing at the same time.", value: "placeholder" }])
+				.setOptions([{ label: "If the menu is stuck, switch channels and come back.", description: "This usually happens when two players try to take the last thing at the same time.", value: "placeholder" }])
 				.setDisabled(true)
 		)
 	}
@@ -310,7 +310,7 @@ function generateMerchantRows(adventure) {
 				rows.push(new ActionRowBuilder().addComponents(
 					new StringSelectMenuBuilder().setCustomId(`buy${groupName}`)
 						.setPlaceholder("SOLD OUT")
-						.setOptions([{ label: "If the menu is stuck, close and reopen the thread.", description: "This usually happens when two players try to buy the last item at the same time.", value: "placeholder" }])
+						.setOptions([{ label: "If the menu is stuck, switch channels and come back.", description: "This usually happens when two players try to buy the last item at the same time.", value: "placeholder" }])
 						.setDisabled(true)));
 			}
 		} else if (groupName === "scouting") {
