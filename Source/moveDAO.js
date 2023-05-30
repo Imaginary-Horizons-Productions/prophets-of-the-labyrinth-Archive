@@ -25,7 +25,6 @@ exports.resolveMove = async function (move, adventure) {
 		}
 
 		let effect;
-		let targetAll = false;
 		let breakText = "";
 		switch (move.type) {
 			case "action":
@@ -37,13 +36,11 @@ exports.resolveMove = async function (move, adventure) {
 					} else if (parsedElement === "@{adventureOpposite}") {
 						parsedElement = getOpposite(adventure.element);
 					}
-					targetAll = action.selector === selectAllFoes;
 					effect = action.effect;
 					moveText = `${getEmoji(parsedElement)} ${moveText}`;
 				}
 				break;
 			case "equip":
-				targetAll = getEquipmentProperty(move.name, "targetingTags").target === "all";
 				effect = getEquipmentProperty(move.name, "effect");
 				if (move.name !== "Punch" && move.userReference.team !== "enemy") {
 					let equip = user.equipment.find(equip => equip.name === move.name);
@@ -55,8 +52,7 @@ exports.resolveMove = async function (move, adventure) {
 				moveText = `${getEmoji(getEquipmentProperty(move.name, "element"))} ${moveText}`;
 				break;
 			case "consumable":
-				const { targetDescription, effect: consumableEffect, element } = getConsumable(move.name);
-				targetAll = targetDescription === "all";
+				const { effect: consumableEffect, element } = getConsumable(move.name);
 				effect = consumableEffect;
 				if (move.userReference.team !== "enemy") {
 					adventure.consumables[move.name]--;
