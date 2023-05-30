@@ -110,13 +110,13 @@ const operationMap = {
  */
 exports.parseExpression = function (expression, nValue) {
 	const operations = expression.replace(/[^\+\-\*/\^]/g, "");
-	return Math.ceil(expression.split(/[\+\-\*/\^]/g).reduce((total, term, index) => {
+	return expression.split(/[\+\-\*/\^]/g).reduce((total, term, index) => {
 		if (term === "n") {
 			return operationMap[operations[index - 1]](total, nValue);
 		} else {
 			return operationMap[operations[index - 1]](total, Number(term));
 		}
-	}));
+	});
 }
 
 /** Replace all @{tag}s in the text with the evaluation of the expression in the tag with n as count
