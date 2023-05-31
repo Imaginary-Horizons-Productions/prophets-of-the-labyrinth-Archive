@@ -98,7 +98,7 @@ exports.generateTextBar = function (numerator, denominator, barLength) {
 
 const operationMap = {
 	'+': (first, second) => Number(first) + second,
-	'-': (first, second) => first - second,
+	'~': (first, second) => first - second,
 	'*': (first, second) => first * second,
 	'/': (first, second) => first / second,
 	'^': (first, second) => first ** second,
@@ -109,8 +109,8 @@ const operationMap = {
  * @param {number} nValue - the value to replace "n" with
  */
 exports.parseExpression = function (expression, nValue) {
-	const operations = expression.replace(/[^\+\-\*/\^]/g, "");
-	return expression.split(/[\+\-\*/\^]/g).reduce((total, term, index) => {
+	const operations = expression.replace(/[^\+~\*/\^]/g, "");
+	return expression.split(/[\+~\*/\^]/g).reduce((total, term, index) => {
 		if (term === "n") {
 			return operationMap[operations[index - 1]](total, nValue);
 		} else {
@@ -125,14 +125,18 @@ exports.parseExpression = function (expression, nValue) {
  */
 exports.calculateTagContent = function (text, tags) {
 	for (const { tag, count } of tags) {
-		const taggedGlobal = new RegExp(`@{(${tag}[\\*\\d]*)}`, "g");
+		const taggedGlobal = new RegExp(`@{(.*${tag}.*)}`, "g");
 		const untagged = new RegExp(tag, "g");
-		const taggedSingle = new RegExp(`@{(${tag}[\\*\\d]*)}`);
+		const taggedSingle = new RegExp(`@{(.*${tag}.*)}`);
 
 		for (const match of text.matchAll(taggedGlobal)) {
 			const countExpression = match?.[1].replace(untagged, "n");
 			if (countExpression) {
-				text = text.replace(taggedSingle, exports.parseExpression(countExpression, count));
+				let parsedExpression = exports.parseExpression(countExpression, count);
+				if (typeof parsedExpression === "number") {
+					parsedExpression = parsedExpression.toFixed(2);
+				}
+				text = text.replace(taggedSingle, parsedExpression);
 			}
 		}
 	}
