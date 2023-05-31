@@ -2,9 +2,10 @@ const { MAX_MESSAGE_ACTION_ROWS, MAX_BUTTONS_PER_ROW } = require("../constants.j
 const { calculateTagContent } = require("../helpers");
 
 module.exports = class Artifact {
-	constructor(nameInput, descriptionInput) {
+	constructor(nameInput, descriptionInput, scalingDescriptionInput) {
 		this.name = nameInput;
 		this.description = descriptionInput;
+		this.scalingDescription = scalingDescriptionInput;
 	}
 	element = "";
 	/** @type {import("discord.js").EmbedField} */

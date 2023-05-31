@@ -182,9 +182,11 @@ exports.nextRoom = function (roomType, thread) {
 				let tier = unparsedTier;
 				for (let i = 0; i < Math.min(MAX_SELECT_OPTIONS, count); i++) {
 					if (unparsedTier === "?") {
-						const threshold = 1 + cloverCount;
-						const max = 8 + cloverCount;
-						adventure.updateArtifactStat("Negative-One Leaf Clover", "Expected Extra Rare Equipment", (threshold / max) - (1 / 8));
+						const baseUpgradeChance = 1 / 8;
+						const cloverUpgradeChance = 1 - 0.80 ** cloverCount;
+						const max = 144;
+						const threshold = max * baseUpgradeChance / cloverUpgradeChance;
+						adventure.updateArtifactStat("Negative-One Leaf Clover", "Expected Extra Rare Equipment", (threshold / max) - baseUpgradeChance);
 						if (generateRandomNumber(adventure, max, "general") < threshold) {
 							tier = "Rare";
 						} else {
@@ -283,13 +285,17 @@ exports.newRound = function (adventure, thread, lastRoundText) {
 			combatant.roundSpeed = Math.floor(combatant.speed * percentBonus);
 
 			// Roll Critical Hit
-			let threshold = combatant.getCritNumerator(adventure.getArtifactCount("Hawk Tailfeather"));
-			let max = combatant.getCritDenominator(adventure.getArtifactCount("Hawk Tailfeather"));
+			const baseCritChance = 1 / 4;
+			const max = 144;
+			let threshold = max * baseCritChance;
+			if (combatant instanceof Delver) {
+				const featherCount = adventure.getArtifactCount("Hawk Tailfeather");
+				const featherCritChance = 1 - 0.85 ** featherCount;
+				threshold /= featherCritChance;
+				adventure.updateArtifactStat("Hawk Tailfeather", "Expected Extra Critical Hits", (threshold / max) - baseCritChance);
+			}
 			let critRoll = generateRandomNumber(adventure, max, "battle");
 			combatant.crit = critRoll < threshold;
-			if (combatant instanceof Delver) {
-				adventure.updateArtifactStat("Hawk Tailfeather", "Expected Extra Critical Hits", (threshold / max) - (1 / 4));
-			}
 
 			// Roll Enemy Moves and Generate Dummy Moves
 			const move = new Move()
@@ -413,10 +419,12 @@ exports.endRound = async function (adventure, thread) {
 			const gearMax = 16;
 			if (generateRandomNumber(adventure, gearMax, "general") < gearThreshold) {
 				const cloverCount = adventure.getArtifactCount("Negative-One Leaf Clover");
+				const baseUpgradeChance = 1 / 8;
+				const cloverUpgradeChance = 1 - 0.80 ** cloverCount;
+				const max = 144;
+				const threshold = max * baseUpgradeChance / cloverUpgradeChance;
 				let tier = "Common";
-				const upgradeThreshold = 1 + cloverCount;
-				const upgradeMax = 8 + cloverCount;
-				adventure.updateArtifactStat("Negative-One Leaf Clover", "Expected Extra Rare Equipment", (upgradeThreshold / upgradeMax) - (1 / 8));
+				adventure.updateArtifactStat("Negative-One Leaf Clover", "Expected Extra Rare Equipment", (threshold / max) - baseUpgradeChance);
 				if (generateRandomNumber(adventure, upgradeMax, "general") < upgradeThreshold) {
 					tier = "Rare";
 				}

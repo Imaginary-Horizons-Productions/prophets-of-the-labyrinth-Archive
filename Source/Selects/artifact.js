@@ -12,7 +12,7 @@ module.exports = new Select(id, (interaction, args) => {
 	let embed = new EmbedBuilder()
 		.setTitle(`${artifactName} x ${artifactCount}`)
 		.setDescription(artifact.dynamicDescription(artifactCount))
-		.addFields({ name: "Element", value: artifact.element })
+		.addFields({ name: "Scaling", value: artifact.scalingDescription }, { name: "Element", value: artifact.element })
 		.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
 	if (artifact.flavorText) {
 		embed.addFields(artifact.flavorText);
