@@ -1,10 +1,10 @@
 const { Adventure, CombatantReference } = require("../Classes/Adventure.js");
 const { Move } = require("../Classes/Move.js");
+const { generateRandomNumber } = require("../helpers.js");
 const { getFullName, dealDamage, gainHealth, removeModifier } = require("./combatantDAO.js");
 const { getConsumable } = require("./consumables/_consumablesDictionary.js");
 const { getEmoji, getOpposite } = require("./elementHelpers.js");
 const { getEnemy } = require("./Enemies/_enemyDictionary.js");
-const { selectAllFoes } = require("./enemyDAO.js");
 const { getEquipmentProperty } = require("./equipment/_equipmentDictionary.js");
 
 /** Updates game state with the move's effect AND returns the game's description of what happened
@@ -43,10 +43,27 @@ exports.resolveMove = async function (move, adventure) {
 			case "equip":
 				effect = getEquipmentProperty(move.name, "effect");
 				if (move.name !== "Punch" && move.userReference.team !== "enemy") {
-					let equip = user.equipment.find(equip => equip.name === move.name);
-					equip.uses--;
-					if (equip.uses < 1) {
-						breakText = ` The ${move.name} broke!`;
+					let decrementDurability = true;
+					const equipCategory = getEquipmentProperty(move.name, "category");
+					if (equipCategory === "Spell") {
+						const crystalShardCount = adventure.getArtifactCount("Crystal Shard");
+						if (crystalShardCount > 0) {
+							const durabilitySaveChance = 1 - 0.85 ** crystalShardCount;
+							const max = 144;
+							const rn = generateRandomNumber(adventure, max, "battle");
+							adventure.updateArtifactStat("Crystal Shard", "Expected Durability Saved", durabilitySaveChance.toFixed(2));
+							if (rn < max * durabilitySaveChance) {
+								decrementDurability = false;
+								adventure.updateArtifactStat("Crystal Shard", "Actual Durability Saved", 1);
+							}
+						}
+					}
+					if (decrementDurability) {
+						const equip = user.equipment.find(equip => equip.name === move.name);
+						equip.uses--;
+						if (equip.uses < 1) {
+							breakText = ` The ${move.name} broke!`;
+						}
 					}
 				}
 				moveText = `${getEmoji(getEquipmentProperty(move.name, "element"))} ${moveText}`;
