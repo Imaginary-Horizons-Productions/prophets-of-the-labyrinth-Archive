@@ -288,7 +288,7 @@ exports.newRound = function (adventure, thread, lastRoundText) {
 			combatant.roundSpeed = Math.floor(combatant.speed * percentBonus);
 
 			// Roll Critical Hit
-			const baseCritChance = 1 / 4;
+			const baseCritChance = (1 + (combatant.critBonus / 100)) * (1 / 4);
 			const max = 144;
 			let threshold = max * baseCritChance;
 			if (combatant instanceof Delver) {

@@ -50,25 +50,10 @@ module.exports = class Enemy extends Combatant {
 		return this;
 	}
 
-	/** Set the numerator of the enemy's critical hit rate.
-	 * @param {number} numeratorInput
-	 */
-	setCritNumerator(numeratorInput) {
-		this.critNumerator = numeratorInput;
-		return this;
-	}
-
-	/** Set the denominator of the enemy's critical hit rate.
-	 * @param {number} denominatorInput
-	 */
-	setCritDenominator(denominatorInput) {
-		this.critDenominator = denominatorInput;
-		return this;
-	}
-
 	/** Marks the enemy as an artifact guardian or final boss, which shouldn't randomize hp */
 	markAsBoss() {
 		this.shouldRandomizeHP = false;
+		this.setCritBonus(15);
 		return this;
 	}
 
