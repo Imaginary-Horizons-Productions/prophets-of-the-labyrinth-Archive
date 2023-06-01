@@ -3,6 +3,7 @@ const { SAFE_DELIMITER } = require('../../constants.js');
 const Select = require('../../Classes/Select.js');
 const { getArtifact } = require('../Artifacts/_artifactDictionary.js');
 const { getAdventure } = require('../adventureDAO.js');
+const { getEmoji } = require('../elementHelpers.js');
 
 const id = "artifact";
 module.exports = new Select(id, (interaction, args) => {
@@ -10,9 +11,9 @@ module.exports = new Select(id, (interaction, args) => {
 	const [artifactName, artifactCount] = interaction.values[0].split(SAFE_DELIMITER);
 	let artifact = getArtifact(artifactName);
 	let embed = new EmbedBuilder()
-		.setTitle(`${artifactName} x ${artifactCount}`)
+		.setTitle(`${getEmoji(artifact.element)} ${artifactName} x ${artifactCount}`)
 		.setDescription(artifact.dynamicDescription(artifactCount))
-		.addFields({ name: "Scaling", value: artifact.scalingDescription }, { name: "Element", value: artifact.element })
+		.addFields({ name: "Scaling", value: artifact.scalingDescription })
 		.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
 	if (artifact.flavorText) {
 		embed.addFields(artifact.flavorText);
