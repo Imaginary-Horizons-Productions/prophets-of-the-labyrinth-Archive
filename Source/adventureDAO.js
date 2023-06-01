@@ -104,6 +104,19 @@ const roomTypesByRarity = {
 	6: ["Battle", "Event"]
 };
 
+/**
+ * @param {Adventure} adventure
+ */
+function rollGearTier(adventure) {
+	const cloverCount = adventure.getArtifactCount("Negative-One Leaf Clover");
+	const baseUpgradeChance = 1 / 8;
+	const cloverUpgradeChance = 1 - 0.80 ** cloverCount;
+	const max = 144;
+	const threshold = max * baseUpgradeChance / cloverUpgradeChance;
+	adventure.updateArtifactStat("Negative-One Leaf Clover", "Expected Extra Rare Equipment", (threshold / max) - baseUpgradeChance);
+	return generateRandomNumber(adventure, max, "general") < threshold ? "Rare" : "Common";
+}
+
 /** Set up the upcoming room: roll options for rooms after, update adventure's room meta data object for current room, and generate room's resources
  * @param {"Artifact Guardian" | "Treasure" | "Forge" | "Rest Site" | "Merchant" | "Battle" | "Event" | "Empty"} roomType
  * @param {ThreadChannel} thread
@@ -169,7 +182,6 @@ exports.nextRoom = function (roomType, thread) {
 	}
 
 	// Initialize Resources
-	const cloverCount = adventure.getArtifactCount("Negative-One Leaf Clover");
 	for (const { resourceType: resource, count: unparsedCount, tier: unparsedTier, visibility, cost: unparsedCost, uiGroup } of roomTemplate.resourceList) {
 		const count = Math.ceil(parseExpression(unparsedCount, adventure.delvers.length));
 		switch (resource) {
@@ -182,16 +194,7 @@ exports.nextRoom = function (roomType, thread) {
 				let tier = unparsedTier;
 				for (let i = 0; i < Math.min(MAX_SELECT_OPTIONS, count); i++) {
 					if (unparsedTier === "?") {
-						const baseUpgradeChance = 1 / 8;
-						const cloverUpgradeChance = 1 - 0.80 ** cloverCount;
-						const max = 144;
-						const threshold = max * baseUpgradeChance / cloverUpgradeChance;
-						adventure.updateArtifactStat("Negative-One Leaf Clover", "Expected Extra Rare Equipment", (threshold / max) - baseUpgradeChance);
-						if (generateRandomNumber(adventure, max, "general") < threshold) {
-							tier = "Rare";
-						} else {
-							tier = "Common";
-						}
+						tier = rollGearTier(adventure);
 					}
 					const equipName = rollEquipmentDrop(tier, adventure);
 					adventure.addResource(new Resource(equipName, resource, 1, visibility, Math.ceil(parseExpression(unparsedCost, getEquipmentProperty(equipName, "cost", resource))), uiGroup));
@@ -418,16 +421,7 @@ exports.endRound = async function (adventure, thread) {
 			const gearThreshold = 1;
 			const gearMax = 16;
 			if (generateRandomNumber(adventure, gearMax, "general") < gearThreshold) {
-				const cloverCount = adventure.getArtifactCount("Negative-One Leaf Clover");
-				const baseUpgradeChance = 1 / 8;
-				const cloverUpgradeChance = 1 - 0.80 ** cloverCount;
-				const max = 144;
-				const threshold = max * baseUpgradeChance / cloverUpgradeChance;
-				let tier = "Common";
-				adventure.updateArtifactStat("Negative-One Leaf Clover", "Expected Extra Rare Equipment", (threshold / max) - baseUpgradeChance);
-				if (generateRandomNumber(adventure, upgradeMax, "general") < upgradeThreshold) {
-					tier = "Rare";
-				}
+				const tier = rollGearTier(adventure);
 				const droppedEquip = rollEquipmentDrop(tier, adventure);
 				adventure.addResource(new Resource(droppedEquip, "equipment", 1, "loot", 0));
 			}
