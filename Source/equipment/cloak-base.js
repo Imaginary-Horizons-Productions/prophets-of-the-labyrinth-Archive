@@ -1,7 +1,7 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addModifier, removeModifier } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Cloak", "Gain @{mod1Stacks} @{mod1}", "@{mod2} +@{bonus}", "Wind", effect, ["Accelerating Cloak", "Long Cloak", "Thick Cloak"])
+module.exports = new EquipmentTemplate("Cloak", "Gain @{mod1Stacks} @{mod1}", "@{mod1} +@{bonus}", "Wind", effect, ["Accelerating Cloak", "Long Cloak", "Thick Cloak"])
 	.setCategory("Armor")
 	.setTargetingTags({ target: "self", team: "self" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Evade", stacks: 2 }])

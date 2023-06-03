@@ -11,8 +11,7 @@ module.exports = class Combatant {
 	roundSpeed = 0;
 	actionSpeed = 0;
 	crit = false;
-	critNumerator = 1;
-	critDenominator = 4;
+	critBonus = 0;
 	element = "not picked";
 	/** @type {{[modifierName: string]: number}} */
 	modifiers = {};
@@ -59,18 +58,12 @@ module.exports = class Combatant {
 		return this;
 	}
 
-	/** Gets the numerator of the combatant's critical hit chance. Starts at 1. Delver has an overwrite that uses `hawkTailfeatherCount`.
-	 * @param {number} hawkTailfeatherCount
+	/** Adds the given percent to the combatant's individual increased chance to crit
+	 * @param {number} percent
 	 */
-	getCritNumerator(hawkTailfeatherCount) {
-		return this.critNumerator;
-	}
-
-	/** Gets the denominator of the combatant's critical hit chance. Starts at 4. Delver has an overwrite that uses `hawkTailfeatherCount`.
-	 * @param {number} hawkTailfeatherCount
-	 */
-	getCritDenominator(hawkTailfeatherCount) {
-		return this.critDenominator;
+	setCritBonus(percent) {
+		this.critBonus += percent;
+		return this;
 	}
 
 	/** Get the number of stacks of the given modifier the combatant has

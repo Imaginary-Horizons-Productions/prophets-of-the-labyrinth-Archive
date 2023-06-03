@@ -30,18 +30,4 @@ module.exports = class Delver extends Combatant {
 		this.predict = predictEnum;
 		return this;
 	}
-
-	/** Overwrite of Combatant.getCritNumerator(). `hawkTailfeatherCount` included so delvers can modify value via artifacts.
-	 * @param {number} hawkTailfeatherCount
-	 */
-	getCritNumerator(hawkTailfeatherCount) {
-		return this.critNumerator + (hawkTailfeatherCount / 2);
-	}
-
-	/** Overwrite of Combatant.getCritDenominator(). `hawkTailfeatherCount` included so delvers can modify value via artifacts.
-	 * @param {number} hawkTailfeatherCount
-	 */
-	getCritDenominator(hawkTailfeatherCount) {
-		return this.critDenominator + (hawkTailfeatherCount / 2);
-	}
 }

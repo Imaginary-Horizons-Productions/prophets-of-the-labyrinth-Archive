@@ -50,9 +50,8 @@ exports.resolveMove = async function (move, adventure) {
 						if (crystalShardCount > 0) {
 							const durabilitySaveChance = 1 - 0.85 ** crystalShardCount;
 							const max = 144;
-							const rn = generateRandomNumber(adventure, max, "battle");
 							adventure.updateArtifactStat("Crystal Shard", "Expected Durability Saved", durabilitySaveChance.toFixed(2));
-							if (rn < max * durabilitySaveChance) {
+							if (generateRandomNumber(adventure, max, "battle") < max * durabilitySaveChance) {
 								decrementDurability = false;
 								adventure.updateArtifactStat("Crystal Shard", "Actual Durability Saved", 1);
 							}
