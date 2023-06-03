@@ -5,6 +5,7 @@ module.exports = new EquipmentTemplate("Accelerating Cloak", "Gain @{mod1Stacks}
 	.setCategory("Armor")
 	.setTargetingTags({ target: "self", team: "self" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Evade", stacks: 2 }, { name: "Quicken", stacks: 1 }])
+	.setBonus(1) // Evade stacks
 	.setCost(350)
 	.setUses(10);
 
