@@ -15,6 +15,7 @@
 - *Reckless* gear variants (and *Battleaxes*) now have high base damage and apply *Exposed* to the user
 - Fixed Potion Kit upgrades cost being the same as the unupgraded Potion Kit
 - *Daggers* can now upgrade to *Slowing Daggers* instead of *Wicked Daggers*
+- *Punch* is now always available unless the delver is full on gear
 - Adventures that end by `/give-up` no longer provide score to player profiles
 - Merchants now show how many uses equipment they're selling has
 
