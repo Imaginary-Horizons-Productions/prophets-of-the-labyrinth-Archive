@@ -7,7 +7,7 @@ module.exports = new EquipmentTemplate("Punch", "Strike a foe for @{damage} @{el
 	.setModifiers([])
 	.setCost(0)
 	.setUses(Infinity)
-	.setDamage(50);
+	.setDamage(35);
 
 function effect([target], user, isCrit, adventure) {
 	if (target.hp < 1) {

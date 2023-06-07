@@ -40,8 +40,7 @@ module.exports = new Button(id, (interaction, args) => {
 			});
 			const components = [];
 			const usableMoves = delver.equipment.filter(equip => equip.uses > 0);
-			const needsPunch = !usableMoves.some(move => getEquipmentProperty(move.name, 'category') === "Weapon");
-			if (needsPunch && usableMoves.length < adventure.getEquipmentCapacity()) {
+			if (usableMoves.length < adventure.getEquipmentCapacity()) {
 				usableMoves.unshift({ name: "Punch", uses: Infinity });
 			}
 			for (let i = 0; i < usableMoves.length; i++) {
