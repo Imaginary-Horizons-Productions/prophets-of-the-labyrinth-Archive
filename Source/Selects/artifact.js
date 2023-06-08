@@ -6,7 +6,7 @@ const { getAdventure } = require('../adventureDAO.js');
 const { getEmoji } = require('../elementHelpers.js');
 
 const id = "artifact";
-module.exports = new Select(id, (interaction, args) => {
+module.exports = new Select(id, (interaction, [pageIndex]) => {
 	// Provide information about the selected artifact
 	const [artifactName, artifactCount] = interaction.values[0].split(SAFE_DELIMITER);
 	let artifact = getArtifact(artifactName);
