@@ -10,7 +10,7 @@ for (const file of [
 	"ritualist.js"
 ]) {
 	const archetype = require(`./${file}`);
-	archetypeDictionary[archetype.title] = archetype;
+	archetypeDictionary[archetype.name] = archetype;
 }
 
 exports.getArchetype = function (archetypeName) {
