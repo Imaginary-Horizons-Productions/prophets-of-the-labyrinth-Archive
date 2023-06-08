@@ -8,7 +8,7 @@
    - Sword renamed to Lance and now double benefits from Power Up instead of granting it (upgrades: Accelerating, Piercing, Vigilant)
    - Buckler now grants Power Up (Urgent upgrade changed to Devoted)
    - Old Sword (weapon that grants user Power Up) has been reworked to Pact: Certain Victory (upgrades: Hunter's, Lethal, Reckless)
-- New Artifact: *Piggy Bank*
+- New Artifacts: *Piggy Bank*, *Crystal Shard*
 - Reduced base damage of *Warhammer* (and upgrades) from 100 to 75
 - New Gear Variants: *Fate Sealing Censer*, *Fate Sealing Infinite Regeneration*, *Slowing Warhammer*, *Slowing War Cry*, and *Organic Potion Kit*
 - Reworked *Blood Aegis*: now always adds block to self and forces an enemy to target the user if the enemy is using a single target move after the user
