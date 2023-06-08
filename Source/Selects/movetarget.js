@@ -4,7 +4,6 @@ const { CombatantReference } = require('../../Classes/Adventure');
 const { SAFE_DELIMITER } = require('../../constants.js');
 const { getAdventure, checkNextRound, endRound, setAdventure } = require('../adventureDAO');
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary');
-const { getFullName } = require("../combatantDAO.js");
 
 const id = "movetarget";
 module.exports = new Select(id, async (interaction, [moveName, round, index]) => {
@@ -56,7 +55,7 @@ module.exports = new Select(id, async (interaction, [moveName, round, index]) =>
 				target = adventure.room.enemies[targetIndex];
 			}
 			interaction.update({ components: [] });
-			interaction.channel.send(`${interaction.user} ${overwritten ? "switches to ready" : "readies"} **${moveName}** to use on **${getFullName(target, adventure.room.enemyTitles)}**.`).then(() => {
+			interaction.channel.send(`${interaction.user} ${overwritten ? "switches to ready" : "readies"} **${moveName}** to use on **${target.getName(adventure.room.enemyIdMap)}**.`).then(() => {
 				setAdventure(adventure);
 				if (checkNextRound(adventure)) {
 					endRound(adventure, interaction.channel);

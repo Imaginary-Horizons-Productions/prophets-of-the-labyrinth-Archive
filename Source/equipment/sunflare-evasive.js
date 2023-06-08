@@ -1,5 +1,5 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
-const { addModifier, getFullName } = require('../combatantDAO.js');
+const { addModifier } = require('../combatantDAO.js');
 
 module.exports = new EquipmentTemplate("Evasive Sun Flare", "Inflict @{mod1Stacks} @{mod1} on a foe and gain @{mod2Stacks} @{mod2} with priority", "Also inflict @{mod3Stacks} @{mod3}", "Wind", effect, ["Accelerating Sun Flare", "Tormenting Sun Flare"])
 	.setCategory("Spell")
@@ -12,7 +12,7 @@ module.exports = new EquipmentTemplate("Evasive Sun Flare", "Inflict @{mod1Stack
 
 function effect([target], user, isCrit, adventure) {
 	if (target.hp < 1) {
-		return ` ${getFullName(target, adventure.room.enemyTitles)} was already dead!`;
+		return ` ${target.getName(adventure.room.enemyIdMap)} was already dead!`;
 	}
 
 	let { element, modifiers: [elementStagger, stagger, evade, slow] } = module.exports;

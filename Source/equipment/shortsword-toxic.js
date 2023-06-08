@@ -1,5 +1,5 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
-const { dealDamage, addModifier, getFullName } = require("../combatantDAO.js");
+const { dealDamage, addModifier } = require("../combatantDAO.js");
 
 module.exports = new EquipmentTemplate("Shortsword", "Strike a foe for @{damage} @{element} damage, then apply @{mod1Stacks} @{mod1} and @{mod2Stacks} @{mod2} to the foe and @{mod1Stacks} @{mod1} to yourself", "Damage x@{critBonus}", "Fire", effect, ["Accelerating Shortsword"])
 	.setCategory("Weapon")
@@ -11,7 +11,7 @@ module.exports = new EquipmentTemplate("Shortsword", "Strike a foe for @{damage}
 
 function effect([target], user, isCrit, adventure) {
 	if (target.hp < 1) {
-		return ` ${getFullName(target, adventure.room.enemyTitles)} was already dead!`;
+		return ` ${target.getName(adventure.room.enemyIdMap)} was already dead!`;
 	}
 
 	let { element, modifiers: [elementStagger, exposed, poison], damage, critBonus } = module.exports;

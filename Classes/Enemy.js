@@ -6,7 +6,7 @@ module.exports = class Enemy extends Combatant {
 	 */
 	constructor(nameInput) {
 		super(nameInput, "enemy");
-		this.lookupName = nameInput;
+		this.archetype = nameInput;
 	}
 	// Properties from Combatant: hp, maxHp, speed, roundSpeed, element, setHp, setSpeed, setElement
 	actions = {};
@@ -16,7 +16,8 @@ module.exports = class Enemy extends Combatant {
 	shouldRandomizeHP = true;
 
 	setHp = super.setHp;
-	setTitle = super.setTitle;
+	setId = super.setId;
+	setArchetype = super.setArchetype;
 	setStaggerThreshold = super.setStaggerThreshold;
 
 	/** Set the name of the first action an enemy takes. "random" allowed for random move in enemy's move pool.
@@ -50,11 +51,19 @@ module.exports = class Enemy extends Combatant {
 		return this;
 	}
 
-	/** Marks the enemy as an artifact guardian or final boss, which shouldn't randomize hp */
+	/** Marks the enemy as an artifact guardian or final boss, which shouldn't randomize hp and has boosted crit chance*/
 	markAsBoss() {
 		this.shouldRandomizeHP = false;
 		this.setCritBonus(15);
 		return this;
+	}
+
+	getName(enemyIdMap) {
+		if (enemyIdMap[this.name] > 1) {
+			return `${this.name} ${this.archetype}`;
+		} else {
+			return this.name;
+		}
 	}
 
 	/** Set the uniquifing number for an enemy to its title.
@@ -63,10 +72,10 @@ module.exports = class Enemy extends Combatant {
 	static setEnemyTitle(titleObject, enemy) {
 		if (titleObject[enemy.name]) {
 			titleObject[enemy.name]++;
-			enemy.title = titleObject[enemy.name];
+			enemy.id = titleObject[enemy.name];
 		} else {
 			titleObject[enemy.name] = 1;
-			enemy.title = 1;
+			enemy.id = 1;
 		}
 	}
 }

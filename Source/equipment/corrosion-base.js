@@ -1,5 +1,5 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
-const { addModifier, getFullName } = require('../combatantDAO.js');
+const { addModifier } = require('../combatantDAO.js');
 
 module.exports = new EquipmentTemplate("Corrosion", "Inflict @{mod1Stacks} @{mod1} on a foe", "Also inflict @{mod2Stacks} @{mod2}", "Fire", effect, ["Flanking Corrosion"])
 	.setCategory("Spell")
@@ -10,7 +10,7 @@ module.exports = new EquipmentTemplate("Corrosion", "Inflict @{mod1Stacks} @{mod
 
 function effect([target], user, isCrit, adventure) {
 	if (target.hp < 1) {
-		return ` ${getFullName(target, adventure.room.enemyTitles)} was already dead!`;
+		return ` ${target.getName(adventure.room.enemyIdMap)} was already dead!`;
 	}
 
 	let { element, modifiers: [elementStagger, powerDown, critStagger] } = module.exports;

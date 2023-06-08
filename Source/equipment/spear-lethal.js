@@ -1,5 +1,5 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
-const { dealDamage, addModifier, getFullName } = require("../combatantDAO.js");
+const { dealDamage, addModifier } = require("../combatantDAO.js");
 
 module.exports = new EquipmentTemplate("Lethal Spear", "Strike a foe for @{damage} @{element} damage", "Damage x@{critBonus}, also inflict @{mod1Stacks} @{mod1}", "Wind", effect, ["Reactive Spear", "Sweeping Spear"])
 	.setCategory("Weapon")
@@ -11,7 +11,7 @@ module.exports = new EquipmentTemplate("Lethal Spear", "Strike a foe for @{damag
 
 function effect([target], user, isCrit, adventure) {
 	if (target.hp < 1) {
-		return ` ${getFullName(target, adventure.room.enemyTitles)} was already dead!`;
+		return ` ${target.getName(adventure.room.enemyIdMap)} was already dead!`;
 	}
 
 	let { element, modifiers: [elementStagger, critStagger], damage, critBonus } = module.exports;

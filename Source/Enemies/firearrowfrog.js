@@ -1,5 +1,5 @@
 const Enemy = require("../../Classes/Enemy.js");
-const { addModifier, removeModifier, getFullName, dealDamage } = require("../combatantDAO.js");
+const { addModifier, removeModifier, dealDamage } = require("../combatantDAO.js");
 const { selectRandomFoe, selectSelf } = require("../enemyDAO.js");
 
 module.exports = new Enemy("Fire-Arrow Frog")
@@ -29,7 +29,7 @@ function venomCannonEffect([target], user, isCrit, adventure) {
 		addModifier(target, { name: "Poison", stacks: 3 });
 	}
 	return dealDamage(target, user, damage, false, user.element, adventure).then(damageText => {
-		return `${getFullName(target, adventure.room.enemyTitles)} is poisoned. ${damageText}`;
+		return `${target.getName(adventure.room.enemyIdMap)} is poisoned. ${damageText}`;
 	});
 }
 
@@ -50,5 +50,5 @@ function goopSprayEffect([target], user, isCrit, adventure) {
 	} else {
 		addModifier(target, { name: "Slow", stacks: 2 });
 	}
-	return `${getFullName(target, adventure.room.enemyTitles)} is Slowed by the sticky ooze.`;
+	return `${target.getName(adventure.room.enemyIdMap)} is Slowed by the sticky ooze.`;
 }

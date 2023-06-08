@@ -26,7 +26,7 @@ function effect([target], user, isCrit, adventure) {
 	if (targetMove.targets.length === 1) {
 		const userIndex = adventure.delvers.findIndex(delver => delver.id === user.id);
 		targetMove.targets = [{ team: "delver", index: userIndex }];
-		return `${payHP(user, hpCost, adventure)} ${getFullName(target, adventure.room.enemyTitles)} falls for the provocation.`;
+		return `${payHP(user, hpCost, adventure)} ${target.getName(adventure.room.enemyIdMap)} falls for the provocation.`;
 	} else {
 		return payHP(user, hpCost, adventure);
 	}

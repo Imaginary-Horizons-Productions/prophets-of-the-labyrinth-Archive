@@ -312,8 +312,8 @@ exports.newRound = function (adventure, thread, lastRoundText) {
 				move.setMoveName("Stun");
 			} else {
 				if (teamName === "enemy") {
-					if (combatant.lookupName !== "@{clone}") {
-						let enemyTemplate = getEnemy(combatant.lookupName);
+					if (combatant.archetype !== "@{clone}") {
+						let enemyTemplate = getEnemy(combatant.archetype);
 						let actionName = combatant.nextAction;
 						if (actionName === "random") {
 							let actionPool = Object.keys(enemyTemplate.actions);
@@ -363,7 +363,7 @@ exports.newRound = function (adventure, thread, lastRoundText) {
 exports.endRound = async function (adventure, thread) {
 	// Generate Reactive Moves by Enemies
 	adventure.room.enemies.forEach((enemy, index) => {
-		if (enemy.lookupName === "@{clone}") {
+		if (enemy.archetype === "@{clone}") {
 			const move = adventure.room.moves.find(move => move.userReference.team === "enemy" && move.userReference.index === index);
 			let counterpartHasPriority = false;
 			let counterpartMove = adventure.room.moves.find(move => move.userReference.team === "delver" && move.userReference.index == index);

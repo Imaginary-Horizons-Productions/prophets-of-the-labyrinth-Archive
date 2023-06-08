@@ -1,5 +1,5 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
-const { addBlock, removeModifier, getFullName } = require('../combatantDAO.js');
+const { addBlock, removeModifier } = require('../combatantDAO.js');
 const { isDebuff } = require('../Modifiers/_modifierDictionary.js');
 
 module.exports = new EquipmentTemplate("Purifying Barrier", "Grant an ally @{block} block and cure them of all debuffs", "Block x@{critBonus}", "Fire", effect, ["Thick Barrier", "Urgent Barrier"])
@@ -25,5 +25,5 @@ function effect([target], user, isCrit, adventure) {
 			debuffs.push(modifier);
 		}
 	}
-	return `${getFullName(target, adventure.room.enemyTitles)} is relieved of ${debuffs.join(", ")}.`; // result as text
+	return `${target.getName(adventure.room.enemyIdMap)} is relieved of ${debuffs.join(", ")}.`; // result as text
 }

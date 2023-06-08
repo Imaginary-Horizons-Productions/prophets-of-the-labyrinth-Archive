@@ -1,5 +1,5 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
-const { dealDamage, addModifier, addBlock, getFullName } = require('../combatantDAO.js');
+const { dealDamage, addModifier, addBlock } = require('../combatantDAO.js');
 
 module.exports = new EquipmentTemplate("Vigilant Lance", "Strike a foe for @{damage} @{element} damage (double increase from Power Up), then gain @{mod1Stacks} @{mod1}", "Damage x@{critBonus}", "Earth", effect, ["Accelerating Lance", "Piercing Lance"])
 	.setCategory("Weapon")
@@ -12,7 +12,7 @@ module.exports = new EquipmentTemplate("Vigilant Lance", "Strike a foe for @{dam
 
 function effect([target], user, isCrit, adventure) {
 	if (target.hp < 1) {
-		return ` ${getFullName(target, adventure.room.enemyTitles)} was already dead!`;
+		return ` ${target.getName(adventure.room.enemyIdMap)} was already dead!`;
 	}
 
 	let { element, modifiers: [elementStagger, vigilance], damage, block, critBonus } = module.exports;

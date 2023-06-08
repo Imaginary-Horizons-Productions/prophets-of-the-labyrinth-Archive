@@ -37,11 +37,11 @@ module.exports.spawnEnemy = function (adventure, enemyTemplate) {
 			break;
 	}
 	adventure.room.enemies.push(enemy);
-	Enemy.setEnemyTitle(adventure.room.enemyTitles, enemy);
+	Enemy.setEnemyTitle(adventure.room.enemyIdMap, enemy);
 }
 
 module.exports.selectRandomOtherAlly = function (adventure, self) {
-	const selfIndex = adventure.room.enemies.findIndex(enemy => enemy.lookupName === self.lookupName && enemy.title === self.title);
+	const selfIndex = adventure.room.enemies.findIndex(enemy => enemy.archetype === self.archetype && enemy.id === self.id);
 	const liveOtherEnemyIndexes = [];
 	adventure.room.enemies.forEach((enemy, index) => {
 		if (enemy.hp > 0 && index !== selfIndex) {

@@ -1,5 +1,5 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
-const { addModifier, getFullName } = require('../combatantDAO.js');
+const { addModifier } = require('../combatantDAO.js');
 
 module.exports = new EquipmentTemplate("Charging War Cry", "Inflict @{mod1Stacks} @{mod1} on a foe and all foes with Exposed then gain @{mod2Stacks} @{mod2}", "@{mod1} +@{bonus}", "Fire", effect, ["Slowing War Cry", "Tormenting War Cry"])
 	.setCategory("Spell")
@@ -11,11 +11,11 @@ module.exports = new EquipmentTemplate("Charging War Cry", "Inflict @{mod1Stacks
 	.markPriority();
 
 function effect([initialTarget], user, isCrit, adventure) {
-	const targetSet = new Set().add(getFullName(initialTarget, adventure.room.enemyTitles));
+	const targetSet = new Set().add(initialTarget.getName(adventure.room.enemyIdMap));
 	const targetArray = [initialTarget];
 	adventure.room.enemies.forEach(enemy => {
-		if (enemy.getModifierStacks("Exposed") > 0 && !targetSet.has(getFullName(enemy, adventure.room.enemyTitles))) {
-			targetSet.add(getFullName(enemy, adventure.room.enemyTitles));
+		if (enemy.getModifierStacks("Exposed") > 0 && !targetSet.has(enemy.getName(adventure.room.enemyIdMap))) {
+			targetSet.add(enemy.getName(adventure.room.enemyIdMap));
 			targetArray.push(enemy);
 		}
 	})
