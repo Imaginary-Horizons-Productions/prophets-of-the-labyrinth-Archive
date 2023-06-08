@@ -13,7 +13,7 @@ module.exports = new Select(id, (interaction, args) => {
 		// Add delver to list (or overwrite)
 		let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 		let archetype = interaction.values[0];
-		let isSwitching = delver.title !== "";
+		let isSwitching = delver.archetype !== "";
 		let archetypeTemplate = Object.assign(new Archetype(), getArchetype(archetype));
 		delver.equipment = archetypeTemplate.signatureEquipment.map(equipmentName => {
 			return { name: equipmentName, uses: getEquipmentProperty(equipmentName, "maxUses") }
@@ -34,7 +34,7 @@ module.exports = new Select(id, (interaction, args) => {
 		});
 		interaction.channel.send(`${interaction.user} ${isSwitching ? "has switched to" : "will be playing as"} ${archetype}.`).then(() => {
 			// Check if all ready... wasReady is used to guarantee only one ready-button in a racecondition
-			if (adventure.delvers.every(delver => delver.title) && !wasReady) {
+			if (adventure.delvers.every(delver => delver.archetype) && !wasReady) {
 				let readyButton = [
 					new ActionRowBuilder().addComponents(
 						new ButtonBuilder().setCustomId("startadventure")
