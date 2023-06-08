@@ -19,7 +19,7 @@ module.exports = new Select(id, (interaction, args) => {
 			return { name: equipmentName, uses: getEquipmentProperty(equipmentName, "maxUses") }
 		});
 		const wasReady = adventure.delvers.every(delver => delver.title);
-		delver.setTitle(archetypeTemplate.title)
+		delver.setArchetype(archetypeTemplate.name)
 			.setHp(archetypeTemplate.maxHp)
 			.setSpeed(archetypeTemplate.speed)
 			.setElement(archetypeTemplate.element)

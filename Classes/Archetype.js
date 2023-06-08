@@ -1,6 +1,6 @@
 module.exports = class Archetype {
-	constructor(titleInput) {
-		this.title = titleInput;
+	constructor(nameInput) {
+		this.name = nameInput;
 	}
 	maxHp = 300;
 	speed = 100;

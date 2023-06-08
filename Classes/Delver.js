@@ -13,7 +13,7 @@ module.exports = class Delver extends Combatant {
 	equipment = [];
 	startingArtifact = "";
 
-	setTitle = super.setTitle;
+	setArchetype = super.setArchetype;
 
 	setHp = super.setHp;
 
@@ -29,5 +29,9 @@ module.exports = class Delver extends Combatant {
 	setPredict(predictEnum) {
 		this.predict = predictEnum;
 		return this;
+	}
+
+	getName() {
+		return this.name;
 	}
 }

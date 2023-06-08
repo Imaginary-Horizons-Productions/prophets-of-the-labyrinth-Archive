@@ -1,5 +1,5 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
-const { addModifier, dealDamage, getFullName } = require('../combatantDAO.js');
+const { addModifier, dealDamage } = require('../combatantDAO.js');
 
 module.exports = new EquipmentTemplate("Toxic Sickle", "Strike a foe applying @{mod1Stacks} @{mod1} and @{damage} (+5% foe max hp) @{element} damage and apply", "Damage x@{critBonus}", "Water", effect, ["Hunter's Sickle", "Sharpened Sickle"])
 	.setCategory("Weapon")
@@ -11,7 +11,7 @@ module.exports = new EquipmentTemplate("Toxic Sickle", "Strike a foe applying @{
 
 function effect([target], user, isCrit, adventure) {
 	if (target.hp < 1) {
-		return ` ${getFullName(target, adventure.room.enemyTitles)} was already dead!`;
+		return ` ${target.getName(adventure.room.enemyIdMap)} was already dead!`;
 	}
 
 	let { element, modifiers: [elementStagger, poison], damage, critBonus } = module.exports;

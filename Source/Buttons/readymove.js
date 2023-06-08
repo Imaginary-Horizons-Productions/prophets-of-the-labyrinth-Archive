@@ -4,7 +4,6 @@ const Delver = require('../../Classes/Delver.js');
 const { SAFE_DELIMITER } = require('../../constants.js');
 const { getEmoji, getWeakness, getColor } = require('../elementHelpers.js');
 const { getAdventure } = require('../adventureDAO.js');
-const { getFullName } = require("../combatantDAO.js");
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
 const { equipmentToEmbedField } = require('../equipmentDAO.js');
 const { generateTextBar } = require('../../helpers.js');
@@ -25,7 +24,7 @@ module.exports = new Button(id, (interaction, args) => {
 				let enemy = adventure.room.enemies[i];
 				if (enemy.hp > 0) {
 					enemyOptions.push({
-						label: getFullName(enemy, adventure.room.enemyTitles),
+						label: enemy.getName(adventure.room.enemyIdMap),
 						description: miniPredict(delver.predict, enemy),
 						value: `enemy${SAFE_DELIMITER}${i}`
 					})

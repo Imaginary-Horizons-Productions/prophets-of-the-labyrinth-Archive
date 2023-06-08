@@ -4,7 +4,6 @@ const { isBuff, isDebuff, isNonStacking } = require("./Modifiers/_modifierDictio
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const { SAFE_DELIMITER, MAX_BUTTONS_PER_ROW } = require("../constants.js");
 const { ordinalSuffixEN } = require("../helpers.js");
-const { getFullName } = require("./combatantDAO.js");
 
 /** Seen in target selection embeds and /inspect-self equipment fields contain nearly all information about the equipment they represent
  * @param {string} equipmentName
@@ -26,7 +25,7 @@ exports.equipmentToEmbedField = function (equipmentName, uses) {
  */
 exports.delverStatsPayload = function (delver, equipmentCapacity) {
 	const embed = new EmbedBuilder().setColor(getColor(delver.element))
-		.setTitle(getFullName(delver, {}))
+		.setTitle(delver.getName())
 		.setDescription(`HP: ${delver.hp}/${delver.maxHp}\nPredicts: ${delver.predict}\nYour ${getEmoji(delver.element)} moves add 1 Stagger to enemies and remove 1 Stagger from allies.`)
 		.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
 	if (delver.block > 0) {

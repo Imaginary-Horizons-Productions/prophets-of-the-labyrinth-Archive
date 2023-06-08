@@ -1,6 +1,6 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const Resource = require('../../Classes/Resource.js');
-const { removeModifier, getFullName, addBlock } = require('../combatantDAO.js');
+const { removeModifier, addBlock } = require('../combatantDAO.js');
 const { rollConsumable } = require('../labyrinths/_labyrinthDictionary');
 
 module.exports = new EquipmentTemplate("Guarding Potion Kit", "Gain @{block} block and add 1 random potion to loot", "Instead add @{critBonus} potions", "Water", effect, ["Organic Potion Kit", "Urgent Potion Kit"])
@@ -20,9 +20,9 @@ function effect(targets, user, isCrit, adventure) {
 	addBlock(user, block);
 	if (isCrit) {
 		adventure.addResource(new Resource(randomPotion, "consumable", critBonus, "loot", 0));
-		return `${getFullName(user, adventure.room.enemyTitles)} hunkers down and sets a double-batch of ${randomPotion} simmering.`;
+		return `${user.getName(adventure.room.enemyIdMap)} hunkers down and sets a double-batch of ${randomPotion} simmering.`;
 	} else {
 		adventure.addResource(new Resource(randomPotion, "consumable", 1, "loot", 0));
-		return `${getFullName(user, adventure.room.enemyTitles)} hunkers down and sets a batch of ${randomPotion} simmering.`;
+		return `${user.getName(adventure.room.enemyIdMap)} hunkers down and sets a batch of ${randomPotion} simmering.`;
 	}
 }

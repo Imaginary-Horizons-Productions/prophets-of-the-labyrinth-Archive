@@ -1,5 +1,5 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
-const { dealDamage, getFullName } = require('../combatantDAO.js');
+const { dealDamage } = require('../combatantDAO.js');
 
 module.exports = new EquipmentTemplate("Punch", "Strike a foe for @{damage} @{element} damage", "Damage x@{critBonus}", "Untyped", effect, [])
 	.setCategory("Weapon")
@@ -11,7 +11,7 @@ module.exports = new EquipmentTemplate("Punch", "Strike a foe for @{damage} @{el
 
 function effect([target], user, isCrit, adventure) {
 	if (target.hp < 1) {
-		return ` ${getFullName(target, adventure.room.enemyTitles)} was already dead!`;
+		return ` ${target.getName(adventure.room.enemyIdMap)} was already dead!`;
 	}
 
 	let { damage, critBonus, element } = module.exports;

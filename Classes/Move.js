@@ -31,7 +31,7 @@ module.exports.Move = class {
 	 * @param {Delver | Enemy} combatant
 	 */
 	onSetMoveSpeed(combatant) {
-		// DESIGN SPACE: if enemy.lookupName has static speed, or is always faster than a delver, etc, put that logic here
+		// DESIGN SPACE: if enemy.archetype has static speed, or is always faster than a delver, etc, put that logic here
 		this.speed = calculateTotalSpeed(combatant);
 		removeModifier(combatant, { name: "Slow", stacks: 1, force: true });
 		removeModifier(combatant, { name: "Quicken", stacks: 1, force: true });

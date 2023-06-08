@@ -1,5 +1,5 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
-const { dealDamage, addModifier, getFullName } = require('../combatantDAO.js');
+const { dealDamage, addModifier } = require('../combatantDAO.js');
 const { isDebuff } = require('../Modifiers/_modifierDictionary.js');
 
 module.exports = new EquipmentTemplate("Thick Censer", "Burn a foe for @{damage} (+@{bonus} if target has any debuffs) @{element} damage", "Also apply @{mod1Stacks} @{mod1}", "Fire", effect, ["Fate Sealing Censer", "Tormenting Censor"])
@@ -13,7 +13,7 @@ module.exports = new EquipmentTemplate("Thick Censer", "Burn a foe for @{damage}
 
 function effect([target], user, isCrit, adventure) {
 	if (target.hp < 1) {
-		return ` ${getFullName(target, adventure.room.enemyTitles)} was already dead!`;
+		return ` ${target.getName(adventure.room.enemyIdMap)} was already dead!`;
 	}
 
 	let { element, modifiers: [elementStagger, slow], damage, bonus } = module.exports;

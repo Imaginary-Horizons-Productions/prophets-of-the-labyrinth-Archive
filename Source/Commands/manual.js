@@ -22,7 +22,7 @@ module.exports.execute = (interaction) => {
 	let response = { ephemeral: true };
 	switch (interaction.options.getString(options[0].name)) {
 		case "Credits":
-			response.embeds = [embedTemplate(interaction.client.user.displayAvatarURL()).setTitle("Prophets of the Labyrinth v0.8.0")
+			response.embeds = [embedTemplate(interaction.client.user.displayAvatarURL()).setTitle("Prophets of the Labyrinth v0.11.0")
 				.setThumbnail(interaction.client.user.displayAvatarURL())
 				.setDescription(`A roguelike dungeon crawl in Discord to play with other server members.`)
 				.addFields([

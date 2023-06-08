@@ -16,7 +16,7 @@ module.exports.Room = class {
 			this.priorityMoves = [];
 			this.moves = [];
 			this.enemies = [];
-			this.enemyTitles = {};
+			this.enemyIdMap = {};
 		}
 	}
 	/** @type {Record<string, Resource>} */

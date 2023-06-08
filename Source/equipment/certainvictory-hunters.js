@@ -1,5 +1,5 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
-const { dealDamage, addModifier, getFullName, payHP } = require('../combatantDAO.js');
+const { dealDamage, addModifier, payHP } = require('../combatantDAO.js');
 
 module.exports = new EquipmentTemplate("Hunter's Certain Victory", "Strike a foe for @{damage} @{element} damage, gain @{mod1Stacks} @{mod1} (@{bonus}g on kill); pay HP for your @{mod1}", "Damage x@{critBonus}", "Earth", effect, ["Lethal Certain Victory", "Reckless Certain Victory"])
 	.setCategory("Pact")
@@ -12,7 +12,7 @@ module.exports = new EquipmentTemplate("Hunter's Certain Victory", "Strike a foe
 
 function effect([target], user, isCrit, adventure) {
 	if (target.hp < 1) {
-		return ` ${getFullName(target, adventure.room.enemyTitles)} was already dead!`;
+		return ` ${target.getName(adventure.room.enemyIdMap)} was already dead!`;
 	}
 
 	let { element, modifiers: [elementStagger, powerUp], damage, bonus: bounty, critBonus } = module.exports;
@@ -26,7 +26,7 @@ function effect([target], user, isCrit, adventure) {
 	return dealDamage(target, user, damage, false, element, adventure).then(damageText => {
 		if (target.hp < 1) {
 			adventure.gainGold(bounty);
-			damageText += ` ${getFullName(user, adventure.room.enemyTitles)} gains ${bounty}g of victory spoils.`;
+			damageText += ` ${user.getName(adventure.room.enemyIdMap)} gains ${bounty}g of victory spoils.`;
 		}
 		return `${payHP(user, user.getModifierStacks("Power Up"), adventure)}${damageText}`;
 	});

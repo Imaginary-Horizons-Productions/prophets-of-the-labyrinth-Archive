@@ -1,5 +1,5 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
-const { dealDamage, addModifier, getFullName } = require('../combatantDAO.js');
+const { dealDamage, addModifier } = require('../combatantDAO.js');
 
 module.exports = new EquipmentTemplate("Hunter's Bow", "Strike a foe for @{damage} @{element} damage with priority, gain @{bonus}g on kill", "Damage x@{critBonus}", "Wind", effect, ["Evasive Bow", "Mercurial Bow"])
 	.setCategory("Weapon")
@@ -13,7 +13,7 @@ module.exports = new EquipmentTemplate("Hunter's Bow", "Strike a foe for @{damag
 
 function effect([target], user, isCrit, adventure) {
 	if (target.hp < 1) {
-		return ` ${getFullName(target, adventure.room.enemyTitles)} was already dead!`;
+		return ` ${target.getName(adventure.room.enemyIdMap)} was already dead!`;
 	}
 
 	let { element, modifiers: [elementStagger], damage, bonus: bonusBounty, critBonus } = module.exports;
@@ -26,7 +26,7 @@ function effect([target], user, isCrit, adventure) {
 	return dealDamage(target, user, damage, false, element, adventure).then(damageText => {
 		if (target.hp < 1) {
 			adventure.gainGold(bonusBounty);
-			damageText += ` ${getFullName(user, adventure.room.enemyTitles)} forages ${bonusBounty}g of hunting trophies.`;
+			damageText += ` ${user.getName(adventure.room.enemyIdMap)} forages ${bonusBounty}g of hunting trophies.`;
 		}
 		return damageText;
 	});

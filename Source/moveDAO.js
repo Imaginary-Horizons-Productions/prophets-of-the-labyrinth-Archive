@@ -1,7 +1,7 @@
 const { Adventure, CombatantReference } = require("../Classes/Adventure.js");
 const { Move } = require("../Classes/Move.js");
 const { generateRandomNumber } = require("../helpers.js");
-const { getFullName, dealDamage, gainHealth, removeModifier } = require("./combatantDAO.js");
+const { dealDamage, gainHealth, removeModifier } = require("./combatantDAO.js");
 const { getConsumable } = require("./consumables/_consumablesDictionary.js");
 const { getEmoji, getOpposite } = require("./elementHelpers.js");
 const { getEnemy } = require("./Enemies/_enemyDictionary.js");
@@ -18,7 +18,7 @@ exports.resolveMove = async function (move, adventure) {
 		return "";
 	}
 
-	let moveText = `**${getFullName(user, adventure.room.enemyTitles)}** `;
+	let moveText = `**${user.getName(adventure.room.enemyIdMap)}** `;
 	if (move.name !== "Stun" && user.getModifierStacks("Stun") < 1) {
 		if (move.isCrit) {
 			moveText = `💥${moveText}`;
@@ -29,7 +29,7 @@ exports.resolveMove = async function (move, adventure) {
 		switch (move.type) {
 			case "action":
 				if (move.userReference.team !== "delver") {
-					const action = getEnemy(user.lookupName).actions[move.name];
+					const action = getEnemy(user.archetype).actions[move.name];
 					let parsedElement = action.element;
 					if (parsedElement === "@{adventure}") {
 						parsedElement = adventure.element;
@@ -117,7 +117,7 @@ exports.getTargetList = function (targets, adventure) {
 	for (const targetReference of targets) {
 		const target = adventure.getCombatant(targetReference);
 		if (target) {
-			targetList.push(getFullName(target, adventure.room.enemyTitles));
+			targetList.push(target.getName(adventure.room.enemyIdMap));
 		}
 	}
 	return targetList;

@@ -27,7 +27,7 @@ function effect(targets, user, isCrit, adventure) {
 			const enemy = adventure.getCombatant(move.userReference);
 			if (enemy.hp > 0) {
 				move.targets = [{ team: "delver", index: userIndex }];
-				provokedEnemies.push(getFullName(enemy, adventure.room.enemyTitles));
+				provokedEnemies.push(enemy.getName(adventure.room.enemyIdMap));
 			}
 		}
 	})

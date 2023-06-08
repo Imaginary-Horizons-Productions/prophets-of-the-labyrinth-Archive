@@ -3,7 +3,8 @@ module.exports = class Combatant {
 		this.name = nameInput;
 		this.team = teamInput;
 	}
-	title = "";
+	id = "";
+	archetype = "";
 	hp = 300;
 	maxHp = 300;
 	block = 0;
@@ -17,11 +18,19 @@ module.exports = class Combatant {
 	modifiers = {};
 	staggerThreshold = 3;
 
-	/** Sets the combatant's title, either the archetype for delvers or the uniquifying number for enemies
-	 * @param {string} titleInput
+	/** Sets the combatant's id, either the discord member id for delvers or the uniquifying number for enemies
+	 * @param {string} idInput
 	 */
-	setTitle(titleInput) {
-		this.title = titleInput;
+	setId(idInput) {
+		this.id = idInput;
+		return this;
+	}
+
+	/** Sets the combatant's archetype, either the archetype name for delvers or the lookup name for enemies
+	 * @param {string} archetypeInput
+	   */
+	setArchetype(archetypeInput) {
+		this.archetype = archetypeInput;
 		return this;
 	}
 
@@ -65,6 +74,8 @@ module.exports = class Combatant {
 		this.critBonus += percent;
 		return this;
 	}
+
+	getName() { }
 
 	/** Get the number of stacks of the given modifier the combatant has
 	 * @param {string} modifierName
