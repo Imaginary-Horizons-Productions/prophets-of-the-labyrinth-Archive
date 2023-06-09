@@ -97,7 +97,7 @@ exports.generateTextBar = function (numerator, denominator, barLength) {
 }
 
 const operationMap = {
-	'+': (first, second) => Number(first) + second,
+	'+': (first, second) => first + second,
 	'~': (first, second) => first - second,
 	'*': (first, second) => first * second,
 	'/': (first, second) => first / second,
@@ -110,22 +110,8 @@ const operationMap = {
  */
 exports.parseExpression = function (expression, nValue) {
 	const operations = expression.replace(/[^\+~\*/\^]/g, "");
-	const terms = expression.split(/[\+~\*/\^]/g);
-	if (terms.length > 1) {
-		return terms.reduce((total, term, index) => {
-			if (term === "n") {
-				return operationMap[operations[index - 1]](total, nValue);
-			} else {
-				return operationMap[operations[index - 1]](total, Number(term));
-			}
-		});
-	} else {
-		if (terms[0] === "n") {
-			return nValue;
-		} else {
-			return terms[0];
-		}
-	}
+	const terms = expression.split(/[\+~\*/\^]/g).map(term => term === "n" ? nValue : Number(term));
+	return terms.reduce((total, term, index) => operationMap[operations[index - 1]](total, term));
 }
 
 /** Replace all @{tag}s in the text with the evaluation of the expression in the tag with n as count
