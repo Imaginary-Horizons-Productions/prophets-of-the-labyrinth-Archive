@@ -60,7 +60,7 @@ module.exports.execute = (interaction) => {
 						guildProfile.adventuring.add(interaction.user.id);
 
 						let options = [{ label: "None", description: "Deselect previously selected challenges", value: "None" }];
-						["Can't Hold All this Value", "Restless"].forEach(challengeName => {
+						["Can't Hold All this Value", "Restless", "Rushing"].forEach(challengeName => {
 							const challenge = getChallenge(challengeName);
 							options.push({ label: challengeName, description: challenge.dynamicDescription(challenge.intensity, challenge.duration), value: challengeName });
 						})

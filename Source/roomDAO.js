@@ -2,7 +2,7 @@ const { ActionRowBuilder, ButtonBuilder, StringSelectMenuBuilder, ThreadChannel,
 const { Adventure } = require("../Classes/Adventure.js");
 
 const { SAFE_DELIMITER, MAX_MESSAGE_ACTION_ROWS } = require("../constants.js");
-const { ordinalSuffixEN } = require("../helpers");
+const { ordinalSuffixEN, generateRandomNumber } = require("../helpers");
 
 const { getArtifact } = require("./Artifacts/_artifactDictionary");
 const { getChallenge } = require("./Challenges/_challengeDictionary.js");
@@ -176,19 +176,21 @@ exports.updateRoomHeader = function (adventure, message) {
 
 function generateRoutingRow(adventure) {
 	const candidateKeys = Object.keys(adventure.roomCandidates);
+	const max = 144;
+	const rushingChance = adventure.getChallengeIntensity("Rushing") / 100;
 	if (candidateKeys.length > 1) {
 		return new ActionRowBuilder().addComponents(
 			...candidateKeys.map(candidateTag => {
 				const [roomType, depth] = candidateTag.split(SAFE_DELIMITER);
 				return new ButtonBuilder().setCustomId(`routevote${SAFE_DELIMITER}${candidateTag}`)
-					.setLabel(`Next room: ${roomType}`)
+					.setLabel(`Next room: ${generateRandomNumber(adventure, max, "general") < max * rushingChance ? "???" : roomType}`)
 					.setStyle(ButtonStyle.Secondary)
 			}));
 	} else {
 		return new ActionRowBuilder().addComponents(
 			new ButtonBuilder().setCustomId("continue")
 				.setEmoji("👑")
-				.setLabel(`Continue to the ${candidateKeys[0].split(SAFE_DELIMITER)[0]}`)
+				.setLabel(`Continue to the ${generateRandomNumber(adventure, max, "general") < max * rushingChance ? "???" : candidateKeys[0].split(SAFE_DELIMITER)[0]}`)
 				.setStyle(ButtonStyle.Secondary)
 		);
 	}
