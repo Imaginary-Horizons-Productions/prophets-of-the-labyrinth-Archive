@@ -5,7 +5,8 @@ const CHALLENGES = {};
 for (const file of [
 	"blindavarice.js",
 	"cantholdallthisvalue.js",
-	"restless.js"
+	"restless.js",
+	"rushing.js"
 ]) {
 	const challenge = require(`./${file}`);
 	CHALLENGES[challenge.name] = challenge;
