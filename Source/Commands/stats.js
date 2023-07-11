@@ -23,7 +23,7 @@ module.exports.execute = (interaction) => {
 	let totalArtifacts = getArtifactCounts();
 	let embed = new MessageEmbed().setAuthor({ name: availability })
 		.setTitle("Player Stats")
-		.setDescription(`Total Score: ${Object.values(player.scores).reduce((total, current) => total += current)}`)
+		.setDescription(`Total Score: ${Object.values(player.scores).map(score => score.total).reduce((total, current) => total += current)}`)
 		.addFields({ name: "Artifacts Collected", value: `${Object.values(player.artifacts).length}/${totalArtifacts} Artifacts (${Math.floor(Object.values(player.artifacts).length / totalArtifacts * 100)}%)` })
 		.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
 	interaction.reply({ embeds: [embed], ephemeral: true })

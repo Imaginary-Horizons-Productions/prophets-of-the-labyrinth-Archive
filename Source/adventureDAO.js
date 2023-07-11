@@ -441,12 +441,22 @@ exports.checkNextRound = function ({ room, delvers }) {
 exports.completeAdventure = function (adventure, thread, descriptionOverride) {
 	const { guildId, messages: messageManager } = thread;
 	const guildProfile = getGuild(guildId);
+	if (adventure.accumulatedScore > guildProfile.highScore.score) {
+		guildProfile.highScore = {
+			score: adventure.accumulatedScore,
+			playerIds: adventure.delvers.map(delver => delver.id),
+			adventure: adventure.name
+		};
+	}
 	adventure.delvers.forEach(delver => {
 		let player = getPlayer(delver.id, guildId);
 		if (player.scores[guildId]) {
-			player.scores[guildId] += adventure.accumulatedScore;
+			player.scores[guildId].total += adventure.accumulatedScore;
+			if (adventure.accumulatedScore > player.scores[guildId].high) {
+				player.scores[guildId].high = adventure.accumulatedScore;
+			}
 		} else {
-			player.scores[guildId] = adventure.accumulatedScore;
+			player.scores[guildId] = { total: adventure.accumulatedScore, high: adventure.accumulatedScore };
 		}
 		setPlayer(player);
 		guildProfile.adventuring.delete(delver.id);

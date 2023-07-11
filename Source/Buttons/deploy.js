@@ -15,7 +15,7 @@ module.exports = new Button(id, (interaction, args) => {
 	if (user) {
 		let classOptions = [];
 		for (const className in playerProfile.archetypes) {
-			if (playerProfile.archetypes[className] > 0) {
+			if (playerProfile.archetypes[className] != null) {
 				let archetype = getArchetype(className);
 				classOptions.push({
 					label: `${className} ${getEmoji(archetype.element)}`,
