@@ -28,5 +28,5 @@ function crystallizeEffect(targets, user, isCrit, adventure) {
 	} else {
 		addModifier(user, { name: "Power Up", stacks: 25 });
 	}
-	return "";
+	return "It prepares to Block and is Powered Up.";
 }

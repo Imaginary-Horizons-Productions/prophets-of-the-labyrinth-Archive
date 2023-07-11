@@ -20,5 +20,5 @@ function effect([target], user, isCrit, adventure) {
 		addModifier(target, elementStagger);
 	}
 	addModifier(target, pendingCurse);
-	return "";
+	return `${target.getName(adventure.room.enemyIdMap)} gains Curse of Midas.`;
 }

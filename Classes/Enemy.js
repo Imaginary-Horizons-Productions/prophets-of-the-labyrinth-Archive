@@ -60,7 +60,7 @@ module.exports = class Enemy extends Combatant {
 
 	getName(enemyIdMap) {
 		if (enemyIdMap[this.name] > 1) {
-			return `${this.name} ${this.archetype}`;
+			return `${this.name} ${this.id}`;
 		} else {
 			return this.name;
 		}

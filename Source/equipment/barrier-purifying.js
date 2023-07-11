@@ -25,5 +25,5 @@ function effect([target], user, isCrit, adventure) {
 			debuffs.push(modifier);
 		}
 	}
-	return `${target.getName(adventure.room.enemyIdMap)} is relieved of ${debuffs.join(", ")}.`; // result as text
+	return `Damage will be Blocked for ${target.getName(adventure.room.enemyIdMap)} and they are relieved of ${debuffs.join(", ")}.`;
 }

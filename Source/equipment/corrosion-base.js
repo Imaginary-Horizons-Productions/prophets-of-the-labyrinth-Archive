@@ -21,5 +21,5 @@ function effect([target], user, isCrit, adventure) {
 		addModifier(target, critStagger);
 	}
 	addModifier(target, powerDown);
-	return ""; // result text
+	return `${target.getName(adventure.room.enemyIdMap)} is Powered Down.`;
 }

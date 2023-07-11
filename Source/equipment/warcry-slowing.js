@@ -32,5 +32,5 @@ function effect([initialTarget], user, isCrit, adventure) {
 		addModifier(target, { name: "Stagger", stacks: pendingStaggerStacks });
 		addModifier(target, slow);
 	})
-	return `${[...targetSet].join(", ")} ${targetArray.length === 1 ? "is" : "are"} staggered and slowed by the fierce war cry.`;
+	return `${[...targetSet].join(", ")} ${targetArray.length === 1 ? "is" : "are"} staggered and Slowed by the fierce war cry.`;
 }

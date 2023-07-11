@@ -28,6 +28,6 @@ function effect([target], user, isCrit, adventure) {
 			adventure.gainGold(bounty);
 			damageText += ` ${user.getName(adventure.room.enemyIdMap)} gains ${bounty}g of victory spoils.`;
 		}
-		return `${payHP(user, user.getModifierStacks("Power Up"), adventure)}${damageText}`;
+		return `${payHP(user, user.getModifierStacks("Power Up"), adventure)}${damageText} ${user.getName(adventure.room.enemyIdMap)} is Powered Up.`;
 	});
 }

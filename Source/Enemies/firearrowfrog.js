@@ -5,7 +5,7 @@ const { selectRandomFoe, selectSelf } = require("../enemyDAO.js");
 module.exports = new Enemy("Fire-Arrow Frog")
 	.setFirstAction("random")
 	.addAction({ name: "Venom Cannon", element: "Fire", isPriority: false, effect: venomCannonEffect, selector: selectRandomFoe, next: firearrowFrogPattern })
-	.addAction({ name: "Evade", element: "Untyped", isPriority: false, effect: evadeEffect, selector: selectSelf, next: firearrowFrogPattern })
+	.addAction({ name: "Burrow", element: "Untyped", isPriority: false, effect: burrowEffect, selector: selectSelf, next: firearrowFrogPattern })
 	.addAction({ name: "Goop Spray", element: "Untyped", isPriority: false, effect: goopSprayEffect, selector: selectRandomFoe, next: firearrowFrogPattern })
 	.setHp(250)
 	.setSpeed(100)
@@ -14,7 +14,7 @@ module.exports = new Enemy("Fire-Arrow Frog")
 
 const PATTERN = {
 	"Venom Cannon": "random",
-	"Evade": "Venom Cannon",
+	"Burrow": "Venom Cannon",
 	"Goop Spray": "Venom Cannon"
 }
 function firearrowFrogPattern(actionName) {
@@ -29,18 +29,18 @@ function venomCannonEffect([target], user, isCrit, adventure) {
 		addModifier(target, { name: "Poison", stacks: 3 });
 	}
 	return dealDamage(target, user, damage, false, user.element, adventure).then(damageText => {
-		return `${target.getName(adventure.room.enemyIdMap)} is poisoned. ${damageText}`;
+		return `${target.getName(adventure.room.enemyIdMap)} is Poisoned. ${damageText}`;
 	});
 }
 
-function evadeEffect(targets, user, isCrit, adventure) {
+function burrowEffect(targets, user, isCrit, adventure) {
 	let stacks = 2;
 	if (isCrit) {
 		stacks *= 3;
 	}
 	addModifier(user, { name: "Evade", stacks });
 	removeModifier(user, { name: "Stagger", stacks: 1 });
-	return "";
+	return "It's prepared to Evade.";
 }
 
 function goopSprayEffect([target], user, isCrit, adventure) {
@@ -50,5 +50,5 @@ function goopSprayEffect([target], user, isCrit, adventure) {
 	} else {
 		addModifier(target, { name: "Slow", stacks: 2 });
 	}
-	return `${target.getName(adventure.room.enemyIdMap)} is Slowed by the sticky ooze.`;
+	return `${target.getName(adventure.room.enemyIdMap)} is Slowed.`;
 }

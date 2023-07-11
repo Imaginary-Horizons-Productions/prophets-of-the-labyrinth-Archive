@@ -22,8 +22,8 @@ function effect([target], user, isCrit, adventure) {
 		damage *= critBonus;
 	}
 	addModifier(user, exposed);
-	return dealDamage(target, user, damage, false, element, adventure).then(resultText => {
+	return dealDamage(target, user, damage, false, element, adventure).then(damageText => {
 		addModifier(target, exposed);
-		return resultText;
+		return `${damageText} ${user.getName(adventure.room.enemyIdMap)} is Exposed.`;
 	});
 }

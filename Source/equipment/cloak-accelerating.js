@@ -18,5 +18,5 @@ function effect(targets, user, isCrit, adventure) {
 	}
 	addModifier(user, pendingEvade);
 	addModifier(user, pendingQuicken);
-	return "";
+	return `${user.getName(adventure.room.enemyIdMap)} is prepared to Evade and Quickened.`;
 }

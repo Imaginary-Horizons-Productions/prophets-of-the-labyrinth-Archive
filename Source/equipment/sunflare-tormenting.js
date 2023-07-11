@@ -28,5 +28,5 @@ function effect([target], user, isCrit, adventure) {
 		addModifier(target, slow);
 	}
 	addModifier(target, stagger);
-	return "";
+	return `${target.getName(adventure.room.enemyIdMap)}'s debuffs are duplicated${isCrit ? ` and is Slowed` : ""}.`;
 }

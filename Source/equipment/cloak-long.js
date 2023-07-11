@@ -16,5 +16,5 @@ function effect(targets, user, isCrit, adventure) {
 		removeModifier(user, elementStagger);
 	}
 	addModifier(user, pendingEvade);
-	return ""; // result as text
+	return `${user.getName(adventure.room.enemyIdMap)} is prepared to Evade.`;
 }

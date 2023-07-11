@@ -18,5 +18,5 @@ function effect(targets, user, isCrit, adventure) {
 	}
 	addModifier(user, pendingVigilance);
 	addBlock(user, block * (isCrit ? critBonus : 1))
-	return ""; // result as text
+	return `${user.getName(adventure.room.enemyIdMap)} gains Vigilance and prepares to Block.`;
 }

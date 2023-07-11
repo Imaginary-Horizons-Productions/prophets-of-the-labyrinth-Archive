@@ -22,9 +22,11 @@ function effect([target], user, isCrit, adventure) {
 	if (isCrit) {
 		hpThreshold *= critBonus;
 	}
-	addModifier(target, poison);
 	if (target.hp > hpThreshold) {
-		return dealDamage(target, user, damage, false, element, adventure);
+		addModifier(target, poison);
+		return dealDamage(target, user, damage, false, element, adventure).then(damageText => {
+			return `${damageText} ${target.getName(adventure.room.enemyIdMap)} is Poisoned.`;
+		});
 	} else {
 		target.hp = 0;
 		return `${target.getName(adventure.room.enemyIdMap)} meets the reaper.`;

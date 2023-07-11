@@ -20,7 +20,10 @@ function effect([target], user, isCrit, adventure) {
 	}
 	if (isCrit) {
 		addModifier(target, slow);
+		addModifier(target, stagger);
+		return `${target.getName(adventure.room.enemyIdMap)} is Slowed.`;
+	} else {
+		addModifier(target, stagger);
+		return "";
 	}
-	addModifier(target, stagger);
-	return "";
 }

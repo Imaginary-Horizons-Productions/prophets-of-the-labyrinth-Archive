@@ -23,5 +23,5 @@ function effect([target], user, isCrit, adventure) {
 	}
 	addModifier(target, stagger);
 	addModifier(user, quicken);
-	return "";
+	return `${user.getName(adventure.room.enemyIdMap)} is Quickened.${isCrit ? `${target.getName(adventure.room.enemyIdMap)} is Slowed.` : ""}`;
 }

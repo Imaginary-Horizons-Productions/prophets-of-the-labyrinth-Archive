@@ -19,5 +19,5 @@ function effect([target], user, isCrit, adventure) {
 		addModifier(target, stasis);
 	}
 	addModifier(target, regen);
-	return payHP(user, hpCost, adventure);
+	return `${payHP(user, hpCost, adventure)} ${user.getName(adventure.room.enemyIdMap)} gains Regen${isCrit ? " and enters Stasis" : ""}.`;
 }

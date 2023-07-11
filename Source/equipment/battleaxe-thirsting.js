@@ -27,6 +27,6 @@ function effect([target], user, isCrit, adventure) {
 		if (target.hp < 1) {
 			damageText += gainHealth(user, healing, adventure);
 		}
-		return damageText;
+		return `${damageText} ${user.getName(adventure.room.enemyIdMap)} is Exposed.`;
 	});
 }

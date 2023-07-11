@@ -24,5 +24,5 @@ function effect([target], user, isCrit, adventure) {
 	}
 	addModifier(target, stagger);
 	addModifier(user, evade);
-	return "";
+	return `${user.getName(adventure.room.enemyIdMap)} prepares to Evade.${isCrit ? ` ${target.getName(adventure.room.enemyIdMap)} is Slowed.` : ""}`;
 }

@@ -27,5 +27,5 @@ function goopSprayEffect([target], user, isCrit, adventure) {
 	} else {
 		addModifier(target, { name: "Slow", stacks: 2 });
 	}
-	return `${target.getName(adventure.room.enemyIdMap)} is Slowed by the sticky ooze.`;
+	return `${target.getName(adventure.room.enemyIdMap)} is Slowed.`;
 }
