@@ -8,5 +8,5 @@ module.exports = class Player {
 	scores = {};
 	artifacts = { "start": "Phoenix Fruit Blossom" };
 	/** @type {{[archetypeName]: highScore}} set highScore to null to signify "not unlocked yet" */
-	archetypes = { "Knight": 0, "Assassin": 0, "Chemist": 0, "Martial Artist": 0, "Hemomancer": 0, "Ritualist": 0 };
+	archetypes = { "Knight": 0, "Assassin": 0, "Chemist": 0, "Martial Artist": 0, "Hemomancer": 0, "Ritualist": 0, "Legionnaire": 0 };
 }

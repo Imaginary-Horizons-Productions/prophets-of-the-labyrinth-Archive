@@ -1,7 +1,7 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
-const { removeModifier, addModifier, dealDamage } = require('../combatantDAO.js');
+const { removeModifier, addModifier, payHP } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Infinite Regeneration", "*Pay @{hpCost} hp to grant an ally @{mod1Stacks} @{mod1}*\nCritical Hit💥: HP Cost / @{critBonus}", "Earth", effect, [])
+module.exports = new EquipmentTemplate("Infinite Regeneration", "Pay @{hpCost} hp to grant an ally @{mod1Stacks} @{mod1}", "HP Cost / @{critBonus}", "Earth", effect, ["Fate Sealing Infinite Regeneration"])
 	.setCategory("Pact")
 	.setTargetingTags({ target: "single", team: "delver" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Regen", stacks: 3 }])
@@ -18,5 +18,5 @@ function effect([target], user, isCrit, adventure) {
 		hpCost /= critBonus;
 	}
 	addModifier(target, regen);
-	return dealDamage(user, null, hpCost, true, "Untyped", adventure); // result text
+	return `${payHP(user, hpCost, adventure)} ${user.getName(adventure.room.enemyIdMap)} gains Regen.`;
 }

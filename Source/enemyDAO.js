@@ -3,11 +3,12 @@ const Enemy = require("../Classes/Enemy.js");
 const { generateRandomNumber } = require("../helpers.js");
 const { getOpposite } = require("./elementHelpers.js");
 
-module.exports.spawnEnemy = function (adventure, enemyTemplate, randomizeHp) {
-	let enemy = Object.assign(new Enemy(), enemyTemplate);
+module.exports.spawnEnemy = function (adventure, enemyTemplate) {
+	/** @type {Enemy} */
+	const enemy = Object.assign(new Enemy(), enemyTemplate);
 	enemy.modifiers = { ...enemyTemplate.startingModifiers }; // breaks shared reference to modifiers object by enemies of same name
 	let hpPercent = 85 + 15 * adventure.delvers.length;
-	if (randomizeHp) {
+	if (enemy.shouldRandomizeHP) {
 		hpPercent += 10 * (2 - generateRandomNumber(adventure, 5, "battle"));
 	}
 	enemy.setHp(Math.ceil(enemy.maxHp * hpPercent / 100));
@@ -36,11 +37,11 @@ module.exports.spawnEnemy = function (adventure, enemyTemplate, randomizeHp) {
 			break;
 	}
 	adventure.room.enemies.push(enemy);
-	Enemy.setEnemyTitle(adventure.room.enemyTitles, enemy);
+	Enemy.setEnemyTitle(adventure.room.enemyIdMap, enemy);
 }
 
 module.exports.selectRandomOtherAlly = function (adventure, self) {
-	const selfIndex = adventure.room.enemies.findIndex(enemy => enemy.lookupName === self.lookupName && enemy.title === self.title);
+	const selfIndex = adventure.room.enemies.findIndex(enemy => enemy.archetype === self.archetype && enemy.id === self.id);
 	const liveOtherEnemyIndexes = [];
 	adventure.room.enemies.forEach((enemy, index) => {
 		if (enemy.hp > 0 && index !== selfIndex) {

@@ -9,7 +9,7 @@ module.exports = new Enemy("Bloodtail Hawk")
 	.setSpeed(105)
 	.setElement("Wind")
 	.setStaggerThreshold(1)
-	.setCritDenominator(3);
+	.setCritBonus(30);
 
 function rakeEffect([target], user, isCrit, adventure) {
 	let damage = 50;

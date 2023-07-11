@@ -1,8 +1,8 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
-const { addModifier, getFullName } = require('../combatantDAO.js');
+const { addModifier } = require('../combatantDAO.js');
 const { isDebuff } = require('../Modifiers/_modifierDictionary.js');
 
-module.exports = new EquipmentTemplate("Tormenting Sun Flare", "*Inflict @{mod1Stacks} @{mod1} and 1 of each of a foe's debuffs on that foe with priority*\nCritical Hit💥: Inflict @{mod2Stacks} @{mod2} as well", "Fire", effect, ["Accelerating Sun Flare", "Evasive Sun Flare"])
+module.exports = new EquipmentTemplate("Tormenting Sun Flare", "Inflict @{mod1Stacks} @{mod1} and duplicate its debuffs with priority", "Also inflict @{mod2Stacks} @{mod2}", "Wind", effect, ["Accelerating Sun Flare", "Evasive Sun Flare"])
 	.setCategory("Spell")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Stagger", stacks: 1 }, { name: "Slow", stacks: 2 }])
@@ -12,7 +12,7 @@ module.exports = new EquipmentTemplate("Tormenting Sun Flare", "*Inflict @{mod1S
 
 function effect([target], user, isCrit, adventure) {
 	if (target.hp < 1) {
-		return ` ${getFullName(target, adventure.room.enemyTitles)} was already dead!`;
+		return ` ${target.getName(adventure.room.enemyIdMap)} was already dead!`;
 	}
 
 	let { element, modifiers: [elementStagger, stagger, slow] } = module.exports;
@@ -28,5 +28,5 @@ function effect([target], user, isCrit, adventure) {
 		addModifier(target, slow);
 	}
 	addModifier(target, stagger);
-	return "";
+	return `${target.getName(adventure.room.enemyIdMap)}'s debuffs are duplicated${isCrit ? ` and is Slowed` : ""}.`;
 }

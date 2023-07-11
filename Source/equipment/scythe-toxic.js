@@ -1,32 +1,34 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
-const { addModifier, dealDamage, getFullName } = require('../combatantDAO.js');
+const { addModifier, dealDamage } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Toxic Scythe", "*Strike a foe applying @{mod1Stacks} @{mod1} and @{damage} @{element} damage; instant death if foe is at or below @{bonusDamage} hp*\nCritical Hit💥: Instant death threshold x@{critBonus}", "Wind", effect, ["Lethal Scythe", "Piercing Scythe"])
+module.exports = new EquipmentTemplate("Toxic Scythe", "Strike a foe applying @{mod1Stacks} @{mod1} and @{damage} @{element} damage; instant death if foe is at or below @{bonus} hp", "Instant death threshold x@{critBonus}", "Wind", effect, ["Lethal Scythe", "Piercing Scythe"])
 	.setCategory("Weapon")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Poison", stacks: 3 }])
 	.setCost(350)
 	.setUses(10)
 	.setDamage(75)
-	.setBonusDamage(99);
+	.setBonus(99); // execute threshold
 
 function effect([target], user, isCrit, adventure) {
 	if (target.hp < 1) {
-		return ` ${getFullName(target, adventure.room.enemyTitles)} was already dead!`;
+		return ` ${target.getName(adventure.room.enemyIdMap)} was already dead!`;
 	}
 
-	let { element, modifiers: [elementStagger, poison], damage, bonusDamage: hpThreshold, critBonus } = module.exports;
+	let { element, modifiers: [elementStagger, poison], damage, bonus: hpThreshold, critBonus } = module.exports;
 	if (user.element === element) {
 		addModifier(target, elementStagger);
 	}
 	if (isCrit) {
 		hpThreshold *= critBonus;
 	}
-	addModifier(target, poison);
 	if (target.hp > hpThreshold) {
-		return dealDamage(target, user, damage, false, element, adventure);
+		addModifier(target, poison);
+		return dealDamage(target, user, damage, false, element, adventure).then(damageText => {
+			return `${damageText} ${target.getName(adventure.room.enemyIdMap)} is Poisoned.`;
+		});
 	} else {
 		target.hp = 0;
-		return `${getFullName(target, adventure.room.enemyTitles)} meets the reaper.`;
+		return `${target.getName(adventure.room.enemyIdMap)} meets the reaper.`;
 	}
 }

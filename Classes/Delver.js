@@ -13,7 +13,7 @@ module.exports = class Delver extends Combatant {
 	equipment = [];
 	startingArtifact = "";
 
-	setTitle = super.setTitle;
+	setArchetype = super.setArchetype;
 
 	setHp = super.setHp;
 
@@ -31,17 +31,7 @@ module.exports = class Delver extends Combatant {
 		return this;
 	}
 
-	/** Overwrite of Combatant.getCritNumerator(). `hawkTailfeatherCount` included so delvers can modify value via artifacts.
-	 * @param {number} hawkTailfeatherCount
-	 */
-	getCritNumerator(hawkTailfeatherCount) {
-		return this.critNumerator + (hawkTailfeatherCount / 2);
-	}
-
-	/** Overwrite of Combatant.getCritDenominator(). `hawkTailfeatherCount` included so delvers can modify value via artifacts.
-	 * @param {number} hawkTailfeatherCount
-	 */
-	getCritDenominator(hawkTailfeatherCount) {
-		return this.critDenominator + (hawkTailfeatherCount / 2);
+	getName() {
+		return this.name;
 	}
 }

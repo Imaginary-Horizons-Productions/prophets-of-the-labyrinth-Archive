@@ -1,5 +1,5 @@
 const Enemy = require("../../Classes/Enemy.js");
-const { addModifier, getFullName, dealDamage } = require("../combatantDAO.js");
+const { addModifier, dealDamage } = require("../combatantDAO.js");
 const { selectRandomFoe, nextRandom } = require("../enemyDAO.js");
 
 module.exports = new Enemy("@{adventure} Slime")
@@ -27,5 +27,5 @@ function goopSprayEffect([target], user, isCrit, adventure) {
 	} else {
 		addModifier(target, { name: "Slow", stacks: 2 });
 	}
-	return `${getFullName(target, adventure.room.enemyTitles)} is Slowed by the sticky ooze.`;
+	return `${target.getName(adventure.room.enemyIdMap)} is Slowed.`;
 }

@@ -5,18 +5,6 @@ const { getInverse, isNonStacking, getModifierDescription, isBuff, isDebuff } = 
 const { getWeakness } = require("./elementHelpers.js");
 const Adventure = require("../Classes/Adventure.js");
 
-exports.getFullName = function (combatant, titleObject) {
-	if (combatant instanceof Enemy) {
-		if (titleObject[combatant.name] > 1) {
-			return `${combatant.name} ${combatant.title}`;
-		} else {
-			return combatant.name;
-		}
-	} else if (combatant instanceof Delver) {
-		return `${combatant.name}`;
-	}
-}
-
 /** Speed is affected by `roundSpeed` and modifiers
  * @param {Delver | Enemy} combatant
  * @returns {number}
@@ -35,7 +23,7 @@ exports.calculateTotalSpeed = function (combatant) {
 }
 
 exports.dealDamage = async function (target, user, damage, isUnblockable, element, adventure) {
-	let targetName = exports.getFullName(target, adventure.room.enemyTitles);
+	let targetName = target.getName(adventure.room.enemyIdMap);
 	let targetModifiers = Object.keys(target.modifiers);
 	if (!targetModifiers.includes(`${element} Absorb`)) {
 		if (!targetModifiers.includes("Evade") || isUnblockable) {
@@ -96,6 +84,28 @@ exports.dealDamage = async function (target, user, damage, isUnblockable, elemen
 	}
 }
 
+/**
+ * @param {Combatant} user
+ * @param {number} damage
+ * @param {Adventure} adventure
+ */
+exports.payHP = function (user, damage, adventure) {
+	user.hp -= damage;
+	let userName = user.getName(adventure.room.enemyIdMap);
+	let resultText = ` **${userName}** pays ${damage} hp.`;
+	if (user.hp <= 0) {
+		if (user.team === "delver") {
+			user.hp = user.maxHp;
+			adventure.lives -= 1;
+			resultText += ` *${userName} has died* and been revived. ***${adventure.lives} lives remain.***`;
+		} else {
+			user.hp = 0;
+			resultText += ` *${userName} has died*.`;
+		}
+	}
+	return resultText;
+}
+
 exports.gainHealth = function (combatant, healing, adventure, inCombat = true) {
 	combatant.hp += healing;
 	let excessHealing = 0;
@@ -111,9 +121,9 @@ exports.gainHealth = function (combatant, healing, adventure, inCombat = true) {
 	}
 
 	if (combatant.hp === combatant.maxHp) {
-		return `${exports.getFullName(combatant, adventure.room.enemyTitles)} was fully healed${excessHealing && inCombat && bloodshieldSwordCount > 0 ? ` (and gained block)` : ""}!`;
+		return `${combatant.getName(adventure.room.enemyIdMap)} was fully healed${excessHealing && inCombat && bloodshieldSwordCount > 0 ? ` (and gained block)` : ""}!`;
 	} else {
-		return `${exports.getFullName(combatant, adventure.room.enemyTitles)} *gained ${healing} hp*.`
+		return `${combatant.getName(adventure.room.enemyIdMap)} *gained ${healing} hp*.`
 	}
 }
 

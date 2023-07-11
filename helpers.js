@@ -96,19 +96,22 @@ exports.generateTextBar = function (numerator, denominator, barLength) {
 	return bar;
 }
 
-/** Calculate the value represented by a mathematical expression (supported operations: multiplication)
- * @param {string} countExpression
+const operationMap = {
+	'+': (first, second) => first + second,
+	'~': (first, second) => first - second,
+	'*': (first, second) => first * second,
+	'/': (first, second) => first / second,
+	'^': (first, second) => first ** second,
+};
+
+/** Calculate the value represented by a mathematical expression (supported operations: addition, subtration, multiplication, division, power)
+ * @param {string} expression
  * @param {number} nValue - the value to replace "n" with
- * @returns {number} the calculated value
  */
-exports.parseCount = function (countExpression, nValue) {
-	return Math.ceil(countExpression.split("*").reduce((total, term) => {
-		if (term === "n") {
-			return total * nValue;
-		} else {
-			return total * Number(term);
-		}
-	}, 1));
+exports.parseExpression = function (expression, nValue) {
+	const operations = expression.replace(/[^\+~\*/\^]/g, "");
+	const terms = expression.split(/[\+~\*/\^]/g).map(term => term === "n" ? nValue : Number(term));
+	return terms.reduce((total, term, index) => operationMap[operations[index - 1]](total, term));
 }
 
 /** Replace all @{tag}s in the text with the evaluation of the expression in the tag with n as count
@@ -117,14 +120,18 @@ exports.parseCount = function (countExpression, nValue) {
  */
 exports.calculateTagContent = function (text, tags) {
 	for (const { tag, count } of tags) {
-		const taggedGlobal = new RegExp(`@{(${tag}[\\*\\d]*)}`, "g");
+		const taggedGlobal = new RegExp(`@{(.*${tag}.*)}`, "g");
 		const untagged = new RegExp(tag, "g");
-		const taggedSingle = new RegExp(`@{(${tag}[\\*\\d]*)}`);
+		const taggedSingle = new RegExp(`@{(.*${tag}.*)}`);
 
 		for (const match of text.matchAll(taggedGlobal)) {
 			const countExpression = match?.[1].replace(untagged, "n");
 			if (countExpression) {
-				text = text.replace(taggedSingle, exports.parseCount(countExpression, count));
+				let parsedExpression = exports.parseExpression(countExpression, count);
+				if (typeof parsedExpression === "number") {
+					parsedExpression = parsedExpression.toFixed(2);
+				}
+				text = text.replace(taggedSingle, parsedExpression);
 			}
 		}
 	}

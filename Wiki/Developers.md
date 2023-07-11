@@ -24,6 +24,11 @@ Welcome prospective developers! We're so glad you've interested in helping out.
 - Feature Branches are to be deleted after their Pull Requests are merged or rejected
 
 ## Style
-- This project uses tabs for indentation to reduce file size and keypresses during code navigation
-- Bot feedback messages should be written in 3rd-person passive tense and make requests in polite language
+1. This project uses tabs for indentation to reduce file size and keypresses during code navigation
+1. Bot feedback messages should be written in 3rd-person passive tense and make requests in polite language
     - Example: "Your bounty could not be posted. Please remove phrases disallowed by the server from the title and try again."
+
+### Move Result Messages
+1. All messages should mention Modifiers applied, but avoid specifying quantity
+1. Boss messages can contain flavor/world building text, non-boss enemies and gear should avoid doing so because they more frequently repeated
+1. Modifier names can be conjugated, but should be capitalized

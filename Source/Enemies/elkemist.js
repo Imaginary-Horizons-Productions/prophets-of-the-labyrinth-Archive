@@ -13,7 +13,8 @@ module.exports = new Enemy("Elkemist")
 	.setHp(2000)
 	.setSpeed(100)
 	.setElement("Water")
-	.setStaggerThreshold(4);
+	.setStaggerThreshold(4)
+	.markAsBoss();
 
 function toilEffect(targets, user, isCrit, adventure) {
 	// Gain block and medium progress
@@ -24,7 +25,7 @@ function toilEffect(targets, user, isCrit, adventure) {
 		addModifier(user, { name: "Progress", stacks: 45 + generateRandomNumber(adventure, 31, "battle") });
 	}
 	addBlock(user, 200);
-	return "It succeeds at gathering some materials and fortifying its laboratory.";
+	return "It gathers some materials, fortifying its laboratory to Block incoming damage.";
 }
 
 function troubleEffect([target], user, isCrit, adventure) {

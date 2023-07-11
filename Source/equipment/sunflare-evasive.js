@@ -1,7 +1,7 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
-const { addModifier, getFullName } = require('../combatantDAO.js');
+const { addModifier } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Evasive Sun Flare", "*Inflict @{mod1Stacks} @{mod1} on a foe and gain @{mod2Stacks} @{mod2} with priority*\nCritical Hit💥: Inflict @{mod3Stacks} @{mod3} as well", "Fire", effect, ["Accelerating Sun Flare", "Tormenting Sun Flare"])
+module.exports = new EquipmentTemplate("Evasive Sun Flare", "Inflict @{mod1Stacks} @{mod1} on a foe and gain @{mod2Stacks} @{mod2} with priority", "Also inflict @{mod3Stacks} @{mod3}", "Wind", effect, ["Accelerating Sun Flare", "Tormenting Sun Flare"])
 	.setCategory("Spell")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Stagger", stacks: 1 }, { name: "Evade", stacks: 2 }, { name: "Slow", stacks: 2 }])
@@ -12,7 +12,7 @@ module.exports = new EquipmentTemplate("Evasive Sun Flare", "*Inflict @{mod1Stac
 
 function effect([target], user, isCrit, adventure) {
 	if (target.hp < 1) {
-		return ` ${getFullName(target, adventure.room.enemyTitles)} was already dead!`;
+		return ` ${target.getName(adventure.room.enemyIdMap)} was already dead!`;
 	}
 
 	let { element, modifiers: [elementStagger, stagger, evade, slow] } = module.exports;
@@ -24,5 +24,5 @@ function effect([target], user, isCrit, adventure) {
 	}
 	addModifier(target, stagger);
 	addModifier(user, evade);
-	return "";
+	return `${user.getName(adventure.room.enemyIdMap)} prepares to Evade.${isCrit ? ` ${target.getName(adventure.room.enemyIdMap)} is Slowed.` : ""}`;
 }

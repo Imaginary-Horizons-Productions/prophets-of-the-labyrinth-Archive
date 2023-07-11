@@ -2,7 +2,7 @@ const { ActionRowBuilder, ButtonBuilder, StringSelectMenuBuilder, ThreadChannel,
 const { Adventure } = require("../Classes/Adventure.js");
 
 const { SAFE_DELIMITER, MAX_MESSAGE_ACTION_ROWS } = require("../constants.js");
-const { ordinalSuffixEN } = require("../helpers");
+const { ordinalSuffixEN, generateRandomNumber } = require("../helpers");
 
 const { getArtifact } = require("./Artifacts/_artifactDictionary");
 const { getChallenge } = require("./Challenges/_challengeDictionary.js");
@@ -33,7 +33,7 @@ exports.renderRoom = function (adventure, thread, descriptionOverride) {
 	let components = [];
 
 	if (adventure.depth <= getLabyrinthProperty(adventure.labyrinth, "maxDepth")) {
-		if (adventure.state !== "completed") {
+		if (!Adventure.endStates.includes(adventure.state)) {
 			// Continue
 			const roomActionCount = adventure.room.resources.roomAction?.count;
 			if ("roomAction" in adventure.room.resources) {
@@ -99,7 +99,6 @@ exports.renderRoom = function (adventure, thread, descriptionOverride) {
  * @param {Adventure} adventure
  */
 function addScoreField(embed, adventure) {
-	const isSuccess = adventure.lives > 0 && adventure.depth > getLabyrinthProperty(adventure.labyrinth, "maxDepth");
 	const livesScore = adventure.lives * 10;
 	const goldScore = Math.floor(Math.log10(adventure.peakGold)) * 5;
 	let score = adventure.accumulatedScore + livesScore + goldScore + adventure.depth;
@@ -109,22 +108,30 @@ function addScoreField(embed, adventure) {
 		challengeMultiplier *= challenge.scoreMultiplier;
 	})
 	score *= challengeMultiplier;
-	if (!isSuccess) {
-		embed.setTitle(`Defeated${adventure.room.title ? ` in ${adventure.room.title}` : " before even starting"}`);
-		score = Math.floor(score / 2);
-	} else {
-		embed.setTitle(`Success in ${adventure.labyrinth}`);
-	}
 	const skippedArtifactsMultiplier = 1 + (adventure.delvers.reduce((count, delver) => delver.startingArtifact ? count : count + 1, 0) / adventure.delvers.length);
 	score = Math.max(1, score * skippedArtifactsMultiplier);
+	switch (adventure.state) {
+		case "success":
+			embed.setTitle(`Success in ${adventure.labyrinth}`);
+			break;
+		case "defeat":
+			embed.setTitle(`Defeated${adventure.room.title ? ` in ${adventure.room.title}` : " before even starting"}`);
+			score = Math.floor(score / 2);
+			break;
+		case "giveup":
+			embed.setTitle(`Gave up${adventure.room.title ? ` in ${adventure.room.title}` : " before even starting"}`);
+			score = 0;
+			break;
+	}
 	const depthScoreLine = generateScoreline("additive", "Depth", adventure.depth);
 	const livesScoreLine = generateScoreline("additive", "Lives", livesScore);
 	const goldScoreline = generateScoreline("additive", "Gold", goldScore);
 	const bonusScoreline = generateScoreline("additive", "Bonus", adventure.accumulatedScore);
 	const challengesScoreline = generateScoreline("multiplicative", "Challenges Multiplier", challengeMultiplier);
 	const skippedArtifactScoreline = generateScoreline("multiplicative", "Artifact Skip Multiplier", skippedArtifactsMultiplier);
-	const defeatScoreline = generateScoreline("multiplicative", "Defeat", isSuccess ? 1 : 0.5);
-	embed.addFields({ name: "Score Breakdown", value: `${depthScoreLine}${livesScoreLine}${goldScoreline}${bonusScoreline}${challengesScoreline}${skippedArtifactScoreline}${defeatScoreline}\n__Total__: ${score}` });
+	const defeatScoreline = generateScoreline("multiplicative", "Defeat", adventure.state === "defeat" ? 0.5 : 1);
+	const giveupScoreline = generateScoreline("multiplicative", "Give Up", adventure.state === "giveup" ? 0 : 1);
+	embed.addFields({ name: "Score Breakdown", value: `${depthScoreLine}${livesScoreLine}${goldScoreline}${bonusScoreline}${challengesScoreline}${skippedArtifactScoreline}${defeatScoreline}${giveupScoreline}\n__Total__: ${score}` });
 	adventure.accumulatedScore = score;
 }
 
@@ -169,19 +176,21 @@ exports.updateRoomHeader = function (adventure, message) {
 
 function generateRoutingRow(adventure) {
 	const candidateKeys = Object.keys(adventure.roomCandidates);
+	const max = 144;
+	const rushingChance = adventure.getChallengeIntensity("Rushing") / 100;
 	if (candidateKeys.length > 1) {
 		return new ActionRowBuilder().addComponents(
 			...candidateKeys.map(candidateTag => {
 				const [roomType, depth] = candidateTag.split(SAFE_DELIMITER);
 				return new ButtonBuilder().setCustomId(`routevote${SAFE_DELIMITER}${candidateTag}`)
-					.setLabel(`Next room: ${roomType}`)
+					.setLabel(`Next room: ${generateRandomNumber(adventure, max, "general") < max * rushingChance ? "???" : roomType}`)
 					.setStyle(ButtonStyle.Secondary)
 			}));
 	} else {
 		return new ActionRowBuilder().addComponents(
 			new ButtonBuilder().setCustomId("continue")
 				.setEmoji("👑")
-				.setLabel(`Continue to the ${candidateKeys[0].split(SAFE_DELIMITER)[0]}`)
+				.setLabel(`Continue to the ${generateRandomNumber(adventure, max, "general") < max * rushingChance ? "???" : candidateKeys[0].split(SAFE_DELIMITER)[0]}`)
 				.setStyle(ButtonStyle.Secondary)
 		);
 	}
@@ -218,7 +227,7 @@ function generateLootRow(adventure) {
 		return new ActionRowBuilder().addComponents(
 			new StringSelectMenuBuilder().setCustomId("loot")
 				.setPlaceholder("No loot")
-				.setOptions([{ label: "If the menu is stuck, close and reopen the thread.", description: "This usually happens when two players try to take the last thing at the same time.", value: "placeholder" }])
+				.setOptions([{ label: "If the menu is stuck, switch channels and come back.", description: "This usually happens when two players try to take the last thing at the same time.", value: "placeholder" }])
 				.setDisabled(true)
 		)
 	}
@@ -227,7 +236,7 @@ function generateLootRow(adventure) {
 function generateTreasureRow(adventure) {
 	let options = [];
 	for (const { name, resourceType: type, count, visibility } of Object.values(adventure.room.resources)) {
-		if (visibility === "internal" && type !== "roomAction") {
+		if (visibility === "always") {
 			if (count > 0) {
 				let option = { value: `${name}${SAFE_DELIMITER}${options.length}` };
 
@@ -261,7 +270,7 @@ function generateTreasureRow(adventure) {
 		return new ActionRowBuilder().addComponents(
 			new StringSelectMenuBuilder().setCustomId("treasure")
 				.setPlaceholder("No treasure")
-				.setOptions([{ label: "If the menu is stuck, close and reopen the thread.", description: "This usually happens when two players try to take the last thing at the same time.", value: "placeholder" }])
+				.setOptions([{ label: "If the menu is stuck, switch channels and come back.", description: "This usually happens when two players try to take the last thing at the same time.", value: "placeholder" }])
 				.setDisabled(true)
 		)
 	}
@@ -287,8 +296,9 @@ function generateMerchantRows(adventure) {
 			categorizedResources[groupName].forEach((resource, i) => {
 				if (adventure.room.resources[resource].count > 0) {
 					const cost = getEquipmentProperty(resource, "cost");
+					const maxUses = getEquipmentProperty(resource, "maxUses");
 					options.push({
-						label: `${cost}g: ${resource}`,
+						label: `${cost}g: ${resource} (${maxUses} uses)`,
 						description: buildEquipmentDescription(resource, false),
 						value: `${resource}${SAFE_DELIMITER}${i}`
 					})
@@ -303,7 +313,7 @@ function generateMerchantRows(adventure) {
 				rows.push(new ActionRowBuilder().addComponents(
 					new StringSelectMenuBuilder().setCustomId(`buy${groupName}`)
 						.setPlaceholder("SOLD OUT")
-						.setOptions([{ label: "If the menu is stuck, close and reopen the thread.", description: "This usually happens when two players try to buy the last item at the same time.", value: "placeholder" }])
+						.setOptions([{ label: "If the menu is stuck, switch channels and come back.", description: "This usually happens when two players try to buy the last item at the same time.", value: "placeholder" }])
 						.setDisabled(true)));
 			}
 		} else if (groupName === "scouting") {

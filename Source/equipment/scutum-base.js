@@ -1,14 +1,13 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addBlock, removeModifier } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Urgent Buckler", "*Grant an ally @{block} block with priority*\nCritical Hit💥: Block x@{critBonus}", "Earth", effect, ["Guarding Buckler", "Heavy Buckler"])
+module.exports = new EquipmentTemplate("Scutum", "Grant @{block} block to an ally and yourself", "Block x@{critBonus}", "Fire", effect, ["Heavy Scutum", "Sweeping Scutum", "Vigilant Scutum"])
 	.setCategory("Armor")
 	.setTargetingTags({ target: "single", team: "delver" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
-	.setCost(350)
+	.setCost(200)
 	.setUses(10)
-	.setBlock(75)
-	.markPriority();
+	.setBlock(75);
 
 function effect([target], user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger], block, critBonus } = module.exports;
@@ -19,5 +18,6 @@ function effect([target], user, isCrit, adventure) {
 		block *= critBonus;
 	}
 	addBlock(target, block);
-	return "";
+	addBlock(user, block);
+	return `Damage will be blocked for ${target.getName(adventure.room.enemyIdMap)} and ${user.getName(adventure.room.enemyIdMap)}.`;
 }

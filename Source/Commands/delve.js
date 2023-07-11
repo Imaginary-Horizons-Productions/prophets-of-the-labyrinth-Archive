@@ -43,7 +43,12 @@ module.exports.execute = (interaction) => {
 					.setDescription("A new adventure is starting!")
 					.addFields({ name: "1 Party Member", value: `${interaction.member} 👑` })
 				interaction.reply({ embeds: [embed], fetchReply: true }).then(recruitMessage => {
-					return recruitMessage.startThread({ name: adventure.name }).then(thread => {
+					adventure.messageIds.recruit = recruitMessage.id;
+					interaction.channel.threads.create({
+						name: adventure.name,
+						type: ChannelType.PrivateThread,
+						invitable: true
+					}).then(thread => {
 						recruitMessage.edit({
 							components: [new ActionRowBuilder().addComponents(
 								new ButtonBuilder().setCustomId(`join${SAFE_DELIMITER}${thread.guildId}${SAFE_DELIMITER}${thread.id}${SAFE_DELIMITER}recruit`)
@@ -55,7 +60,7 @@ module.exports.execute = (interaction) => {
 						guildProfile.adventuring.add(interaction.user.id);
 
 						let options = [{ label: "None", description: "Deselect previously selected challenges", value: "None" }];
-						["Can't Hold All this Value", "Restless"].forEach(challengeName => {
+						["Can't Hold All this Value", "Restless", "Rushing"].forEach(challengeName => {
 							const challenge = getChallenge(challengeName);
 							options.push({ label: challengeName, description: challenge.dynamicDescription(challenge.intensity, challenge.duration), value: challengeName });
 						})

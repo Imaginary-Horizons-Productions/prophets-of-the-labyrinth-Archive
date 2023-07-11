@@ -1,6 +1,6 @@
 const { EmbedBuilder } = require('discord.js');
 const Select = require('../../Classes/Select.js');
-const { getAdventure, setAdventure } = require('../adventureDAO.js');
+const { getAdventure, setAdventure, fetchRecruitMessage } = require('../adventureDAO.js');
 const { getChallenge } = require('../Challenges/_challengeDictionary.js');
 
 const id = "startingchallenges";
@@ -18,7 +18,7 @@ module.exports = new Select(id, (interaction, args) => {
 
 	if (interaction.values.includes("None")) {
 		adventure.challenges = {};
-		interaction.channel.fetchStarterMessage().then(starterMessage => {
+		fetchRecruitMessage(interaction.channel, adventure.messageIds.recruit).then(starterMessage => {
 			const [{ data: starterEmbed }] = starterMessage.embeds;
 			starterMessage.edit({
 				embeds: [
@@ -35,7 +35,7 @@ module.exports = new Select(id, (interaction, args) => {
 			const challenge = getChallenge(challengeName);
 			adventure.challenges[challengeName] = { intensity: challenge.intensity, duration: challenge.duration };
 		})
-		interaction.channel.fetchStarterMessage().then(starterMessage => {
+		fetchRecruitMessage(interaction.channel, adventure.messageIds.recruit).then(starterMessage => {
 			const [{ data: starterEmbed }] = starterMessage.embeds;
 			const updatedEmbed = new EmbedBuilder(starterEmbed);
 

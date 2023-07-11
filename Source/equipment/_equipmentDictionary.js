@@ -21,12 +21,17 @@ for (const file of [
 	"bow-hunters.js",
 	"bow-mercurial.js",
 	"buckler-base.js",
+	"buckler-devoted.js",
 	"buckler-guarding.js",
 	"buckler-heavy.js",
-	"buckler-urgent.js",
 	"censer-base.js",
+	"censer-fatesealing.js",
 	"censer-thick.js",
 	"censer-tormenting.js",
+	"certainvictory-base.js",
+	"certainvictory-hunters.js",
+	"certainvictory-lethal.js",
+	"certainvictory-reckless.js",
 	"cloak-base.js",
 	"cloak-long.js",
 	"cloak-accelerating.js",
@@ -35,20 +40,22 @@ for (const file of [
 	"corrosion-flanking.js",
 	"daggers-base.js",
 	"daggers-sharpened.js",
+	"daggers-slowing.js",
 	"daggers-sweeping.js",
-	"daggers-wicked.js",
 	"firecracker-base.js",
 	"firecracker-double.js",
 	"firecracker-mercurial.js",
 	"firecracker-toxic.js",
-	"iceward-base.js",
-	"iceward-heavy.js",
-	"iceward-sweeping.js",
 	"infiniteregeneration-base.js",
+	"infiniteregeneration-fatesealing.js",
 	"inspiration-base.js",
 	"inspiration-reinforcing.js",
 	"inspiration-soothing.js",
 	"inspiration-sweeping.js",
+	"lance-accelerating.js",
+	"lance-base.js",
+	"lance-piercing.js",
+	"lance-vigilant.js",
 	"lifedrain-base.js",
 	"lifedrain-flanking.js",
 	"lifedrain-reactive.js",
@@ -58,11 +65,19 @@ for (const file of [
 	"midasstaff-accelerating.js",
 	"potionkit-base.js",
 	"potionkit-guarding.js",
+	"potionkit-organic.js",
 	"potionkit-urgent.js",
+	"scutum-base.js",
+	"scutum-heavy.js",
+	"scutum-sweeping.js",
+	"scutum-vigilant.js",
 	"scythe-base.js",
 	"scythe-lethal.js",
 	"scythe-piercing.js",
 	"scythe-toxic.js",
+	"shortsword-accelerating.js",
+	"shortsword-base.js",
+	"shortsword-toxic.js",
 	"sickle-base.js",
 	"sickle-hunters",
 	"sickle-sharpened",
@@ -75,19 +90,17 @@ for (const file of [
 	"sunflare-evasive.js",
 	"sunflare-accelerating.js",
 	"sunflare-tormenting.js",
-	"sword-base.js",
-	"sword-guarding.js",
-	"sword-reckless.js",
-	"sword-accelerating.js",
 	"vigilancecharm-base.js",
 	"vigilancecharm-devoted.js",
 	"vigilancecharm-long.js",
 	"vigilancecharm-guarding.js",
 	"warcry-base.js",
 	"warcry-charging.js",
+	"warcry-slowing.js",
 	"warcry-tormenting.js",
 	"warhammer-base.js",
-	"warhammer-piercing.js"
+	"warhammer-piercing.js",
+	"warhammer-slowing.js"
 ]) {
 	const equip = require(`./${file}`);
 	EQUIPMENT[equip.name] = equip;
@@ -121,10 +134,19 @@ exports.getEquipmentProperty = function (equipmentName, propertyName) {
 
 exports.buildEquipmentDescription = function (equipmentName, buildFullDescription) {
 	if (exports.equipmentExists(equipmentName)) {
-		let description = exports.getEquipmentProperty(equipmentName, "description").replace("@{element}", getEmoji(exports.getEquipmentProperty(equipmentName, "element")))
+		let description;
+		if (buildFullDescription) {
+			// return the base and crit effects of the equipment with the base italicized
+			description = `*Effect:* ${exports.getEquipmentProperty(equipmentName, "description")}\n*Critical💥:* ${exports.getEquipmentProperty(equipmentName, "critDescription")}`;
+		} else {
+			// return the base effect of the equipment unitalicized
+			description = exports.getEquipmentProperty(equipmentName, "description");
+		}
+
+		description = description.replace("@{element}", getEmoji(exports.getEquipmentProperty(equipmentName, "element")))
 			.replace("@{critBonus}", exports.getEquipmentProperty(equipmentName, "critBonus"))
 			.replace("@{damage}", exports.getEquipmentProperty(equipmentName, "damage"))
-			.replace("@{bonusDamage}", exports.getEquipmentProperty(equipmentName, "bonusDamage"))
+			.replace("@{bonus}", exports.getEquipmentProperty(equipmentName, "bonus"))
 			.replace("@{block}", exports.getEquipmentProperty(equipmentName, "block"))
 			.replace("@{hpCost}", exports.getEquipmentProperty(equipmentName, "hpCost"))
 			.replace("@{healing}", exports.getEquipmentProperty(equipmentName, "healing"));
@@ -132,13 +154,6 @@ exports.buildEquipmentDescription = function (equipmentName, buildFullDescriptio
 			description = description.replace(new RegExp(`@{mod${index}}`, "g"), modifier.name)
 				.replace(new RegExp(`@{mod${index}Stacks}`, "g"), modifier.stacks);
 		})
-
-		if (buildFullDescription) {
-			// return the base and crit effects of the equipment with the base italicized
-			return description;
-		} else {
-			// return the base effect of the equipment unitalicized
-			return description.split("\n")[0].replace(/\*/g, "");
-		}
+		return description;
 	}
 }

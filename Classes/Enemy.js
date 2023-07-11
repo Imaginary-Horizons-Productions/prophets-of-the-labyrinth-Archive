@@ -6,16 +6,18 @@ module.exports = class Enemy extends Combatant {
 	 */
 	constructor(nameInput) {
 		super(nameInput, "enemy");
-		this.lookupName = nameInput;
+		this.archetype = nameInput;
 	}
 	// Properties from Combatant: hp, maxHp, speed, roundSpeed, element, setHp, setSpeed, setElement
 	actions = {};
 	nextAction = "";
 	/** @type {[modifierName: string]: number} */
 	startingModifiers = {};
+	shouldRandomizeHP = true;
 
 	setHp = super.setHp;
-	setTitle = super.setTitle;
+	setId = super.setId;
+	setArchetype = super.setArchetype;
 	setStaggerThreshold = super.setStaggerThreshold;
 
 	/** Set the name of the first action an enemy takes. "random" allowed for random move in enemy's move pool.
@@ -49,20 +51,19 @@ module.exports = class Enemy extends Combatant {
 		return this;
 	}
 
-	/** Set the numerator of the enemy's critical hit rate.
-	 * @param {number} numeratorInput
-	 */
-	setCritNumerator(numeratorInput) {
-		this.critNumerator = numeratorInput;
+	/** Marks the enemy as an artifact guardian or final boss, which shouldn't randomize hp and has boosted crit chance*/
+	markAsBoss() {
+		this.shouldRandomizeHP = false;
+		this.setCritBonus(15);
 		return this;
 	}
 
-	/** Set the denominator of the enemy's critical hit rate.
-	 * @param {number} denominatorInput
-	 */
-	setCritDenominator(denominatorInput) {
-		this.critDenominator = denominatorInput;
-		return this;
+	getName(enemyIdMap) {
+		if (enemyIdMap[this.name] > 1) {
+			return `${this.name} ${this.id}`;
+		} else {
+			return this.name;
+		}
 	}
 
 	/** Set the uniquifing number for an enemy to its title.
@@ -71,10 +72,10 @@ module.exports = class Enemy extends Combatant {
 	static setEnemyTitle(titleObject, enemy) {
 		if (titleObject[enemy.name]) {
 			titleObject[enemy.name]++;
-			enemy.title = titleObject[enemy.name];
+			enemy.id = titleObject[enemy.name];
 		} else {
 			titleObject[enemy.name] = 1;
-			enemy.title = 1;
+			enemy.id = 1;
 		}
 	}
 }

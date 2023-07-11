@@ -1,5 +1,5 @@
 const ConsumableTemplate = require("../../Classes/ConsumableTemplate.js");
-const { addModifier, getFullName } = require("../combatantDAO.js");
+const { addModifier } = require("../combatantDAO.js");
 const { selectSelf } = require("./selectors/selectSelf.js");
 
 module.exports = new ConsumableTemplate("Smoke Bomb", "Grants the user 2 Evade", selectSelf, effect)
@@ -10,5 +10,5 @@ module.exports = new ConsumableTemplate("Smoke Bomb", "Grants the user 2 Evade",
 function effect(targets, user, isCrit, adventure) {
 	// +2 Evade
 	addModifier(user, { name: "Evade", stacks: 2 });
-	return `${getFullName(user, adventure.room.enemyTitles)} becomes more evasive.`;
+	return `${user.getName()} prepares to Evade.`;
 }

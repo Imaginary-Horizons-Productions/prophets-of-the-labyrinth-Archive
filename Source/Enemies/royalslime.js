@@ -13,7 +13,8 @@ module.exports = new Enemy("Royal Slime")
 	.setHp(600)
 	.setSpeed(90)
 	.setElement("@{adventure}")
-	.setStaggerThreshold(5);
+	.setStaggerThreshold(5)
+	.markAsBoss();
 
 function elementShift(targets, user, isCrit, adventure) {
 	user.element = elementsList()[generateRandomNumber(adventure, elementsList().length, "battle")];
@@ -23,7 +24,7 @@ function elementShift(targets, user, isCrit, adventure) {
 	} else {
 		addModifier(user, { name: `${user.element} Absorb`, stacks: 3 });
 	}
-	return "";
+	return "Its elemental alignment has changed.";
 }
 
 function rollingTackleEffect(targets, user, isCrit, adventure) {
@@ -48,7 +49,7 @@ function goopDelugeEffect(targets, user, isCrit, adventure) {
 			addModifier(target, { name: "Slow", stacks: 2 });
 		}
 	});
-	return "";
+	return "Everyone is Slowed by the sticky ooze.";
 }
 
 function toxicSpikeShotEffect([target], user, isCrit, adventure) {
@@ -58,5 +59,7 @@ function toxicSpikeShotEffect([target], user, isCrit, adventure) {
 	}
 	addModifier(target, { name: "Stagger", stacks: 1 });
 	addModifier(target, { name: "Poison", stacks: 2 });
-	return dealDamage(target, user, damage, false, user.element, adventure);
+	return dealDamage(target, user, damage, false, user.element, adventure).then(damageText => {
+		return `${damageText} ${target.getName(adventure.room.enemyIdMap)} is Poisoned.`;
+	});
 }

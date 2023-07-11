@@ -1,27 +1,25 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
-const { addModifier, getFullName } = require('../combatantDAO.js');
+const { addModifier } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Accelerating Midas Staff", "*Apply @{mod1Stacks} @{mod1} to a combatant, then gain $${mod2Stacks} @{mod2}*\nCritical Hit💥: @{mod1} x@{critBonus}", "Water", effect, ["Soothing Midas Staff"])
+module.exports = new EquipmentTemplate("Accelerating Midas Staff", "Apply @{mod1Stacks} @{mod1} to a combatant, then gain @{mod2Stacks} @{mod2}", "@{mod1} +@{bonus}", "Water", effect, ["Soothing Midas Staff"])
 	.setCategory("Weapon")
 	.setTargetingTags({ target: "single", team: "any" })
-	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Curse of Midas", stacks: 1 }, { name: "Quicken", stacks: 1 }, { name: "Curse of Midas", stacks: 2 }])
+	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Curse of Midas", stacks: 1 }, { name: "Quicken", stacks: 1 }])
+	.setBonus(1) // Curse of Midas stacks
 	.setCost(350)
 	.setUses(5);
 
 function effect([target], user, isCrit, adventure) {
 	if (target.hp < 1) {
-		return ` ${getFullName(target, adventure.room.enemyTitles)} was already dead!`;
+		return ` ${target.getName(adventure.room.enemyIdMap)} was already dead!`;
 	}
 
-	let { element, modifiers: [elementStagger, curse, quicken, critCurse] } = module.exports;
+	let { element, modifiers: [elementStagger, curse, quicken], bonus } = module.exports;
+	const pendingCurse = { ...curse, stacks: curse.stacks + (isCrit ? bonus : 0) };
 	if (user.element === element) {
 		addModifier(target, elementStagger);
 	}
-	if (isCrit) {
-		addModifier(target, critCurse);
-	} else {
-		addModifier(target, curse);
-	}
+	addModifier(target, pendingCurse);
 	addModifier(user, quicken);
-	return "";
+	return `${target.getName(adventure.room.enemyIdMap)} gains Curse of Midas. ${user.getName(adventure.room.enemyIdMap)} is Quickened.`;
 }

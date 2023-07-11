@@ -16,7 +16,6 @@ for (const file of [
 	"readyconsumable.js",
 	"readymove.js",
 	"replaceequipment.js",
-	"replaceequipmenttreasure.js",
 	"rest.js",
 	"routevote.js",
 	"startadventure.js",

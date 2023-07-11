@@ -1,7 +1,7 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addBlock, removeModifier } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Urgent Barrier", "*Grant an ally @{block} block with priority*\nCritical Hit💥: Block x@{critBonus}", "Fire", effect, ["Purifiying Barrier", "Thick Barrier"])
+module.exports = new EquipmentTemplate("Urgent Barrier", "Grant an ally @{block} block with priority", "Block x@{critBonus}", "Fire", effect, ["Purifiying Barrier", "Thick Barrier"])
 	.setCategory("Spell")
 	.setTargetingTags({ target: "single", team: "delver" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
@@ -19,5 +19,5 @@ function effect([target], user, isCrit, adventure) {
 		block *= critBonus;
 	}
 	addBlock(target, block);
-	return ""; // result as text
+	return `Damage will be Blocked for ${target.getName(adventure.room.enemyIdMap)}.`;
 }

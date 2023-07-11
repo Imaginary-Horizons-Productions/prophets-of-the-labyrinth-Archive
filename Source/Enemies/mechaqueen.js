@@ -15,7 +15,8 @@ module.exports = new Enemy("Mecha Queen")
 	.setHp(500)
 	.setSpeed(100)
 	.setElement("Earth")
-	.setStaggerThreshold(4);
+	.setStaggerThreshold(4)
+	.markAsBoss();
 
 const PATTERN = {
 	"Swarm Protocol": "V.E.N.O.Missile",
@@ -35,11 +36,11 @@ function missileEffect([target], user, isCrit, adventure) {
 	} else {
 		addModifier(target, { name: "Poison", stacks: 3 });
 	}
-	return "";
+	return `${target.getName(adventure.room.enemyIdMap)} is Poisoned.`;
 }
 
 function deployEffect(targets, user, isCrit, adventure) {
-	spawnEnemy(adventure, mechabee, true);
+	spawnEnemy(adventure, mechabee);
 	return "Another mechabee arrives.";
 }
 
@@ -52,7 +53,7 @@ function swarmEffect(targets, user, isCrit, adventure) {
 		}
 	});
 	addBlock(user, isCrit ? 200 : 100);
-	return "She braces herself and demands reinforcements!";
+	return "She prepares to Block and demands reinforcements!";
 }
 
 // assumes mecha queen is at enemy index 0 and that all other enemies are mechabees
@@ -65,7 +66,7 @@ function assaultEffect(targets, user, isCrit, adventure) {
 		}
 	});
 	addBlock(user, isCrit ? 200 : 100);
-	return "She braces herself and orders a full-on attack!";
+	return "She prepares to Block and orders a full-on attack!";
 }
 
 function sacrificeEffect([target], user, isCrit, adventure) {
@@ -74,8 +75,8 @@ function sacrificeEffect([target], user, isCrit, adventure) {
 		const targetMove = adventure.room.moves.find(move => move.userReference.team === "enemy" && move.userReference.index === parseInt(target.title));
 		targetMove.name = "Self-Destruct";
 		targetMove.targets = selectAllFoes(adventure, target);
-		return "She braces herself and employs desperate measures!";
+		return "She prepares to Block and employs desperate measures!";
 	}
-	return "She braces herself."
+	return "She prepares to Block."
 
 }
