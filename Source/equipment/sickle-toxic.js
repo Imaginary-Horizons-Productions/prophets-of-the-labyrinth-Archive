@@ -16,12 +16,18 @@ function effect([target], user, isCrit, adventure) {
 
 	let { element, modifiers: [elementStagger, poison], damage, critBonus } = module.exports;
 	damage += (0.05 * target.maxHp);
-	addModifier(target, poison);
 	if (user.element === element) {
 		addModifier(target, elementStagger);
 	}
 	if (isCrit) {
 		damage *= critBonus;
 	}
-	return dealDamage(target, user, damage, false, element, adventure);
+	return dealDamage(target, user, damage, false, element, adventure).then(damageText => {
+		if (target.hp > 0) {
+			addModifier(target, poison);
+			return `${damageText} ${target.getName(adventure.room.enemyIdMap)} is Poisoned.`;
+		} else {
+			return damageText;
+		}
+	});
 }

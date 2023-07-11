@@ -10,5 +10,5 @@ module.exports = new ConsumableTemplate("Block Potion", "Adds 50 block to all al
 function effect([target], user, isCrit, adventure) {
 	// +50 block
 	addBlock(target, 50);
-	return "";
+	return `${user.getName()} prepares to Block.`;
 }

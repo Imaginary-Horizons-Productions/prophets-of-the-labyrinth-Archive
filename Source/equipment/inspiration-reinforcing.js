@@ -18,5 +18,5 @@ function effect([target], user, isCrit, adventure) {
 	}
 	addModifier(target, pendingPowerUp);
 	addBlock(target, block);
-	return "";
+	return `${target.getName(adventure.room.enemyIdMap)} is Powered Up and prepared to Block.`;
 }

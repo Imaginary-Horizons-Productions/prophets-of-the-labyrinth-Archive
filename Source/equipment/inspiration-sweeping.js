@@ -18,5 +18,5 @@ function effect(targets, user, isCrit, adventure) {
 		}
 		addModifier(target, pendingPowerUp);
 	})
-	return "";
+	return `Everyone is Powered Up.`;
 }

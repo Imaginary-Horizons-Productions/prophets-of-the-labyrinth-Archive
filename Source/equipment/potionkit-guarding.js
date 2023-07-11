@@ -20,9 +20,9 @@ function effect(targets, user, isCrit, adventure) {
 	addBlock(user, block);
 	if (isCrit) {
 		adventure.addResource(new Resource(randomPotion, "consumable", critBonus, "loot", 0));
-		return `${user.getName(adventure.room.enemyIdMap)} hunkers down and sets a double-batch of ${randomPotion} simmering.`;
+		return `${user.getName(adventure.room.enemyIdMap)} prepares to Block and sets a double-batch of ${randomPotion} simmering.`;
 	} else {
 		adventure.addResource(new Resource(randomPotion, "consumable", 1, "loot", 0));
-		return `${user.getName(adventure.room.enemyIdMap)} hunkers down and sets a batch of ${randomPotion} simmering.`;
+		return `${user.getName(adventure.room.enemyIdMap)} prepares to Block and sets a batch of ${randomPotion} simmering.`;
 	}
 }

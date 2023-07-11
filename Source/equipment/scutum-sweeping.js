@@ -21,5 +21,5 @@ function effect(targets, user, isCrit, adventure) {
 		}
 		addBlock(target, block);
 	})
-	return "";
+	return "Damage will be blocked for everyone.";
 }

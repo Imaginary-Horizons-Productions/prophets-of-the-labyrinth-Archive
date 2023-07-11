@@ -14,5 +14,5 @@ function selectTargets(userIndex, adventure) {
 
 function effect(target, user, isCrit, adventure) {
 	// specification
-	return ``; // result text
+	return ``; // see style guide for conventions on result texts
 }

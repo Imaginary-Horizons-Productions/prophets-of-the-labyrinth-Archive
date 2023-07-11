@@ -33,8 +33,8 @@ function effect(targets, user, isCrit, adventure) {
 	})
 
 	if (provokedEnemies.length > 0) {
-		return `${payHP(user, hpCost, adventure)} ${provokedEnemies.join(", ")} fall(s) for the provocation.`;
+		return `Preparing to Block, ${payHP(user, hpCost, adventure)} ${provokedEnemies.join(", ")} fall(s) for the provocation.`;
 	} else {
-		return payHP(user, hpCost, adventure);
+		return `Preparing to Block, ${payHP(user, hpCost, adventure)}`;
 	}
 }

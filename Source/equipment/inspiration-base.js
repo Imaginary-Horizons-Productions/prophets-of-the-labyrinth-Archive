@@ -16,5 +16,5 @@ function effect([target], user, isCrit, adventure) {
 		removeModifier(target, elementStagger);
 	}
 	addModifier(target, pendingPowerUp);
-	return "";
+	return `${target.getName(adventure.room.enemyIdMap)} is Powered Up.`;
 }

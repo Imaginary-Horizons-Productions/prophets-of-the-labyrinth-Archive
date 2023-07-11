@@ -22,5 +22,5 @@ function effect([target], user, isCrit, adventure) {
 	}
 	addModifier(target, powerDown);
 	addModifier(target, exposed);
-	return ""; // result text
+	return `${target.getName(adventure.room.enemyIdMap)} is Powered Down and Exposed.`;
 }

@@ -18,5 +18,5 @@ function effect([target], user, isCrit, adventure) {
 		hpCost /= critBonus;
 	}
 	addModifier(target, regen);
-	return payHP(user, hpCost, adventure);
+	return `${payHP(user, hpCost, adventure)} ${user.getName(adventure.room.enemyIdMap)} gains Regen.`;
 }

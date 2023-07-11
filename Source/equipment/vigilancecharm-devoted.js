@@ -16,5 +16,5 @@ function effect([target], user, isCrit, adventure) {
 		removeModifier(target, elementStagger);
 	}
 	addModifier(target, pendingVigilance);
-	return ""; // result as text
+	return `${target.getName(adventure.room.enemyIdMap)} gains Vigilance.`;
 }

@@ -21,5 +21,5 @@ function effect([target], user, isCrit, adventure) {
 	}
 	addModifier(target, pendingCurse);
 	addModifier(target, regen);
-	return "";
+	return `${target.getName(adventure.room.enemyIdMap)} gains Curse of Midas and Regen.`;
 }

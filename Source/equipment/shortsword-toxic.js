@@ -23,8 +23,8 @@ function effect([target], user, isCrit, adventure) {
 	}
 	addModifier(user, exposed);
 	addModifier(target, poison);
-	return dealDamage(target, user, damage, false, element, adventure).then(resultText => {
+	return dealDamage(target, user, damage, false, element, adventure).then(damageText => {
 		addModifier(target, exposed);
-		return resultText;
+		return `${damageText} ${target.getName(adventure.room.enemyIdMap)} is Poisoned. ${user.getName(adventure.room.enemyIdMap)} is Exposed.`;
 	});
 }

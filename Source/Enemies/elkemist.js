@@ -25,7 +25,7 @@ function toilEffect(targets, user, isCrit, adventure) {
 		addModifier(user, { name: "Progress", stacks: 45 + generateRandomNumber(adventure, 31, "battle") });
 	}
 	addBlock(user, 200);
-	return "It succeeds at gathering some materials and fortifying its laboratory.";
+	return "It gathers some materials, fortifying its laboratory to Block incoming damage.";
 }
 
 function troubleEffect([target], user, isCrit, adventure) {

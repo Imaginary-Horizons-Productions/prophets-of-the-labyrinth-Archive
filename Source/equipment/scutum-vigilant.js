@@ -20,5 +20,6 @@ function effect([target], user, isCrit, adventure) {
 	addBlock(target, block);
 	addBlock(user, block);
 	addModifier(user, vigilant);
-	return "";
+	const userName = user.getName(adventure.room.enemyIdMap);
+	return `Damage will be blocked for ${target.getName(adventure.room.enemyIdMap)} and ${userName}. ${userName} gains Vigilance.`;
 }

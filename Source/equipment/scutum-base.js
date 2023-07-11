@@ -19,5 +19,5 @@ function effect([target], user, isCrit, adventure) {
 	}
 	addBlock(target, block);
 	addBlock(user, block);
-	return "";
+	return `Damage will be blocked for ${target.getName(adventure.room.enemyIdMap)} and ${user.getName(adventure.room.enemyIdMap)}.`;
 }

@@ -17,5 +17,5 @@ function effect([target], user, isCrit, adventure) {
 	}
 	addModifier(target, pendingPowerUp);
 	addModifier(target, regen);
-	return "";
+	return `${target.getName(adventure.room.enemyIdMap)} is Powered Up and gains Regen.`;
 }

@@ -21,5 +21,5 @@ function effect([target], user, isCrit, adventure) {
 	}
 	addModifier(target, pendingCurse);
 	addModifier(user, quicken);
-	return "";
+	return `${target.getName(adventure.room.enemyIdMap)} gains Curse of Midas. ${user.getName(adventure.room.enemyIdMap)} is Quickened.`;
 }

@@ -36,5 +36,5 @@ function effect([initialTarget], user, isCrit, adventure) {
 			}
 		}
 	})
-	return `${[...targetSet].join(", ")} ${targetArray.length === 1 ? "is" : "are"} staggered by the fierce war cry.`;
+	return `${[...targetSet].join(", ")} ${targetArray.length === 1 ? "is" : "are"} staggered by the fierce war cry and their debuffs are duplicated.`;
 }

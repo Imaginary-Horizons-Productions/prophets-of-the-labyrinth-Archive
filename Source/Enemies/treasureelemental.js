@@ -5,7 +5,7 @@ const { selectSelf, selectNone, selectAllFoes, selectRandomFoe } = require("../e
 module.exports = new Enemy("Treasure Elemental")
 	.setFirstAction("Guarding Slam")
 	.addAction({ name: "Guarding Slam", element: "Earth", isPriority: false, effect: guardingSlamEffect, selector: selectRandomFoe, next: treasureElementalPattern })
-	.addAction({ name: "Evade", element: "Untyped", isPriority: false, effect: evadeEffect, selector: selectSelf, next: treasureElementalPattern })
+	.addAction({ name: "Burrow", element: "Untyped", isPriority: false, effect: burrowEffect, selector: selectSelf, next: treasureElementalPattern })
 	.addAction({ name: "Eyes of Greed", element: "Untyped", isPriority: false, effect: eyesOfGreedEffect, selector: selectAllFoes, next: treasureElementalPattern })
 	.addAction({ name: "Heavy Pockets", element: "Untyped", isPriority: false, effect: heavyPocketsEffect, selector: selectAllFoes, next: treasureElementalPattern })
 	.addAction({ name: "Escape", element: "Untyped", isPriority: false, effect: escapeEffect, selector: selectNone, next: treasureElementalPattern })
@@ -17,8 +17,8 @@ module.exports = new Enemy("Treasure Elemental")
 	.markAsBoss();
 
 const PATTERN = {
-	"Guarding Slam": "Evade",
-	"Evade": "Eyes of Greed",
+	"Guarding Slam": "Burrow",
+	"Burrow": "Eyes of Greed",
 	"Eyes of Greed": "Heavy Pockets",
 	"Heavy Pockets": "Escape",
 	"Escape": "Escape"
@@ -34,17 +34,19 @@ function guardingSlamEffect([target], user, isCrit, adventure) {
 	}
 	addBlock(user, block);
 	removeModifier(user, { name: "Stagger", stacks: 1 });
-	return dealDamage(target, user, 100, false, user.element, adventure);
+	return dealDamage(target, user, 100, false, user.element, adventure).then(damageText => {
+		return `It prepares to Block and ${damageText}`;
+	});
 }
 
-function evadeEffect(target, user, isCrit, adventure) {
+function burrowEffect(target, user, isCrit, adventure) {
 	let stacks = 2;
 	if (isCrit) {
 		stacks *= 3;
 	}
 	addModifier(user, { name: "Evade", stacks });
 	removeModifier(user, { name: "Stagger", stacks: 1 });
-	return "";
+	return "It scatters among the other treasure in the room to Evade.";
 }
 
 function eyesOfGreedEffect(targets, user, isCrit, adventure) {
@@ -57,7 +59,7 @@ function eyesOfGreedEffect(targets, user, isCrit, adventure) {
 		addModifier(target, { name: "Power Down", stacks });
 		addModifier(target, { name: "Stagger", stacks: 1 });
 	});
-	return "";
+	return "Everyone is Powered Down, due to being distracted by a treasure that catches their eyes.";
 }
 
 function heavyPocketsEffect(targets, user, isCrit, adventure) {
@@ -68,7 +70,7 @@ function heavyPocketsEffect(targets, user, isCrit, adventure) {
 	targets.forEach(target => {
 		addModifier(target, { name: "Slow", stacks });
 	});
-	return "";
+	return "Everyone is Slowed trying to grab at some treasure.";
 }
 
 function escapeEffect(targets, user, isCrit, adventure) {

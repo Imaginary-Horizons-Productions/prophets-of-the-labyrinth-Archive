@@ -32,5 +32,5 @@ function effect([initialTarget], user, isCrit, adventure) {
 		addModifier(target, { name: "Stagger", stacks: pendingStaggerStacks });
 	});
 	addModifier(user, powerup);
-	return `${[...targetSet].join(", ")} ${targetArray.length === 1 ? "is" : "are"} staggered by the fierce war cry.`;
+	return `${[...targetSet].join(", ")} ${targetArray.length === 1 ? "is" : "are"} staggered by the fierce war cry. ${user.getName(adventure.room.enemyIdMap)} is Powered Up.`;
 }
