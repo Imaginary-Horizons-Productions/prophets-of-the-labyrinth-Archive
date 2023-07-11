@@ -481,12 +481,12 @@ exports.completeAdventure = function (adventure, thread, endState, descriptionOv
 		if (endState !== "giveup") {
 			const player = getPlayer(delver.id, guildId);
 			if (player.scores[guildId]) {
-  			player.scores[guildId].total += adventure.accumulatedScore;
-	  		if (adventure.accumulatedScore > player.scores[guildId].high) {
-		  		player.scores[guildId].high = adventure.accumulatedScore;
-		  	}
+				player.scores[guildId].total += adventure.accumulatedScore;
+				if (adventure.accumulatedScore > player.scores[guildId].high) {
+					player.scores[guildId].high = adventure.accumulatedScore;
+				}
 			} else {
-  			player.scores[guildId] = { total: adventure.accumulatedScore, high: adventure.accumulatedScore };
+				player.scores[guildId] = { total: adventure.accumulatedScore, high: adventure.accumulatedScore };
 			}
 			setPlayer(player);
 		}
