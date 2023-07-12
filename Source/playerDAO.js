@@ -18,7 +18,7 @@ exports.loadPlayers = async function () {
 		})
 		return `${players.length} players loaded`;
 	} else {
-		ensuredPathSave(dirPath,fileName,"[]");
+		ensuredPathSave(dirPath, fileName, "[]");
 		return "players regenerated";
 	}
 }
@@ -41,7 +41,7 @@ exports.setPlayer = function (player) {
 exports.resetScores = function (userIds, guildId) {
 	userIds.forEach(id => {
 		let player = playerDictionary.get(id);
-		player.scores[guildId] = 0;
+		player.scores[guildId] = { total: 0, high: 0 };
 		exports.setPlayer(player);
 	})
 }

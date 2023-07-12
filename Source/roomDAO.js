@@ -11,6 +11,8 @@ const { getColor } = require("./elementHelpers.js");
 const { buildEquipmentDescription, getEquipmentProperty } = require("./equipment/_equipmentDictionary");
 const { getLabyrinthProperty } = require("./labyrinths/_labyrinthDictionary.js");
 const { getRoom } = require("./Rooms/_roomDictionary.js");
+const { getGuild, setGuild } = require("./guildDAO.js");
+const { setPlayer, getPlayer } = require("./playerDAO.js");
 
 /** Derive the embeds and components that correspond with the adventure's state
  * @param {Adventure} adventure
@@ -75,13 +77,13 @@ exports.renderRoom = function (adventure, thread, descriptionOverride) {
 			}
 		} else {
 			// Defeat
-			addScoreField(roomEmbed, adventure);
+			addScoreField(roomEmbed, adventure, thread.guildId);
 			components = [];
 
 		}
 	} else {
 		// Victory
-		addScoreField(roomEmbed, adventure);
+		addScoreField(roomEmbed, adventure, thread.guildId);
 		components = [new ActionRowBuilder().addComponents(
 			new ButtonBuilder().setCustomId("viewcollectartifact")
 				.setLabel("Collect Artifact")
@@ -97,8 +99,9 @@ exports.renderRoom = function (adventure, thread, descriptionOverride) {
 /** The score breakdown is added to a room embed to show how the players in the just finished adventure did
  * @param {MessageEmbed} embed
  * @param {Adventure} adventure
+ * @param {string} guildId
  */
-function addScoreField(embed, adventure) {
+function addScoreField(embed, adventure, guildId) {
 	const livesScore = adventure.lives * 10;
 	const goldScore = Math.floor(Math.log10(adventure.peakGold)) * 5;
 	let score = adventure.accumulatedScore + livesScore + goldScore + adventure.depth;
@@ -133,6 +136,34 @@ function addScoreField(embed, adventure) {
 	const giveupScoreline = generateScoreline("multiplicative", "Give Up", adventure.state === "giveup" ? 0 : 1);
 	embed.addFields({ name: "Score Breakdown", value: `${depthScoreLine}${livesScoreLine}${goldScoreline}${bonusScoreline}${challengesScoreline}${skippedArtifactScoreline}${defeatScoreline}${giveupScoreline}\n__Total__: ${score}` });
 	adventure.accumulatedScore = score;
+
+	const guildProfile = getGuild(guildId);
+	if (adventure.accumulatedScore > guildProfile.highScore.score) {
+		guildProfile.highScore = {
+			score: adventure.accumulatedScore,
+			playerIds: adventure.delvers.map(delver => delver.id),
+			adventure: adventure.name
+		};
+		setGuild(guildProfile);
+	}
+	adventure.delvers.forEach(delver => {
+		if (adventure.state !== "giveup") {
+			const player = getPlayer(delver.id, guildId);
+			if (player.scores[guildId]) {
+				player.scores[guildId].total += adventure.accumulatedScore;
+				if (adventure.accumulatedScore > player.scores[guildId].high) {
+					player.scores[guildId].high = adventure.accumulatedScore;
+				}
+			} else {
+				player.scores[guildId] = { total: adventure.accumulatedScore, high: adventure.accumulatedScore };
+			}
+			if (adventure.accumulatedScore > player.archetypes[delver.archetype]) {
+				player.archetypes[delver.archetype] = adventure.accumulatedScore;
+			}
+			setPlayer(player);
+		}
+		guildProfile.adventuring.delete(delver.id);
+	})
 }
 
 /** Generates the string for a scoreline or omits the line (returns empty string) if value is the identity for stackType

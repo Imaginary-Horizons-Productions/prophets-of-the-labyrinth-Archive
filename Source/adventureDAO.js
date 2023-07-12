@@ -21,7 +21,6 @@ const { clearBlock, removeModifier } = require("./combatantDAO.js");
 const { spawnEnemy } = require("./enemyDAO.js");
 const { getGuild } = require("./guildDAO.js");
 const { resolveMove } = require("./moveDAO.js");
-const { setPlayer, getPlayer } = require("./playerDAO.js");
 const { renderRoom, updateRoomHeader } = require("./roomDAO.js");
 const { getEquipmentProperty } = require("./equipment/_equipmentDictionary.js");
 
@@ -468,21 +467,7 @@ exports.fetchRecruitMessage = async function (thread, messageId) {
  * @param {string?} descriptionOverride
  */
 exports.completeAdventure = function (adventure, thread, endState, descriptionOverride) {
-	const { guildId, messages: messageManager } = thread;
-	const guildProfile = getGuild(guildId);
-	adventure.delvers.forEach(delver => {
-		if (endState !== "giveup") {
-			const player = getPlayer(delver.id, guildId);
-			if (player.scores[guildId]) {
-				player.scores[guildId] += adventure.accumulatedScore;
-			} else {
-				player.scores[guildId] = adventure.accumulatedScore;
-			}
-			setPlayer(player);
-		}
-		guildProfile.adventuring.delete(delver.id);
-	})
-
+	const { messages: messageManager } = thread;
 	exports.fetchRecruitMessage(thread, adventure.messageIds.recruit).then(recruitMessage => {
 		const [{ data: recruitEmbed }] = recruitMessage.embeds;
 		recruitMessage.edit({
@@ -498,7 +483,7 @@ exports.completeAdventure = function (adventure, thread, endState, descriptionOv
 	clearComponents(adventure.messageIds.room, messageManager);
 	[adventure.messageIds.utility, adventure.messageIds.deploy, adventure.messageIds.leaderNotice].forEach(id => {
 		if (id) {
-			messageManager.delete(id);
+			messageManager.delete(id).catch(console.error);
 		}
 	})
 
