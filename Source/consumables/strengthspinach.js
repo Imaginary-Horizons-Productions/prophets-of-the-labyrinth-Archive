@@ -4,6 +4,7 @@ const { selectSelf } = require("./selectors/selectSelf.js");
 
 module.exports = new ConsumableTemplate("Strength Spinach", "Grants the user 50 Power Up", selectSelf, effect)
 	.setElement("Untyped")
+	.setCost(30)
 	.setTargetTags("self", "delver")
 	.setFlavorText([]);
 

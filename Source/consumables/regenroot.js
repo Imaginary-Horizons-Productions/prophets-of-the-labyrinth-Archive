@@ -4,6 +4,7 @@ const { selectSelf } = require("./selectors/selectSelf.js");
 
 module.exports = new ConsumableTemplate("Regen Root", "Grants the user 5 Regen", selectSelf, effect)
 	.setElement("Untyped")
+	.setCost(30)
 	.setTargetTags("self", "delver")
 	.setFlavorText([]);
 

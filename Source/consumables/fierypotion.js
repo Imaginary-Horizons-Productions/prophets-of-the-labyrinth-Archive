@@ -5,6 +5,7 @@ const { selectSelf } = require("./selectors/selectSelf.js");
 
 module.exports = new ConsumableTemplate("Fiery Potion", "Grants the user 1 Fire Absorb", selectSelf, effect)
 	.setElement("Untyped")
+	.setCost(30)
 	.setTargetTags("self", "delver")
 	.setFlavorText(["*Additional Notes*", "*Not to be confused with __Explosive Potion__. DO NOT apply to enemies.*"]);
 

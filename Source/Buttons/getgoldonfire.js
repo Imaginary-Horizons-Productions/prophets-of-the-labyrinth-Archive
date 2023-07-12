@@ -23,7 +23,7 @@ module.exports = new Button(id, (interaction, args) => {
 			setAdventure(adventure);
 		}
 	} else { // just take the gold
-		interaction.update({ components: editButtons(interaction.message.components, { "getgoldonfire": { preventUse: true, label: `+${goldCount} gold`, emoji: "✔️" } }) })
+		interaction.update({ components: editButtons(interaction.message.components, { [id]: { preventUse: true, label: `+${goldCount} gold`, emoji: "✔️" } }) })
 		setAdventure(adventure);
 	}
 });

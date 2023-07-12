@@ -5,6 +5,7 @@ const { selectSelf } = require("./selectors/selectSelf.js");
 
 module.exports = new ConsumableTemplate("Windy Potion", "Grants the user 1 Wind Absorb", selectSelf, effect)
 	.setElement("Untyped")
+	.setCost(30)
 	.setTargetTags("self", "delver")
 	.setFlavorText([]);
 

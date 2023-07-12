@@ -4,6 +4,7 @@ const { selectSelf } = require("./selectors/selectSelf.js");
 
 module.exports = new ConsumableTemplate("Smoke Bomb", "Grants the user 2 Evade", selectSelf, effect)
 	.setElement("Untyped")
+	.setCost(30)
 	.setTargetTags("self", "delver")
 	.setFlavorText(["___'s Commentary", "Take advantage of an enemy being blinded to run away? Who would do that?"]);
 

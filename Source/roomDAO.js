@@ -320,6 +320,7 @@ function generateMerchantRows(adventure) {
 	}
 
 	let rows = [];
+	const soldOutOptions = [{ label: "If the menu is stuck, switch channels and come back.", description: "This usually happens when two players try to buy the last item at the same time.", value: "placeholder" }];
 	for (const groupName in categorizedResources) {
 		if (groupName.startsWith("equipment")) {
 			const [type, tier] = groupName.split(SAFE_DELIMITER);
@@ -344,7 +345,7 @@ function generateMerchantRows(adventure) {
 				rows.push(new ActionRowBuilder().addComponents(
 					new StringSelectMenuBuilder().setCustomId(`buy${groupName}`)
 						.setPlaceholder("SOLD OUT")
-						.setOptions([{ label: "If the menu is stuck, switch channels and come back.", description: "This usually happens when two players try to buy the last item at the same time.", value: "placeholder" }])
+						.setOptions(soldOutOptions)
 						.setDisabled(true)));
 			}
 		} else if (groupName === "scouting") {
@@ -360,6 +361,32 @@ function generateMerchantRows(adventure) {
 					.setStyle(ButtonStyle.Secondary)
 					.setDisabled(adventure.gold < guardScoutingCost)
 			));
+		} else if (groupName == "consumables") {
+			let options = [];
+			categorizedResources[groupName].forEach((resource, i) => {
+				if (adventure.room.resources[resource].count > 0) {
+					const { cost, description } = getConsumable(resource);
+					options.push({
+						label: `${cost}g: ${resource}`,
+						description,
+						value: `${resource}${SAFE_DELIMITER}${i}`
+					})
+				}
+			})
+			if (options.length > 0) {
+				rows.push(new ActionRowBuilder().addComponents(
+					new StringSelectMenuBuilder().setCustomId("buyconsumable")
+						.setPlaceholder("Buy a consumable...")
+						.setOptions(options)
+				))
+			} else {
+				rows.push(new ActionRowBuilder().addComponents(
+					new StringSelectMenuBuilder().setCustomId("buyconsumable")
+						.setPlaceholder("SOLD OUT")
+						.setDisabled(true)
+						.setOptions(soldOutOptions)
+				))
+			}
 		}
 	}
 	return rows;

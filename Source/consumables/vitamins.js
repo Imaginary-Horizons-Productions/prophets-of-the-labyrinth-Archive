@@ -4,6 +4,7 @@ const { selectSelf } = require("./selectors/selectSelf.js");
 
 module.exports = new ConsumableTemplate("Vitamins", "Increases the user's max HP by 50", selectSelf, effect)
 	.setElement("Untyped")
+	.setCost(30)
 	.setTargetTags("self", "delver")
 	.setFlavorText(["*Additional Notes*", "*Make sure to consume exactly the right number so your HP isn't divisible by 4*"]);
 

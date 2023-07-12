@@ -4,6 +4,7 @@ const { selectSelf } = require("../enemyDAO.js");
 
 module.exports = new ConsumableTemplate("Health Potion", "Heals the user by 25% of their max HP", selectSelf, effect)
 	.setElement("Untyped")
+	.setCost(30)
 	.setTargetTags("self", "delver")
 	.setFlavorText([]);
 

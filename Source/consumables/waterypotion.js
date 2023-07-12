@@ -5,6 +5,7 @@ const { selectSelf } = require("./selectors/selectSelf.js");
 
 module.exports = new ConsumableTemplate("Watery Potion", "Grants the user 1 Water Absorb", selectSelf, effect)
 	.setElement("Untyped")
+	.setCost(30)
 	.setTargetTags("self", "delver")
 	.setFlavorText(["*Additional Note*", "Apply directly to the forehead."]);
 

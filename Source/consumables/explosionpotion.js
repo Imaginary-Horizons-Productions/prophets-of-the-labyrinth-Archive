@@ -4,6 +4,7 @@ const { selectAllFoes } = require("./selectors/selectAllFoes.js");
 
 module.exports = new ConsumableTemplate("Explosion Potion", "Deal 75 damage to all enemies", selectAllFoes, effect)
 	.setElement("Untyped")
+	.setCost(30)
 	.setTargetTags("all", "enemy")
 	.setFlavorText(["*Additional Notes*", "*Not to be confused with __Fiery Potion__. DO NOT apply to self.*"]);
 

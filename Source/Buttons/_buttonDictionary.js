@@ -6,6 +6,7 @@ for (const file of [
 	"continue.js",
 	"deploy.js",
 	"elementswap.js",
+	"freerepairkit.js",
 	"getgoldonfire.js",
 	"hpshare.js",
 	"inspectself.js",

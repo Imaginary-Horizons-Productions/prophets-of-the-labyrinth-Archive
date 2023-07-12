@@ -23,6 +23,7 @@ const { getGuild } = require("./guildDAO.js");
 const { resolveMove } = require("./moveDAO.js");
 const { renderRoom, updateRoomHeader } = require("./roomDAO.js");
 const { getEquipmentProperty } = require("./equipment/_equipmentDictionary.js");
+const { getConsumable } = require("./consumables/_consumablesDictionary.js");
 
 const adventureDictionary = new Map();
 
@@ -209,7 +210,7 @@ exports.nextRoom = function (roomType, thread) {
 				break;
 			case "consumable":
 				const consumable = rollConsumable(adventure);
-				adventure.addResource(new Resource(consumable, resource, count, visibility, "0", uiGroup));
+				adventure.addResource(new Resource(consumable, resource, count, visibility, Math.ceil(parseExpression(unparsedCost, getConsumable(consumable).cost)), uiGroup));
 				break;
 			case "gold":
 				// Randomize loot gold
