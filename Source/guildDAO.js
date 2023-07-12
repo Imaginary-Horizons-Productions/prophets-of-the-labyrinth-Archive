@@ -17,12 +17,16 @@ exports.loadGuilds = async function () {
 		})
 		return `${guildProfiles.length} guilds loaded`;
 	} else {
-		ensuredPathSave(dirPath,fileName,"[]");
+		ensuredPathSave(dirPath, fileName, "[]");
 		return "guilds regenerated";
 	}
 }
 
 exports.getGuild = function (guildId) {
+	if (!guildId) {
+		throw new Error("Attempted to get guild with falsey id");
+	}
+
 	let guildProfile = guildDictionary.get(guildId);
 	if (!guildProfile) {
 		guildProfile = new GuildProfile(guildId);
