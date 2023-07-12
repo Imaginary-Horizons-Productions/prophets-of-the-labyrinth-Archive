@@ -19,6 +19,7 @@
 - Adventures that end by `/give-up` no longer provide score to player profiles
 - Merchants now show how many uses equipment they're selling has
 - New Challenge: Rushing - adds a chance to not know the type of a route option
+- Player high scores are now tracked per archetype
 
 #### Prophets of the Labyrinth Version 0.10.0:
 - Added **Consumables**: these resources can be used by any party member during combat at priority speed
