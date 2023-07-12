@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const Command = require('../../Classes/Command.js');
 const { isSponsor } = require('../../helpers.js');
 const { getArtifactCounts } = require('../Artifacts/_artifactDictionary.js');
@@ -21,7 +21,7 @@ module.exports.execute = (interaction) => {
 	}
 	let player = getPlayer(user.id, guildId);
 	let totalArtifacts = getArtifactCounts();
-	let embed = new MessageEmbed().setAuthor({ name: availability })
+	let embed = new EmbedBuilder().setAuthor({ name: availability })
 		.setTitle("Player Stats")
 		.setDescription(`Total Score: ${Object.values(player.scores).map(score => score.total).reduce((total, current) => total += current)}`)
 		.addFields({ name: "Artifacts Collected", value: `${Object.values(player.artifacts).length}/${totalArtifacts} Artifacts (${Math.floor(Object.values(player.artifacts).length / totalArtifacts * 100)}%)` })
