@@ -20,11 +20,23 @@ module.exports.execute = (interaction) => {
 		availability = "💎 Premium (available for adventure)";
 	}
 	let player = getPlayer(user.id, guildId);
+	let bestArchetype = "N/A";
+	let highScore = 0;
+	for (const archetype in player.archetypes) {
+		const score = player.archetypes[archetype];
+		if (score > highScore) {
+			bestArchetype = archetype;
+			highScore = score;
+		}
+	}
 	let totalArtifacts = getArtifactCounts();
 	let embed = new EmbedBuilder().setAuthor({ name: availability })
 		.setTitle("Player Stats")
 		.setDescription(`Total Score: ${Object.values(player.scores).map(score => score.total).reduce((total, current) => total += current)}`)
-		.addFields({ name: "Artifacts Collected", value: `${Object.values(player.artifacts).length}/${totalArtifacts} Artifacts (${Math.floor(Object.values(player.artifacts).length / totalArtifacts * 100)}%)` })
+		.addFields(
+			{ name: `Best Archetype: ${bestArchetype}`, value: `High Score: ${highScore}` },
+			{ name: "Artifacts Collected", value: `${Object.values(player.artifacts).length}/${totalArtifacts} Artifacts (${Math.floor(Object.values(player.artifacts).length / totalArtifacts * 100)}%)` }
+		)
 		.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
 	interaction.reply({ embeds: [embed], ephemeral: true })
 		.catch(console.error);
