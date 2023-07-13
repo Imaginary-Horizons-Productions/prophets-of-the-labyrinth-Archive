@@ -357,7 +357,7 @@ function generateMerchantRows(adventure) {
 					.setStyle(ButtonStyle.Secondary)
 					.setDisabled(adventure.scouting.finalBoss || adventure.gold < bossScoutingCost),
 				new ButtonBuilder().setCustomId(`buyscouting${SAFE_DELIMITER}Artifact Guardian`)
-					.setLabel(`${guardScoutingCost}g: Scout the ${ordinalSuffixEN(adventure.scouting.artifactGuardians + 1)} Artifact Guardian`)
+					.setLabel(`${guardScoutingCost}g: Scout the ${ordinalSuffixEN(adventure.scouting.artifactGuardiansEncountered + adventure.scouting.artifactGuardians + 1)} Artifact Guardian`)
 					.setStyle(ButtonStyle.Secondary)
 					.setDisabled(adventure.gold < guardScoutingCost)
 			));

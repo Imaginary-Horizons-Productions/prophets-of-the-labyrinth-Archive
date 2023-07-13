@@ -224,9 +224,10 @@ exports.nextRoom = function (roomType, thread) {
 	if (adventure.room.hasEnemies) {
 		if (roomType === "Artifact Guardian") {
 			adventure.scouting.artifactGuardiansEncountered++;
-			while (adventure.artifactGuardians.length <= adventure.scouting.artifactGuardiansEncountered) {
+			while (adventure.artifactGuardians.length <= adventure.scouting.artifactGuardiansEncountered + adventure.scouting.artifactGuardians) {
 				prerollBoss("Artifact Guardian", adventure);
 			}
+			adventure.scouting.artifactGuardians = Math.max(adventure.scouting.artifactGuardians - 1, 0);
 		}
 
 		for (const enemyName in roomTemplate.enemyList) {

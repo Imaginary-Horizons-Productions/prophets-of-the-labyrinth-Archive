@@ -19,9 +19,9 @@ module.exports.execute = (interaction) => {
 				{ name: `${adventure.gold} Gold`, value: "Gold is exchanged for goods and services within adventures. Gold *will be lost when an adventure ends*." },
 				{ name: "Consumables", value: Object.keys(adventure.consumables).map(consumable => `${consumable} x ${adventure.consumables[consumable]}`).join("\n") || "None" },
 				{
-					name: "Scouting", value: `Final Battle: ${adventure.scouting.finalBoss ? adventure.finalBoss : "???"}\nArtifact Guardians (${adventure.scouting.artifactGuardiansEncountered} encountered so far): ${adventure.artifactGuardians.slice(0, adventure.scouting.artifactGuardians).map((encounter, index) => {
-						if (adventure.scouting.artifactGuardiansEncountered === index) {
-							return `**${encounter}**`;
+					name: "Scouting", value: `Final Battle: ${adventure.scouting.finalBoss ? adventure.finalBoss : "???"}\nArtifact Guardians: ${adventure.artifactGuardians.slice(0, adventure.scouting.artifactGuardiansEncountered + adventure.scouting.artifactGuardians).map((encounter, index) => {
+						if (index + 1 <= adventure.scouting.artifactGuardiansEncountered) {
+							return `~~${encounter}~~`;
 						} else {
 							return encounter;
 						}

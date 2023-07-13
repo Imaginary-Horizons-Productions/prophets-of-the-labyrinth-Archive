@@ -171,9 +171,9 @@ module.exports.Adventure = class {
 		const count = this.getArtifactCount("Amethyst Spyglass");
 		switch (type) {
 			case "Final Battle":
-				return 150 - (count * 5);
+				return Math.max(150 - (count * 15), 0);
 			case "Artifact Guardian":
-				return 100 - (count * 5);
+				return Math.max(100 - (count * 15), 0);
 		}
 	}
 
