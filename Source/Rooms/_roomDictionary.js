@@ -23,6 +23,7 @@ for (const file of [
 	"forge-basic.js",
 	"merchant-basic.js",
 	"merchant-consumable.js",
+	"merchant-overpriced.js",
 	"restsite-basic.js",
 	"treasure-basic.js"
 ]) {
