@@ -8,8 +8,9 @@ module.exports = class RoomTemplate {
 	}
 	description = "";
 	element = "";
-	uiRows = [];
 	enemyList = {};
+
+	buildUI(adventure) { };
 
 	setDescription(descriptionText) {
 		this.description = descriptionText;

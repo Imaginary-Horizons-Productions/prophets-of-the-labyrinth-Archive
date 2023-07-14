@@ -20,10 +20,10 @@
 - Merchants now show how many uses equipment they're selling has
 - New Challenge: Rushing - adds a chance to not know the type of a route option
 - Player high scores are now tracked per archetype (view in `/stats`)
-- Added a new Event room and a new Merchant room
+- Added 2 new Event rooms and a new Merchant room
 - Amethyst Spyglass now reduces scouting costs by 15g per spyglass (and can't reduce past 0g)
 - Scouting Artifact Guardians will now always start with the next upcoming Artifact Guardian
-- Element Swap event now pays 200g instead of costing 100g
+- Element Redistrabution event (now named Elemental Research) now pays 200g instead of costing 100g
 
 #### Prophets of the Labyrinth Version 0.10.0:
 - Added **Consumables**: these resources can be used by any party member during combat at priority speed

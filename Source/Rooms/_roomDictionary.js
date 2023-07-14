@@ -11,6 +11,7 @@ for (const file of [
 	"battle-slimes.js",
 	"battle-tortoises.js",
 	"empty.js",
+	"event-artifactdupe.js",
 	"event-elementswap.js",
 	"event-freegoldonfire.js",
 	"event-freerepairkit.js",

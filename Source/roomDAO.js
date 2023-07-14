@@ -43,7 +43,7 @@ exports.renderRoom = function (adventure, thread, descriptionOverride) {
 			}
 
 			if (roomTemplate) {
-				components.push(...roomTemplate.uiRows);
+				components.push(...roomTemplate.buildUI(adventure));
 			}
 			if (adventure.room.title === "Treasure!" && roomActionCount > 0) {
 				components.push(generateTreasureRow(adventure));

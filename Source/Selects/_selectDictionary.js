@@ -3,6 +3,7 @@ const selectDictionary = {};
 for (const file of [
 	"archetype.js",
 	"artifact.js",
+	"artifactdupe.js",
 	"buyconsumable.js",
 	"buyequipment.js",
 	"challenge.js",

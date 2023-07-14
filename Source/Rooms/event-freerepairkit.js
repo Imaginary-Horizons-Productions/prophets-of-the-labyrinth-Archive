@@ -7,9 +7,13 @@ module.exports = new RoomTemplate("Repair Kit, just hanging out", [
 ]).setDescription("There's a Repair Kit hanging in the middle of the room tied to the ceiling by a rope.")
 	.setElement("Earth");
 
-module.exports.uiRows.push(new ActionRowBuilder().addComponents(
-	new ButtonBuilder()
-		.setCustomId("freerepairkit")
-		.setLabel("Take the Repair Kit")
-		.setStyle(ButtonStyle.Primary)
-))
+module.exports.buildUI = function (adventure) {
+	return [
+		new ActionRowBuilder().addComponents(
+			new ButtonBuilder()
+				.setCustomId("freerepairkit")
+				.setLabel("Take the Repair Kit")
+				.setStyle(ButtonStyle.Primary)
+		)
+	];
+}
