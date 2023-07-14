@@ -1,7 +1,7 @@
 const { EmbedBuilder } = require('discord.js');
 const Button = require('../../Classes/Button.js');
 const Delver = require('../../Classes/Delver.js');
-const { maxDelverCount } = require("../../constants.js");
+const { maxDelverCount, ZERO_WIDTH_WHITESPACE } = require("../../constants.js");
 const { isSponsor } = require('../../helpers.js');
 const { getGuild } = require('../guildDAO.js');
 const { getAdventure, setAdventure, fetchRecruitMessage } = require("./../adventureDAO.js");
@@ -58,7 +58,7 @@ module.exports = new Button(id, async (interaction, [guildId, adventureId, conte
 						if (context === "invite") {
 							interaction.update({ components: [] })
 						} else {
-							interaction.update({ content: "\u200B" })
+							interaction.update({ content: ZERO_WIDTH_WHITESPACE })
 						}
 					} else {
 						interaction.reply({ content: "You are already part of this adventure!", ephemeral: true })

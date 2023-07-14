@@ -2,7 +2,7 @@ const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const Select = require('../../Classes/Select.js');
 const { getAdventure, setAdventure } = require('../adventureDAO.js');
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
-const { SAFE_DELIMITER } = require('../../constants.js');
+const { SAFE_DELIMITER, ZERO_WIDTH_WHITESPACE } = require('../../constants.js');
 const { consumeRoomActions, renderRoom } = require("../roomDAO.js");
 
 const id = "treasure";
@@ -71,7 +71,7 @@ module.exports = new Select(id,
 					setAdventure(adventure);
 				});
 			} else {
-				interaction.update({ content: "\u200B" });
+				interaction.update({ content: ZERO_WIDTH_WHITESPACE });
 			}
 		} else {
 			interaction.reply({ content: "There aren't any more treasure picks to use.", ephemeral: true });

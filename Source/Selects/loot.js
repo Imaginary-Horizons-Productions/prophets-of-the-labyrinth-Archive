@@ -2,7 +2,7 @@ const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const Select = require('../../Classes/Select.js');
 const { getAdventure, setAdventure } = require('../adventureDAO.js');
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
-const { SAFE_DELIMITER } = require('../../constants.js');
+const { SAFE_DELIMITER, ZERO_WIDTH_WHITESPACE } = require('../../constants.js');
 const { renderRoom } = require("../roomDAO.js");
 
 const id = "loot";
@@ -67,6 +67,6 @@ module.exports = new Select(id, (interaction, args) => {
 			setAdventure(adventure);
 		});
 	} else {
-		interaction.update({ content: "\u200B" });
+		interaction.update({ content: ZERO_WIDTH_WHITESPACE });
 	}
 });

@@ -1,7 +1,7 @@
 const { getAdventure, endRoom } = require('../adventureDAO.js');
 const Button = require('../../Classes/Button.js');
 const { ActionRowBuilder, ButtonBuilder, ComponentType, StringSelectMenuBuilder } = require('discord.js');
-const { SAFE_DELIMITER } = require("../../constants.js");
+const { SAFE_DELIMITER, ZERO_WIDTH_WHITESPACE } = require("../../constants.js");
 const { clearComponents } = require('../../helpers.js');
 
 const id = "routevote";
@@ -47,6 +47,6 @@ module.exports = new Button(id, (interaction, [candidate, depth]) => {
 			}
 		});
 	} else {
-		interaction.update({ content: "\u200B" });
+		interaction.update({ content: ZERO_WIDTH_WHITESPACE });
 	}
 });
