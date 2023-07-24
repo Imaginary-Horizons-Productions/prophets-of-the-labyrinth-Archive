@@ -7,32 +7,28 @@ exports.sponsors = {};
 exports.versionData = require('./Config/versionData.json');
 exports.sponsors = require("./Config/sponsors.json");
 
+const NUMBER_EMOJI = {
+	0: '0️⃣',
+	1: '1️⃣',
+	2: '2️⃣',
+	3: '3️⃣',
+	4: '4️⃣',
+	5: '5️⃣',
+	6: '6️⃣',
+	7: '7️⃣',
+	8: '8️⃣',
+	9: '9️⃣',
+	10: '🔟'
+};
+/**
+ * @param {number} number
+ * @returns {string}
+ */
 exports.getNumberEmoji = function (number) {
-	switch (number) {
-		case 0:
-			return '0️⃣';
-		case 1:
-			return '1️⃣';
-		case 2:
-			return '2️⃣';
-		case 3:
-			return '3️⃣';
-		case 4:
-			return '4️⃣';
-		case 5:
-			return '5️⃣';
-		case 6:
-			return '6️⃣';
-		case 7:
-			return '7️⃣';
-		case 8:
-			return '8️⃣';
-		case 9:
-			return '9️⃣';
-		case 10:
-			return '🔟';
-		default:
-			return '#️⃣';
+	if (number in NUMBER_EMOJI) {
+		return NUMBER_EMOJI[number];
+	} else {
+		return '#️⃣';
 	}
 }
 
