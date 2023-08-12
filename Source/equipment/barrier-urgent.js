@@ -8,7 +8,7 @@ module.exports = new EquipmentTemplate("Urgent Barrier", "Grant an ally @{block}
 	.setCost(350)
 	.setUses(1)
 	.setBlock(1000)
-	.markPriority();
+	.setPriority(1);
 
 function effect([target], user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger], block, critBonus } = module.exports;

@@ -9,7 +9,7 @@ module.exports = new EquipmentTemplate("Urgent Life Drain", "Strike a foe for @{
 	.setUses(10)
 	.setDamage(75)
 	.setHealing(25)
-	.markPriority();
+	.setPriority(1);
 
 async function effect([target], user, isCrit, adventure) {
 	if (target.hp < 1) {

@@ -9,7 +9,7 @@ module.exports = new EquipmentTemplate("Hunter's Bow", "Strike a foe for @{damag
 	.setUses(10)
 	.setDamage(75)
 	.setBonus(15) // gold
-	.markPriority();
+	.setPriority(1);
 
 function effect([target], user, isCrit, adventure) {
 	if (target.hp < 1) {

@@ -55,29 +55,14 @@ module.exports = new Button(id, async (interaction, [moveName, round, index]) =>
 				newMove.addTarget(new CombatantReference("none", -1));
 			}
 
-			let overwritten = false;
 			for (let i = 0; i < adventure.room.moves.length; i++) {
 				const { userReference } = adventure.room.moves[i];
 				if (userReference.team === user.team && userReference.index === userIndex) {
 					await adventure.room.moves.splice(i, 1);
-					overwritten = true;
 					break;
 				}
 			}
-			if (!overwritten) {
-				for (let i = 0; i < adventure.room.priorityMoves.length; i++) {
-					const { userReference } = adventure.room.priorityMoves[i];
-					if (userReference.team === user.team && userReference.index === userIndex) {
-						await adventure.room.priorityMoves.splice(i, 1);
-						break;
-					}
-				}
-			}
-			if (getEquipmentProperty(moveName, "isPriority")) {
-				await adventure.room.priorityMoves.push(newMove);
-			} else {
-				await adventure.room.moves.push(newMove);
-			}
+			await adventure.room.moves.push(newMove);
 
 			// Send confirmation text
 			interaction.update({ components: [] });

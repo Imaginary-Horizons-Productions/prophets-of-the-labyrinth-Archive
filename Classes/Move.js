@@ -8,6 +8,8 @@ module.exports.Move = class {
 		this.name = "";
 		this.type = "";
 		this.speed = 0;
+		this.randomOrder = 0;
+		this.priority = 0;
 		this.isCrit = false;
 		this.userReference; //TODO #76 convert to array to support joint/combo moves
 		/** @type {CombatantReference[]} */
@@ -33,8 +35,6 @@ module.exports.Move = class {
 	onSetMoveSpeed(combatant) {
 		// DESIGN SPACE: if enemy.archetype has static speed, or is always faster than a delver, etc, put that logic here
 		this.speed = calculateTotalSpeed(combatant);
-		removeModifier(combatant, { name: "Slow", stacks: 1, force: true });
-		removeModifier(combatant, { name: "Quicken", stacks: 1, force: true });
 		return this;
 	}
 

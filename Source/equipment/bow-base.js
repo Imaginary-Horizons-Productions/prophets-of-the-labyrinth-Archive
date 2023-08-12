@@ -8,7 +8,7 @@ module.exports = new EquipmentTemplate("Bow", "Strike a foe for @{damage} @{elem
 	.setCost(200)
 	.setUses(10)
 	.setDamage(75)
-	.markPriority();
+	.setPriority(1);
 
 function effect([target], user, isCrit, adventure) {
 	if (target.hp < 1) {
