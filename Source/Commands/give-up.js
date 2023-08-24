@@ -2,12 +2,12 @@ const { Adventure } = require('../../Classes/Adventure.js');
 const Command = require('../../Classes/Command.js');
 const { completeAdventure, getAdventure } = require('../adventureDAO.js');
 
-const id = "give-up";
+const customId = "give-up";
 const options = [];
-module.exports = new Command(id, "Lets the adventure leader end the adventure", false, false, options);
+module.exports = new Command(customId, "Lets the adventure leader end the adventure", false, false, options);
 
+/** Give up on the current adventure */
 module.exports.execute = (interaction) => {
-	// Give up on the current adventure
 	const adventure = getAdventure(interaction.channelId);
 	if (adventure && !Adventure.endStates.includes(adventure.state)) {
 		if (interaction.user.id === adventure.leaderId) {

@@ -11,7 +11,7 @@ module.exports = new Select(customId, (interaction, args) => {
 	const adventure = getAdventure(interaction.channel.id);
 	if (adventure?.state === "config") {
 		// Add delver to list (or overwrite)
-		const delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
+		const delver = adventure.delvers.find(delver => delver.id == interaction.user.id);
 		const archetype = interaction.values[0];
 		const isSwitching = delver.archetype !== "";
 		const archetypeTemplate = Object.assign(new Archetype(), getArchetype(archetype));

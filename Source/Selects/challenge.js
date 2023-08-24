@@ -12,6 +12,11 @@ module.exports = new Select(customId,
 	 */
 	(interaction, args) => {
 		const adventure = getAdventure(interaction.channelId);
+		if (!adventure.delvers.some(delver => delver.id == interaction.user.id)) {
+			interaction.reply({ content: "You aren't in this adventure.", ephemeral: true });
+			return;
+		}
+
 		if (adventure?.room.resources.roomAction.count > 0) {
 			const [challengeName] = interaction.values;
 			const { intensity, duration, reward } = getChallenge(challengeName);
