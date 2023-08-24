@@ -5,16 +5,16 @@ const { getAdventure, setAdventure } = require('../adventureDAO');
 const { getArchetype } = require('../Archetypes/_archetypeDictionary.js');
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
 
-const id = "archetype";
-module.exports = new Select(id, (interaction, args) => {
+const customId = "archetype";
+module.exports = new Select(customId, (interaction, args) => {
 	// Add the player's delver object to the adventure
-	let adventure = getAdventure(interaction.channel.id);
+	const adventure = getAdventure(interaction.channel.id);
 	if (adventure?.state === "config") {
 		// Add delver to list (or overwrite)
-		let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
-		let archetype = interaction.values[0];
-		let isSwitching = delver.archetype !== "";
-		let archetypeTemplate = Object.assign(new Archetype(), getArchetype(archetype));
+		const delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
+		const archetype = interaction.values[0];
+		const isSwitching = delver.archetype !== "";
+		const archetypeTemplate = Object.assign(new Archetype(), getArchetype(archetype));
 		delver.equipment = archetypeTemplate.signatureEquipment.map(equipmentName => {
 			return { name: equipmentName, uses: getEquipmentProperty(equipmentName, "maxUses") }
 		});
