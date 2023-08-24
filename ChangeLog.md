@@ -24,6 +24,10 @@
 - Amethyst Spyglass now reduces scouting costs by 15g per spyglass (and can't reduce past 0g)
 - Scouting Artifact Guardians will now always start with the next upcoming Artifact Guardian
 - Element Redistrabution event (now named Elemental Research) now pays 200g instead of costing 100g
+- Removed "wait for leader" decision points
+   - Anyone can now pick a challenge at a rest site, make sure to discuss with the party!
+   - Start of adventure now has a "Ready!" button instead of a confirmation after everyone's picked an archetype
+   - Anyone can now `/give-up`
 
 #### Prophets of the Labyrinth Version 0.10.0:
 - Added **Consumables**: these resources can be used by any party member during combat at priority speed

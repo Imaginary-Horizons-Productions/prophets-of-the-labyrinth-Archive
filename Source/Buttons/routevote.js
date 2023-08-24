@@ -44,7 +44,7 @@ module.exports = new Button(customId,
 								case ComponentType.StringSelect:
 									return new StringSelectMenuBuilder(component).setDisabled(true);
 								default:
-									throw new Error(`Disabling unregistered component from continue button: ${component.type}`);
+									throw new Error(`Disabling unregistered component from routevote button: ${component.type}`);
 							}
 						}))
 					})];

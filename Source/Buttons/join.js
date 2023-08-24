@@ -54,12 +54,7 @@ module.exports = new Button(customId,
 
 		// Welcome player to thread
 		let thread = interaction.client.guilds.resolve(guildId).channels.resolve(adventureId);
-		thread.send(`<@${interaction.user.id}> joined the adventure!`).then(_message => {
-			if (adventure.messageIds.start) {
-				thread.messages.delete(adventure.messageIds.start);
-				adventure.messageIds.start = "";
-			}
-		});
+		thread.send(`<@${interaction.user.id}> joined the adventure!`);
 
 		// Update recruit message
 		let partyList = `<@${adventure.leaderId}> 👑`;
