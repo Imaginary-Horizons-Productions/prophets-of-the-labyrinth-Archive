@@ -19,6 +19,7 @@ module.exports = new Button(id, async (interaction, [moveName, round, index]) =>
 				.onSetMoveSpeed(user)
 				.setIsCrit(user.crit)
 				.setMoveName(moveName)
+				.setPriority(getEquipmentProperty(moveName, "priority"))
 				.setType("equip")
 				.setUser(new CombatantReference(user.team, userIndex));
 
@@ -55,10 +56,12 @@ module.exports = new Button(id, async (interaction, [moveName, round, index]) =>
 				newMove.addTarget(new CombatantReference("none", -1));
 			}
 
+			let overwritten = false;
 			for (let i = 0; i < adventure.room.moves.length; i++) {
 				const { userReference } = adventure.room.moves[i];
 				if (userReference.team === user.team && userReference.index === userIndex) {
 					await adventure.room.moves.splice(i, 1);
+					overwritten = true;
 					break;
 				}
 			}

@@ -324,7 +324,7 @@ exports.newRound = function (adventure, thread, lastRoundText) {
 							actionName = actionPool[generateRandomNumber(adventure, actionPool.length, "battle")];
 						}
 						move.setMoveName(actionName);
-						move.setPriority(getEnemy(user.archetype).actions[move.name].priority)
+						move.setPriority(enemyTemplate.actions[move.name].priority)
 						enemyTemplate.actions[actionName].selector(adventure, combatant).forEach(({ team, index }) => {
 							move.addTarget(new CombatantReference(team, index));
 						})
@@ -388,12 +388,12 @@ exports.endRound = async function (adventure, thread) {
 	// Randomize speed ties
 	let randomOrderBag=Array(adventure.room.moves.length).fill().map((_,idx)=>idx) // ensure that unique values are available for each move
 	adventure.room.moves.forEach(move => {
-		let rIdx=generateRandomNumber(adventure, randomOrderBag.length, "battle");
-		move.randomOrder += randomOrderOrderBag.splice(rIdx,1)[0]; // pull a remaining randomOrder out of the bag and assign it to a move
+		let rIdx = generateRandomNumber(adventure, randomOrderBag.length, "battle");
+		move.randomOrder = randomOrderBag.splice(rIdx,1)[0]; // pull a remaining randomOrder out of the bag and assign it to a move
 	})
-	// "second" is the 1st parameter, so that way the sort is descending instead of ascending
+	// "second" is the 1st parameter rather than "first", so that way the sort is descending instead of ascending
 	adventure.room.moves.sort((second, first) => {
-		if(first.priority === second.priority && first.speed === second.speed && first.randomOrder > second.randomOrder){
+		if(first.priority === second.priority && first.speed === second.speed && first.randomOrder === second.randomOrder){
 			return 0;
 		}
 		else if((first.priority > second.priority) || 

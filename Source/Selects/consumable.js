@@ -26,10 +26,12 @@ module.exports = new Select(id, async (interaction, [round]) => {
 			consumable.selectTargets(userIndex, adventure).forEach(target => {
 				newMove.addTarget(target);
 			})
+			let overwritten = false;
 			for (let i = 0; i < adventure.room.moves.length; i++) {
 				const { userReference } = adventure.room.moves[i];
 				if (userReference.team === user.team && userReference.index === userIndex) {
 					await adventure.room.moves.splice(i, 1);
+					overwritten = true;
 					break;
 				}
 			}

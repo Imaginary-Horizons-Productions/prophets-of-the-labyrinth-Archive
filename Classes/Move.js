@@ -38,6 +38,11 @@ module.exports.Move = class {
 		return this;
 	}
 
+	setPriority(integer){
+		this.priority = integer;
+		return this;
+	}
+
 	setIsCrit(boolean) {
 		this.isCrit = boolean;
 		return this;
