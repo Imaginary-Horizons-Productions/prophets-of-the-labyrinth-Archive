@@ -7,11 +7,11 @@ const mechabee = require("./mechabee.js")
 
 module.exports = new Enemy("Mecha Queen")
 	.setFirstAction("a random protocol")
-	.addAction({ name: "Swarm Protocol", element: "Untyped", isPriority: true, effect: swarmEffect, selector: selectNone, next: mechaQueenPattern })
-	.addAction({ name: "Assault Protocol", element: "Untyped", isPriority: true, effect: assaultEffect, selector: selectRandomFoe, next: mechaQueenPattern })
-	.addAction({ name: "Sacrifice Protocol", element: "Untyped", isPriority: true, effect: sacrificeEffect, selector: selectRandomOtherAlly, next: mechaQueenPattern })
-	.addAction({ name: "Deploy Drone", element: "Untyped", isPriority: false, effect: deployEffect, selector: selectNone, next: mechaQueenPattern })
-	.addAction({ name: "V.E.N.O.Missile", element: "Earth", isPriority: false, effect: missileEffect, selector: selectRandomFoe, next: mechaQueenPattern })
+	.addAction({ name: "Swarm Protocol", element: "Untyped", priority: 1, effect: swarmEffect, selector: selectNone, next: mechaQueenPattern })
+	.addAction({ name: "Assault Protocol", element: "Untyped", priority: 1, effect: assaultEffect, selector: selectRandomFoe, next: mechaQueenPattern })
+	.addAction({ name: "Sacrifice Protocol", element: "Untyped", priority: 1, effect: sacrificeEffect, selector: selectRandomOtherAlly, next: mechaQueenPattern })
+	.addAction({ name: "Deploy Drone", element: "Untyped", priority: 0, effect: deployEffect, selector: selectNone, next: mechaQueenPattern })
+	.addAction({ name: "V.E.N.O.Missile", element: "Earth", priority: 0, effect: missileEffect, selector: selectRandomFoe, next: mechaQueenPattern })
 	.setHp(500)
 	.setSpeed(100)
 	.setElement("Earth")
@@ -58,7 +58,7 @@ function swarmEffect(targets, user, isCrit, adventure) {
 
 // assumes mecha queen is at enemy index 0 and that all other enemies are mechabees
 function assaultEffect(targets, user, isCrit, adventure) {
-	const { targets: mechaqueensTargets } = adventure.room.priorityMoves.find(move => move.userReference.team === "enemy" && move.userReference.index === 0)
+	const { targets: mechaqueensTargets } = adventure.room.moves.find(move => move.userReference.team === "enemy" && move.userReference.index === 0)
 	adventure.room.moves.forEach(move => {
 		if (move.userReference.team === "enemy" && move.userReference.index !== 0) {
 			move.name = "Sting";
