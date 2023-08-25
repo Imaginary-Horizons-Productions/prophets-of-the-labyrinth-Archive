@@ -4,8 +4,8 @@ const { getPlayer, setPlayer } = require('../playerDAO.js');
 const id = "collectartifact";
 module.exports = new Select(id, (interaction, args) => {
 	// Add the selected artifact to the player's profile
-	let [artifactName] = interaction.values;
-	let player = getPlayer(interaction.user.id, interaction.guildId);
+	const [artifactName] = interaction.values;
+	const player = getPlayer(interaction.user.id, interaction.guildId);
 	player.artifacts[interaction.channelId] = artifactName;
 	setPlayer(player);
 	interaction.reply({ content: `You decide to hold onto a ${artifactName}. You'll be able to bring it on future adventures.`, ephemeral: true });

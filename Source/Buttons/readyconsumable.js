@@ -5,12 +5,21 @@ const { getAdventure } = require('../adventureDAO.js');
 const { SAFE_DELIMITER, MAX_SELECT_OPTIONS } = require('../../constants.js');
 const { getConsumable } = require('../consumables/_consumablesDictionary.js');
 
-const id = "readyconsumable";
-module.exports = new Button(id, (interaction, args) => {
-	// Show the delver stats of the user and provide components to ready a move
-	const adventure = getAdventure(interaction.channel.id);
-	const delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
-	if (delver.getModifierStacks("Stun") < 1) { // Early out if stunned
+const customId = "readyconsumable";
+module.exports = new Button(customId,
+	/** Show the delver stats of the user and provide components to ready a move */
+	(interaction, args) => {
+		const adventure = getAdventure(interaction.channel.id);
+		const delver = adventure?.delvers.find(delver => delver.id == interaction.user.id);
+		if (!delver) {
+			interaction.reply({ content: "This adventure isn't active or you aren't participating in it.", ephemeral: true });
+			return;
+		}
+		if (delver.getModifierStacks("Stun") > 0) { // Early out if stunned
+			interaction.reply({ content: "You cannot pick a move because you are stunned this round.", ephemeral: true });
+			return;
+		}
+
 		interaction.reply({
 			embeds: [
 				new EmbedBuilder().setColor(getColor(adventure.room.element))
@@ -30,7 +39,5 @@ module.exports = new Button(id, (interaction, args) => {
 			],
 			ephemeral: true
 		}).catch(console.error);
-	} else {
-		interaction.reply({ content: "You cannot pick a move because you are stunned this round.", ephemeral: true });
 	}
-});
+);

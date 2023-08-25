@@ -7,6 +7,11 @@ const customId = "buyconsumable";
 module.exports = new Select(customId, (interaction, args) => {
 	// Allow the party to buy a consumable at a merchant
 	const adventure = getAdventure(interaction.channel.id);
+	if (!adventure.delvers.some(delver => delver.id == interaction.user.id)) {
+		interaction.reply({ content: "You aren't in this adventure.", ephemeral: true });
+		return;
+	}
+
 	const [name, menuIndex] = interaction.values[0].split(SAFE_DELIMITER);
 	const { count, cost } = adventure.room.resources[name];
 	if (count < 1) {

@@ -24,9 +24,6 @@ module.exports.Adventure = class {
 	element;
 	messageIds = {
 		recruit: "",
-		start: "",
-		leaderNotice: "",
-		deploy: "",
 		utility: "",
 		room: "",
 		battleRound: ""

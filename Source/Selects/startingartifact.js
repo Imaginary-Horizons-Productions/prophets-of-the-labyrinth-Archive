@@ -1,6 +1,6 @@
 const Select = require('../../Classes/Select.js');
 const { getAdventure, setAdventure } = require('../adventureDAO');
-const { ActionRowBuilder } = require('discord.js');
+const { ActionRowBuilder, StringSelectMenuBuilder } = require('discord.js');
 const { getArtifact } = require('../Artifacts/_artifactDictionary.js');
 
 const id = "startingartifact";

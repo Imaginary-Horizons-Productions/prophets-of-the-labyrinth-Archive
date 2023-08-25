@@ -4,17 +4,22 @@ const { SAFE_DELIMITER } = require('../../constants.js');
 const { getAdventure } = require("../adventureDAO.js");
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
 
-const id = "viewrepairs";
-module.exports = new Button(id,
+const customId = "viewrepairs";
+module.exports = new Button(customId,
 	/** Allow the user to select a piece of equipment to regain uses on
 	 * @param {Interaction} interaction
-	 * @param {Array<string>} args
+	 * @param {string[]} args
 	 */
 	(interaction, args) => {
 		const adventure = getAdventure(interaction.channelId);
-		const user = adventure.delvers.find(delver => delver.id === interaction.user.id);
+		const delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
+		if (!delver) {
+			interaction.reply({ content: "This adventure isn't active or you aren't participating in it.", ephemeral: true });
+			return;
+		}
+
 		const options = [];
-		user.equipment.forEach((equip, index) => {
+		delver.equipment.forEach((equip, index) => {
 			let maxUses = getEquipmentProperty(equip.name, "maxUses");
 			if (maxUses > 0 && equip.uses < maxUses) {
 				let value = Math.min(Math.ceil(maxUses / 2), maxUses - equip.uses);
@@ -39,4 +44,5 @@ module.exports = new Button(id,
 		} else {
 			interaction.reply({ content: "The forge's supplies have been exhausted.", ephemeral: true });
 		}
-	});
+	}
+);

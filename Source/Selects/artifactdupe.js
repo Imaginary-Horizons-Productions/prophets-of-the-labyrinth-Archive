@@ -9,6 +9,11 @@ module.exports = new Select(customId,
 	/** Give the party 1 copy of the specified artifact */
 	(interaction, args) => {
 		const adventure = getAdventure(interaction.channel.id);
+		if (!adventure.delvers.some(delver => delver.id == interaction.user.id)) {
+			interaction.reply({ content: "You aren't in this adventure.", ephemeral: true });
+			return;
+		}
+
 		if (adventure.room.resources.roomAction.count > 0) {
 			const artifactName = interaction.values[0];
 			adventure.gainArtifact(artifactName, 1);
