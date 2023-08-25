@@ -2,7 +2,7 @@
  * Find index of a sorted array, to insert an item https://stackoverflow.com/a/29018745
  * @param {*[]} sortedArr Array must be already sorted
  * @param {*} target target value
- * @param {*} compareFn compare function applicable to target and sortedArr items
+ * @param {(first, second) => number} compareFn compare function applicable to target and sortedArr items
  */
 function bSearchIndex (sortedArr, target, compareFn){
     let botIdx=0;
