@@ -1,5 +1,5 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
-const { dealDamage, addModifier, calculateTotalSpeed } = require("../combatantDAO.js");
+const { dealDamage, addModifier, compareMoveSpeed } = require("../combatantDAO.js");
 
 module.exports = new EquipmentTemplate("Reactive Spear", "Strike a foe for @{damage} (+@{bonus} if foe went first) @{element} damage", "Also inflict @{mod1Stacks} @{mod1}", "Wind", effect, ["Lethal Spear", "Sweeping Spear"])
 	.setCategory("Weapon")
@@ -16,7 +16,22 @@ function effect([target], user, isCrit, adventure) {
 	}
 
 	let { element, modifiers: [elementStagger, critStagger], damage, bonus } = module.exports;
-	if (calculateTotalSpeed(target) > calculateTotalSpeed(user)) {
+	let userTeam = "delver";
+	let userCombatantPool = adventure.delvers;
+	let targetTeam = "enemy";
+	let targetCombatantPool = adventure.room.enemies;
+	if (user.archtype === "@{clone}") {
+		userTeam = "enemy";
+		userCombatantPool = adventure.room.enemies;
+		targetTeam = "delver";
+		targetCombatantPool = adventure.delvers;
+	}
+	const userIndex = userCombatantPool.findIndex(combatant => combatant.id === user.id);
+	const userMove = adventure.room.moves.find(move => move.userReference.team === userTeam && move.userReference.index === userIndex);
+	const targetIndex = targetCombatantPool.findIndex(combatant => combatant.id === target.id);
+	const targetMove = adventure.room.moves.find(move => move.userReference.team === targetTeam && move.userReference.index === targetIndex);
+
+	if (compareMoveSpeed(userMove, targetMove) > 0) {
 		damage += bonus;
 	}
 	if (user.element === element) {

@@ -17,7 +17,7 @@ const { getEnemy } = require("./Enemies/_enemyDictionary");
 const { rollEquipmentDrop, rollConsumable, getLabyrinthProperty, prerollBoss, rollRoom } = require("./labyrinths/_labyrinthDictionary.js");
 const { getTurnDecrement } = require("./Modifiers/_modifierDictionary.js");
 
-const { clearBlock, removeModifier } = require("./combatantDAO.js");
+const { clearBlock, removeModifier, compareMoveSpeed } = require("./combatantDAO.js");
 const { spawnEnemy } = require("./enemyDAO.js");
 const { getGuild, setGuild } = require("./guildDAO.js");
 const { resolveMove } = require("./moveDAO.js");
@@ -387,18 +387,7 @@ exports.endRound = async function (adventure, thread) {
 		let rIdx = generateRandomNumber(adventure, randomOrderBag.length, "battle");
 		move.randomOrder = randomOrderBag.splice(rIdx, 1)[0]; // pull a remaining randomOrder out of the bag and assign it to a move
 	})
-	// Want bigger numbers to be first in list, so order must be descending (basic compare functions are NORMALLY ascending by returning first-second)
-	adventure.room.moves.sort((first, second) => {
-		if (second.priority == first.priority) {
-			if (second.speed == first.speed) {
-				return second.randomOrder - first.randomOrder;
-			} else {
-				return second.speed - first.speed;
-			}
-		} else {
-			return second.priority - first.priority;
-		}
-	})
+	adventure.room.moves.sort(compareMoveSpeed)
 
 	// Resolve moves
 	let lastRoundText = "";

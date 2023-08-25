@@ -21,19 +21,25 @@ function effect(targets, user, isCrit, adventure) {
 	addBlock(user, block);
 
 	const userIndex = adventure.delvers.findIndex(delver => delver.id === user.id);
-	const provokedEnemies = [];
+	const provokedTargets = [];
+	let userTeam = "delver";
+	let targetTeam = "enemy";
+	if (user.archtype == "@{clone}") {
+		userTeam = "enemy";
+		targetTeam = "delver";
+	}
 	adventure.moves.forEach(move => {
-		if (move.userReference.team === "enemy" && move.targets.length === 1) {
-			const enemy = adventure.getCombatant(move.userReference);
-			if (enemy.hp > 0) {
-				move.targets = [{ team: "delver", index: userIndex }];
-				provokedEnemies.push(enemy.getName(adventure.room.enemyIdMap));
+		if (move.userReference.team === targetTeam && move.targets.length === 1) {
+			const target = adventure.getCombatant(move.userReference);
+			if (target.hp > 0) {
+				move.targets = [{ team: userTeam, index: userIndex }];
+				provokedTargets.push(target.getName(adventure.room.enemyIdMap));
 			}
 		}
 	})
 
-	if (provokedEnemies.length > 0) {
-		return `Preparing to Block, ${payHP(user, hpCost, adventure)} ${provokedEnemies.join(", ")} fall(s) for the provocation.`;
+	if (provokedTargets.length > 0) {
+		return `Preparing to Block, ${payHP(user, hpCost, adventure)} ${provokedTargets.join(", ")} fall(s) for the provocation.`;
 	} else {
 		return `Preparing to Block, ${payHP(user, hpCost, adventure)}`;
 	}
