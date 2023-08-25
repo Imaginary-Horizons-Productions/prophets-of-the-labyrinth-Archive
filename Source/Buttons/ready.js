@@ -20,7 +20,7 @@ module.exports = new Button(customId,
 		delver.isReady = !delver.isReady;
 		if (!adventure.delvers.every(delver => delver.isReady)) {
 			setAdventure(adventure);
-			interaction.reply({ content: `${interaction.member} is ${delver.isReady ? "no longer " : ""}ready!` })
+			interaction.reply({ content: `${interaction.member} is ${delver.isReady ? "" : "no longer "}ready!` })
 		} else {
 			// Clear components from recruitment, start, and deploy messages
 			fetchRecruitMessage(interaction.channel, adventure.messageIds.recruit).then(recruitMessage => {
