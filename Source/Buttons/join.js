@@ -3,7 +3,7 @@ const Button = require('../../Classes/Button.js');
 const Delver = require('../../Classes/Delver.js');
 const { maxDelverCount, ZERO_WIDTH_WHITESPACE } = require("../../constants.js");
 const { isSponsor } = require('../../helpers.js');
-const { getGuild } = require('../guildDAO.js');
+const { getGuild, setGuild } = require('../guildDAO.js');
 const { getAdventure, setAdventure, fetchRecruitMessage } = require("./../adventureDAO.js");
 
 const customId = "join";
@@ -51,6 +51,7 @@ module.exports = new Button(customId,
 		adventure.gainGold(50);
 		setAdventure(adventure);
 		guildProfile.adventuring.add(interaction.user.id);
+		setGuild(guildProfile);
 
 		// Welcome player to thread
 		let thread = interaction.client.guilds.resolve(guildId).channels.resolve(adventureId);

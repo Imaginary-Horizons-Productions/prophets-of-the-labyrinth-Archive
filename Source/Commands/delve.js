@@ -5,7 +5,7 @@ const Delver = require('../../Classes/Delver.js');
 const { setAdventure } = require('../adventureDAO.js');
 const { getChallenge } = require('../Challenges/_challengeDictionary.js');
 const { elementsList, getColor } = require('../elementHelpers.js');
-const { getGuild } = require('../guildDAO.js');
+const { getGuild, setGuild } = require('../guildDAO.js');
 const { prerollBoss } = require('../labyrinths/_labyrinthDictionary.js');
 const { SAFE_DELIMITER } = require("../../constants.js");
 const { isSponsor, generateRandomNumber } = require('./../../helpers.js');
@@ -58,6 +58,7 @@ module.exports.execute = (interaction) => {
 						});
 						adventure.delvers.push(new Delver(interaction.user.id, interaction.member.displayName, thread.id));
 						guildProfile.adventuring.add(interaction.user.id);
+						setGuild(guildProfile);
 
 						let options = [{ label: "None", description: "Deselect previously selected challenges", value: "None" }];
 						["Can't Hold All this Value", "Restless", "Rushing"].forEach(challengeName => {

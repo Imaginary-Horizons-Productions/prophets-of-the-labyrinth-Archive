@@ -23,7 +23,7 @@ function effect([target], user, isCrit, adventure) {
 		damage *= critBonus;
 	}
 	addModifier(target, slow);
-	return dealDamage(target, user, damage, false, element, adventure).then(damageText => {
+	return dealDamage([target], user, damage, false, element, adventure).then(damageText => {
 		return `${damageText} ${target.getName(adventure.room.enemyIdMap)} is Slowed.`;
 	});
 }

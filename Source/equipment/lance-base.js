@@ -24,5 +24,5 @@ function effect([target], user, isCrit, adventure) {
 		damage *= critBonus;
 		damage += powerUpStacks;
 	}
-	return dealDamage(target, user, damage, false, element, adventure);
+	return dealDamage([target], user, damage, false, element, adventure);
 }

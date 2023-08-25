@@ -11,11 +11,11 @@ module.exports = new Enemy("Bloodtail Hawk")
 	.setStaggerThreshold(1)
 	.setCritBonus(30);
 
-function rakeEffect([target], user, isCrit, adventure) {
+function rakeEffect(targets, user, isCrit, adventure) {
 	let damage = 50;
 	if (isCrit) {
 		damage *= 2;
 	}
 	addModifier(target, { name: "Stagger", stacks: 1 });
-	return dealDamage(target, user, damage, false, user.element, adventure);
+	return dealDamage(targets, user, damage, false, user.element, adventure);
 }

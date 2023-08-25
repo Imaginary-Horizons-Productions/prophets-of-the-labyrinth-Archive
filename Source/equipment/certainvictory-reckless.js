@@ -23,7 +23,7 @@ function effect([target], user, isCrit, adventure) {
 	}
 	addModifier(user, powerUp);
 	addModifier(user, exposed);
-	return dealDamage(target, user, damage, false, element, adventure).then(damageText => {
+	return dealDamage([target], user, damage, false, element, adventure).then(damageText => {
 		return `${payHP(user, user.getModifierStacks("Power Up"), adventure)}${damageText} ${user.getName(adventure.room.enemyIdMap)} is Powered Up and Exposed.`;
 	});
 }

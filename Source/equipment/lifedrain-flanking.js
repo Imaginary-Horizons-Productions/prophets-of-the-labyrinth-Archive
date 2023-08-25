@@ -22,7 +22,7 @@ async function effect([target], user, isCrit, adventure) {
 	if (isCrit) {
 		healing *= critBonus;
 	}
-	let damageText = await dealDamage(target, user, damage, false, element, adventure);
+	let damageText = await dealDamage([target], user, damage, false, element, adventure);
 	addModifier(target, exposed);
 	return `${damageText} ${target.getName(adventure.room.enemyIdMap)} is Exposed. ${gainHealth(user, healing, adventure)}`;
 }

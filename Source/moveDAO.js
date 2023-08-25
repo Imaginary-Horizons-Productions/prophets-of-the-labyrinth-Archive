@@ -104,7 +104,7 @@ exports.resolveMove = async function (move, adventure) {
 
 	const regenStacks = user.getModifierStacks("Regen");
 	if (poisonDamage) {
-		moveText += ` ${await dealDamage(user, null, poisonDamage, true, "Poison", adventure)}`;
+		moveText += ` ${await dealDamage([user], null, poisonDamage, true, "Poison", adventure)}`;
 	} else if (regenStacks) {
 		moveText += ` ${gainHealth(user, regenStacks * 10, adventure)}`;
 	}

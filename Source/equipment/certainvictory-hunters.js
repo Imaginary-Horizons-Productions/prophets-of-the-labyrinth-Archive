@@ -23,7 +23,7 @@ function effect([target], user, isCrit, adventure) {
 		damage *= critBonus;
 	}
 	addModifier(user, powerUp);
-	return dealDamage(target, user, damage, false, element, adventure).then(damageText => {
+	return dealDamage([target], user, damage, false, element, adventure).then(damageText => {
 		if (target.hp < 1) {
 			adventure.gainGold(bounty);
 			damageText += ` ${user.getName(adventure.room.enemyIdMap)} gains ${bounty}g of victory spoils.`;

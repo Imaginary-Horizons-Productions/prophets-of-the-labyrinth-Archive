@@ -10,7 +10,5 @@ module.exports = new ConsumableTemplate("Explosion Potion", "Deal 75 damage to a
 
 function effect(targets, user, isCrit, adventure) {
 	// 75 damage
-	return Promise.all(
-		targets.map(target => dealDamage(target, user, 75, false, "Untyped", adventure))
-	).then(results => results.join(" "))
+	return dealDamage(targets, user, 75, false, "Untyped", adventure);
 }

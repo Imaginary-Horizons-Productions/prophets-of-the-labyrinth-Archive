@@ -23,7 +23,7 @@ function effect([target], user, isCrit, adventure) {
 		hpThreshold *= critBonus;
 	}
 	if (target.hp > hpThreshold) {
-		return dealDamage(target, user, damage, false, element, adventure);
+		return dealDamage([target], user, damage, false, element, adventure);
 	} else {
 		target.hp = 0;
 		return `${target.getName(adventure.room.enemyIdMap)} meets the reaper.`;

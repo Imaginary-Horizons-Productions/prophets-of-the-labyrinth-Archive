@@ -28,7 +28,7 @@ function venomCannonEffect([target], user, isCrit, adventure) {
 	} else {
 		addModifier(target, { name: "Poison", stacks: 3 });
 	}
-	return dealDamage(target, user, damage, false, user.element, adventure).then(damageText => {
+	return dealDamage([target], user, damage, false, user.element, adventure).then(damageText => {
 		return `${target.getName(adventure.room.enemyIdMap)} is Poisoned. ${damageText}`;
 	});
 }
