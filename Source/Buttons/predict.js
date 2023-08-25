@@ -29,6 +29,7 @@ module.exports = new Button(customId,
 			} else {
 				return interaction.reply({ content: "*Blind Avarice* prevents you from predicting until you get more gold.", ephemeral: true });
 			}
+		}
 		const embed = new EmbedBuilder().setColor(getColor(adventure.room.element))
 			.setFooter({ text: `Room #${adventure.depth} - Round ${adventure.room.round}` });
 		let infoForNextRound = true;
@@ -58,7 +59,7 @@ module.exports = new Button(customId,
 						if (enemy.hp > 0) {
 							const targetNames = getTargetList(targets, adventure);
 							if (name !== "@{clone}") {
-							embed.addFields({ name: enemy.getName(adventure.room.enemyIdMap), value: `Round ${adventure.room.round + 1}: ${name} ${priority != 0 ? "(Priority: " + priority + ") " : ""}(Targets: ${targetNames.length ? targetNames.join(", ") : "???"})\nRound ${adventure.room.round + 2}: ${enemy.nextAction}` });
+								embed.addFields({ name: enemy.getName(adventure.room.enemyIdMap), value: `Round ${adventure.room.round + 1}: ${name} ${priority != 0 ? "(Priority: " + priority + ") " : ""}(Targets: ${targetNames.length ? targetNames.join(", ") : "???"})\nRound ${adventure.room.round + 2}: ${enemy.nextAction}` });
 							} else {
 								embed.addFields({ name: enemy.getName(adventure.room.enemyIdMap), value: "Mirror Clones mimic your allies!" })
 							}

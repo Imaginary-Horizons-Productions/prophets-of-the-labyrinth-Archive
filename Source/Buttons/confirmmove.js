@@ -20,7 +20,7 @@ module.exports = new Button(customId,
 					.onSetMoveSpeed(user)
 					.setIsCrit(user.crit)
 					.setMoveName(moveName)
-        	.setPriority(getEquipmentProperty(moveName, "priority"))
+					.setPriority(getEquipmentProperty(moveName, "priority"))
 					.setType("equip")
 					.setUser(new CombatantReference(user.team, userIndex));
 
@@ -66,8 +66,8 @@ module.exports = new Button(customId,
 						break;
 					}
 				}
-  	    await adventure.room.moves.push(newMove);
-        
+				await adventure.room.moves.push(newMove);
+
 				// Send confirmation text
 				interaction.update({ components: [] });
 				interaction.channel.send(`${interaction.user} ${overwritten ? "switches to ready" : "readies"} **${moveName}**${target !== "none" && target !== "self" ? ` to use on **${targetText}**` : ""}.`).then(() => {
