@@ -395,7 +395,7 @@ exports.endRound = async function (adventure, thread) {
 	adventure.room.moves.sort((first, second) => {
 		if (second.priority == first.priority) {
 			if (second.speed == first.speed) {
-				return second.randomOrder - first.randomOrder - ;
+				return second.randomOrder - first.randomOrder;
 			} else {
 				return second.speed - first.speed;
 			}
