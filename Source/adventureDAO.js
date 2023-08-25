@@ -393,16 +393,15 @@ exports.endRound = async function (adventure, thread) {
 	})
 	// "second" is the 1st parameter rather than "first", so that way the sort is descending instead of ascending
 	adventure.room.moves.sort((second, first) => {
-		if(first.priority === second.priority && first.speed === second.speed && first.randomOrder === second.randomOrder){
-			return 0;
-		}
-		else if((first.priority > second.priority) || 
-		(first.priority === second.priority && first.speed > second.speed) ||
-		(first.priority === second.priority && first.speed === second.speed && first.randomOrder > second.randomOrder))
-		{
-			return 1;
-		}
-		else return -1;
+if (first.priority == second.priority) {
+  if (first.speed == second.speed) {
+    return first.randomOrder - second.randomOrder;
+  } else {
+    return first.speed - second.speed;
+  }
+} else {
+  return first.priority - second.priority;
+}
 	})
 
 	// Resolve moves
