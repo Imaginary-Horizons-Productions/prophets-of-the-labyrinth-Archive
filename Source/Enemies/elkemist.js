@@ -36,7 +36,7 @@ function troubleEffect([target], user, isCrit, adventure) {
 	}
 	addModifier(user, { name: "Progress", stacks: 15 + generateRandomNumber(adventure, 16, "battle") });
 	addModifier(target, { name: "Stagger", stacks: 1 });
-	return dealDamage(target, user, damage, false, user.element, adventure).then(damageText => {
+	return dealDamage([target], user, damage, false, user.element, adventure).then(damageText => {
 		return `An obstacle to potion progress is identified and mitigated; ${damageText}`;
 	})
 }
@@ -47,9 +47,7 @@ function boilEffect(targets, user, isCrit, adventure) {
 	if (isCrit) {
 		damage *= 2;
 	}
-	return Promise.all(
-		targets.map(target => dealDamage(target, user, damage, false, "Fire", adventure))
-	).then(results => results.join(" "));
+	return dealDamage(targets, user, damage, false, "Fire", adventure);
 }
 
 function bubbleEffect(targets, user, isCrit, adventure) {

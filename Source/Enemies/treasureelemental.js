@@ -34,7 +34,7 @@ function guardingSlamEffect([target], user, isCrit, adventure) {
 	}
 	addBlock(user, block);
 	removeModifier(user, { name: "Stagger", stacks: 1 });
-	return dealDamage(target, user, 100, false, user.element, adventure).then(damageText => {
+	return dealDamage([target], user, 100, false, user.element, adventure).then(damageText => {
 		return `It prepares to Block and ${damageText}`;
 	});
 }

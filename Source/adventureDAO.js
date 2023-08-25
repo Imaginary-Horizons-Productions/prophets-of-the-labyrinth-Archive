@@ -19,7 +19,7 @@ const { getTurnDecrement } = require("./Modifiers/_modifierDictionary.js");
 
 const { clearBlock, removeModifier } = require("./combatantDAO.js");
 const { spawnEnemy } = require("./enemyDAO.js");
-const { getGuild } = require("./guildDAO.js");
+const { getGuild, setGuild } = require("./guildDAO.js");
 const { resolveMove } = require("./moveDAO.js");
 const { renderRoom, updateRoomHeader } = require("./roomDAO.js");
 const { getEquipmentProperty } = require("./equipment/_equipmentDictionary.js");
@@ -41,12 +41,8 @@ exports.loadAdventures = async function () {
 				loaded++;
 				// Cast delvers into Delver class
 				let castDelvers = [];
-				let guildProfile = getGuild(adventure.guildId);
 				for (let delver of adventure.delvers) {
 					castDelvers.push(Object.assign(new Delver(), delver));
-					if (!guildProfile.adventuring.has(delver.id)) {
-						guildProfile.adventuring.add(delver.id);
-					}
 				}
 				adventure.delvers = castDelvers;
 
@@ -491,5 +487,8 @@ exports.completeAdventure = function (adventure, thread, endState, descriptionOv
 
 	adventure.state = endState;
 	exports.setAdventure(adventure);
+	const guildProfile = getGuild(thread.guild.id);
+	adventure.delvers.forEach(delver => guildProfile.adventuring.delete(delver.id));
+	setGuild(guildProfile);
 	return renderRoom(adventure, thread, descriptionOverride);
 }

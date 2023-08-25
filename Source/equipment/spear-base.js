@@ -21,5 +21,5 @@ function effect([target], user, isCrit, adventure) {
 	if (isCrit) {
 		addModifier(target, critStagger);
 	}
-	return dealDamage(target, user, damage, false, element, adventure);
+	return dealDamage([target], user, damage, false, element, adventure);
 }

@@ -30,7 +30,7 @@ function stingEffect([target], user, isCrit, adventure) {
 	} else {
 		addModifier(target, { name: "Poison", stacks: 2 });
 	}
-	return dealDamage(target, user, 10, false, user.element, adventure);
+	return dealDamage([target], user, 10, false, user.element, adventure);
 }
 
 function barrelRollEffect(targets, user, isCrit, adventure) {
@@ -54,11 +54,9 @@ function selfDestructEffect(targets, user, isCrit, adventure) {
 		damage *= 2;
 	}
 	user.hp = 0;
+	targets.map(target => {
+		addModifier(target, { name: "Stagger", stacks: 1 });
+	})
 
-	return Promise.all(
-		targets.map(target => {
-			addModifier(target, { name: "Stagger", stacks: 1 });
-			return dealDamage(target, user, damage, false, user.element, adventure);
-		})
-	).then(results => results.join(" "));
+	return dealDamage(targets, user, damage, false, user.element, adventure);
 }

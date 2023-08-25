@@ -22,7 +22,7 @@ function effect([target], user, isCrit, adventure) {
 	if (isCrit) {
 		damage *= critBonus;
 	}
-	return dealDamage(target, user, damage, false, element, adventure).then(damageText => {
+	return dealDamage([target], user, damage, false, element, adventure).then(damageText => {
 		if (target.hp > 0) {
 			addModifier(target, poison);
 			return `${damageText} ${target.getName(adventure.room.enemyIdMap)} is Poisoned.`;

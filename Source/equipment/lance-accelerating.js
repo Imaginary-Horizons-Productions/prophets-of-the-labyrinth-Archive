@@ -25,7 +25,7 @@ function effect([target], user, isCrit, adventure) {
 		damage += powerUpStacks;
 	}
 	addModifier(user, quicken);
-	return dealDamage(target, user, damage, false, element, adventure).then(damageText => {
+	return dealDamage([target], user, damage, false, element, adventure).then(damageText => {
 		return `${damageText} ${user.getName(adventure.room.enemyIdMap)} is Quickened.`;
 	});
 }

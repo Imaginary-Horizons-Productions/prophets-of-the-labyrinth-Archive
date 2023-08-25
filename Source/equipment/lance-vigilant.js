@@ -27,7 +27,7 @@ function effect([target], user, isCrit, adventure) {
 	}
 	addBlock(user, block);
 	addModifier(user, vigilance);
-	return dealDamage(target, user, damage, false, element, adventure).then(damageText => {
+	return dealDamage([target], user, damage, false, element, adventure).then(damageText => {
 		return `${damageText} ${user.getName(adventure.room.enemyIdMap)} gains Vigilance`;
 	});
 }

@@ -25,7 +25,7 @@ function effect(targets, user, isCrit, adventure) {
 			if (user.element === element) {
 				addModifier(target, elementStagger);
 			}
-			return dealDamage(target, user, damage, false, element, adventure);
+			return dealDamage([target], user, damage, false, element, adventure);
 		})
 	).then(results => results.filter(result => Boolean(result)).join(" "));
 }

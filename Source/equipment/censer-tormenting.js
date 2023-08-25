@@ -27,7 +27,7 @@ function effect([target], user, isCrit, adventure) {
 	if (Object.keys(target.modifiers).some(modifier => isDebuff(modifier))) {
 		damage += bonus;
 	}
-	return dealDamage(target, user, damage, false, element, adventure).then(damageText => {
+	return dealDamage([target], user, damage, false, element, adventure).then(damageText => {
 		if (isCrit && target.hp > 0) {
 			addModifier(target, slow);
 			return `${damageText} ${target.getName(adventure.room.enemyIdMap)} is Slowed and their other debuffs are duplicated.`;

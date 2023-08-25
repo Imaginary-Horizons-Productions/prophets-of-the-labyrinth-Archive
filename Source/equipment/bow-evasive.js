@@ -23,7 +23,7 @@ function effect([target], user, isCrit, adventure) {
 		damage *= critBonus;
 	}
 	addModifier(user, evade);
-	return dealDamage(target, user, damage, false, element, adventure).then(damageText => {
+	return dealDamage([target], user, damage, false, element, adventure).then(damageText => {
 		return `${damageText} ${user.getName(adventure.room.enemyIdMap)} is ready to Evade.`;
 	});
 }

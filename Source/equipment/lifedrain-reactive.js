@@ -26,5 +26,5 @@ async function effect([target], user, isCrit, adventure) {
 	if (isCrit) {
 		healing *= critBonus;
 	}
-	return `${await dealDamage(target, user, damage, false, element, adventure)} ${gainHealth(user, healing, adventure)}`;
+	return `${await dealDamage([target], user, damage, false, element, adventure)} ${gainHealth(user, healing, adventure)}`;
 }
