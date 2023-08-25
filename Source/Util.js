@@ -4,20 +4,20 @@
  * @param {*} target target value
  * @param {(first, second) => number} compareFn compare function applicable to target and sortedArr items
  */
-function bSearchIndex (sortedArr, target, compareFn){
-    let botIdx=0;
-    let topIdx=sortedArr.length-1;
+function bSearchIndex(sortedArr, target, compareFn) {
+    let botIdx = 0;
+    let topIdx = sortedArr.length - 1;
     while (botIdx <= topIdx) {
         midIdx = (botIdx + topIdx) >> 1;
-        let cmp = compareFn (target, sortedArr[midIdx]);
-        if (cmp==0) {
+        let cmp = compareFn(target, sortedArr[midIdx]);
+        if (cmp == 0) {
             return midIdx;
         }
-        else if (cmp<0){
-            topIdx=midIdx-1;
+        else if (cmp < 0) {
+            topIdx = midIdx - 1;
         }
         else {
-            botIdx=midIdx+1;
+            botIdx = midIdx + 1;
         }
     }
     return botIdx
@@ -30,32 +30,32 @@ function bSearchIndex (sortedArr, target, compareFn){
  * @param {*} items initial array of items the same type as compareFn arguments
  * @returns 
  */
-function newSortedArray(compareFn, items=[]) {
+function newSortedArray(compareFn, items = []) {
     return {
-        add: function(target) {
-            items.splice(bSearchIndex(items, target, compareFn),0,target)
+        add: function (target) {
+            items.splice(bSearchIndex(items, target, compareFn), 0, target)
             return target;
         },
-        remove: function(target){
-            let i=bSearchIndex(items, target, compareFn);
-            if(i!==null && compareFn(target,items[i]) == 0){
-                items.splice(bSearchIndex(items, target, compareFn),1);
+        remove: function (target) {
+            let i = bSearchIndex(items, target, compareFn);
+            if (i !== null && compareFn(target, items[i]) == 0) {
+                items.splice(bSearchIndex(items, target, compareFn), 1);
                 return true
             }
             else {
                 return false;
-            }       
+            }
         },
-        get: function(target) {
-            let i=bSearchIndex(items, target, compareFn);
-            if(compareFn(target,items[i]) == 0){
+        get: function (target) {
+            let i = bSearchIndex(items, target, compareFn);
+            if (compareFn(target, items[i]) == 0) {
                 return i;
             }
             else {
                 return null;
             }
         },
-        getAll: function() {
+        getAll: function () {
             return items;
         }
     }

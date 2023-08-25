@@ -377,31 +377,31 @@ exports.endRound = async function (adventure, thread) {
 			})
 
 			// Replace placeholder
-			let placeholderIdx=adventure.room.moves.findIndex(move => move.userReference.team === "enemy" && move.userReference.index == index)
-			if(placeholderIdx >=0){
-				adventure.room.moves.splice(placeholderIdx, 1,move);
+			let placeholderIdx = adventure.room.moves.findIndex(move => move.userReference.team === "enemy" && move.userReference.index == index)
+			if (placeholderIdx >= 0) {
+				adventure.room.moves.splice(placeholderIdx, 1, move);
 			}
 		}
 	});
 
 
 	// Randomize speed ties
-	let randomOrderBag=Array(adventure.room.moves.length).fill().map((_,idx)=>idx) // ensure that unique values are available for each move
+	let randomOrderBag = Array(adventure.room.moves.length).fill().map((_, idx) => idx) // ensure that unique values are available for each move
 	adventure.room.moves.forEach(move => {
 		let rIdx = generateRandomNumber(adventure, randomOrderBag.length, "battle");
-		move.randomOrder = randomOrderBag.splice(rIdx,1)[0]; // pull a remaining randomOrder out of the bag and assign it to a move
+		move.randomOrder = randomOrderBag.splice(rIdx, 1)[0]; // pull a remaining randomOrder out of the bag and assign it to a move
 	})
-	// "second" is the 1st parameter rather than "first", so that way the sort is descending instead of ascending
-	adventure.room.moves.sort((second, first) => {
-if (first.priority == second.priority) {
-  if (first.speed == second.speed) {
-    return first.randomOrder - second.randomOrder;
-  } else {
-    return first.speed - second.speed;
-  }
-} else {
-  return first.priority - second.priority;
-}
+	// Want bigger numbers to be first in list, so order must be descending (basic compare functions are NORMALLY ascending by returning first-second)
+	adventure.room.moves.sort((first, second) => {
+		if (second.priority == first.priority) {
+			if (second.speed == first.speed) {
+				return second.randomOrder - first.randomOrder - ;
+			} else {
+				return second.speed - first.speed;
+			}
+		} else {
+			return second.priority - first.priority;
+		}
 	})
 
 	// Resolve moves

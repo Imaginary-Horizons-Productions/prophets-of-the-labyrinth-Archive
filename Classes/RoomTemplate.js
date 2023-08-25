@@ -10,7 +10,7 @@ module.exports = class RoomTemplate {
 	element = "";
 	enemyList = {};
 
-	buildUI(adventure) {return []};
+	buildUI(adventure) { return [] };
 
 	setDescription(descriptionText) {
 		this.description = descriptionText;
