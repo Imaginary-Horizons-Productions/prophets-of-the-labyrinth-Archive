@@ -7,11 +7,16 @@ const id = "party-stats";
 const options = [];
 module.exports = new Command(id, "Get info about the current adventure", false, false, options);
 
+/** Show user the party stats */
 module.exports.execute = (interaction) => {
-	// Show user the party stats
 	const adventure = getAdventure(interaction.channelId);
 	if (adventure) {
-		let embed = new EmbedBuilder()
+		if (!adventure.delvers.some(delver => delver.id == interaction.user.id)) {
+			interaction.reply({ content: "You aren't in this adventure.", ephemeral: true });
+			return;
+		}
+
+		const embed = new EmbedBuilder()
 			.setTitle("Party Stats")
 			.setDescription(`${adventure.name} - Depth: ${adventure.depth}`)
 			.addFields([

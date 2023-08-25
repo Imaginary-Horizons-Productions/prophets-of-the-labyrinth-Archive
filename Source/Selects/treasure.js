@@ -11,6 +11,11 @@ module.exports = new Select(id,
 	(interaction, args) => {
 		const adventure = getAdventure(interaction.channel.id);
 		const delver = adventure?.delvers.find(delver => delver.id === interaction.user.id);
+		if (!delver) {
+			interaction.reply({ content: "You aren't in this adventure.", ephemeral: true });
+			return;
+		}
+
 		if (adventure.room.resources.roomAction.count > 0) {
 			const [name, index] = interaction.values[0].split(SAFE_DELIMITER);
 			let result;

@@ -483,7 +483,7 @@ exports.completeAdventure = function (adventure, thread, endState, descriptionOv
 	})
 	clearComponents(adventure.messageIds.battleRound, messageManager);
 	clearComponents(adventure.messageIds.room, messageManager);
-	[adventure.messageIds.utility, adventure.messageIds.deploy, adventure.messageIds.leaderNotice].forEach(id => {
+	[adventure.messageIds.utility].forEach(id => {
 		if (id) {
 			messageManager.delete(id).catch(console.error);
 		}

@@ -10,6 +10,11 @@ module.exports = new Select(id, (interaction, [tier]) => {
 	// Create the equipment details embed so player can decide whether to make the purchase
 	const adventure = getAdventure(interaction.channel.id);
 	const delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
+	if (!delver) {
+		interaction.reply({ content: "You aren't in this adventure.", ephemeral: true });
+		return;
+	}
+
 	const [name, menuIndex] = interaction.values[0].split(SAFE_DELIMITER);
 	const { count, cost } = adventure.room.resources[name];
 	if (count > 0) {

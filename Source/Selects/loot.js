@@ -9,6 +9,11 @@ const id = "loot";
 module.exports = new Select(id, (interaction, args) => {
 	// Move the selected loot into party/delver's inventory
 	const adventure = getAdventure(interaction.channel.id);
+	if (!adventure.delvers.some(delver => delver.id == interaction.user.id)) {
+		interaction.reply({ content: "You aren't in this adventure.", ephemeral: true });
+		return;
+	}
+
 	const delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
 	const [name, index] = interaction.values[0].split(SAFE_DELIMITER);
 	let result;

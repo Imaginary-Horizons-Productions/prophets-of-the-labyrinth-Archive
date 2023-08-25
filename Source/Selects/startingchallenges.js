@@ -11,11 +11,6 @@ module.exports = new Select(id, (interaction, args) => {
 		return;
 	}
 
-	if (interaction.user.id !== adventure.leaderId) {
-		interaction.reply({ content: "Please ask the party leader to set challenges.", ephemeral: true });
-		return;
-	}
-
 	if (interaction.values.includes("None")) {
 		adventure.challenges = {};
 		fetchRecruitMessage(interaction.channel, adventure.messageIds.recruit).then(starterMessage => {

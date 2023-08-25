@@ -5,11 +5,11 @@ const { getArtifactCounts } = require('../Artifacts/_artifactDictionary.js');
 const { getGuild } = require('../guildDAO.js');
 const { getPlayer } = require('../playerDAO.js');
 
-const id = "stats";
+const customId = "stats";
 const options = [
 	{ type: "User", name: "user", description: "The user's mention", required: false, choices: [] }
 ];
-module.exports = new Command(id, "Get the stats for a user (default: yourself)", false, false, options);
+module.exports = new Command(customId, "Get the stats for a user (default: yourself)", false, false, options);
 
 module.exports.execute = (interaction) => {
 	// Get the stats on a user

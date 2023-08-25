@@ -8,17 +8,25 @@ const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js')
 const { equipmentToEmbedField } = require('../equipmentDAO.js');
 const { generateTextBar } = require('../../helpers.js');
 
-const id = "readymove";
-module.exports = new Button(id, (interaction, args) => {
-	// Show the delver stats of the user and provide components to ready a move
-	const adventure = getAdventure(interaction.channel.id);
-	const delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
-	if (delver.getModifierStacks("Stun") < 1) { // Early out if stunned
-		let embed = new EmbedBuilder().setColor(getColor(adventure.room.element))
+const customId = "readymove";
+module.exports = new Button(customId,
+	/** Show the delver stats of the user and provide components to ready a move */
+	(interaction, args) => {
+		const adventure = getAdventure(interaction.channel.id);
+		const delver = adventure?.delvers.find(delver => delver.id == interaction.user.id);
+		if (!delver) {
+			interaction.reply({ content: "This adventure isn't active or you aren't participating in it.", ephemeral: true });
+			return;
+		}
+		if (delver.getModifierStacks("Stun") > 0) { // Early out if stunned
+			interaction.reply({ content: "You cannot pick a move because you are stunned this round.", ephemeral: true });
+			return;
+		}
+		const embed = new EmbedBuilder().setColor(getColor(adventure.room.element))
 			.setTitle("Readying a Move")
 			.setDescription(`Your ${getEmoji(delver.element)} moves add 1 Stagger to enemies and remove 1 Stagger from allies.\n\nPick one option from below as your move for this round:`)
 			.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
-		let enemyOptions = [];
+		const enemyOptions = [];
 		for (let i = 0; i < adventure.room.enemies.length; i++) {
 			let enemy = adventure.room.enemies[i];
 			if (enemy.hp > 0) {
@@ -73,10 +81,8 @@ module.exports = new Button(id, (interaction, args) => {
 		}
 		interaction.reply({ embeds: [embed], components, ephemeral: true })
 			.catch(console.error);
-	} else {
-		interaction.reply({ content: "You cannot pick a move because you are stunned this round.", ephemeral: true });
 	}
-});
+);
 
 function miniPredict(predictType, combatant) {
 	switch (predictType) {

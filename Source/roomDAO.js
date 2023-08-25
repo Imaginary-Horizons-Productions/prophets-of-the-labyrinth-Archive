@@ -209,22 +209,13 @@ function generateRoutingRow(adventure) {
 	const candidateKeys = Object.keys(adventure.roomCandidates);
 	const max = 144;
 	const rushingChance = adventure.getChallengeIntensity("Rushing") / 100;
-	if (candidateKeys.length > 1) {
-		return new ActionRowBuilder().addComponents(
-			...candidateKeys.map(candidateTag => {
-				const [roomType, depth] = candidateTag.split(SAFE_DELIMITER);
-				return new ButtonBuilder().setCustomId(`routevote${SAFE_DELIMITER}${candidateTag}`)
-					.setLabel(`Next room: ${generateRandomNumber(adventure, max, "general") < max * rushingChance ? "???" : roomType}`)
-					.setStyle(ButtonStyle.Secondary)
-			}));
-	} else {
-		return new ActionRowBuilder().addComponents(
-			new ButtonBuilder().setCustomId("continue")
-				.setEmoji("👑")
-				.setLabel(`Continue to the ${generateRandomNumber(adventure, max, "general") < max * rushingChance ? "???" : candidateKeys[0].split(SAFE_DELIMITER)[0]}`)
+	return new ActionRowBuilder().addComponents(
+		...candidateKeys.map(candidateTag => {
+			const [roomType, depth] = candidateTag.split(SAFE_DELIMITER);
+			return new ButtonBuilder().setCustomId(`routevote${SAFE_DELIMITER}${candidateTag}`)
+				.setLabel(`Next room: ${generateRandomNumber(adventure, max, "general") < max * rushingChance ? "???" : roomType}`)
 				.setStyle(ButtonStyle.Secondary)
-		);
-	}
+		}));
 }
 
 function generateLootRow(adventure) {
@@ -404,14 +395,7 @@ exports.editButtons = function (components, edits) {
 			switch (component.type) {
 				case ComponentType.Button:
 					const editedButton = new ButtonBuilder(component);
-					if (customId in edits) {
-						const { preventUse, label, emoji } = edits[customId];
-						editedButton.setDisabled(preventUse)
-							.setLabel(label);
-						if (emoji) {
-							editedButton.setEmoji(emoji);
-						}
-					};
+;
 					return editedButton;
 				case ComponentType.StringSelect:
 					return new StringSelectMenuBuilder(component);
