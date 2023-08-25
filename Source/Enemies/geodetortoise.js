@@ -4,8 +4,8 @@ const { selectRandomFoe, selectSelf, nextRandom } = require("../enemyDAO.js");
 
 module.exports = new Enemy("Geode Tortoise")
 	.setFirstAction("random")
-	.addAction({ name: "Bite", element: "Earth", isPriority: false, effect: biteEffect, selector: selectRandomFoe, next: nextRandom })
-	.addAction({ name: "Crystallize", element: "Untyped", isPriority: false, effect: crystallizeEffect, selector: selectSelf, next: nextRandom })
+	.addAction({ name: "Bite", element: "Earth", priority: 0, effect: biteEffect, selector: selectRandomFoe, next: nextRandom })
+	.addAction({ name: "Crystallize", element: "Untyped", priority: 0, effect: crystallizeEffect, selector: selectSelf, next: nextRandom })
 	.setHp(350)
 	.setSpeed(85)
 	.setElement("Earth")

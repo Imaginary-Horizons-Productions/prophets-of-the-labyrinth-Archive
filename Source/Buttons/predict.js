@@ -53,22 +53,13 @@ module.exports = new Button(customId,
 				});
 				break;
 			case "Intents": // Shows each enemy's target(s) in the next round and the names of the next two moves and if their move has priority
-				adventure.room.priorityMoves.forEach(({ userReference, targets, name }) => {
-					if (userReference.team === "enemy") {
-						const enemy = adventure.getCombatant(userReference);
-						if (enemy.hp > 0) {
-							const targetNames = getTargetList(targets, adventure);
-							embed.addFields({ name: enemy.getName(adventure.room.enemyIdMap), value: `Round ${adventure.room.round + 1} (Priority): ${name} (Targets: ${targetNames.length ? targetNames.join(", ") : "???"})\nRound ${adventure.room.round + 2}: ${enemy.nextAction}` });
-						}
-					}
-				})
 				adventure.room.moves.forEach(({ userReference, targets, name }) => {
 					if (userReference.team === "enemy") {
 						const enemy = adventure.getCombatant(userReference);
 						if (enemy.hp > 0) {
 							const targetNames = getTargetList(targets, adventure);
 							if (name !== "@{clone}") {
-								embed.addFields({ name: enemy.getName(adventure.room.enemyIdMap), value: `Round ${adventure.room.round + 1}: ${name} (Targets: ${targetNames.length ? targetNames.join(", ") : "???"})\nRound ${adventure.room.round + 2}: ${enemy.nextAction}` });
+								embed.addFields({ name: enemy.getName(adventure.room.enemyIdMap), value: `Round ${adventure.room.round + 1}: ${name} ${priority != 0 ? "(Priority: " + priority + ") " : ""}(Targets: ${targetNames.length ? targetNames.join(", ") : "???"})\nRound ${adventure.room.round + 2}: ${enemy.nextAction}` });
 							} else {
 								embed.addFields({ name: enemy.getName(adventure.room.enemyIdMap), value: "Mirror Clones mimic your allies!" })
 							}

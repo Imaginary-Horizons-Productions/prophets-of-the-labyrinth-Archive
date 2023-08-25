@@ -25,7 +25,7 @@ module.exports = class EquipmentTemplate {
 	block = 0;
 	hpCost = 0;
 	healing = 0;
-	isPriority = false;
+	priority = 0;
 	modifiers = []; //[{name, stacks}]
 
 	/** Sets the equipment's category and returns the category via builder pattern
@@ -95,8 +95,8 @@ module.exports = class EquipmentTemplate {
 	/** Determines that this equipment adds moves to the priority queue
 	 * @returns {EquipmentTemplate}
 	 */
-	markPriority() {
-		this.isPriority = true;
+	setPriority(integer) {
+		this.priority = integer;
 		return this;
 	}
 

@@ -9,7 +9,7 @@ module.exports = new EquipmentTemplate("Urgent Potion Kit", "Add 1 random potion
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(350)
 	.setUses(10)
-	.markPriority();
+	.setPriority(1);
 
 function effect(targets, user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger], critBonus } = module.exports;

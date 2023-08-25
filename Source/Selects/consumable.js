@@ -17,6 +17,7 @@ module.exports = new Select(id, async (interaction, [round]) => {
 			let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
 			let newMove = new Move()
 				.onSetMoveSpeed(user)
+				.setPriority(1)
 				.setIsCrit(false)
 				.setMoveName(consumableName)
 				.setType("consumable")
@@ -34,16 +35,7 @@ module.exports = new Select(id, async (interaction, [round]) => {
 					break;
 				}
 			}
-			if (!overwritten) {
-				for (let i = 0; i < adventure.room.priorityMoves.length; i++) {
-					const { userReference } = adventure.room.priorityMoves[i];
-					if (userReference.team === user.team && userReference.index === userIndex) {
-						await adventure.room.priorityMoves.splice(i, 1);
-						break;
-					}
-				}
-			}
-			await adventure.room.priorityMoves.push(newMove);
+			await adventure.room.moves.push(newMove);
 
 			// Send confirmation text
 			interaction.update({ components: [] });

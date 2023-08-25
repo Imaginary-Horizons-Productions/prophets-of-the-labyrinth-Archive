@@ -307,7 +307,6 @@ exports.newRound = function (adventure, thread, lastRoundText) {
 				.onSetMoveSpeed(combatant)
 				.setIsCrit(combatant.crit)
 				.setUser(new CombatantReference(teamName, i))
-			let isPriorityMove = false;
 			if (combatant.getModifierStacks("Stun") > 0) {
 				// Dummy move for Stunned combatants
 				move.setMoveName("Stun");
@@ -325,10 +324,10 @@ exports.newRound = function (adventure, thread, lastRoundText) {
 							actionName = actionPool[generateRandomNumber(adventure, actionPool.length, "battle")];
 						}
 						move.setMoveName(actionName);
+						move.setPriority(enemyTemplate.actions[move.name].priority)
 						enemyTemplate.actions[actionName].selector(adventure, combatant).forEach(({ team, index }) => {
 							move.addTarget(new CombatantReference(team, index));
 						})
-						isPriorityMove = enemyTemplate.actions[actionName].isPriority;
 						combatant.nextAction = enemyTemplate.actions[actionName].next(actionName);
 					} else {
 						move.setMoveName("@{clone}");
@@ -336,7 +335,7 @@ exports.newRound = function (adventure, thread, lastRoundText) {
 				}
 			}
 			if (move.name) {
-				(isPriorityMove ? adventure.room.priorityMoves : adventure.room.moves).push(move);
+				adventure.room.moves.push(move);
 			}
 
 			// Decrement Modifiers
@@ -366,12 +365,7 @@ exports.endRound = async function (adventure, thread) {
 	adventure.room.enemies.forEach((enemy, index) => {
 		if (enemy.archetype === "@{clone}") {
 			const move = adventure.room.moves.find(move => move.userReference.team === "enemy" && move.userReference.index === index);
-			let counterpartHasPriority = false;
 			let counterpartMove = adventure.room.moves.find(move => move.userReference.team === "delver" && move.userReference.index == index);
-			if (!counterpartMove) {
-				counterpartMove = adventure.room.priorityMoves.find(move => move.userReference.team === "delver" && move.userReference.index == index);
-				counterpartHasPriority = true;
-			}
 			move.setType(counterpartMove.type)
 				.setMoveName(counterpartMove.name);
 			counterpartMove.targets.forEach(target => {
@@ -383,29 +377,36 @@ exports.endRound = async function (adventure, thread) {
 			})
 
 			// Replace placeholder
-			adventure.room.moves.splice(adventure.room.moves.findIndex(move => move.userReference.team === "enemy" && move.userReference.index == index), 1);
-			if (counterpartHasPriority) {
-				adventure.room.priorityMoves.push(move);
-			} else {
-				adventure.room.moves.push(move);
+			let placeholderIdx = adventure.room.moves.findIndex(move => move.userReference.team === "enemy" && move.userReference.index == index)
+			if (placeholderIdx >= 0) {
+				adventure.room.moves.splice(placeholderIdx, 1, move);
 			}
 		}
 	});
 
 
 	// Randomize speed ties
-	[adventure.room.priorityMoves, adventure.room.moves].forEach(moveQueue => {
-		moveQueue.forEach(move => {
-			move.speed += generateRandomNumber(adventure, 10, "battle") / 10;
-		})
-		moveQueue.sort((first, second) => {
-			return second.speed - first.speed;
-		})
+	let randomOrderBag = Array(adventure.room.moves.length).fill().map((_, idx) => idx) // ensure that unique values are available for each move
+	adventure.room.moves.forEach(move => {
+		let rIdx = generateRandomNumber(adventure, randomOrderBag.length, "battle");
+		move.randomOrder = randomOrderBag.splice(rIdx, 1)[0]; // pull a remaining randomOrder out of the bag and assign it to a move
+	})
+	// Want bigger numbers to be first in list, so order must be descending (basic compare functions are NORMALLY ascending by returning first-second)
+	adventure.room.moves.sort((first, second) => {
+		if (second.priority == first.priority) {
+			if (second.speed == first.speed) {
+				return second.randomOrder - first.randomOrder;
+			} else {
+				return second.speed - first.speed;
+			}
+		} else {
+			return second.priority - first.priority;
+		}
 	})
 
 	// Resolve moves
 	let lastRoundText = "";
-	for (const move of adventure.room.priorityMoves.concat(adventure.room.moves)) {
+	for (const move of adventure.room.moves) {
 		lastRoundText += await resolveMove(move, adventure);
 		// Check for end of combat
 		if (adventure.lives <= 0) {
@@ -437,7 +438,6 @@ exports.endRound = async function (adventure, thread) {
 			return thread.send(renderRoom(adventure, thread, lastRoundText));
 		}
 	}
-	adventure.room.priorityMoves = [];
 	adventure.room.moves = [];
 	exports.newRound(adventure, thread, lastRoundText);
 }
@@ -447,7 +447,7 @@ exports.endRound = async function (adventure, thread) {
  * @returns {boolean}
  */
 exports.checkNextRound = function ({ room, delvers }) {
-	const readiedMoves = room.moves.length + room.priorityMoves.length;
+	const readiedMoves = room.moves.length;
 	const movesThisRound = room.enemies.length + delvers.length;
 	return readiedMoves === movesThisRound;
 }

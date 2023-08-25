@@ -8,7 +8,7 @@ module.exports = new EquipmentTemplate("War Cry", "Inflict @{mod1Stacks} @{mod1}
 	.setBonus(1) // Stagger stacks
 	.setCost(200)
 	.setUses(10)
-	.markPriority();
+	.setPriority(1);
 
 function effect([initialTarget], user, isCrit, adventure) {
 	const targetSet = new Set().add(initialTarget.getName(adventure.room.enemyIdMap));

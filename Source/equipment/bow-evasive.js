@@ -8,7 +8,7 @@ module.exports = new EquipmentTemplate("Evasive Bow", "Strike a foe for @{damage
 	.setCost(350)
 	.setUses(10)
 	.setDamage(75)
-	.markPriority();
+	.setPriority(1);
 
 function effect([target], user, isCrit, adventure) {
 	if (target.hp < 1) {

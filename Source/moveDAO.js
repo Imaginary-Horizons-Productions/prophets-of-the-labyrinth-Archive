@@ -84,6 +84,10 @@ exports.resolveMove = async function (move, adventure) {
 		const resultText = await effect(targets, adventure.getCombatant(move.userReference), move.isCrit, adventure);
 
 		moveText += `used ${move.name}. ${resultText}${breakText}`;
+
+		// remove Slow and Quicken only on actual use of move
+		removeModifier(user, { name: "Slow", stacks: 1, force: true });
+		removeModifier(user, { name: "Quicken", stacks: 1, force: true });
 	} else {
 		removeModifier(user, { name: "Stun", stacks: "all" });
 		moveText = `💫 ${moveText} is Stunned!`;

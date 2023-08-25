@@ -19,6 +19,7 @@ module.exports = new Select(id, async (interaction, [moveName, round, index]) =>
 				.onSetMoveSpeed(user)
 				.setIsCrit(user.crit)
 				.setMoveName(moveName)
+				.setPriority(getEquipmentProperty(moveName, "priority"))
 				.setType("equip")
 				.setUser(new CombatantReference(user.team, userIndex))
 				.addTarget(new CombatantReference(targetTeam, targetIndex));
@@ -32,20 +33,7 @@ module.exports = new Select(id, async (interaction, [moveName, round, index]) =>
 					break;
 				}
 			}
-			if (!overwritten) {
-				for (let i = 0; i < adventure.room.priorityMoves.length; i++) {
-					const { userReference } = adventure.room.priorityMoves[i];
-					if (userReference.team === user.team && userReference.index === userIndex) {
-						await adventure.room.priorityMoves.splice(i, 1);
-						break;
-					}
-				}
-			}
-			if (getEquipmentProperty(moveName, "isPriority")) {
-				await adventure.room.priorityMoves.push(newMove);
-			} else {
-				await adventure.room.moves.push(newMove);
-			}
+			await adventure.room.moves.push(newMove);
 
 			// Send confirmation text
 			let target;
