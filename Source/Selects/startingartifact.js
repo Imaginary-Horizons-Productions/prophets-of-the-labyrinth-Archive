@@ -17,7 +17,7 @@ module.exports = new Select(id, (interaction, args) => {
 			interaction.update({
 				content: "Forgoing a starting artifact will increase your end of adventure score multiplier (up to 2x if no one takes a starting artifact).",
 				components: [new ActionRowBuilder().addComponents(
-					interaction.component.setPlaceholder("Pick an artifact after all...")
+					new StringSelectMenuBuilder(interaction.component.data).setPlaceholder("Pick an artifact after all...")
 				)]
 			});
 		} else {
@@ -28,7 +28,7 @@ module.exports = new Select(id, (interaction, args) => {
 			interaction.update({
 				content: getArtifact(artifactName).dynamicDescription(1),
 				components: [new ActionRowBuilder().addComponents(
-					interaction.component.setPlaceholder("Pick a different artifact...")
+					new StringSelectMenuBuilder(interaction.component.data).setPlaceholder("Pick a different artifact...")
 				)]
 			});
 			interaction.channel.send(`${interaction.user} ${isSwitching ? "has switched to" : "is taking"} ${artifactName} for their starting artifact.`);
