@@ -1,6 +1,6 @@
 const Button = require('../../Classes/Button.js');
 const { getAdventure } = require('../adventureDAO.js');
-const { delverStatsPayload } = require('../equipmentDAO.js');
+const { inspectSelfPayload } = require('../equipmentDAO.js');
 
 const customId = "inspectself";
 module.exports = new Button(customId,
@@ -12,7 +12,7 @@ module.exports = new Button(customId,
 			interaction.reply({ content: "This adventure isn't active or you aren't participating in it.", ephemeral: true });
 			return;
 		}
-		interaction.reply(delverStatsPayload(delver, adventure.getEquipmentCapacity()))
+		interaction.reply(inspectSelfPayload(delver, adventure.getEquipmentCapacity()))
 			.catch(console.error);
 	}
 );

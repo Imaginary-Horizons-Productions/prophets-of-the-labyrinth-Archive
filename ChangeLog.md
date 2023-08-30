@@ -28,6 +28,7 @@
    - Anyone can now pick a challenge at a rest site, make sure to discuss with the party!
    - Start of adventure now has a "Ready!" button instead of a confirmation after everyone's picked an archetype
    - Anyone can now `/give-up`
+- Renamed `/delver-stats` to `/inspect-self` to match the button that does the same thing in combat
 
 #### Prophets of the Labyrinth Version 0.10.0:
 - Added **Consumables**: these resources can be used by any party member during combat at priority speed
