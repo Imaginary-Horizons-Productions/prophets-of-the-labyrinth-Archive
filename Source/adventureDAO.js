@@ -267,7 +267,6 @@ exports.endRoom = function (roomType, thread) {
 exports.newRound = function (adventure, thread, lastRoundText) {
 	// Increment round and clear last round's components
 	adventure.room.round++;
-	clearComponents(adventure.messageIds.battleRound, thread.messages);
 
 	// Logistics for Next Round
 	let teams = {
@@ -346,6 +345,7 @@ exports.newRound = function (adventure, thread, lastRoundText) {
 			updateRoomHeader(adventure, message);
 			adventure.messageIds.battleRound = message.id;
 		} else {
+			clearComponents(message.id, thread.messages);
 			exports.endRound(adventure, thread);
 		}
 		exports.setAdventure(adventure);
@@ -357,6 +357,8 @@ exports.newRound = function (adventure, thread, lastRoundText) {
  * @param {ThreadChannel} thread
  */
 exports.endRound = async function (adventure, thread) {
+	clearComponents(adventure.messageIds.battleRound, thread.messages);
+
 	// Generate Reactive Moves by Enemies
 	adventure.room.enemies.forEach((enemy, index) => {
 		if (enemy.archetype === "@{clone}") {
