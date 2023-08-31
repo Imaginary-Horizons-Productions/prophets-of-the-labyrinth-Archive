@@ -12,5 +12,5 @@ module.exports = new ConsumableTemplate("Windy Potion", "Grants the user 1 Wind 
 function effect(targets, user, isCrit, adventure) {
 	// +1 Wind Absorb
 	addModifier(user, { name: "Wind Absorb", stacks: 1 });
-	return `${user.getName()} now absorbs ${getEmoji("Wind")} damage.`;
+	return `${user.getName(adventure.room.enemyIdMap)} now absorbs ${getEmoji("Wind")} damage.`;
 }

@@ -11,5 +11,5 @@ module.exports = new ConsumableTemplate("Salt of Oblivion", "Grants the user 1 O
 function effect(targets, user, isCrit, adventure) {
 	// +1 Oblivious
 	addModifier(user, { name: "Oblivious", stacks: 1 });
-	return `${user.getName()} gains Oblivious.`;
+	return `${user.getName(adventure.room.enemyIdMap)} gains Oblivious.`;
 }

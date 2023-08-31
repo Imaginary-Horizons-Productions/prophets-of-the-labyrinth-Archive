@@ -12,5 +12,5 @@ module.exports = new ConsumableTemplate("Watery Potion", "Grants the user 1 Wate
 function effect(targets, user, isCrit, adventure) {
 	// +1 Water Absorb
 	addModifier(user, { name: "Water Absorb", stacks: 1 });
-	return `${user.getName()} now absorbs ${getEmoji("Water")} damage.`;
+	return `${user.getName(adventure.room.enemyIdMap)} now absorbs ${getEmoji("Water")} damage.`;
 }

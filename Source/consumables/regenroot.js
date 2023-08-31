@@ -11,5 +11,5 @@ module.exports = new ConsumableTemplate("Regen Root", "Grants the user 5 Regen",
 function effect(targets, user, isCrit, adventure) {
 	// +5 Regen
 	addModifier(user, { name: "Regen", stacks: 5 });
-	return `${user.getName()} gains Regen.`;
+	return `${user.getName(adventure.room.enemyIdMap)} gains Regen.`;
 }

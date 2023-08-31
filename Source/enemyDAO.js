@@ -21,7 +21,7 @@ module.exports.spawnEnemy = function (adventure, enemyTemplate) {
 			enemy.name = enemy.name.replace("@{adventureOpposite}", getOpposite(adventure.element));
 			break;
 		case "clone":
-			enemy.name = enemy.name.replace("@{clone}", `Mirror ${adventure.delvers[adventure.room.enemies.length].title}`);
+			enemy.name = enemy.name.replace("@{clone}", `Mirror ${adventure.delvers[adventure.room.enemies.length].archetype}`);
 			break;
 	}
 
@@ -41,7 +41,7 @@ module.exports.spawnEnemy = function (adventure, enemyTemplate) {
 }
 
 module.exports.selectRandomOtherAlly = function (adventure, self) {
-	const selfIndex = adventure.room.enemies.findIndex(enemy => enemy.archetype === self.archetype && enemy.id === self.id);
+	const selfIndex = adventure.room.enemies.findIndex(enemy => enemy.name === self.name && enemy.id === self.id);
 	const liveOtherEnemyIndexes = [];
 	adventure.room.enemies.forEach((enemy, index) => {
 		if (enemy.hp > 0 && index !== selfIndex) {
@@ -66,7 +66,7 @@ module.exports.selectAllFoes = function (adventure, self) {
 }
 
 module.exports.selectSelf = function (adventure, self) {
-	const index = adventure.room.enemies.findIndex(enemy => enemy.name === self.name && enemy.title === self.title);
+	const index = adventure.room.enemies.findIndex(enemy => enemy.name === self.name && enemy.id === self.id);
 	return [new CombatantReference("enemy", index)];
 }
 

@@ -26,11 +26,11 @@ function effect([target], user, isCrit, adventure) {
 	if (targetMove.targets.length === 1) {
 		let userTeam = "delver";
 		let userCombatantPool = adventure.delvers;
-		if (user.archtype == "@{clone}") {
+		if (user.archetype == "@{clone}") {
 			userTeam = "enemy";
 			userCombatantPool = adventure.room.enemies;
 		}
-		const userIndex = userCombatantPool.findIndex(delver => delver.id === user.id);
+		const userIndex = userCombatantPool.findIndex(combatant => combatant.id === user.id && combatant.name === user.name);
 		targetMove.targets = [{ team: userTeam, index: userIndex }];
 		return `Preparing to Block, ${payHP(user, hpCost, adventure)} ${target.getName(adventure.room.enemyIdMap)} falls for the provocation.`;
 	} else {

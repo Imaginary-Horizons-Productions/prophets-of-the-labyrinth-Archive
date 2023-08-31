@@ -12,5 +12,5 @@ module.exports = new ConsumableTemplate("Fiery Potion", "Grants the user 1 Fire 
 function effect(targets, user, isCrit, adventure) {
 	// +1 Fire Absorb
 	addModifier(user, { name: "Fire Absorb", stacks: 1 });
-	return `${user.getName()} now absorbs ${getEmoji("Fire")} damage.`;
+	return `${user.getName(adventure.room.enemyIdMap)} now absorbs ${getEmoji("Fire")} damage.`;
 }

@@ -5,6 +5,10 @@ const { CombatantReference, Adventure } = require("../../../Classes/Adventure");
  * @param {Adventure} adventure
  * @returns
  */
-module.exports.selectAllAllies = function (userIndex, adventure) {
-	return adventure.delvers.map((delver, index) => new CombatantReference("delver", index));
+module.exports.selectAllAllies = function (userTeam, userIndex, adventure) {
+	if (userTeam === "delver") {
+		return adventure.delvers.map((delver, index) => new CombatantReference("delver", index));
+	} else {
+		return adventure.room.enemies.map((enemy, index) => new CombatantReference("enemy", index));
+	}
 }

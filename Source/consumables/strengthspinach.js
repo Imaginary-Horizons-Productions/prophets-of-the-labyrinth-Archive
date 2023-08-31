@@ -11,5 +11,5 @@ module.exports = new ConsumableTemplate("Strength Spinach", "Grants the user 50 
 function effect(targets, user, isCrit, adventure) {
 	// +50 Power Up
 	addModifier(user, { name: "Power Up", stacks: 50 });
-	return `${user.getName()} is Powered Up.`;
+	return `${user.getName(adventure.room.enemyIdMap)} is Powered Up.`;
 }

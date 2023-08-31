@@ -11,5 +11,5 @@ module.exports = new ConsumableTemplate("Smoke Bomb", "Grants the user 2 Evade",
 function effect(targets, user, isCrit, adventure) {
 	// +2 Evade
 	addModifier(user, { name: "Evade", stacks: 2 });
-	return `${user.getName()} prepares to Evade.`;
+	return `${user.getName(adventure.room.enemyIdMap)} prepares to Evade.`;
 }

@@ -11,5 +11,5 @@ module.exports = new ConsumableTemplate("Quick Pepper", "Grants the user 3 Quick
 function effect(targets, user, isCrit, adventure) {
 	// +3 Quicken
 	addModifier(user, { name: "Quicken", stacks: 3 });
-	return `${user.getName()} gains Quicken.`;
+	return `${user.getName(adventure.room.enemyIdMap)} gains Quicken.`;
 }

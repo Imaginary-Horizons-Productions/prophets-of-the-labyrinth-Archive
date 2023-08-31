@@ -20,15 +20,15 @@ function effect([target], user, isCrit, adventure) {
 	let userCombatantPool = adventure.delvers;
 	let targetTeam = "enemy";
 	let targetCombatantPool = adventure.room.enemies;
-	if (user.archtype === "@{clone}") {
+	if (user.archetype === "@{clone}") {
 		userTeam = "enemy";
 		userCombatantPool = adventure.room.enemies;
 		targetTeam = "delver";
 		targetCombatantPool = adventure.delvers;
 	}
-	const userIndex = userCombatantPool.findIndex(combatant => combatant.id === user.id);
+	const userIndex = userCombatantPool.findIndex(combatant => combatant.id === user.id && combatant.name === user.name);
 	const userMove = adventure.room.moves.find(move => move.userReference.team === userTeam && move.userReference.index === userIndex);
-	const targetIndex = targetCombatantPool.findIndex(combatant => combatant.id === target.id);
+	const targetIndex = targetCombatantPool.findIndex(combatant => combatant.id === target.id && combatant.name === user.name);
 	const targetMove = adventure.room.moves.find(move => move.userReference.team === targetTeam && move.userReference.index === targetIndex);
 
 	if (compareMoveSpeed(userMove, targetMove) > 0) {

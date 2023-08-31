@@ -10,12 +10,14 @@ module.exports = new Select(id, async (interaction, [round]) => {
 	const adventure = getAdventure(interaction.channelId);
 	if (adventure.room.round === Number(round)) {
 		const [consumableName] = interaction.values;
-		if (consumableName in adventure.consumables && adventure.consumables[consumableName] > 0) {
+		const user = adventure.delvers.find(delver => delver.id === interaction.user.id);
+		const userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
+		// Filter out: consumable uses by self and enemy (only count own team)
+		const committedCount = adventure.room.moves.filter(move => move.name === consumableName && move.userReference.team === user.team && move.userReference.index !== userIndex).length;
+		if (consumableName in adventure.consumables && adventure.consumables[consumableName] > committedCount) {
 			// Add move to round list (overwrite exisiting readied move)
 			const consumable = getConsumable(consumableName);
-			const user = adventure.delvers.find(delver => delver.id === interaction.user.id);
-			let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
-			let newMove = new Move()
+			const newMove = new Move()
 				.onSetMoveSpeed(user)
 				.setPriority(1)
 				.setIsCrit(false)
@@ -23,7 +25,7 @@ module.exports = new Select(id, async (interaction, [round]) => {
 				.setType("consumable")
 				.setUser(new CombatantReference(user.team, userIndex));
 
-			consumable.selectTargets(userIndex, adventure).forEach(target => {
+			consumable.selectTargets(user.team, userIndex, adventure).forEach(target => {
 				newMove.addTarget(target);
 			})
 			let overwritten = false;
@@ -46,9 +48,7 @@ module.exports = new Select(id, async (interaction, [round]) => {
 				}
 			}).catch(console.error);
 		} else {
-			// Needed to prevent crashes in case users keep ephemeral messages around and uses an out of stock consuamble, or race condition
-			interaction.update({ content: `The party doesn't have any ${consumableName}(s) remaining.`, components: [], ephemeral: true })
-				.catch(console.error);
+			interaction.update({ content: `The party doesn't have any more ${consumableName}(s) to use.`, embeds: [], components: [] });
 		}
 	} else {
 		interaction.update({ components: [] });

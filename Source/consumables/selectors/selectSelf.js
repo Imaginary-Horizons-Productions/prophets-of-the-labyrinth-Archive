@@ -4,6 +4,11 @@ const { CombatantReference, Adventure } = require("../../../Classes/Adventure");
  * @param {number} userIndex
  * @param {Adventure} adventure
  */
-module.exports.selectSelf = function (userIndex, adventure) {
-	return [new CombatantReference("delver", userIndex)];
+module.exports.selectSelf = function (userTeam, userIndex, adventure) {
+	if (userTeam === "delver") {
+		return [new CombatantReference("delver", userIndex)];
+	} else {
+		return [new CombatantReference("enemy", userIndex)];
+	}
+
 }

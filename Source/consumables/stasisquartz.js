@@ -11,5 +11,5 @@ module.exports = new ConsumableTemplate("Stasis Quartz", "Grants the user 1 Stas
 function effect(targets, user, isCrit, adventure) {
 	// +1 Stasis
 	addModifier(user, { name: "Stasis", stacks: 1 });
-	return `${user.getName()} enters Stasis.`;
+	return `${user.getName(adventure.room.enemyIdMap)} enters Stasis.`;
 }
