@@ -1,5 +1,5 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
-const { addModifier, dealDamage, gainHealth, calculateTotalSpeed } = require('../combatantDAO.js');
+const { addModifier, dealDamage, gainHealth, compareMoveSpeed } = require('../combatantDAO.js');
 
 module.exports = new EquipmentTemplate("Reactive Life Drain", "Strike a foe for @{damage} (+@{bonus} if foe went first) @{element} damage, then gain @{healing} hp", "Healing x@{critBonus}", "Water", effect, ["Flanking Life Drain", "Urgent Life Drain"])
 	.setCategory("Spell")
@@ -17,7 +17,22 @@ async function effect([target], user, isCrit, adventure) {
 	}
 
 	let { element, modifiers: [elementStagger], damage, bonus, healing, critBonus } = module.exports;
-	if (calculateTotalSpeed(target) > calculateTotalSpeed(user)) {
+	let userTeam = "delver";
+	let userCombatantPool = adventure.delvers;
+	let targetTeam = "enemy";
+	let targetCombatantPool = adventure.room.enemies;
+	if (user.archtype === "@{clone}") {
+		userTeam = "enemy";
+		userCombatantPool = adventure.room.enemies;
+		targetTeam = "delver";
+		targetCombatantPool = adventure.delvers;
+	}
+	const userIndex = userCombatantPool.findIndex(combatant => combatant.id == user.id);
+	const userMove = adventure.room.moves.find(move => move.userReference.team == userTeam && move.userReference.index == userIndex);
+	const targetIndex = targetCombatantPool.findIndex(delver => delver.id == target.id);
+	const targetMove = adventure.room.moves.find(move => move.userReference.team == targetTeam && move.userReference.index == targetIndex);
+
+	if (compareMoveSpeed(userMove, targetMove) > 0) {
 		damage += bonus;
 	}
 	if (user.element === element) {
