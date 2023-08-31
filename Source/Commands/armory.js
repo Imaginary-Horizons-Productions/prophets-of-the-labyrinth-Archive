@@ -1,11 +1,11 @@
 const Command = require('../../Classes/Command.js');
 const { embedTemplate } = require('../../helpers.js');
 const { getColor } = require('../elementHelpers.js');
-const { equipmentExists, buildEquipmentDescription, getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
+const { equipNames, equipmentExists, buildEquipmentDescription, getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
 
 const id = "armory";
 const options = [
-	{ type: "String", name: "equipment-name", description: "The name of the equipment (case-sensitive)", required: true, choices: [] }
+	{ type: "String", name: "equipment-name", description: "The name of the equipment (case-sensitive)", required: true, autocomplete: true, choices: [] }
 ];
 module.exports = new Command(id, "Look up the stats on a type of equipment", false, false, options);
 
@@ -25,3 +25,5 @@ module.exports.execute = (interaction) => {
 		interaction.reply({ content: `Stats on **${equipmentName}** could not be found. Check for typos!`, ephemeral: true });
 	}
 }
+
+module.exports["autocomplete_equipment-name"] = equipNames;

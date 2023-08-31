@@ -106,6 +106,8 @@ for (const file of [
 	EQUIPMENT[equip.name] = equip;
 };
 
+exports.equipNames = Object.keys(EQUIPMENT);
+
 /** Checks if a type of equipment with the given name exists
  * @param {string} equipmentName
  * @returns {boolean}

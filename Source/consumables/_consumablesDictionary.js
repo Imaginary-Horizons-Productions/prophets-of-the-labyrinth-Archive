@@ -23,6 +23,8 @@ for (const file of [
 	CONSUMABLES[consumable.name] = consumable;
 }
 
+exports.consumableNames = Object.keys(CONSUMABLES);
+
 /** Checks if a consumable with the given name exists
  * @param {string} consumableName
  * @returns {boolean}

@@ -1,12 +1,12 @@
 const Command = require('../../Classes/Command.js');
 const { embedTemplate } = require('../../helpers.js');
 const { getAdventure } = require('../adventureDAO.js');
-const { consumableExists, getConsumable } = require('../consumables/_consumablesDictionary.js');
+const { consumableNames, consumableExists, getConsumable } = require('../consumables/_consumablesDictionary.js');
 const { getColor } = require('../elementHelpers.js');
 
 const id = "consumable-info";
 const options = [
-	{ type: "String", name: "consumable-name", description: "The name of the consumable (case-sensitive)", required: true, choices: [] }
+	{ type: "String", name: "consumable-name", description: "The name of the consumable (case-sensitive)", required: true, autocomplete: true, choices: [] }
 ];
 module.exports = new Command(id, "Look up the info on a consumable", false, false, options);
 
@@ -28,3 +28,5 @@ module.exports.execute = (interaction) => {
 		interaction.reply({ content: `Stats on **${consumableName}** could not be found. Check for typos!`, ephemeral: true });
 	}
 }
+
+module.exports["autocomplete_consumable-name"] = consumableNames;
