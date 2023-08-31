@@ -68,7 +68,6 @@ exports.dealDamage = async function (targets, user, damage, isUnblockable, eleme
 					if (target.team === "delver") {
 						target.hp = target.maxHp;
 						adventure.lives = Math.max(adventure.lives - 1, 0);
-						console.log(adventure.lives);
 						damageText += ` *${targetName} has died*${adventure.lives > 0 ? " and been revived" : ""}.`;
 					} else {
 						target.hp = 0;
