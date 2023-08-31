@@ -29,6 +29,7 @@
    - Start of adventure now has a "Ready!" button instead of a confirmation after everyone's picked an archetype
    - Anyone can now `/give-up`
 - Renamed `/delver-stats` to `/inspect-self` to match the button that does the same thing in combat
+- Updated `armory` and `consumable-info` commands to now utilize Discord autocomplete
 
 #### Prophets of the Labyrinth Version 0.10.0:
 - Added **Consumables**: these resources can be used by any party member during combat at priority speed
