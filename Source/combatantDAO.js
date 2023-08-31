@@ -239,7 +239,7 @@ exports.modifiersToString = function (combatant, includeStagger, adventure) {
 /** compare function for sorting Moves to descending speed
  * @param {Move} first
  * @param {Move} second
- * @returns positive if second before first, negative if first before second, zero if same as before
+ * @returns positive if second before first, negative if first before second
  */
 exports.compareMoveSpeed = function (first, second) {
 	if (second.priority == first.priority) {
