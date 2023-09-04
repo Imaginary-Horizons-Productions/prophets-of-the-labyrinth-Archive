@@ -4,12 +4,11 @@ const { selectAllFoes } = require("./selectors/selectAllFoes.js");
 
 module.exports = new ConsumableTemplate("Explosion Potion", "Deal 75 damage to all enemies", selectAllFoes, effect)
 	.setElement("Untyped")
+	.setCost(30)
 	.setTargetTags("all", "enemy")
 	.setFlavorText(["*Additional Notes*", "*Not to be confused with __Fiery Potion__. DO NOT apply to self.*"]);
 
 function effect(targets, user, isCrit, adventure) {
 	// 75 damage
-	return Promise.all(
-		targets.map(target => dealDamage(target, user, 75, false, "Untyped", adventure))
-	).then(results => results.join(" "))
+	return dealDamage(targets, user, 75, false, "Untyped", adventure);
 }

@@ -1,14 +1,20 @@
+const { Adventure } = require('../../Classes/Adventure.js');
 const Command = require('../../Classes/Command.js');
 const { getAdventure } = require('../adventureDAO.js');
 
-const id = "ping";
+const customId = "ping";
 const options = [];
-module.exports = new Command(id, "Remind delvers to input their vote or move", false, false, options);
+module.exports = new Command(customId, "Remind delvers to input their vote or move", false, false, options);
 
+/** Remind delvers to input their vote or move */
 module.exports.execute = (interaction) => {
-	// Remind delvers to input their vote or move
 	const adventure = getAdventure(interaction.channelId);
-	if (adventure && adventure.state !== "completed") {
+	if (adventure && !Adventure.endStates.includes(adventure.state)) {
+		if (!adventure.delvers.some(delver => delver.id == interaction.user.id)) {
+			interaction.reply({ content: "You aren't in this adventure.", ephemeral: true });
+			return;
+		}
+
 		let mentions = adventure.delvers.reduce((ids, delver) => ids.add(delver.id), new Set());
 		let inCombat = adventure.room.enemies && !adventure.room.enemies.every(enemy => enemy.hp === 0);
 		if (inCombat) {

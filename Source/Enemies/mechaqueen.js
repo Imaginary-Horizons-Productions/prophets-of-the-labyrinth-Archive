@@ -7,15 +7,16 @@ const mechabee = require("./mechabee.js")
 
 module.exports = new Enemy("Mecha Queen")
 	.setFirstAction("a random protocol")
-	.addAction({ name: "Swarm Protocol", element: "Untyped", isPriority: true, effect: swarmEffect, selector: selectNone, next: mechaQueenPattern })
-	.addAction({ name: "Assault Protocol", element: "Untyped", isPriority: true, effect: assaultEffect, selector: selectRandomFoe, next: mechaQueenPattern })
-	.addAction({ name: "Sacrifice Protocol", element: "Untyped", isPriority: true, effect: sacrificeEffect, selector: selectRandomOtherAlly, next: mechaQueenPattern })
-	.addAction({ name: "Deploy Drone", element: "Untyped", isPriority: false, effect: deployEffect, selector: selectNone, next: mechaQueenPattern })
-	.addAction({ name: "V.E.N.O.Missile", element: "Earth", isPriority: false, effect: missileEffect, selector: selectRandomFoe, next: mechaQueenPattern })
+	.addAction({ name: "Swarm Protocol", element: "Untyped", priority: 1, effect: swarmEffect, selector: selectNone, next: mechaQueenPattern })
+	.addAction({ name: "Assault Protocol", element: "Untyped", priority: 1, effect: assaultEffect, selector: selectRandomFoe, next: mechaQueenPattern })
+	.addAction({ name: "Sacrifice Protocol", element: "Untyped", priority: 1, effect: sacrificeEffect, selector: selectRandomOtherAlly, next: mechaQueenPattern })
+	.addAction({ name: "Deploy Drone", element: "Untyped", priority: 0, effect: deployEffect, selector: selectNone, next: mechaQueenPattern })
+	.addAction({ name: "V.E.N.O.Missile", element: "Earth", priority: 0, effect: missileEffect, selector: selectRandomFoe, next: mechaQueenPattern })
 	.setHp(500)
 	.setSpeed(100)
 	.setElement("Earth")
-	.setStaggerThreshold(4);
+	.setStaggerThreshold(4)
+	.markAsBoss();
 
 const PATTERN = {
 	"Swarm Protocol": "V.E.N.O.Missile",
@@ -35,11 +36,11 @@ function missileEffect([target], user, isCrit, adventure) {
 	} else {
 		addModifier(target, { name: "Poison", stacks: 3 });
 	}
-	return "";
+	return `${target.getName(adventure.room.enemyIdMap)} is Poisoned.`;
 }
 
 function deployEffect(targets, user, isCrit, adventure) {
-	spawnEnemy(adventure, mechabee, true);
+	spawnEnemy(adventure, mechabee);
 	return "Another mechabee arrives.";
 }
 
@@ -52,12 +53,12 @@ function swarmEffect(targets, user, isCrit, adventure) {
 		}
 	});
 	addBlock(user, isCrit ? 200 : 100);
-	return "She braces herself and demands reinforcements!";
+	return "She prepares to Block and demands reinforcements!";
 }
 
 // assumes mecha queen is at enemy index 0 and that all other enemies are mechabees
 function assaultEffect(targets, user, isCrit, adventure) {
-	const { targets: mechaqueensTargets } = adventure.room.priorityMoves.find(move => move.userReference.team === "enemy" && move.userReference.index === 0)
+	const { targets: mechaqueensTargets } = adventure.room.moves.find(move => move.userReference.team === "enemy" && move.userReference.index === 0)
 	adventure.room.moves.forEach(move => {
 		if (move.userReference.team === "enemy" && move.userReference.index !== 0) {
 			move.name = "Sting";
@@ -65,7 +66,7 @@ function assaultEffect(targets, user, isCrit, adventure) {
 		}
 	});
 	addBlock(user, isCrit ? 200 : 100);
-	return "She braces herself and orders a full-on attack!";
+	return "She prepares to Block and orders a full-on attack!";
 }
 
 function sacrificeEffect([target], user, isCrit, adventure) {
@@ -74,8 +75,8 @@ function sacrificeEffect([target], user, isCrit, adventure) {
 		const targetMove = adventure.room.moves.find(move => move.userReference.team === "enemy" && move.userReference.index === parseInt(target.title));
 		targetMove.name = "Self-Destruct";
 		targetMove.targets = selectAllFoes(adventure, target);
-		return "She braces herself and employs desperate measures!";
+		return "She prepares to Block and employs desperate measures!";
 	}
-	return "She braces herself."
+	return "She prepares to Block."
 
 }

@@ -7,32 +7,28 @@ exports.sponsors = {};
 exports.versionData = require('./Config/versionData.json');
 exports.sponsors = require("./Config/sponsors.json");
 
+const NUMBER_EMOJI = {
+	0: '0️⃣',
+	1: '1️⃣',
+	2: '2️⃣',
+	3: '3️⃣',
+	4: '4️⃣',
+	5: '5️⃣',
+	6: '6️⃣',
+	7: '7️⃣',
+	8: '8️⃣',
+	9: '9️⃣',
+	10: '🔟'
+};
+/**
+ * @param {number} number
+ * @returns {string}
+ */
 exports.getNumberEmoji = function (number) {
-	switch (number) {
-		case 0:
-			return '0️⃣';
-		case 1:
-			return '1️⃣';
-		case 2:
-			return '2️⃣';
-		case 3:
-			return '3️⃣';
-		case 4:
-			return '4️⃣';
-		case 5:
-			return '5️⃣';
-		case 6:
-			return '6️⃣';
-		case 7:
-			return '7️⃣';
-		case 8:
-			return '8️⃣';
-		case 9:
-			return '9️⃣';
-		case 10:
-			return '🔟';
-		default:
-			return '#️⃣';
+	if (number in NUMBER_EMOJI) {
+		return NUMBER_EMOJI[number];
+	} else {
+		return '#️⃣';
 	}
 }
 
@@ -96,19 +92,22 @@ exports.generateTextBar = function (numerator, denominator, barLength) {
 	return bar;
 }
 
-/** Calculate the value represented by a mathematical expression (supported operations: multiplication)
- * @param {string} countExpression
+const operationMap = {
+	'+': (first, second) => first + second,
+	'~': (first, second) => first - second,
+	'*': (first, second) => first * second,
+	'/': (first, second) => first / second,
+	'^': (first, second) => first ** second,
+};
+
+/** Calculate the value represented by a mathematical expression (supported operations: addition, subtration, multiplication, division, power)
+ * @param {string} expression
  * @param {number} nValue - the value to replace "n" with
- * @returns {number} the calculated value
  */
-exports.parseCount = function (countExpression, nValue) {
-	return Math.ceil(countExpression.split("*").reduce((total, term) => {
-		if (term === "n") {
-			return total * nValue;
-		} else {
-			return total * Number(term);
-		}
-	}, 1));
+exports.parseExpression = function (expression, nValue) {
+	const operations = expression.replace(/[^\+~\*/\^]/g, "");
+	const terms = expression.split(/[\+~\*/\^]/g).map(term => term === "n" ? nValue : Number(term));
+	return terms.reduce((total, term, index) => operationMap[operations[index - 1]](total, term));
 }
 
 /** Replace all @{tag}s in the text with the evaluation of the expression in the tag with n as count
@@ -117,14 +116,18 @@ exports.parseCount = function (countExpression, nValue) {
  */
 exports.calculateTagContent = function (text, tags) {
 	for (const { tag, count } of tags) {
-		const taggedGlobal = new RegExp(`@{(${tag}[\\*\\d]*)}`, "g");
+		const taggedGlobal = new RegExp(`@{(.*?${tag}.*?)}`, "g");
 		const untagged = new RegExp(tag, "g");
-		const taggedSingle = new RegExp(`@{(${tag}[\\*\\d]*)}`);
+		const taggedSingle = new RegExp(`@{(.*?${tag}.*?)}`);
 
 		for (const match of text.matchAll(taggedGlobal)) {
 			const countExpression = match?.[1].replace(untagged, "n");
 			if (countExpression) {
-				text = text.replace(taggedSingle, exports.parseCount(countExpression, count));
+				let parsedExpression = exports.parseExpression(countExpression, count);
+				if (typeof parsedExpression === "number") {
+					parsedExpression = parsedExpression.toFixed(2);
+				}
+				text = text.replace(taggedSingle, parsedExpression);
 			}
 		}
 	}

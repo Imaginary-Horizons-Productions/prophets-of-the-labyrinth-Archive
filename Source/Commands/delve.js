@@ -5,7 +5,7 @@ const Delver = require('../../Classes/Delver.js');
 const { setAdventure } = require('../adventureDAO.js');
 const { getChallenge } = require('../Challenges/_challengeDictionary.js');
 const { elementsList, getColor } = require('../elementHelpers.js');
-const { getGuild } = require('../guildDAO.js');
+const { getGuild, setGuild } = require('../guildDAO.js');
 const { prerollBoss } = require('../labyrinths/_labyrinthDictionary.js');
 const { SAFE_DELIMITER } = require("../../constants.js");
 const { isSponsor, generateRandomNumber } = require('./../../helpers.js');
@@ -43,7 +43,12 @@ module.exports.execute = (interaction) => {
 					.setDescription("A new adventure is starting!")
 					.addFields({ name: "1 Party Member", value: `${interaction.member} 👑` })
 				interaction.reply({ embeds: [embed], fetchReply: true }).then(recruitMessage => {
-					return recruitMessage.startThread({ name: adventure.name }).then(thread => {
+					adventure.messageIds.recruit = recruitMessage.id;
+					interaction.channel.threads.create({
+						name: adventure.name,
+						type: ChannelType.PrivateThread,
+						invitable: true
+					}).then(thread => {
 						recruitMessage.edit({
 							components: [new ActionRowBuilder().addComponents(
 								new ButtonBuilder().setCustomId(`join${SAFE_DELIMITER}${thread.guildId}${SAFE_DELIMITER}${thread.id}${SAFE_DELIMITER}recruit`)
@@ -53,40 +58,37 @@ module.exports.execute = (interaction) => {
 						});
 						adventure.delvers.push(new Delver(interaction.user.id, interaction.member.displayName, thread.id));
 						guildProfile.adventuring.add(interaction.user.id);
+						setGuild(guildProfile);
 
 						let options = [{ label: "None", description: "Deselect previously selected challenges", value: "None" }];
-						["Can't Hold All this Value", "Restless"].forEach(challengeName => {
+						["Can't Hold All this Value", "Restless", "Rushing"].forEach(challengeName => {
 							const challenge = getChallenge(challengeName);
 							options.push({ label: challengeName, description: challenge.dynamicDescription(challenge.intensity, challenge.duration), value: challengeName });
 						})
-						let components = [new ActionRowBuilder().addComponents(
-							new StringSelectMenuBuilder().setCustomId("startingchallenges")
-								.setPlaceholder("👑 Select challenge(s)...")
-								.setMinValues(1)
-								.setMaxValues(options.length)
-								.addOptions(options)
-						)];
-
-						thread.send({
-							content: `${interaction.user} Here's the channel for your new adventure. As adventure leader you're responsible for inputting the group's decisions (indicated with a 👑).`,
-							components
-						}).then(leaderMessage => {
-							let ready = new ActionRowBuilder().addComponents(
+						const components = [
+							new ActionRowBuilder().addComponents(
+								new ButtonBuilder().setCustomId("ready")
+									.setLabel("Ready!")
+									.setStyle(ButtonStyle.Success),
 								new ButtonBuilder().setCustomId("deploy")
 									.setLabel("Pick Archetype")
 									.setStyle(ButtonStyle.Primary),
 								new ButtonBuilder().setCustomId("viewstartingartifacts")
 									.setLabel("Pick Starting Artifact")
 									.setStyle(ButtonStyle.Secondary)
+							),
+							new ActionRowBuilder().addComponents(
+								new StringSelectMenuBuilder().setCustomId("startingchallenges")
+									.setPlaceholder("Select challenge(s)...")
+									.setMinValues(1)
+									.setMaxValues(options.length)
+									.addOptions(options)
 							)
-							adventure.setId(thread.id)
-								.setLeaderId(interaction.user.id);
-							adventure.messageIds.leaderNotice = leaderMessage.id;
-							return thread.send({ content: "The adventure will begin when everyone has picked an archetype and the leader clicks the \"Ready!\" button. Each player can optionally select a starting artifact.", components: [ready], flags: MessageFlags.SuppressNotifications });
-						}).then(deployMessage => {
-							adventure.messageIds.deploy = deployMessage.id;
-							setAdventure(adventure);
-						});
+						];
+						adventure.setId(thread.id)
+							.setLeaderId(interaction.user.id);
+						setAdventure(adventure);
+						thread.send({ content: `This is ${interaction.member}'s new adventure. The adventure will begin when everyone clicks the "Ready!" button. Each player must select an archetype and can optionally select a starting artifact.`, components, flags: MessageFlags.SuppressNotifications });
 					});
 				}).catch(console.error);
 			} else {

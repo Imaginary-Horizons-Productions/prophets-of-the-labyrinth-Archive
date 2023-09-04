@@ -1,4 +1,36 @@
 # Prophets of the Labyrinth Change Log
+#### Prophets of the Labyrinth Verison 0.11.0:
+- New Archetype: Legionnaire
+   - Element: Fire; Predicts: Intents
+   - Martial Artist changed to Wind
+   - Converted *Spell: Ice Ward* to *Scutum* (Legionnaire's starting defensive gear)
+- Reworked the Knight
+   - Sword renamed to Lance and now double benefits from Power Up instead of granting it (upgrades: Accelerating, Piercing, Vigilant)
+   - Buckler now grants Power Up (Urgent upgrade changed to Devoted)
+   - Old Sword (weapon that grants user Power Up) has been reworked to Pact: Certain Victory (upgrades: Hunter's, Lethal, Reckless)
+- New Artifacts: *Piggy Bank*, *Crystal Shard*
+- Reduced base damage of *Warhammer* (and upgrades) from 100 to 75
+- New Gear Variants: *Fate Sealing Censer*, *Fate Sealing Infinite Regeneration*, *Slowing Warhammer*, *Slowing War Cry*, and *Organic Potion Kit*
+- Reworked *Blood Aegis*: now always adds block to self and forces an enemy to target the user if the enemy is using a single target move after the user
+- *Reckless* gear variants (and *Battleaxes*) now have high base damage and apply *Exposed* to the user
+- Fixed Potion Kit upgrades cost being the same as the unupgraded Potion Kit
+- *Daggers* can now upgrade to *Slowing Daggers* instead of *Wicked Daggers*
+- *Punch* is now always available unless the delver is full on gear (damage reduced to 35 to be less than the average resisted damage)
+- Adventures that end by `/give-up` no longer provide score to player profiles
+- Merchants now show how many uses equipment they're selling has
+- New Challenge: Rushing - adds a chance to not know the type of a route option
+- Player high scores are now tracked per archetype (view in `/stats`)
+- Added 2 new Event rooms and 2 new Merchant rooms
+- Amethyst Spyglass now reduces scouting costs by 15g per spyglass (and can't reduce past 0g)
+- Scouting Artifact Guardians will now always start with the next upcoming Artifact Guardian
+- Element Redistrabution event (now named Elemental Research) now pays 200g instead of costing 100g
+- Removed "wait for leader" decision points
+   - Anyone can now pick a challenge at a rest site, make sure to discuss with the party!
+   - Start of adventure now has a "Ready!" button instead of a confirmation after everyone's picked an archetype
+   - Anyone can now `/give-up`
+- Renamed `/delver-stats` to `/inspect-self` to match the button that does the same thing in combat
+- Updated `armory` and `consumable-info` commands to now utilize Discord autocomplete
+
 #### Prophets of the Labyrinth Version 0.10.0:
 - Added **Consumables**: these resources can be used by any party member during combat at priority speed
    1. Vitamins

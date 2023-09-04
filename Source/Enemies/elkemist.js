@@ -6,14 +6,15 @@ const { isBuff } = require("../Modifiers/_modifierDictionary.js");
 
 module.exports = new Enemy("Elkemist")
 	.setFirstAction("random")
-	.addAction({ name: "Toil", element: "Untyped", isPriority: false, effect: toilEffect, selector: selectSelf, next: nextRandom })
-	.addAction({ name: "Trouble", element: "Water", isPriority: false, effect: troubleEffect, selector: selectRandomFoe, next: nextRandom })
-	.addAction({ name: "Boil", element: "Fire", isPriority: false, effect: boilEffect, selector: selectAllFoes, next: nextRandom })
-	.addAction({ name: "Bubble", element: "Untyped", isPriority: false, effect: bubbleEffect, selector: selectAllFoes, next: nextRandom })
+	.addAction({ name: "Toil", element: "Untyped", priority: 0, effect: toilEffect, selector: selectSelf, next: nextRandom })
+	.addAction({ name: "Trouble", element: "Water", priority: 0, effect: troubleEffect, selector: selectRandomFoe, next: nextRandom })
+	.addAction({ name: "Boil", element: "Fire", priority: 0, effect: boilEffect, selector: selectAllFoes, next: nextRandom })
+	.addAction({ name: "Bubble", element: "Untyped", priority: 0, effect: bubbleEffect, selector: selectAllFoes, next: nextRandom })
 	.setHp(2000)
 	.setSpeed(100)
 	.setElement("Water")
-	.setStaggerThreshold(4);
+	.setStaggerThreshold(4)
+	.markAsBoss();
 
 function toilEffect(targets, user, isCrit, adventure) {
 	// Gain block and medium progress
@@ -24,7 +25,7 @@ function toilEffect(targets, user, isCrit, adventure) {
 		addModifier(user, { name: "Progress", stacks: 45 + generateRandomNumber(adventure, 31, "battle") });
 	}
 	addBlock(user, 200);
-	return "It succeeds at gathering some materials and fortifying its laboratory.";
+	return "It gathers some materials, fortifying its laboratory to Block incoming damage.";
 }
 
 function troubleEffect([target], user, isCrit, adventure) {
@@ -35,7 +36,7 @@ function troubleEffect([target], user, isCrit, adventure) {
 	}
 	addModifier(user, { name: "Progress", stacks: 15 + generateRandomNumber(adventure, 16, "battle") });
 	addModifier(target, { name: "Stagger", stacks: 1 });
-	return dealDamage(target, user, damage, false, user.element, adventure).then(damageText => {
+	return dealDamage([target], user, damage, false, user.element, adventure).then(damageText => {
 		return `An obstacle to potion progress is identified and mitigated; ${damageText}`;
 	})
 }
@@ -46,9 +47,7 @@ function boilEffect(targets, user, isCrit, adventure) {
 	if (isCrit) {
 		damage *= 2;
 	}
-	return Promise.all(
-		targets.map(target => dealDamage(target, user, damage, false, "Fire", adventure))
-	).then(results => results.join(" "));
+	return dealDamage(targets, user, damage, false, "Fire", adventure);
 }
 
 function bubbleEffect(targets, user, isCrit, adventure) {

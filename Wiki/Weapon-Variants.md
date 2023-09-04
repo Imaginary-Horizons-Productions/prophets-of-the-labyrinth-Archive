@@ -2,37 +2,39 @@
 Grants the user the Quicken modifier
 
 #### Available on
-- Sun Flare (Fire)
+- Sun Flare (Wind)
 - Cloak (Wind)
-- Sword (Earth)
+- Lance (Earth)
 - Midas Staff (Water)
+- Shortsword (Fire)
 
 ### Charging
 User gains Power Up modifier
 
 #### Available on
-- all Swords (Earth)
 - Blood Aegis (Water)
 - War Cry (Fire)
-
-### Cursed
-User pays hp to use
-
-#### Available on
-- all Blood Aegis (Water)
 
 ### Devoted
 Can target allies (beyond self)
 
 #### Available on
 - Vigilance Charm (Earth)
+- Buckler (Earth)
 
 ### Evasive
 User gains Evade
 
 #### Available on
-- Sun Flare (Fire)
+- Sun Flare (Wind)
 - Bow (Wind)
+
+### Fate Sealing
+Apply Stasis to target on crit
+
+#### Available on
+- Censer (Fire)
+- Infinite Regeneration (Water)
 
 ### Flanking
 Applies Exposed to target
@@ -46,8 +48,7 @@ Adds block on the user
 
 #### Available on
 - Buckler (Earth)
-- Sword (Earth)
-- all Ice Ward (Water)
+- all Scutum (Fire)
 - Vigilance Charm (Earth)
 - Potion Kit (Water)
 
@@ -57,7 +58,7 @@ Increased base block
 #### Available on
 - Buckler (Earth)
 - Blood Aegis (Water)
-- Ice Ward (Water)
+- Scutum (Fire)
 
 ### Hunter's
 Gain gold on kill
@@ -65,14 +66,16 @@ Gain gold on kill
 #### Available on
 - Sickle (Water)
 - Bow (Wind)
+- Certain Victory (Earth)
 
 ### Lethal
 Increased crit damage
 
 #### Avaialble on
 - all Daggers (Wind)
-- Spear (Fire)
+- Spear (Wind)
 - Scythe (Wind)
+- Certain Victory (Earth)
 
 ### Long
 Increased stack count of buff/debuff applied
@@ -88,12 +91,19 @@ Damage type matches user
 - Fire Cracker (Fire)
 - Bow (Wind)
 
+### Organic
+Regain durability when entering new rooms
+
+#### Available on
+- Potion Kit (water)
+
 ### Piercing
 Deals unblockable damage
 
 #### Available on
 - Warhammer (Earth)
 - Scythe (Wind)
+- Lance (Earth)
 
 ### Prideful
 High value non-elemental damage
@@ -111,7 +121,7 @@ Removes all debuffs on target
 Increased damage against a foe with higher speed
 
 #### Available on
-- Spear (Fire)
+- Spear (Wind)
 - Life Drain (Water)
 
 ### Reaper's
@@ -121,11 +131,11 @@ Instant death if target is below hp threshold
 - all Scythes (Water)
 
 ### Reckless
-Increased damage if user has 0 block
+Very high base damage, applies Exposed to user
 
 #### Available on
 - all Battleaxes (Fire)
-- Sword (Earth)
+- Certain Victory (Earth)
 
 ### Reinforcing
 Adds block to target
@@ -140,6 +150,14 @@ Increased base damage
 - Dagger (Wind)
 - Sickle (Water)
 
+### Slowing
+Adds Slow to target
+
+#### Available on
+- Warhammer (Earth)
+- War Cry (Fire)
+- Daggers (Wind)
+
 ### Soothing
 Applies Regen
 
@@ -148,14 +166,20 @@ Applies Regen
 - Inspiration (Wind)
 
 ### Sweeping
-Hits all enemes/allies
+Reduce base damage, hits all enemies/allies
 
 #### Available on
 - Dagger (Wind)
-- Spear (Fire)
+- Spear (Wind)
 - Blood Aegis (Water)
 - Inspiration (Wind)
-- Ice Ward (Water)
+- Scutum (Fire)
+
+### Taunting
+Forces target to target the user if using single-target move and going after user
+
+#### Available on
+- all Blood Aegis (Water)
 
 ### Thick
 Increased durability, grants the differences in uses when upgraded.
@@ -176,7 +200,7 @@ User regains hp on kill
 Adds stacks to debuffs
 
 #### Avaialble on
-- Sun Flare (Fire)
+- Sun Flare (Wind)
 - Censer (Fire)
 - War Cry (Fire)
 
@@ -187,31 +211,49 @@ Applies Poison
 - Fire Cracker (Fire)
 - Scythe (Wind)
 - Sickle (Water)
+- Shortsword (Fire)
 
 ### Urgent
 Using this equipment puts moves in the priority queue
 
 #### Avaialble on
 - all Bows (Wind)
-- all Sun Flare (Fire)
+- all Sun Flare (Wind)
 - Barrier (Fire)
-- Buckler (Earth)
 - Life Drain (Water)
 - Potion Kit (Water)
 
+### Vanguard's
+Apply Exposed to both target and self
+
+#### Available on
+- all Shortsword (Fire)
+
 ### Vexing
-Bonus damage if target has has debuffs
+Bonus damage if target has debuffs
 
 #### Available on
  - all Censer (Fire)
 
-### Wicked
-Increased damage against enemies with 0 block
+### Vigilant
+Grants Vigilant to user
 
 #### Available on
-- Dagger (Wind)
+- Lance (Earth)
+- Scutum (Fire)
+
+## Yet Unused Variants
+### Duelist's
+Bonus damage if no allies are targeting the same enemy
+
+### Opportunist's
+Bonus damage if at least one other ally is targetting the same enemy
+
+### Wicked
+Bonus damage if target has no block
 
 ## Unnamed
+- Lance (double upgrade from Power Up)
 - Spear (add stagger on crit)
 - Sickle (5% max hp bonus damage)
 - Life Drain (attack a foe and gain hp)
@@ -219,5 +261,5 @@ Increased damage against enemies with 0 block
 - Inspire (power up to ally)
 - Corrosion (power down to enemy)
 - Midas Staff (apply Curse of Midas)
-- Pact of Healing (pay hp to apply regen)
+- Infinite Regeneration (pay hp to apply regen)
 - Potion Kit (add potion consumable to loot)

@@ -1,7 +1,7 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { dealDamage, addModifier } = require("../combatantDAO.js");
 
-module.exports = new EquipmentTemplate("Sweeping Spear", "*Strike all foes for @{damage} @{element} damage*\nCritical Hit💥: Inflict @{mod1Stacks} @{mod1}", "Fire", effect, ["Lethal Spear", "Reactive Spear"])
+module.exports = new EquipmentTemplate("Sweeping Spear", "Strike all foes for @{damage} @{element} damage", "Also inflict @{mod1Stacks} @{mod1}", "Wind", effect, ["Lethal Spear", "Reactive Spear"])
 	.setCategory("Weapon")
 	.setTargetingTags({ target: "all", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Stagger", stacks: 1 }])
@@ -11,19 +11,17 @@ module.exports = new EquipmentTemplate("Sweeping Spear", "*Strike all foes for @
 
 function effect(targets, user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger, critStagger], damage } = module.exports;
-	return Promise.all(
-		targets.map(target => {
-			if (target.hp < 1) {
-				return "";
-			}
+	targets.map(target => {
+		if (target.hp < 1) {
+			return "";
+		}
 
-			if (user.element === element) {
-				addModifier(target, elementStagger);
-			}
-			if (isCrit) {
-				addModifier(target, critStagger);
-			}
-			return dealDamage(target, user, damage, false, element, adventure);
-		})
-	).then(results => results.filter(result => Boolean(result)).join(" "));
+		if (user.element === element) {
+			addModifier(target, elementStagger);
+		}
+		if (isCrit) {
+			addModifier(target, critStagger);
+		}
+	})
+	return dealDamage(targets, user, damage, false, element, adventure);
 }

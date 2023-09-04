@@ -3,6 +3,7 @@ const { MAX_MESSAGE_ACTION_ROWS } = require("../constants.js");
 const Combatant = require("./Combatant.js");
 const Resource = require("./Resource.js");
 const { Room } = require("./Room.js");
+const Delver = require("./Delver.js");
 
 module.exports.Adventure = class {
 	/** This read-write payload class describes an ongoing adventure
@@ -17,18 +18,18 @@ module.exports.Adventure = class {
 	id;
 	name;
 	labyrinth = "Debug Dungeon"; //TODO #462 generate/take labyrinth as input
-	/** @type {"config" | "ongoing" | "completed"} */
+	/** @type {"config" | "ongoing" | "success" | "defeat" | "giveup"} */
 	state = "config";
+	static endStates = ["success", "defeat", "giveup"];
 	element;
 	messageIds = {
-		start: "",
-		leaderNotice: "",
-		deploy: "",
+		recruit: "",
 		utility: "",
 		room: "",
 		battleRound: ""
 	};
 	leaderId = "";
+	/** @type {Delver[]} */
 	delvers = [];
 	challenges = {}; // {challengeName: {intensity, reward, duration}} 0 = done, null = permanent
 	scouting = {
@@ -144,6 +145,11 @@ module.exports.Adventure = class {
 		}
 	}
 
+	/**
+	 * @param {string} artifactName
+	 * @param {string} statName the stat to add to (in case of multiple stats per artifact)
+	 * @param {number} stat the amount to be added
+	 */
 	updateArtifactStat(artifactName, statName, stat) {
 		if (this.artifacts[artifactName]) {
 			if (statName in this.artifacts[artifactName]) {
@@ -162,9 +168,9 @@ module.exports.Adventure = class {
 		const count = this.getArtifactCount("Amethyst Spyglass");
 		switch (type) {
 			case "Final Battle":
-				return 150 - (count * 5);
+				return Math.max(150 - (count * 15), 0);
 			case "Artifact Guardian":
-				return 100 - (count * 5);
+				return Math.max(100 - (count * 15), 0);
 		}
 	}
 
@@ -187,7 +193,6 @@ module.exports.Adventure = class {
 		switch (team) {
 			case "delver":
 				return this.delvers[index];
-			case "clone":
 			case "enemy":
 				return this.room.enemies[index];
 			case "none":

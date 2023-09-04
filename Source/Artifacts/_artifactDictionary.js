@@ -13,12 +13,14 @@ const ROLL_TABLE = {
 for (const file of [
 	"amethystspyglass.js",
 	"bloodshieldsword.js",
+	"crystalshard.js",
 	"enchantedmap.js",
 	"hammerspaceholster.js",
 	"hawktailfeather.js",
 	"negativeoneleafclover.js",
 	"oilpainting.js",
 	"phoenixfruitblossom.js",
+	"piggybank.js",
 	"spiralfunnel.js"
 ]) {
 	const artifact = require(`./${file}`);

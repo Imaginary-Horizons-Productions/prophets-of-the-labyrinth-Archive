@@ -1,21 +1,21 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
-const { dealDamage, addModifier, getFullName } = require('../combatantDAO.js');
+const { dealDamage, addModifier } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Tormenting Censer", "Burn a foe for @{damage} (+@{bonusDamage} if target has any debuffs) @{element} damage and apply 1 stack of all their debuffs*\nCritical Hit💥: Also apply @{mod1Stacks} @{mod1}", "Fire", effect, ["Thick Censer"])
+module.exports = new EquipmentTemplate("Tormenting Censer", "Burn a foe for @{damage} (+@{bonus} if target has debuffs) @{element} damage, duplicate its debuffs", "Also apply @{mod1Stacks} @{mod1}", "Fire", effect, ["Fate Sealing Censer", "Thick Censer"])
 	.setCategory("Trinket")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Slow", stacks: 2 }])
 	.setDamage(50)
-	.setBonusDamage(75)
+	.setBonus(75) // damage
 	.setCost(350)
 	.setUses(10);
 
 function effect([target], user, isCrit, adventure) {
 	if (target.hp < 1) {
-		return ` ${getFullName(target, adventure.room.enemyTitles)} was already dead!`;
+		return ` ${target.getName(adventure.room.enemyIdMap)} was already dead!`;
 	}
 
-	let { element, modifiers: [elementStagger, slow], damage, bonusDamage } = module.exports;
+	let { element, modifiers: [elementStagger, slow], damage, bonus } = module.exports;
 	for (const modifier in target.modifiers) {
 		if (isDebuff(modifier)) {
 			addModifier(target, { name: modifier, stacks: 1 });
@@ -25,10 +25,14 @@ function effect([target], user, isCrit, adventure) {
 		addModifier(target, elementStagger);
 	}
 	if (Object.keys(target.modifiers).some(modifier => isDebuff(modifier))) {
-		damage += bonusDamage;
+		damage += bonus;
 	}
-	if (isCrit) {
-		addModifier(target, slow);
-	}
-	return dealDamage(target, user, damage, false, element, adventure); // result text
+	return dealDamage([target], user, damage, false, element, adventure).then(damageText => {
+		if (isCrit && target.hp > 0) {
+			addModifier(target, slow);
+			return `${damageText} ${target.getName(adventure.room.enemyIdMap)} is Slowed and their other debuffs are duplicated.`;
+		} else {
+			return `${damageText} ${target.getName(adventure.room.enemyIdMap)}'s debuffs are duplicated.`;
+		}
+	});
 }

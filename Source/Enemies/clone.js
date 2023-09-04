@@ -4,4 +4,5 @@ module.exports = new Enemy("@{clone}")
 	.setHp(300)
 	.setSpeed(100)
 	.setElement("@{clone}")
-	.setStaggerThreshold(3);
+	.setStaggerThreshold(3)
+	.markAsBoss();

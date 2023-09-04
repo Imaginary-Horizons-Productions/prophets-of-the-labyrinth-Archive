@@ -4,8 +4,8 @@ const { selectRandomFoe, selectSelf, nextRandom } = require("../enemyDAO.js");
 
 module.exports = new Enemy("Geode Tortoise")
 	.setFirstAction("random")
-	.addAction({ name: "Bite", element: "Earth", isPriority: false, effect: biteEffect, selector: selectRandomFoe, next: nextRandom })
-	.addAction({ name: "Crystallize", element: "Untyped", isPriority: false, effect: crystallizeEffect, selector: selectSelf, next: nextRandom })
+	.addAction({ name: "Bite", element: "Earth", priority: 0, effect: biteEffect, selector: selectRandomFoe, next: nextRandom })
+	.addAction({ name: "Crystallize", element: "Untyped", priority: 0, effect: crystallizeEffect, selector: selectSelf, next: nextRandom })
 	.setHp(350)
 	.setSpeed(85)
 	.setElement("Earth")
@@ -17,7 +17,7 @@ function biteEffect([target], user, isCrit, adventure) {
 		damage *= 2;
 	}
 	addModifier(target, { name: "Stagger", stacks: 1 });
-	return dealDamage(target, user, damage, false, user.element, adventure);
+	return dealDamage([target], user, damage, false, user.element, adventure);
 }
 
 function crystallizeEffect(targets, user, isCrit, adventure) {
@@ -28,5 +28,5 @@ function crystallizeEffect(targets, user, isCrit, adventure) {
 	} else {
 		addModifier(user, { name: "Power Up", stacks: 25 });
 	}
-	return "";
+	return "It prepares to Block and is Powered Up.";
 }

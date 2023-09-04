@@ -13,10 +13,9 @@ module.exports.Room = class {
 
 		if (this.hasEnemies) {
 			this.round = -1;
-			this.priorityMoves = [];
 			this.moves = [];
 			this.enemies = [];
-			this.enemyTitles = {};
+			this.enemyIdMap = {};
 		}
 	}
 	/** @type {Record<string, Resource>} */

@@ -1,22 +1,26 @@
 const Button = require('../../Classes/Button.js');
 const { getAdventure, setAdventure } = require('../adventureDAO.js');
 
-const id = "elementswap";
-module.exports = new Button(id, (interaction, args) => {
-	// Switch the adventurer's element to the given element
-	let adventure = getAdventure(interaction.channel.id);
-	let delver = adventure.delvers.find(delver => delver.id == interaction.user.id);
-	if (delver) {
-		if (adventure.gold >= 100) {
-			adventure.gold -= 100;
-			delver.element = adventure.room.element;
-			interaction.reply(`${interaction.user} signs the contract and becomes ${adventure.room.element} element.`).then(() => {
-				setAdventure(adventure);
-			});
-		} else {
-			interaction.reply({ content: "You can't afford this contract.", ephemeral: true });
+const customId = "elementswap";
+module.exports = new Button(customId,
+	/** Switch the adventurer's element to the given element */
+	(interaction, args) => {
+		const adventure = getAdventure(interaction.channel.id);
+		const delver = adventure?.delvers.find(delver => delver.id == interaction.user.id);
+		if (!delver) {
+			interaction.reply({ content: "This adventure isn't active or you aren't participating in it.", ephemeral: true });
+			return;
 		}
-	} else {
-		interaction.reply({ content: "Please swap elements in adventures you've joined.", ephemeral: true });
+
+		if (delver.element == adventure.room.element) {
+			interaction.reply({ content: `You are already ${adventure.room.element}.`, ephemeral: true });
+			return;
+		}
+
+		adventure.gainGold(200);
+		delver.element = adventure.room.element;
+		interaction.reply(`${interaction.user} signs the contract and becomes ${adventure.room.element} element.`).then(() => {
+			setAdventure(adventure);
+		});
 	}
-});
+);

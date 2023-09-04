@@ -1,7 +1,6 @@
 const Select = require('../../Classes/Select.js');
-const { SAFE_DELIMITER } = require('../../constants.js');
 const { getAdventure, setAdventure } = require('../adventureDAO');
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { ActionRowBuilder, StringSelectMenuBuilder } = require('discord.js');
 const { getArtifact } = require('../Artifacts/_artifactDictionary.js');
 
 const id = "startingartifact";
@@ -11,38 +10,30 @@ module.exports = new Select(id, (interaction, args) => {
 	if (adventure?.state === "config") {
 		// Add delver to list (or overwrite)
 		let delver = adventure.delvers.find(delver => delver.id === interaction.user.id);
-		if (delver) {
-			let [artifactName] = interaction.values;
-			if (artifactName === "None") {
-				delver.startingArtifact = "";
-				interaction.channel.send(`${interaction.user} is not planning to bring a starting artifact.`);
-				interaction.update({
-					content: "Forgoing a starting artifact will increase your end of adventure score multiplier (up to 2x if no one takes a starting artifact).",
-					components: [new ActionRowBuilder().addComponents(
-						interaction.component.setPlaceholder("Pick an artifact after all...")
-					)]
-				});
-			} else {
-				let isSwitching = delver.startingArtifact !== "";
-				delver.startingArtifact = artifactName;
-
-				// Send confirmation text
-				interaction.update({
-					content: getArtifact(artifactName).dynamicDescription(1),
-					components: [new ActionRowBuilder().addComponents(
-						interaction.component.setPlaceholder("Pick a different artifact...")
-					)]
-				});
-				interaction.channel.send(`${interaction.user} ${isSwitching ? "has switched to" : "is taking"} ${artifactName} for their starting artifact.`);
-			}
-			setAdventure(adventure);
+		let [artifactName] = interaction.values;
+		if (artifactName === "None") {
+			delver.startingArtifact = "";
+			interaction.channel.send(`${interaction.user} is not planning to bring a starting artifact.`);
+			interaction.update({
+				content: "Forgoing a starting artifact will increase your end of adventure score multiplier (up to 2x if no one takes a starting artifact).",
+				components: [new ActionRowBuilder().addComponents(
+					new StringSelectMenuBuilder(interaction.component.data).setPlaceholder("Pick an artifact after all...")
+				)]
+			});
 		} else {
-			let join = new ActionRowBuilder().addComponents(
-				new ButtonBuilder().setCustomId(`join${SAFE_DELIMITER}${interaction.guildId}${SAFE_DELIMITER}${interaction.channelId}${SAFE_DELIMITER}aux`)
-					.setLabel("Join")
-					.setStyle(ButtonStyle.Success));
-			interaction.reply({ content: `You don't appear to be signed up for this adventure. You can join with the button below:`, components: [join], ephemeral: true });
+			let isSwitching = delver.startingArtifact !== "";
+			delver.startingArtifact = artifactName;
+
+			// Send confirmation text
+			interaction.update({
+				content: getArtifact(artifactName).dynamicDescription(1),
+				components: [new ActionRowBuilder().addComponents(
+					new StringSelectMenuBuilder(interaction.component.data).setPlaceholder("Pick a different artifact...")
+				)]
+			});
+			interaction.channel.send(`${interaction.user} ${isSwitching ? "has switched to" : "is taking"} ${artifactName} for their starting artifact.`);
 		}
+		setAdventure(adventure);
 	} else {
 		interaction.reply({ content: "A valid adventure could not be found.", ephemeral: true });
 	}

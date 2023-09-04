@@ -11,8 +11,10 @@ for (const file of [
 	"battle-slimes.js",
 	"battle-tortoises.js",
 	"empty.js",
+	"event-artifactdupe.js",
 	"event-elementswap.js",
 	"event-freegoldonfire.js",
+	"event-freerepairkit.js",
 	"event-hpshare.js",
 	"event-scorebeggar.js",
 	"finalBattle-elkemist.js",
@@ -20,6 +22,8 @@ for (const file of [
 	"finalBattle-mirrors.js",
 	"forge-basic.js",
 	"merchant-basic.js",
+	"merchant-consumable.js",
+	"merchant-overpriced.js",
 	"restsite-basic.js",
 	"treasure-basic.js"
 ]) {

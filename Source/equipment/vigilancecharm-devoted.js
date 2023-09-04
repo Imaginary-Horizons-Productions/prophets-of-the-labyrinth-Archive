@@ -1,22 +1,20 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addModifier, removeModifier } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Devoted Vigilance Charm", "*Grant an ally @{mod1Stacks} @{mod1}*\nCritical Hit💥: Grant ally @{mod2Stacks} @{mod2}", "Earth", effect, ["Long Vigilance Charm", "Guarding Vigilance Charm"])
+module.exports = new EquipmentTemplate("Devoted Vigilance Charm", "Grant an ally @{mod1Stacks} @{mod1}", "@{mod1} +@{bonus}", "Earth", effect, ["Long Vigilance Charm", "Guarding Vigilance Charm"])
 	.setCategory("Trinket")
 	.setTargetingTags({ target: "single", team: "delver" })
-	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Vigilance", stacks: 3 }, { name: "Vigilance", stacks: 5 }])
+	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Vigilance", stacks: 3 }])
+	.setBonus(2) // Vigilance stacks
 	.setCost(350)
 	.setUses(5);
 
 function effect([target], user, isCrit, adventure) {
-	let { element, modifiers: [elementStagger, vigilance, critVigilance] } = module.exports;
+	let { element, modifiers: [elementStagger, vigilance], bonus } = module.exports;
+	const pendingVigilance = { ...vigilance, stacks: vigilance.stacks + (isCrit ? bonus : 0) };
 	if (user.element === element) {
 		removeModifier(target, elementStagger);
 	}
-	if (isCrit) {
-		addModifier(target, critVigilance);
-	} else {
-		addModifier(target, vigilance);
-	}
-	return ""; // result as text
+	addModifier(target, pendingVigilance);
+	return `${target.getName(adventure.room.enemyIdMap)} gains Vigilance.`;
 }

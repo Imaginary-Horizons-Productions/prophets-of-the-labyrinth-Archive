@@ -4,18 +4,22 @@ const { getPlayer } = require('../playerDAO.js');
 const { getAdventure } = require('../adventureDAO.js');
 const { getArtifact } = require('../Artifacts/_artifactDictionary.js');
 
-const id = "viewcollectartifact";
-module.exports = new Button(id, (interaction, args) => {
-	// Send the player a message with a select an artifact to collect
-	let adventure = getAdventure(interaction.channel.id);
-	let playerProfile = getPlayer(interaction.user.id, interaction.guild.id);
-	let user = adventure.delvers.find(delver => delver.id == interaction.user.id);
-	if (user) {
+const customId = "viewcollectartifact";
+module.exports = new Button(customId,
+	/** Send the player a message with a select an artifact to collect */
+	(interaction, args) => {
+		const adventure = getAdventure(interaction.channel.id);
+		if (!adventure?.delvers.some(delver => delver.id == interaction.user.id)) {
+			interaction.reply({ content: "This adventure isn't active or you aren't participating in it.", ephemeral: true });
+			return;
+		}
+
+		const playerProfile = getPlayer(interaction.user.id, interaction.guild.id);
 		if (!playerProfile.artifacts[interaction.channelId]) {
-			let options = [];
+			const options = [];
 			for (const artifactName in adventure.artifacts) {
 				if (!Object.values(playerProfile.artifacts).includes(artifactName)) {
-					let description = getArtifact(artifactName).dynamicDescription(1);
+					const description = getArtifact(artifactName).dynamicDescription(1);
 					options.push({
 						label: artifactName,
 						description,
@@ -43,8 +47,7 @@ module.exports = new Button(id, (interaction, args) => {
 							.setCustomId("collectartifact")
 							.setPlaceholder("Select an artifact...")
 							.addOptions([{
-								label: "If the menu is stuck, close and reopen the thread.",
-								description: "",
+								label: "If the menu is stuck, switch channels and come back.",
 								value: "placeholder"
 							}])
 							.setDisabled(true)
@@ -55,7 +58,5 @@ module.exports = new Button(id, (interaction, args) => {
 		} else {
 			interaction.reply({ content: "You've already collected an artifact from this adventure.", ephemeral: true });
 		}
-	} else {
-		interaction.reply({ content: "You don't appear to be signed up for this adventure.", ephemeral: true });
 	}
-});
+);

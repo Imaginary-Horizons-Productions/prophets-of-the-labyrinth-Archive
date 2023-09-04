@@ -15,6 +15,7 @@ module.exports = class ConsumableTemplate {
 	targetDescription = "";
 	targetTeam = "";
 	flavorText = [];
+	cost = 10;
 
 	/** A consumable's element determines which drop table it's in
 	 * @param {string} elementEnum
@@ -42,6 +43,11 @@ module.exports = class ConsumableTemplate {
 	 */
 	setFlavorText(fieldArray) {
 		this.flavorText = fieldArray;
+		return this;
+	}
+
+	setCost(integer) {
+		this.cost = integer;
 		return this;
 	}
 }

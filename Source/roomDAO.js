@@ -2,7 +2,7 @@ const { ActionRowBuilder, ButtonBuilder, StringSelectMenuBuilder, ThreadChannel,
 const { Adventure } = require("../Classes/Adventure.js");
 
 const { SAFE_DELIMITER, MAX_MESSAGE_ACTION_ROWS } = require("../constants.js");
-const { ordinalSuffixEN } = require("../helpers");
+const { ordinalSuffixEN, generateRandomNumber } = require("../helpers");
 
 const { getArtifact } = require("./Artifacts/_artifactDictionary");
 const { getChallenge } = require("./Challenges/_challengeDictionary.js");
@@ -11,6 +11,8 @@ const { getColor } = require("./elementHelpers.js");
 const { buildEquipmentDescription, getEquipmentProperty } = require("./equipment/_equipmentDictionary");
 const { getLabyrinthProperty } = require("./labyrinths/_labyrinthDictionary.js");
 const { getRoom } = require("./Rooms/_roomDictionary.js");
+const { getGuild, setGuild } = require("./guildDAO.js");
+const { setPlayer, getPlayer } = require("./playerDAO.js");
 
 /** Derive the embeds and components that correspond with the adventure's state
  * @param {Adventure} adventure
@@ -33,7 +35,7 @@ exports.renderRoom = function (adventure, thread, descriptionOverride) {
 	let components = [];
 
 	if (adventure.depth <= getLabyrinthProperty(adventure.labyrinth, "maxDepth")) {
-		if (adventure.state !== "completed") {
+		if (!Adventure.endStates.includes(adventure.state)) {
 			// Continue
 			const roomActionCount = adventure.room.resources.roomAction?.count;
 			if ("roomAction" in adventure.room.resources) {
@@ -41,7 +43,7 @@ exports.renderRoom = function (adventure, thread, descriptionOverride) {
 			}
 
 			if (roomTemplate) {
-				components.push(...roomTemplate.uiRows);
+				components.push(...roomTemplate.buildUI(adventure));
 			}
 			if (adventure.room.title === "Treasure!" && roomActionCount > 0) {
 				components.push(generateTreasureRow(adventure));
@@ -75,13 +77,13 @@ exports.renderRoom = function (adventure, thread, descriptionOverride) {
 			}
 		} else {
 			// Defeat
-			addScoreField(roomEmbed, adventure);
+			addScoreField(roomEmbed, adventure, thread.guildId);
 			components = [];
 
 		}
 	} else {
 		// Victory
-		addScoreField(roomEmbed, adventure);
+		addScoreField(roomEmbed, adventure, thread.guildId);
 		components = [new ActionRowBuilder().addComponents(
 			new ButtonBuilder().setCustomId("viewcollectartifact")
 				.setLabel("Collect Artifact")
@@ -97,9 +99,9 @@ exports.renderRoom = function (adventure, thread, descriptionOverride) {
 /** The score breakdown is added to a room embed to show how the players in the just finished adventure did
  * @param {MessageEmbed} embed
  * @param {Adventure} adventure
+ * @param {string} guildId
  */
-function addScoreField(embed, adventure) {
-	const isSuccess = adventure.lives > 0 && adventure.depth > getLabyrinthProperty(adventure.labyrinth, "maxDepth");
+function addScoreField(embed, adventure, guildId) {
 	const livesScore = adventure.lives * 10;
 	const goldScore = Math.floor(Math.log10(adventure.peakGold)) * 5;
 	let score = adventure.accumulatedScore + livesScore + goldScore + adventure.depth;
@@ -109,23 +111,59 @@ function addScoreField(embed, adventure) {
 		challengeMultiplier *= challenge.scoreMultiplier;
 	})
 	score *= challengeMultiplier;
-	if (!isSuccess) {
-		embed.setTitle(`Defeated${adventure.room.title ? ` in ${adventure.room.title}` : " before even starting"}`);
-		score = Math.floor(score / 2);
-	} else {
-		embed.setTitle(`Success in ${adventure.labyrinth}`);
-	}
 	const skippedArtifactsMultiplier = 1 + (adventure.delvers.reduce((count, delver) => delver.startingArtifact ? count : count + 1, 0) / adventure.delvers.length);
 	score = Math.max(1, score * skippedArtifactsMultiplier);
+	switch (adventure.state) {
+		case "success":
+			embed.setTitle(`Success in ${adventure.labyrinth}`);
+			break;
+		case "defeat":
+			embed.setTitle(`Defeated${adventure.room.title ? ` in ${adventure.room.title}` : " before even starting"}`);
+			score = Math.floor(score / 2);
+			break;
+		case "giveup":
+			embed.setTitle(`Gave up${adventure.room.title ? ` in ${adventure.room.title}` : " before even starting"}`);
+			score = 0;
+			break;
+	}
 	const depthScoreLine = generateScoreline("additive", "Depth", adventure.depth);
 	const livesScoreLine = generateScoreline("additive", "Lives", livesScore);
 	const goldScoreline = generateScoreline("additive", "Gold", goldScore);
 	const bonusScoreline = generateScoreline("additive", "Bonus", adventure.accumulatedScore);
 	const challengesScoreline = generateScoreline("multiplicative", "Challenges Multiplier", challengeMultiplier);
 	const skippedArtifactScoreline = generateScoreline("multiplicative", "Artifact Skip Multiplier", skippedArtifactsMultiplier);
-	const defeatScoreline = generateScoreline("multiplicative", "Defeat", isSuccess ? 1 : 0.5);
-	embed.addFields({ name: "Score Breakdown", value: `${depthScoreLine}${livesScoreLine}${goldScoreline}${bonusScoreline}${challengesScoreline}${skippedArtifactScoreline}${defeatScoreline}\n__Total__: ${score}` });
+	const defeatScoreline = generateScoreline("multiplicative", "Defeat", adventure.state === "defeat" ? 0.5 : 1);
+	const giveupScoreline = generateScoreline("multiplicative", "Give Up", adventure.state === "giveup" ? 0 : 1);
+	embed.addFields({ name: "Score Breakdown", value: `${depthScoreLine}${livesScoreLine}${goldScoreline}${bonusScoreline}${challengesScoreline}${skippedArtifactScoreline}${defeatScoreline}${giveupScoreline}\n__Total__: ${score}` });
 	adventure.accumulatedScore = score;
+
+	const guildProfile = getGuild(guildId);
+	if (adventure.accumulatedScore > guildProfile.highScore.score) {
+		guildProfile.highScore = {
+			score: adventure.accumulatedScore,
+			playerIds: adventure.delvers.map(delver => delver.id),
+			adventure: adventure.name
+		};
+		setGuild(guildProfile);
+	}
+	adventure.delvers.forEach(delver => {
+		if (adventure.state !== "giveup") {
+			const player = getPlayer(delver.id, guildId);
+			if (player.scores[guildId]) {
+				player.scores[guildId].total += adventure.accumulatedScore;
+				if (adventure.accumulatedScore > player.scores[guildId].high) {
+					player.scores[guildId].high = adventure.accumulatedScore;
+				}
+			} else {
+				player.scores[guildId] = { total: adventure.accumulatedScore, high: adventure.accumulatedScore };
+			}
+			if (adventure.accumulatedScore > player.archetypes[delver.archetype]) {
+				player.archetypes[delver.archetype] = adventure.accumulatedScore;
+			}
+			setPlayer(player);
+		}
+		guildProfile.adventuring.delete(delver.id);
+	})
 }
 
 /** Generates the string for a scoreline or omits the line (returns empty string) if value is the identity for stackType
@@ -169,22 +207,15 @@ exports.updateRoomHeader = function (adventure, message) {
 
 function generateRoutingRow(adventure) {
 	const candidateKeys = Object.keys(adventure.roomCandidates);
-	if (candidateKeys.length > 1) {
-		return new ActionRowBuilder().addComponents(
-			...candidateKeys.map(candidateTag => {
-				const [roomType, depth] = candidateTag.split(SAFE_DELIMITER);
-				return new ButtonBuilder().setCustomId(`routevote${SAFE_DELIMITER}${candidateTag}`)
-					.setLabel(`Next room: ${roomType}`)
-					.setStyle(ButtonStyle.Secondary)
-			}));
-	} else {
-		return new ActionRowBuilder().addComponents(
-			new ButtonBuilder().setCustomId("continue")
-				.setEmoji("👑")
-				.setLabel(`Continue to the ${candidateKeys[0].split(SAFE_DELIMITER)[0]}`)
+	const max = 144;
+	const rushingChance = adventure.getChallengeIntensity("Rushing") / 100;
+	return new ActionRowBuilder().addComponents(
+		...candidateKeys.map(candidateTag => {
+			const [roomType, depth] = candidateTag.split(SAFE_DELIMITER);
+			return new ButtonBuilder().setCustomId(`routevote${SAFE_DELIMITER}${candidateTag}`)
+				.setLabel(`Next room: ${generateRandomNumber(adventure, max, "general") < max * rushingChance ? "???" : roomType}`)
 				.setStyle(ButtonStyle.Secondary)
-		);
-	}
+		}));
 }
 
 function generateLootRow(adventure) {
@@ -218,7 +249,7 @@ function generateLootRow(adventure) {
 		return new ActionRowBuilder().addComponents(
 			new StringSelectMenuBuilder().setCustomId("loot")
 				.setPlaceholder("No loot")
-				.setOptions([{ label: "If the menu is stuck, close and reopen the thread.", description: "This usually happens when two players try to take the last thing at the same time.", value: "placeholder" }])
+				.setOptions([{ label: "If the menu is stuck, switch channels and come back.", description: "This usually happens when two players try to take the last thing at the same time.", value: "placeholder" }])
 				.setDisabled(true)
 		)
 	}
@@ -227,7 +258,7 @@ function generateLootRow(adventure) {
 function generateTreasureRow(adventure) {
 	let options = [];
 	for (const { name, resourceType: type, count, visibility } of Object.values(adventure.room.resources)) {
-		if (visibility === "internal" && type !== "roomAction") {
+		if (visibility === "always") {
 			if (count > 0) {
 				let option = { value: `${name}${SAFE_DELIMITER}${options.length}` };
 
@@ -261,7 +292,7 @@ function generateTreasureRow(adventure) {
 		return new ActionRowBuilder().addComponents(
 			new StringSelectMenuBuilder().setCustomId("treasure")
 				.setPlaceholder("No treasure")
-				.setOptions([{ label: "If the menu is stuck, close and reopen the thread.", description: "This usually happens when two players try to take the last thing at the same time.", value: "placeholder" }])
+				.setOptions([{ label: "If the menu is stuck, switch channels and come back.", description: "This usually happens when two players try to take the last thing at the same time.", value: "placeholder" }])
 				.setDisabled(true)
 		)
 	}
@@ -280,6 +311,7 @@ function generateMerchantRows(adventure) {
 	}
 
 	let rows = [];
+	const soldOutOptions = [{ label: "If the menu is stuck, switch channels and come back.", description: "This usually happens when two players try to buy the last item at the same time.", value: "placeholder" }];
 	for (const groupName in categorizedResources) {
 		if (groupName.startsWith("equipment")) {
 			const [type, tier] = groupName.split(SAFE_DELIMITER);
@@ -287,8 +319,9 @@ function generateMerchantRows(adventure) {
 			categorizedResources[groupName].forEach((resource, i) => {
 				if (adventure.room.resources[resource].count > 0) {
 					const cost = getEquipmentProperty(resource, "cost");
+					const maxUses = getEquipmentProperty(resource, "maxUses");
 					options.push({
-						label: `${cost}g: ${resource}`,
+						label: `${cost}g: ${resource} (${maxUses} uses)`,
 						description: buildEquipmentDescription(resource, false),
 						value: `${resource}${SAFE_DELIMITER}${i}`
 					})
@@ -303,7 +336,7 @@ function generateMerchantRows(adventure) {
 				rows.push(new ActionRowBuilder().addComponents(
 					new StringSelectMenuBuilder().setCustomId(`buy${groupName}`)
 						.setPlaceholder("SOLD OUT")
-						.setOptions([{ label: "If the menu is stuck, close and reopen the thread.", description: "This usually happens when two players try to buy the last item at the same time.", value: "placeholder" }])
+						.setOptions(soldOutOptions)
 						.setDisabled(true)));
 			}
 		} else if (groupName === "scouting") {
@@ -315,10 +348,36 @@ function generateMerchantRows(adventure) {
 					.setStyle(ButtonStyle.Secondary)
 					.setDisabled(adventure.scouting.finalBoss || adventure.gold < bossScoutingCost),
 				new ButtonBuilder().setCustomId(`buyscouting${SAFE_DELIMITER}Artifact Guardian`)
-					.setLabel(`${guardScoutingCost}g: Scout the ${ordinalSuffixEN(adventure.scouting.artifactGuardians + 1)} Artifact Guardian`)
+					.setLabel(`${guardScoutingCost}g: Scout the ${ordinalSuffixEN(adventure.scouting.artifactGuardiansEncountered + adventure.scouting.artifactGuardians + 1)} Artifact Guardian`)
 					.setStyle(ButtonStyle.Secondary)
 					.setDisabled(adventure.gold < guardScoutingCost)
 			));
+		} else if (groupName == "consumables") {
+			let options = [];
+			categorizedResources[groupName].forEach((resource, i) => {
+				if (adventure.room.resources[resource].count > 0) {
+					const { cost, description } = getConsumable(resource);
+					options.push({
+						label: `${cost}g: ${resource}`,
+						description,
+						value: `${resource}${SAFE_DELIMITER}${i}`
+					})
+				}
+			})
+			if (options.length > 0) {
+				rows.push(new ActionRowBuilder().addComponents(
+					new StringSelectMenuBuilder().setCustomId("buyconsumable")
+						.setPlaceholder("Buy a consumable...")
+						.setOptions(options)
+				))
+			} else {
+				rows.push(new ActionRowBuilder().addComponents(
+					new StringSelectMenuBuilder().setCustomId("buyconsumable")
+						.setPlaceholder("SOLD OUT")
+						.setDisabled(true)
+						.setOptions(soldOutOptions)
+				))
+			}
 		}
 	}
 	return rows;
@@ -336,14 +395,7 @@ exports.editButtons = function (components, edits) {
 			switch (component.type) {
 				case ComponentType.Button:
 					const editedButton = new ButtonBuilder(component);
-					if (customId in edits) {
-						const { preventUse, label, emoji } = edits[customId];
-						editedButton.setDisabled(preventUse)
-							.setLabel(label);
-						if (emoji) {
-							editedButton.setEmoji(emoji);
-						}
-					};
+;
 					return editedButton;
 				case ComponentType.StringSelect:
 					return new StringSelectMenuBuilder(component);

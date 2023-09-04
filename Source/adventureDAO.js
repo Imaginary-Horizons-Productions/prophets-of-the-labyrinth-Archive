@@ -1,5 +1,5 @@
 const fs = require("fs");
-const { ThreadChannel, EmbedBuilder } = require("discord.js");
+const { ThreadChannel, EmbedBuilder, Message } = require("discord.js");
 const { Adventure, CombatantReference } = require("../Classes/Adventure.js");
 const Resource = require("../Classes/Resource.js");
 const { Move } = require("../Classes/Move.js");
@@ -8,7 +8,7 @@ const Delver = require("../Classes/Delver.js");
 const { Room } = require("../Classes/Room.js");
 
 const { SAFE_DELIMITER, MAX_SELECT_OPTIONS, MAX_MESSAGE_ACTION_ROWS } = require("../constants.js");
-const { ensuredPathSave, generateRandomNumber, parseCount, clearComponents } = require("../helpers.js");
+const { ensuredPathSave, generateRandomNumber, parseExpression, clearComponents } = require("../helpers.js");
 const { getWeakness } = require("./elementHelpers.js");
 
 const { rollArtifact } = require("./Artifacts/_artifactDictionary.js");
@@ -17,13 +17,13 @@ const { getEnemy } = require("./Enemies/_enemyDictionary");
 const { rollEquipmentDrop, rollConsumable, getLabyrinthProperty, prerollBoss, rollRoom } = require("./labyrinths/_labyrinthDictionary.js");
 const { getTurnDecrement } = require("./Modifiers/_modifierDictionary.js");
 
-const { clearBlock, removeModifier } = require("./combatantDAO.js");
+const { clearBlock, removeModifier, compareMoveSpeed } = require("./combatantDAO.js");
 const { spawnEnemy } = require("./enemyDAO.js");
-const { getGuild } = require("./guildDAO.js");
+const { getGuild, setGuild } = require("./guildDAO.js");
 const { resolveMove } = require("./moveDAO.js");
-const { setPlayer, getPlayer } = require("./playerDAO.js");
 const { renderRoom, updateRoomHeader } = require("./roomDAO.js");
 const { getEquipmentProperty } = require("./equipment/_equipmentDictionary.js");
+const { getConsumable } = require("./consumables/_consumablesDictionary.js");
 
 const adventureDictionary = new Map();
 
@@ -37,16 +37,12 @@ exports.loadAdventures = async function () {
 		const adventures = require(requirePath);
 		let loaded = 0;
 		adventures.forEach(adventure => {
-			if (adventure.state !== "completed") {
+			if (!Adventure.endStates.includes(adventure.state)) {
 				loaded++;
 				// Cast delvers into Delver class
 				let castDelvers = [];
-				let guildProfile = getGuild(adventure.guildId);
 				for (let delver of adventure.delvers) {
 					castDelvers.push(Object.assign(new Delver(), delver));
-					if (!guildProfile.adventuring.has(delver.id)) {
-						guildProfile.adventuring.add(delver.id);
-					}
 				}
 				adventure.delvers = castDelvers;
 
@@ -104,6 +100,19 @@ const roomTypesByRarity = {
 	6: ["Battle", "Event"]
 };
 
+/**
+ * @param {Adventure} adventure
+ */
+function rollGearTier(adventure) {
+	const cloverCount = adventure.getArtifactCount("Negative-One Leaf Clover");
+	const baseUpgradeChance = 1 / 8;
+	const cloverUpgradeChance = 1 - 0.80 ** cloverCount;
+	const max = 144;
+	const threshold = max * baseUpgradeChance / cloverUpgradeChance;
+	adventure.updateArtifactStat("Negative-One Leaf Clover", "Expected Extra Rare Equipment", (threshold / max) - baseUpgradeChance);
+	return generateRandomNumber(adventure, max, "general") < threshold ? "Rare" : "Common";
+}
+
 /** Set up the upcoming room: roll options for rooms after, update adventure's room meta data object for current room, and generate room's resources
  * @param {"Artifact Guardian" | "Treasure" | "Forge" | "Rest Site" | "Merchant" | "Battle" | "Event" | "Empty"} roomType
  * @param {ThreadChannel} thread
@@ -113,7 +122,19 @@ exports.nextRoom = function (roomType, thread) {
 
 	adventure.delvers.forEach(delver => {
 		delver.modifiers = {};
+		delver.equipment.forEach(equipment => {
+			if (equipment.name.startsWith("Organic")) {
+				equipment.uses++;
+			}
+		})
 	})
+
+	const piggyBankCount = adventure.getArtifactCount("Piggy Bank");
+	const interest = adventure.gold * piggyBankCount * 0.05;
+	if (piggyBankCount > 0) {
+		adventure.gainGold(interest);
+		adventure.updateArtifactStat("Piggy Bank", "Interest Accrued", interest);
+	}
 
 	// Roll options for next room type
 	if (!getLabyrinthProperty(adventure.labyrinth, "bossRoomDepths").includes(adventure.depth + 1)) {
@@ -157,30 +178,22 @@ exports.nextRoom = function (roomType, thread) {
 	}
 
 	// Initialize Resources
-	const cloverCount = adventure.getArtifactCount("Negative-One Leaf Clover");
 	for (const { resourceType: resource, count: unparsedCount, tier: unparsedTier, visibility, cost: unparsedCost, uiGroup } of roomTemplate.resourceList) {
-		const count = Math.min(MAX_SELECT_OPTIONS, parseCount(unparsedCount, adventure.delvers.length));
+		const count = Math.ceil(parseExpression(unparsedCount, adventure.delvers.length));
 		switch (resource) {
 			case "challenge":
-				rollChallenges(count, adventure).forEach(challengeName => {
+				rollChallenges(Math.min(MAX_SELECT_OPTIONS, count), adventure).forEach(challengeName => {
 					adventure.addResource(new Resource(challengeName, resource, true, visibility, 0, uiGroup));
 				})
 				break;
 			case "equipment":
 				let tier = unparsedTier;
-				for (let i = 0; i < count; i++) {
+				for (let i = 0; i < Math.min(MAX_SELECT_OPTIONS, count); i++) {
 					if (unparsedTier === "?") {
-						const threshold = 1 + cloverCount;
-						const max = 8 + cloverCount;
-						adventure.updateArtifactStat("Negative-One Leaf Clover", "Expected Extra Rare Equipment", (threshold / max) - (1 / 8));
-						if (generateRandomNumber(adventure, max, "general") < threshold) {
-							tier = "Rare";
-						} else {
-							tier = "Common";
-						}
+						tier = rollGearTier(adventure);
 					}
 					const equipName = rollEquipmentDrop(tier, adventure);
-					adventure.addResource(new Resource(equipName, resource, 1, visibility, parseCount(unparsedCost, getEquipmentProperty(equipName, "cost", resource)), uiGroup));
+					adventure.addResource(new Resource(equipName, resource, 1, visibility, Math.ceil(parseExpression(unparsedCost, getEquipmentProperty(equipName, "cost", resource))), uiGroup));
 				}
 				break;
 			case "scouting":
@@ -193,11 +206,12 @@ exports.nextRoom = function (roomType, thread) {
 				break;
 			case "consumable":
 				const consumable = rollConsumable(adventure);
-				adventure.addResource(new Resource(consumable, resource, count, visibility, "0", uiGroup));
+				adventure.addResource(new Resource(consumable, resource, count, visibility, Math.ceil(parseExpression(unparsedCost, getConsumable(consumable).cost)), uiGroup));
 				break;
 			case "gold":
 				// Randomize loot gold
-				adventure.addResource(new Resource(resource, resource, visibility === "loot" ? Math.ceil(count * (90 + generateRandomNumber(adventure, 21, "general")) / 100) : count, visibility, "0", uiGroup));
+				adventure.addResource(new Resource(resource, resource, visibility !== "internal" ? Math.ceil(count * (90 + generateRandomNumber(adventure, 21, "general")) / 100) : count, visibility, "0", uiGroup));
+				break;
 			default:
 				adventure.addResource(new Resource(resource, resource, count, visibility, "0", uiGroup));
 		}
@@ -206,15 +220,15 @@ exports.nextRoom = function (roomType, thread) {
 	if (adventure.room.hasEnemies) {
 		if (roomType === "Artifact Guardian") {
 			adventure.scouting.artifactGuardiansEncountered++;
-			while (adventure.artifactGuardians.length <= adventure.scouting.artifactGuardiansEncountered) {
+			while (adventure.artifactGuardians.length <= adventure.scouting.artifactGuardiansEncountered + adventure.scouting.artifactGuardians) {
 				prerollBoss("Artifact Guardian", adventure);
 			}
+			adventure.scouting.artifactGuardians = Math.max(adventure.scouting.artifactGuardians - 1, 0);
 		}
 
-		const randomizeHp = roomType === "Battle";
 		for (const enemyName in roomTemplate.enemyList) {
-			for (let i = 0; i < parseCount(roomTemplate.enemyList[enemyName], adventure.delvers.length); i++) {
-				spawnEnemy(adventure, getEnemy(enemyName), randomizeHp);
+			for (let i = 0; i < Math.ceil(parseExpression(roomTemplate.enemyList[enemyName], adventure.delvers.length)); i++) {
+				spawnEnemy(adventure, getEnemy(enemyName));
 			}
 		}
 		exports.newRound(adventure, thread);
@@ -253,7 +267,6 @@ exports.endRoom = function (roomType, thread) {
 exports.newRound = function (adventure, thread, lastRoundText) {
 	// Increment round and clear last round's components
 	adventure.room.round++;
-	clearComponents(adventure.messageIds.battleRound, thread.messages);
 
 	// Logistics for Next Round
 	let teams = {
@@ -271,13 +284,17 @@ exports.newRound = function (adventure, thread, lastRoundText) {
 			combatant.roundSpeed = Math.floor(combatant.speed * percentBonus);
 
 			// Roll Critical Hit
-			let threshold = combatant.getCritNumerator(adventure.getArtifactCount("Hawk Tailfeather"));
-			let max = combatant.getCritDenominator(adventure.getArtifactCount("Hawk Tailfeather"));
+			const baseCritChance = (1 + (combatant.critBonus / 100)) * (1 / 4) - 1;
+			const max = 144;
+			let threshold = max * baseCritChance;
+			if (combatant instanceof Delver) {
+				const featherCount = adventure.getArtifactCount("Hawk Tailfeather");
+				const featherCritChance = 1 - 0.85 ** featherCount;
+				threshold /= featherCritChance;
+				adventure.updateArtifactStat("Hawk Tailfeather", "Expected Extra Critical Hits", (threshold / max) - baseCritChance);
+			}
 			let critRoll = generateRandomNumber(adventure, max, "battle");
 			combatant.crit = critRoll < threshold;
-			if (combatant instanceof Delver) {
-				adventure.updateArtifactStat("Hawk Tailfeather", "Expected Extra Critical Hits", (threshold / max) - (1 / 4));
-			}
 
 			// Roll Enemy Moves and Generate Dummy Moves
 			const move = new Move()
@@ -285,14 +302,13 @@ exports.newRound = function (adventure, thread, lastRoundText) {
 				.onSetMoveSpeed(combatant)
 				.setIsCrit(combatant.crit)
 				.setUser(new CombatantReference(teamName, i))
-			let isPriorityMove = false;
 			if (combatant.getModifierStacks("Stun") > 0) {
 				// Dummy move for Stunned combatants
 				move.setMoveName("Stun");
 			} else {
 				if (teamName === "enemy") {
-					if (combatant.lookupName !== "@{clone}") {
-						let enemyTemplate = getEnemy(combatant.lookupName);
+					if (combatant.archetype !== "@{clone}") {
+						let enemyTemplate = getEnemy(combatant.archetype);
 						let actionName = combatant.nextAction;
 						if (actionName === "random") {
 							let actionPool = Object.keys(enemyTemplate.actions);
@@ -303,10 +319,10 @@ exports.newRound = function (adventure, thread, lastRoundText) {
 							actionName = actionPool[generateRandomNumber(adventure, actionPool.length, "battle")];
 						}
 						move.setMoveName(actionName);
+						move.setPriority(enemyTemplate.actions[move.name].priority)
 						enemyTemplate.actions[actionName].selector(adventure, combatant).forEach(({ team, index }) => {
 							move.addTarget(new CombatantReference(team, index));
 						})
-						isPriorityMove = enemyTemplate.actions[actionName].isPriority;
 						combatant.nextAction = enemyTemplate.actions[actionName].next(actionName);
 					} else {
 						move.setMoveName("@{clone}");
@@ -314,7 +330,7 @@ exports.newRound = function (adventure, thread, lastRoundText) {
 				}
 			}
 			if (move.name) {
-				(isPriorityMove ? adventure.room.priorityMoves : adventure.room.moves).push(move);
+				adventure.room.moves.push(move);
 			}
 
 			// Decrement Modifiers
@@ -329,6 +345,7 @@ exports.newRound = function (adventure, thread, lastRoundText) {
 			updateRoomHeader(adventure, message);
 			adventure.messageIds.battleRound = message.id;
 		} else {
+			clearComponents(message.id, thread.messages);
 			exports.endRound(adventure, thread);
 		}
 		exports.setAdventure(adventure);
@@ -340,16 +357,13 @@ exports.newRound = function (adventure, thread, lastRoundText) {
  * @param {ThreadChannel} thread
  */
 exports.endRound = async function (adventure, thread) {
+	clearComponents(adventure.messageIds.battleRound, thread.messages);
+
 	// Generate Reactive Moves by Enemies
 	adventure.room.enemies.forEach((enemy, index) => {
-		if (enemy.lookupName === "@{clone}") {
+		if (enemy.archetype === "@{clone}") {
 			const move = adventure.room.moves.find(move => move.userReference.team === "enemy" && move.userReference.index === index);
-			let counterpartHasPriority = false;
 			let counterpartMove = adventure.room.moves.find(move => move.userReference.team === "delver" && move.userReference.index == index);
-			if (!counterpartMove) {
-				counterpartMove = adventure.room.priorityMoves.find(move => move.userReference.team === "delver" && move.userReference.index == index);
-				counterpartHasPriority = true;
-			}
 			move.setType(counterpartMove.type)
 				.setMoveName(counterpartMove.name);
 			counterpartMove.targets.forEach(target => {
@@ -361,69 +375,56 @@ exports.endRound = async function (adventure, thread) {
 			})
 
 			// Replace placeholder
-			adventure.room.moves.splice(adventure.room.moves.findIndex(move => move.userReference.team === "enemy" && move.userReference.index == index), 1);
-			if (counterpartHasPriority) {
-				adventure.room.priorityMoves.push(move);
-			} else {
-				adventure.room.moves.push(move);
+			let placeholderIdx = adventure.room.moves.findIndex(move => move.userReference.team === "enemy" && move.userReference.index == index)
+			if (placeholderIdx >= 0) {
+				adventure.room.moves.splice(placeholderIdx, 1, move);
 			}
 		}
 	});
 
 
 	// Randomize speed ties
-	[adventure.room.priorityMoves, adventure.room.moves].forEach(moveQueue => {
-		moveQueue.forEach(move => {
-			move.speed += generateRandomNumber(adventure, 10, "battle") / 10;
-		})
-		moveQueue.sort((first, second) => {
-			return second.speed - first.speed;
-		})
+	let randomOrderBag = Array(adventure.room.moves.length).fill().map((_, idx) => idx) // ensure that unique values are available for each move
+	adventure.room.moves.forEach(move => {
+		let rIdx = generateRandomNumber(adventure, randomOrderBag.length, "battle");
+		move.randomOrder = randomOrderBag.splice(rIdx, 1)[0]; // pull a remaining randomOrder out of the bag and assign it to a move
 	})
+	adventure.room.moves.sort(compareMoveSpeed)
 
 	// Resolve moves
 	let lastRoundText = "";
-	for (const move of adventure.room.priorityMoves.concat(adventure.room.moves)) {
+	for (const move of adventure.room.moves) {
 		lastRoundText += await resolveMove(move, adventure);
 		// Check for end of combat
-		const outOfLives = adventure.lives <= 0;
-		const allEnemiesAreDead = adventure.room.enemies.every(enemy => enemy.hp === 0);
-		const atMaxDepth = adventure.depth === getLabyrinthProperty(adventure.labyrinth, "maxDepth");
-		if (outOfLives || allEnemiesAreDead) {
-			if (outOfLives || atMaxDepth) {
-				if (allEnemiesAreDead && atMaxDepth) {
-					adventure.depth++;
-				}
-				return thread.send(exports.completeAdventure(adventure, thread, lastRoundText));
-			} else {
-				// Equipment drops
-				const gearThreshold = 1;
-				const gearMax = 16;
-				if (generateRandomNumber(adventure, gearMax, "general") < gearThreshold) {
-					const cloverCount = adventure.getArtifactCount("Negative-One Leaf Clover");
-					let tier = "Common";
-					const upgradeThreshold = 1 + cloverCount;
-					const upgradeMax = 8 + cloverCount;
-					adventure.updateArtifactStat("Negative-One Leaf Clover", "Expected Extra Rare Equipment", (upgradeThreshold / upgradeMax) - (1 / 8));
-					if (generateRandomNumber(adventure, upgradeMax, "general") < upgradeThreshold) {
-						tier = "Rare";
-					}
-					const droppedEquip = rollEquipmentDrop(tier, adventure);
-					adventure.addResource(new Resource(droppedEquip, "equipment", 1, "loot", 0));
-				}
+		if (adventure.lives <= 0) {
+			adventure.room.round++;
+			return thread.send(exports.completeAdventure(adventure, thread, "defeat", lastRoundText));
+		}
 
-				// Consumable drops
-				const consumableThreshold = 1;
-				const consumableMax = 8;
-				if (generateRandomNumber(adventure, consumableMax, "general") < consumableThreshold) {
-					adventure.addResource(new Resource(rollConsumable(adventure), "consumable", 1, "loot", 0));
-				}
-
-				return thread.send(renderRoom(adventure, thread, lastRoundText));
+		if (adventure.room.enemies.every(enemy => enemy.hp === 0)) {
+			if (adventure.depth === getLabyrinthProperty(adventure.labyrinth, "maxDepth")) {
+				return thread.send(exports.completeAdventure(adventure, thread, "success", lastRoundText));
 			}
+
+			// Equipment drops
+			const gearThreshold = 1;
+			const gearMax = 16;
+			if (generateRandomNumber(adventure, gearMax, "general") < gearThreshold) {
+				const tier = rollGearTier(adventure);
+				const droppedEquip = rollEquipmentDrop(tier, adventure);
+				adventure.addResource(new Resource(droppedEquip, "equipment", 1, "loot", 0));
+			}
+
+			// Consumable drops
+			const consumableThreshold = 1;
+			const consumableMax = 8;
+			if (generateRandomNumber(adventure, consumableMax, "general") < consumableThreshold) {
+				adventure.addResource(new Resource(rollConsumable(adventure), "consumable", 1, "loot", 0));
+			}
+
+			return thread.send(renderRoom(adventure, thread, lastRoundText));
 		}
 	}
-	adventure.room.priorityMoves = [];
 	adventure.room.moves = [];
 	exports.newRound(adventure, thread, lastRoundText);
 }
@@ -433,26 +434,30 @@ exports.endRound = async function (adventure, thread) {
  * @returns {boolean}
  */
 exports.checkNextRound = function ({ room, delvers }) {
-	const readiedMoves = room.moves.length + room.priorityMoves.length;
+	const readiedMoves = room.moves.length;
 	const movesThisRound = room.enemies.length + delvers.length;
 	return readiedMoves === movesThisRound;
 }
 
-exports.completeAdventure = function (adventure, thread, descriptionOverride) {
-	const { guildId, messages: messageManager } = thread;
-	const guildProfile = getGuild(guildId);
-	adventure.delvers.forEach(delver => {
-		let player = getPlayer(delver.id, guildId);
-		if (player.scores[guildId]) {
-			player.scores[guildId] += adventure.accumulatedScore;
-		} else {
-			player.scores[guildId] = adventure.accumulatedScore;
-		}
-		setPlayer(player);
-		guildProfile.adventuring.delete(delver.id);
-	})
+/** The recruit message solicits new delvers to join (until the adventure starts) and shows the state of the adventure publically thereafter
+ * @param {ThreadChannel} thread the adventure's thread
+ * @param {string} messageId usually stored in `adventure.messageIds.recruit`
+ * @returns {Promise<Message>}
+ */
+exports.fetchRecruitMessage = async function (thread, messageId) {
+	const channel = await thread.guild.channels.fetch(thread.parentId);
+	return channel.messages.fetch(messageId);
+}
 
-	thread.fetchStarterMessage({ cache: false, force: true }).then(recruitMessage => {
+/**
+ * @param {Adventure} adventure
+ * @param {ThreadChannel} thread
+ * @param {"success" | "defeat" | "giveup"} endState
+ * @param {string?} descriptionOverride
+ */
+exports.completeAdventure = function (adventure, thread, endState, descriptionOverride) {
+	const { messages: messageManager } = thread;
+	exports.fetchRecruitMessage(thread, adventure.messageIds.recruit).then(recruitMessage => {
 		const [{ data: recruitEmbed }] = recruitMessage.embeds;
 		recruitMessage.edit({
 			embeds: [
@@ -465,13 +470,16 @@ exports.completeAdventure = function (adventure, thread, descriptionOverride) {
 	})
 	clearComponents(adventure.messageIds.battleRound, messageManager);
 	clearComponents(adventure.messageIds.room, messageManager);
-	[adventure.messageIds.utility, adventure.messageIds.deploy, adventure.messageIds.leaderNotice].forEach(id => {
+	[adventure.messageIds.utility].forEach(id => {
 		if (id) {
-			messageManager.delete(id);
+			messageManager.delete(id).catch(console.error);
 		}
 	})
 
-	adventure.state = "completed";
+	adventure.state = endState;
 	exports.setAdventure(adventure);
+	const guildProfile = getGuild(thread.guild.id);
+	adventure.delvers.forEach(delver => guildProfile.adventuring.delete(delver.id));
+	setGuild(guildProfile);
 	return renderRoom(adventure, thread, descriptionOverride);
 }

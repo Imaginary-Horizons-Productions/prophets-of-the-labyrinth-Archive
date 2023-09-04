@@ -4,18 +4,18 @@ const { selectRandomFoe, selectSelf, selectNone, selectAllFoes, spawnEnemy } = r
 
 module.exports = new Enemy("Mechabee")
 	.setFirstAction("Sting")
-	.addAction({ name: "Sting", element: "Earth", isPriority: false, effect: stingEffect, selector: selectRandomFoe, next: mechabeePattern })
-	.addAction({ name: "Evade", element: "Untyped", isPriority: false, effect: evadeEffect, selector: selectSelf, next: mechabeePattern })
-	.addAction({ name: "Call for Help", element: "Untyped", isPriority: false, effect: summonEffect, selector: selectNone, next: mechabeePattern })
-	.addAction({ name: "Self-Destruct", element: "Earth", isPriority: false, effect: selfDestructEffect, selector: selectAllFoes, next: mechabeePattern })
+	.addAction({ name: "Sting", element: "Earth", priority: 0, effect: stingEffect, selector: selectRandomFoe, next: mechabeePattern })
+	.addAction({ name: "Barrel Roll", element: "Untyped", priority: 0, effect: barrelRollEffect, selector: selectSelf, next: mechabeePattern })
+	.addAction({ name: "Call for Help", element: "Untyped", priority: 0, effect: summonEffect, selector: selectNone, next: mechabeePattern })
+	.addAction({ name: "Self-Destruct", element: "Earth", priority: 0, effect: selfDestructEffect, selector: selectAllFoes, next: mechabeePattern })
 	.setHp(200)
 	.setSpeed(100)
 	.setElement("Earth")
 	.setStaggerThreshold(3);
 
 const PATTERN = {
-	"Sting": "Evade",
-	"Evade": "Call for Help",
+	"Sting": "Barrel Roll",
+	"Barrel Roll": "Call for Help",
 	"Call for Help": "Self-Destruct",
 	"Self-Destruct": "Sting"
 }
@@ -30,21 +30,21 @@ function stingEffect([target], user, isCrit, adventure) {
 	} else {
 		addModifier(target, { name: "Poison", stacks: 2 });
 	}
-	return dealDamage(target, user, 10, false, user.element, adventure);
+	return dealDamage([target], user, 10, false, user.element, adventure);
 }
 
-function evadeEffect(targets, user, isCrit, adventure) {
+function barrelRollEffect(targets, user, isCrit, adventure) {
 	let stacks = 2;
 	if (isCrit) {
 		stacks *= 3;
 	}
 	addModifier(user, { name: "Evade", stacks });
 	removeModifier(user, { name: "Stagger", stacks: 1 });
-	return "";
+	return "It's prepared to Evade.";
 }
 
 function summonEffect(targets, user, isCrit, adventure) {
-	spawnEnemy(adventure, module.exports, true);
+	spawnEnemy(adventure, module.exports);
 	return "Another mechabee arrives.";
 }
 
@@ -54,11 +54,9 @@ function selfDestructEffect(targets, user, isCrit, adventure) {
 		damage *= 2;
 	}
 	user.hp = 0;
+	targets.map(target => {
+		addModifier(target, { name: "Stagger", stacks: 1 });
+	})
 
-	return Promise.all(
-		targets.map(target => {
-			addModifier(target, { name: "Stagger", stacks: 1 });
-			return dealDamage(target, user, damage, false, user.element, adventure);
-		})
-	).then(results => results.join(" "));
+	return dealDamage(targets, user, damage, false, user.element, adventure);
 }

@@ -15,5 +15,5 @@ function effect(target, user, isCrit, adventure) {
 	if (isCrit) {
 
 	}
-	return ""; // result text
+	return ""; // see style guide for conventions on result texts
 }

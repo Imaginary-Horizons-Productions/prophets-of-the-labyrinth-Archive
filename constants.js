@@ -1,3 +1,4 @@
+module.exports.ZERO_WIDTH_WHITESPACE = "\u200B";
 module.exports.SAFE_DELIMITER = "→";
 module.exports.MAX_MESSAGE_ACTION_ROWS = 5;
 module.exports.MAX_BUTTONS_PER_ROW = 5;

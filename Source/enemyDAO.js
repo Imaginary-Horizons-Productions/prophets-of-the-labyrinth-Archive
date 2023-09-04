@@ -3,11 +3,12 @@ const Enemy = require("../Classes/Enemy.js");
 const { generateRandomNumber } = require("../helpers.js");
 const { getOpposite } = require("./elementHelpers.js");
 
-module.exports.spawnEnemy = function (adventure, enemyTemplate, randomizeHp) {
-	let enemy = Object.assign(new Enemy(), enemyTemplate);
+module.exports.spawnEnemy = function (adventure, enemyTemplate) {
+	/** @type {Enemy} */
+	const enemy = Object.assign(new Enemy(), enemyTemplate);
 	enemy.modifiers = { ...enemyTemplate.startingModifiers }; // breaks shared reference to modifiers object by enemies of same name
 	let hpPercent = 85 + 15 * adventure.delvers.length;
-	if (randomizeHp) {
+	if (enemy.shouldRandomizeHP) {
 		hpPercent += 10 * (2 - generateRandomNumber(adventure, 5, "battle"));
 	}
 	enemy.setHp(Math.ceil(enemy.maxHp * hpPercent / 100));
@@ -20,7 +21,7 @@ module.exports.spawnEnemy = function (adventure, enemyTemplate, randomizeHp) {
 			enemy.name = enemy.name.replace("@{adventureOpposite}", getOpposite(adventure.element));
 			break;
 		case "clone":
-			enemy.name = enemy.name.replace("@{clone}", `Mirror ${adventure.delvers[adventure.room.enemies.length].title}`);
+			enemy.name = enemy.name.replace("@{clone}", `Mirror ${adventure.delvers[adventure.room.enemies.length].archetype}`);
 			break;
 	}
 
@@ -36,11 +37,11 @@ module.exports.spawnEnemy = function (adventure, enemyTemplate, randomizeHp) {
 			break;
 	}
 	adventure.room.enemies.push(enemy);
-	Enemy.setEnemyTitle(adventure.room.enemyTitles, enemy);
+	Enemy.setEnemyTitle(adventure.room.enemyIdMap, enemy);
 }
 
 module.exports.selectRandomOtherAlly = function (adventure, self) {
-	const selfIndex = adventure.room.enemies.findIndex(enemy => enemy.lookupName === self.lookupName && enemy.title === self.title);
+	const selfIndex = self.findMyIndex(adventure);
 	const liveOtherEnemyIndexes = [];
 	adventure.room.enemies.forEach((enemy, index) => {
 		if (enemy.hp > 0 && index !== selfIndex) {
@@ -65,8 +66,7 @@ module.exports.selectAllFoes = function (adventure, self) {
 }
 
 module.exports.selectSelf = function (adventure, self) {
-	const index = adventure.room.enemies.findIndex(enemy => enemy.name === self.name && enemy.title === self.title);
-	return [new CombatantReference("enemy", index)];
+	return [new CombatantReference(self.team, self.findMyIndex(adventure))];
 }
 
 module.exports.selectNone = function (adventure, self) {

@@ -4,22 +4,22 @@ const { CombatantReference } = require('../../Classes/Adventure');
 const { SAFE_DELIMITER } = require('../../constants.js');
 const { getAdventure, checkNextRound, endRound, setAdventure } = require('../adventureDAO');
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary');
-const { getFullName } = require("../combatantDAO.js");
 
 const id = "movetarget";
 module.exports = new Select(id, async (interaction, [moveName, round, index]) => {
 	// Add move object to adventure
 	let adventure = getAdventure(interaction.channelId);
 	if (adventure.room.round === Number(round)) {
-		let user = adventure.delvers.find(delver => delver.id === interaction.user.id);
+		const user = adventure.delvers.find(delver => delver.id === interaction.user.id);
 		if (moveName === "Punch" || user.equipment.some(equip => equip.name === moveName && equip.uses > 0)) {
 			// Add move to round list (overwrite exisiting readied move)
-			let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
+			const userIndex = user.findMyIndex(adventure);
 			let [targetTeam, targetIndex] = interaction.values[0].split(SAFE_DELIMITER);
 			let newMove = new Move()
 				.onSetMoveSpeed(user)
 				.setIsCrit(user.crit)
 				.setMoveName(moveName)
+				.setPriority(getEquipmentProperty(moveName, "priority"))
 				.setType("equip")
 				.setUser(new CombatantReference(user.team, userIndex))
 				.addTarget(new CombatantReference(targetTeam, targetIndex));
@@ -33,30 +33,12 @@ module.exports = new Select(id, async (interaction, [moveName, round, index]) =>
 					break;
 				}
 			}
-			if (!overwritten) {
-				for (let i = 0; i < adventure.room.priorityMoves.length; i++) {
-					const { userReference } = adventure.room.priorityMoves[i];
-					if (userReference.team === user.team && userReference.index === userIndex) {
-						await adventure.room.priorityMoves.splice(i, 1);
-						break;
-					}
-				}
-			}
-			if (getEquipmentProperty(moveName, "isPriority")) {
-				await adventure.room.priorityMoves.push(newMove);
-			} else {
-				await adventure.room.moves.push(newMove);
-			}
+			await adventure.room.moves.push(newMove);
 
 			// Send confirmation text
-			let target;
-			if (targetTeam === "delver") {
-				target = adventure.delvers[targetIndex];
-			} else if (targetTeam === "enemy") {
-				target = adventure.room.enemies[targetIndex];
-			}
+			const target = adventure.getCombatant({ team: targetTeam, index: targetIndex });
 			interaction.update({ components: [] });
-			interaction.channel.send(`${interaction.user} ${overwritten ? "switches to ready" : "readies"} **${moveName}** to use on **${getFullName(target, adventure.room.enemyTitles)}**.`).then(() => {
+			interaction.channel.send(`${interaction.user} ${overwritten ? "switches to ready" : "readies"} **${moveName}** to use on **${target.getName(adventure.room.enemyIdMap)}**.`).then(() => {
 				setAdventure(adventure);
 				if (checkNextRound(adventure)) {
 					endRound(adventure, interaction.channel);

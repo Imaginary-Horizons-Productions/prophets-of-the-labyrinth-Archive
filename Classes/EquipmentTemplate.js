@@ -2,13 +2,15 @@ module.exports = class EquipmentTemplate {
 	/** This read-only data class defines stats for a piece of equipment
 	 * @param {string} nameInput
 	 * @param {string} descriptionInput
+	 * @param {string} critDescriptionInput
 	 * @param {"Fire" | "Water" | "Earth" | "Wind" | "Untyped"} elementInput
 	 * @param {Function} effectInput
 	 * @param {Array<string>} upgradeNames
 	 */
-	constructor(nameInput, descriptionInput, elementInput, effectInput, upgradeNames) {
+	constructor(nameInput, descriptionInput, critDescriptionInput, elementInput, effectInput, upgradeNames) {
 		this.name = nameInput;
 		this.description = descriptionInput;
+		this.critDescription = critDescriptionInput;
 		this.element = elementInput;
 		this.effect = effectInput;
 		this.upgrades = upgradeNames;
@@ -19,11 +21,11 @@ module.exports = class EquipmentTemplate {
 	maxUses = 10;
 	critBonus = 2;
 	damage = 0;
-	bonusDamage = 0;
+	bonus = 0;
 	block = 0;
 	hpCost = 0;
 	healing = 0;
-	isPriority = false;
+	priority = 0;
 	modifiers = []; //[{name, stacks}]
 
 	/** Sets the equipment's category and returns the category via builder pattern
@@ -65,8 +67,8 @@ module.exports = class EquipmentTemplate {
 		return this;
 	}
 
-	setBonusDamage(integer) {
-		this.bonusDamage = integer;
+	setBonus(integer) {
+		this.bonus = integer;
 		return this;
 	}
 
@@ -93,8 +95,8 @@ module.exports = class EquipmentTemplate {
 	/** Determines that this equipment adds moves to the priority queue
 	 * @returns {EquipmentTemplate}
 	 */
-	markPriority() {
-		this.isPriority = true;
+	setPriority(integer) {
+		this.priority = integer;
 		return this;
 	}
 

@@ -1,17 +1,22 @@
 const Command = require('../../Classes/Command.js');
 const { EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder } = require('discord.js');
-const { SAFE_DELIMITER, MAX_SELECT_OPTIONS } = require('../../constants.js');
+const { SAFE_DELIMITER, MAX_SELECT_OPTIONS, MAX_MESSAGE_ACTION_ROWS } = require('../../constants.js');
 const { getAdventure } = require('../adventureDAO.js');
 
 const id = "party-stats";
 const options = [];
 module.exports = new Command(id, "Get info about the current adventure", false, false, options);
 
+/** Show user the party stats */
 module.exports.execute = (interaction) => {
-	// Show user the party stats
 	const adventure = getAdventure(interaction.channelId);
 	if (adventure) {
-		let embed = new EmbedBuilder()
+		if (!adventure.delvers.some(delver => delver.id == interaction.user.id)) {
+			interaction.reply({ content: "You aren't in this adventure.", ephemeral: true });
+			return;
+		}
+
+		const embed = new EmbedBuilder()
 			.setTitle("Party Stats")
 			.setDescription(`${adventure.name} - Depth: ${adventure.depth}`)
 			.addFields([
@@ -19,9 +24,9 @@ module.exports.execute = (interaction) => {
 				{ name: `${adventure.gold} Gold`, value: "Gold is exchanged for goods and services within adventures. Gold *will be lost when an adventure ends*." },
 				{ name: "Consumables", value: Object.keys(adventure.consumables).map(consumable => `${consumable} x ${adventure.consumables[consumable]}`).join("\n") || "None" },
 				{
-					name: "Scouting", value: `Final Battle: ${adventure.scouting.finalBoss ? adventure.finalBoss : "???"}\nArtifact Guardians (${adventure.scouting.artifactGuardiansEncountered} encountered so far): ${adventure.artifactGuardians.slice(0, adventure.scouting.artifactGuardians).map((encounter, index) => {
-						if (adventure.scouting.artifactGuardiansEncountered === index) {
-							return `**${encounter}**`;
+					name: "Scouting", value: `Final Battle: ${adventure.scouting.finalBoss ? adventure.finalBoss : "???"}\nArtifact Guardians: ${adventure.artifactGuardians.slice(0, adventure.scouting.artifactGuardiansEncountered + adventure.scouting.artifactGuardians).map((encounter, index) => {
+						if (index + 1 <= adventure.scouting.artifactGuardiansEncountered) {
+							return `~~${encounter}~~`;
 						} else {
 							return encounter;
 						}
@@ -35,18 +40,23 @@ module.exports.execute = (interaction) => {
 			embed.addFields({ name: "Challenges", value: Object.keys(adventure.challenges).join(", ") });
 		}
 		const infoSelects = [];
-		const artifactOptions = Object.keys(adventure.artifacts).slice(0, MAX_SELECT_OPTIONS).map(artifact => {
-			return {
-				label: `${artifact} x ${adventure.artifacts[artifact].count} `,
-				value: `${artifact}${SAFE_DELIMITER}${adventure.artifacts[artifact].count} `
-			}
-		})
-		if (artifactOptions.length > 0) {
-			embed.addFields({ name: "Artifacts", value: Object.entries(adventure.artifacts).map(entry => `${entry[0]} x ${entry[1].count} `).join(", ") })
-			infoSelects.push(new ActionRowBuilder().addComponents(
-				new StringSelectMenuBuilder().setCustomId(`artifact`)
-					.setPlaceholder("Get details about an artifact...")
-					.setOptions(artifactOptions)
+		const allArtifacts = Object.keys(adventure.artifacts);
+		const artifactPages = [];
+		for (let i = 0; i < allArtifacts.length; i += MAX_SELECT_OPTIONS) {
+			artifactPages.push(allArtifacts.slice(i, i + MAX_SELECT_OPTIONS));
+		}
+		if (artifactPages.length > 0) {
+			embed.addFields({ name: "Artifacts", value: Object.entries(adventure.artifacts).map(entry => `${entry[0]} x ${entry[1].count}`).join(", ") })
+			infoSelects.push(...artifactPages.slice(0, MAX_MESSAGE_ACTION_ROWS).map((page, index) =>
+				new ActionRowBuilder().addComponents(
+					new StringSelectMenuBuilder().setCustomId(`artifact${SAFE_DELIMITER}${index}`)
+						.setPlaceholder(`Get details about an artifact...${artifactPages.length > 1 ? ` (Page ${index + 1})` : ""}`)
+						.setOptions(page.map(artifact => ({
+							label: `${artifact} x ${adventure.artifacts[artifact].count}`,
+							value: `${artifact}${SAFE_DELIMITER}${adventure.artifacts[artifact].count}`
+						})
+						))
+				)
 			))
 		} else {
 			infoSelects.push(new ActionRowBuilder().addComponents(

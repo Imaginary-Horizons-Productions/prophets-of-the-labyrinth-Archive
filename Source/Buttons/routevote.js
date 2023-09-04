@@ -1,17 +1,21 @@
 const { getAdventure, endRoom } = require('../adventureDAO.js');
 const Button = require('../../Classes/Button.js');
 const { ActionRowBuilder, ButtonBuilder, ComponentType, StringSelectMenuBuilder } = require('discord.js');
-const { SAFE_DELIMITER } = require("../../constants.js");
+const { SAFE_DELIMITER, ZERO_WIDTH_WHITESPACE } = require("../../constants.js");
 const { clearComponents } = require('../../helpers.js');
 
-const id = "routevote";
-module.exports = new Button(id, (interaction, [candidate, depth]) => {
-	// Tally votes for next room
-	let adventure = getAdventure(interaction.channel.id);
-	const candidateTag = `${candidate}${SAFE_DELIMITER}${depth}`;
-	if (adventure.roomCandidates[candidateTag]) {
-		let delverIds = adventure.delvers.map(delver => delver.id);
-		if (delverIds.includes(interaction.user.id)) {
+const customId = "routevote";
+module.exports = new Button(customId,
+	/** Tally votes for next room */
+	(interaction, [candidate, depth]) => {
+		const adventure = getAdventure(interaction.channel.id);
+		if (!adventure?.delvers.some(delver => delver.id == interaction.user.id)) {
+			interaction.reply({ content: "This adventure isn't active or you aren't participating in it.", ephemeral: true });
+			return;
+		}
+
+		const candidateTag = `${candidate}${SAFE_DELIMITER}${depth}`;
+		if (adventure.roomCandidates[candidateTag]) {
 			let changeVote = false;
 			for (const candidate in adventure.roomCandidates) {
 				if (adventure.roomCandidates[candidate].includes(interaction.user.id)) {
@@ -30,7 +34,7 @@ module.exports = new Button(id, (interaction, [candidate, depth]) => {
 							switch (component.type) {
 								case ComponentType.Button:
 									const updatedButton = new ButtonBuilder(component).setDisabled(true);
-									if (component.custom_id === `${id}${SAFE_DELIMITER}${candidateTag}`) {
+									if (component.custom_id === `${customId}${SAFE_DELIMITER}${candidateTag}`) {
 										updatedButton.setEmoji("✔️");
 									} else if (!component.emoji) {
 										updatedButton.setEmoji("✖️");
@@ -40,7 +44,7 @@ module.exports = new Button(id, (interaction, [candidate, depth]) => {
 								case ComponentType.StringSelect:
 									return new StringSelectMenuBuilder(component).setDisabled(true);
 								default:
-									throw new Error(`Disabling unregistered component from continue button: ${component.type}`);
+									throw new Error(`Disabling unregistered component from routevote button: ${component.type}`);
 							}
 						}))
 					})];
@@ -49,9 +53,7 @@ module.exports = new Button(id, (interaction, [candidate, depth]) => {
 				}
 			});
 		} else {
-			interaction.reply({ content: "Please vote on routes in adventures you've joined.", ephemeral: true });
+			interaction.update({ content: ZERO_WIDTH_WHITESPACE });
 		}
-	} else {
-		interaction.update({ content: "\u200B" });
 	}
-});
+);

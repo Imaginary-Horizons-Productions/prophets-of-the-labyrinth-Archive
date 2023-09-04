@@ -3,7 +3,8 @@ module.exports = class Combatant {
 		this.name = nameInput;
 		this.team = teamInput;
 	}
-	title = "";
+	id = "";
+	archetype = "";
 	hp = 300;
 	maxHp = 300;
 	block = 0;
@@ -11,18 +12,25 @@ module.exports = class Combatant {
 	roundSpeed = 0;
 	actionSpeed = 0;
 	crit = false;
-	critNumerator = 1;
-	critDenominator = 4;
+	critBonus = 0;
 	element = "not picked";
 	/** @type {{[modifierName: string]: number}} */
 	modifiers = {};
 	staggerThreshold = 3;
 
-	/** Sets the combatant's title, either the archetype for delvers or the uniquifying number for enemies
-	 * @param {string} titleInput
+	/** Sets the combatant's id, either the discord member id for delvers or the uniquifying number for enemies
+	 * @param {string} idInput
 	 */
-	setTitle(titleInput) {
-		this.title = titleInput;
+	setId(idInput) {
+		this.id = idInput;
+		return this;
+	}
+
+	/** Sets the combatant's archetype, either the archetype name for delvers or the lookup name for enemies
+	 * @param {string} archetypeInput
+	   */
+	setArchetype(archetypeInput) {
+		this.archetype = archetypeInput;
 		return this;
 	}
 
@@ -59,19 +67,17 @@ module.exports = class Combatant {
 		return this;
 	}
 
-	/** Gets the numerator of the combatant's critical hit chance. Starts at 1. Delver has an overwrite that uses `hawkTailfeatherCount`.
-	 * @param {number} hawkTailfeatherCount
+	/** Adds the given percent to the combatant's individual increased chance to crit
+	 * @param {number} percent
 	 */
-	getCritNumerator(hawkTailfeatherCount) {
-		return this.critNumerator;
+	setCritBonus(percent) {
+		this.critBonus += percent;
+		return this;
 	}
 
-	/** Gets the denominator of the combatant's critical hit chance. Starts at 4. Delver has an overwrite that uses `hawkTailfeatherCount`.
-	 * @param {number} hawkTailfeatherCount
-	 */
-	getCritDenominator(hawkTailfeatherCount) {
-		return this.critDenominator;
-	}
+	getName() { }
+
+	findMyIndex(adventure) { }
 
 	/** Get the number of stacks of the given modifier the combatant has
 	 * @param {string} modifierName

@@ -12,17 +12,21 @@ exports.loadGuilds = async function () {
 	if (fs.existsSync(filePath)) {
 		const guildProfiles = require(requirePath);
 		guildProfiles.forEach(guildProfile => {
-			guildProfile.adventuring = new Set();
+			guildProfile.adventuring = new Set(guildProfile.adventurerIds);
 			guildDictionary.set(guildProfile.id, guildProfile);
 		})
 		return `${guildProfiles.length} guilds loaded`;
 	} else {
-		ensuredPathSave(dirPath,fileName,"[]");
+		ensuredPathSave(dirPath, fileName, "[]");
 		return "guilds regenerated";
 	}
 }
 
 exports.getGuild = function (guildId) {
+	if (!guildId) {
+		throw new Error("Attempted to get guild with falsey id");
+	}
+
 	let guildProfile = guildDictionary.get(guildId);
 	if (!guildProfile) {
 		guildProfile = new GuildProfile(guildId);
@@ -33,5 +37,8 @@ exports.getGuild = function (guildId) {
 
 exports.setGuild = function (guildProfile) {
 	guildDictionary.set(guildProfile.id, guildProfile);
-	ensuredPathSave("./Saves", "guilds.json", JSON.stringify(Array.from((guildDictionary.values()))));
+	ensuredPathSave("./Saves", "guilds.json", JSON.stringify(Array.from((guildDictionary.values())).map(guild => {
+		guild.adventurerIds = Array.from(guild.adventuring.values());
+		return guild;
+	})));
 }

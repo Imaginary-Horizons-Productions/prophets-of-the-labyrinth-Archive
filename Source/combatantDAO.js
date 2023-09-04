@@ -5,18 +5,6 @@ const { getInverse, isNonStacking, getModifierDescription, isBuff, isDebuff } = 
 const { getWeakness } = require("./elementHelpers.js");
 const Adventure = require("../Classes/Adventure.js");
 
-exports.getFullName = function (combatant, titleObject) {
-	if (combatant instanceof Enemy) {
-		if (titleObject[combatant.name] > 1) {
-			return `${combatant.name} ${combatant.title}`;
-		} else {
-			return combatant.name;
-		}
-	} else if (combatant instanceof Delver) {
-		return `${combatant.name}`;
-	}
-}
-
 /** Speed is affected by `roundSpeed` and modifiers
  * @param {Delver | Enemy} combatant
  * @returns {number}
@@ -34,66 +22,96 @@ exports.calculateTotalSpeed = function (combatant) {
 	return Math.ceil(totalSpeed);
 }
 
-exports.dealDamage = async function (target, user, damage, isUnblockable, element, adventure) {
-	let targetName = exports.getFullName(target, adventure.room.enemyTitles);
-	let targetModifiers = Object.keys(target.modifiers);
-	if (!targetModifiers.includes(`${element} Absorb`)) {
-		if (!targetModifiers.includes("Evade") || isUnblockable) {
-			let limitBreak = user?.modifiers["Power Up"] || 0;
-			let pendingDamage = damage + limitBreak;
-			if (targetModifiers.includes("Exposed")) {
-				pendingDamage *= 1.5;
-			}
-			let isWeakness = getWeakness(target.element) === element;
-			if (isWeakness) {
-				pendingDamage *= 2;
-			}
-			let isResistance = target.element === element;
-			if (isResistance) {
-				pendingDamage = pendingDamage / 2;
-			}
-			pendingDamage = Math.ceil(pendingDamage);
-			let blockedDamage = 0;
-			if (!isUnblockable) {
-				if (pendingDamage >= target.block) {
-					pendingDamage -= target.block;
-					blockedDamage = target.block;
-					target.block = 0;
-				} else {
-					target.block -= pendingDamage;
-					blockedDamage = pendingDamage;
-					pendingDamage = 0;
+exports.dealDamage = async function (targets, user, damage, isUnblockable, element, adventure) {
+	const previousLifeCount = adventure.lives;
+	let resultTexts = [];
+	for (const target of targets) {
+		let targetName = target.getName(adventure.room.enemyIdMap);
+		let targetModifiers = Object.keys(target.modifiers);
+		if (!targetModifiers.includes(`${element} Absorb`)) {
+			if (!targetModifiers.includes("Evade") || isUnblockable) {
+				let limitBreak = user?.modifiers["Power Up"] || 0;
+				let pendingDamage = damage + limitBreak;
+				if (targetModifiers.includes("Exposed")) {
+					pendingDamage *= 1.5;
 				}
-			}
-			let damageCap = 500 + limitBreak;
-			pendingDamage = Math.min(pendingDamage, damageCap);
-			target.hp -= pendingDamage;
-			let damageText = ` **${targetName}** takes ${pendingDamage} damage${blockedDamage > 0 ? ` (${blockedDamage} was blocked)` : ""}${element === "Poison" ? " from Poison" : ""}${isWeakness ? "!!!" : isResistance ? "." : "!"}`;
-			if (element !== "Poison" && targetModifiers.includes("Curse of Midas")) {
-				adventure.gainGold(Math.floor(pendingDamage / 10));
-				damageText += ` Gold scatters about the room.`;
-			}
-			if (target.hp <= 0) {
-				if (target.team === "delver") {
-					target.hp = target.maxHp;
-					adventure.lives -= 1;
-					damageText += ` *${targetName} has died* and been revived. ***${adventure.lives} lives remain.***`;
-				} else {
-					target.hp = 0;
-					damageText += ` *${targetName} has died*.`;
+				let isWeakness = getWeakness(target.element) === element;
+				if (isWeakness) {
+					pendingDamage *= 2;
 				}
+				let isResistance = target.element === element;
+				if (isResistance) {
+					pendingDamage = pendingDamage / 2;
+				}
+				pendingDamage = Math.ceil(pendingDamage);
+				let blockedDamage = 0;
+				if (!isUnblockable) {
+					if (pendingDamage >= target.block) {
+						pendingDamage -= target.block;
+						blockedDamage = target.block;
+						target.block = 0;
+					} else {
+						target.block -= pendingDamage;
+						blockedDamage = pendingDamage;
+						pendingDamage = 0;
+					}
+				}
+				let damageCap = 500 + limitBreak;
+				pendingDamage = Math.min(pendingDamage, damageCap);
+				target.hp -= pendingDamage;
+				let damageText = ` **${targetName}** takes ${pendingDamage} damage${blockedDamage > 0 ? ` (${blockedDamage} was blocked)` : ""}${element === "Poison" ? " from Poison" : ""}${isWeakness ? "!!!" : isResistance ? "." : "!"}`;
+				if (element !== "Poison" && targetModifiers.includes("Curse of Midas")) {
+					adventure.gainGold(Math.floor(pendingDamage / 10));
+					damageText += ` Gold scatters about the room.`;
+				}
+				if (target.hp <= 0) {
+					if (target.team === "delver") {
+						target.hp = target.maxHp;
+						adventure.lives = Math.max(adventure.lives - 1, 0);
+						damageText += ` *${targetName} has died*${adventure.lives > 0 ? " and been revived" : ""}.`;
+					} else {
+						target.hp = 0;
+						damageText += ` *${targetName} has died*.`;
+					}
+				}
+				resultTexts.push(damageText);
+			} else {
+				target.modifiers["Evade"]--;
+				if (target.modifiers["Evade"] <= 0) {
+					delete target.modifiers["Evade"];
+				}
+				resultTexts.push(` ${targetName} evades the attack!`);
 			}
-			return damageText;
 		} else {
-			target.modifiers["Evade"]--;
-			if (target.modifiers["Evade"] <= 0) {
-				delete target.modifiers["Evade"];
-			}
-			return ` ${targetName} evades the attack!`;
+			resultTexts.push(` ${exports.gainHealth(target, damage, adventure)}`);
 		}
-	} else {
-		return ` ${exports.gainHealth(target, damage, adventure)}`;
 	}
+	if (adventure.lives < previousLifeCount) {
+		resultTexts.push(`***${adventure.lives} lives remain.***`);
+	}
+	return resultTexts.join(" ");
+}
+
+/**
+ * @param {Combatant} user
+ * @param {number} damage
+ * @param {Adventure} adventure
+ */
+exports.payHP = function (user, damage, adventure) {
+	user.hp -= damage;
+	let userName = user.getName(adventure.room.enemyIdMap);
+	let resultText = ` **${userName}** pays ${damage} hp.`;
+	if (user.hp <= 0) {
+		if (user.team === "delver") {
+			user.hp = user.maxHp;
+			adventure.lives -= 1;
+			resultText += ` *${userName} has died* and been revived. ***${adventure.lives} lives remain.***`;
+		} else {
+			user.hp = 0;
+			resultText += ` *${userName} has died*.`;
+		}
+	}
+	return resultText;
 }
 
 exports.gainHealth = function (combatant, healing, adventure, inCombat = true) {
@@ -111,9 +129,9 @@ exports.gainHealth = function (combatant, healing, adventure, inCombat = true) {
 	}
 
 	if (combatant.hp === combatant.maxHp) {
-		return `${exports.getFullName(combatant, adventure.room.enemyTitles)} was fully healed${excessHealing && inCombat && bloodshieldSwordCount > 0 ? ` (and gained block)` : ""}!`;
+		return `${combatant.getName(adventure.room.enemyIdMap)} was fully healed${excessHealing && inCombat && bloodshieldSwordCount > 0 ? ` (and gained block)` : ""}!`;
 	} else {
-		return `${exports.getFullName(combatant, adventure.room.enemyTitles)} *gained ${healing} hp*.`
+		return `${combatant.getName(adventure.room.enemyIdMap)} *gained ${healing} hp*.`
 	}
 }
 
@@ -215,4 +233,21 @@ exports.modifiersToString = function (combatant, includeStagger, adventure) {
 		}
 	}
 	return modifiersText;
+}
+
+/** compare function for sorting Moves to descending speed
+ * @param {Move} first
+ * @param {Move} second
+ * @returns positive if second before first, negative if first before second
+ */
+exports.compareMoveSpeed = function (first, second) {
+	if (second.priority == first.priority) {
+		if (second.speed == first.speed) {
+			return second.randomOrder - first.randomOrder;
+		} else {
+			return second.speed - first.speed;
+		}
+	} else {
+		return second.priority - first.priority;
+	}
 }

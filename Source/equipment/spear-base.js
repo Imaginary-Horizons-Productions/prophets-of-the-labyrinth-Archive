@@ -1,7 +1,7 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
-const { dealDamage, addModifier, getFullName } = require("../combatantDAO.js");
+const { dealDamage, addModifier } = require("../combatantDAO.js");
 
-module.exports = new EquipmentTemplate("Spear", "*Strike a foe for @{damage} @{element} damage*\nCritical Hit💥: Inflict @{mod1Stacks} @{mod1}", "Fire", effect, ["Lethal Spear", "Reactive Spear", "Sweeping Spear"])
+module.exports = new EquipmentTemplate("Spear", "Strike a foe for @{damage} @{element} damage", "Also inflict @{mod1Stacks} @{mod1}", "Wind", effect, ["Lethal Spear", "Reactive Spear", "Sweeping Spear"])
 	.setCategory("Weapon")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Stagger", stacks: 1 }])
@@ -11,7 +11,7 @@ module.exports = new EquipmentTemplate("Spear", "*Strike a foe for @{damage} @{e
 
 function effect([target], user, isCrit, adventure) {
 	if (target.hp < 1) {
-		return ` ${getFullName(target, adventure.room.enemyTitles)} was already dead!`;
+		return ` ${target.getName(adventure.room.enemyIdMap)} was already dead!`;
 	}
 
 	let { element, modifiers: [elementStagger, critStagger], damage } = module.exports;
@@ -21,5 +21,5 @@ function effect([target], user, isCrit, adventure) {
 	if (isCrit) {
 		addModifier(target, critStagger);
 	}
-	return dealDamage(target, user, damage, false, element, adventure);
+	return dealDamage([target], user, damage, false, element, adventure);
 }

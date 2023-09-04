@@ -2,7 +2,7 @@ const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { dealDamage, addModifier } = require('../combatantDAO.js');
 const { SAFE_DELIMITER } = require("../../constants.js");
 
-module.exports = new EquipmentTemplate("Toxic Firecracker", "*Strike 3 random foes applying @{mod1Stacks} @{mod1} and @{damage} @{element} damage*\nCritical Hit💥: Damage x@{critBonus}", "Fire", effect, ["Double Firecracker", "Mercurial Firecracker"])
+module.exports = new EquipmentTemplate("Toxic Firecracker", "Strike 3 random foes applying @{mod1Stacks} @{mod1} and @{damage} @{element} damage", "Damage x@{critBonus}", "Fire", effect, ["Double Firecracker", "Mercurial Firecracker"])
 	.setCategory("Weapon")
 	.setTargetingTags({ target: `random${SAFE_DELIMITER}3`, team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Poison", stacks: 3 }])
@@ -26,7 +26,9 @@ function effect(targets, user, isCrit, adventure) {
 				addModifier(target, elementStagger);
 			}
 			addModifier(target, poison);
-			return dealDamage(target, user, damage, false, element, adventure);
+			return dealDamage([target], user, damage, false, element, adventure).then(damageText => {
+				return `${damageText} ${target.getName(adventure.room.enemyIdMap)} is Poisoned.`;
+			});
 		})
 	).then(results => results.filter(result => Boolean(result)).join(" "));
 }
