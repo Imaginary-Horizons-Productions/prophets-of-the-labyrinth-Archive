@@ -25,14 +25,7 @@ function effect([target], user, isCrit, adventure) {
 		return moveUser.name === target.name && moveUser.title === target.title;
 	});
 	if (targetMove.targets.length === 1) {
-		let userTeam = "delver";
-		let userCombatantPool = adventure.delvers;
-		if (user.archetype == "@{clone}") {
-			userTeam = "enemy";
-			userCombatantPool = adventure.room.enemies;
-		}
-		const userIndex = userCombatantPool.findIndex(combatant => combatant.id === user.id && combatant.name === user.name);
-		targetMove.targets = [{ team: userTeam, index: userIndex }];
+		targetMove.targets = [{ team: user.team, index: user.findMyIndex(adventure) }];
 		return `Preparing to Block, ${payHP(user, hpCost, adventure)} ${user.getName(adventure.room.enemyIdMap)} is Powered Up. ${target.getName(adventure.room.enemyIdMap)} falls for the provocation.`;
 	} else {
 		return `Preparing to Block, ${payHP(user, hpCost, adventure)} ${user.getName(adventure.room.enemyIdMap)} is Powered Up.`;

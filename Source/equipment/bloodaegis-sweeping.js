@@ -20,21 +20,14 @@ function effect(targets, user, isCrit, adventure) {
 	}
 	addBlock(user, block);
 
-	let userCombatantPool = adventure.delvers;
 	const provokedTargets = [];
-	let userTeam = "delver";
-	let targetTeam = "enemy";
-	if (user.archetype == "@{clone}") {
-		userTeam = "enemy";
-		targetTeam = "delver";
-		userCombatantPool = adventure.room.enemies;
-	}
-	const userIndex = userCombatantPool.findIndex(combatant => combatant.id === user.id && combatant.name === user.name);
+	const targetTeam = user.team === "delver" ? "enemy" : "delver";
+	const userIndex = user.findMyIndex(adventure);
 	adventure.moves.forEach(move => {
 		if (move.userReference.team === targetTeam && move.targets.length === 1) {
 			const target = adventure.getCombatant(move.userReference);
 			if (target.hp > 0) {
-				move.targets = [{ team: userTeam, index: userIndex }];
+				move.targets = [{ team: user.team, index: userIndex }];
 				provokedTargets.push(target.getName(adventure.room.enemyIdMap));
 			}
 		}

@@ -66,6 +66,10 @@ module.exports = class Enemy extends Combatant {
 		}
 	}
 
+	findMyIndex(adventure) {
+		return adventure.room.enemies.findIndex(enemy => enemy.id === this.id && enemy.name === this.name);
+	}
+
 	/** Set the uniquifing number for an enemy to its title.
 	 * @param {object} titleObject
 	 */

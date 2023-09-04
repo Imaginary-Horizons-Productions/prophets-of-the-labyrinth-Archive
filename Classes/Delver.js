@@ -35,4 +35,8 @@ module.exports = class Delver extends Combatant {
 	getName() {
 		return this.name;
 	}
+
+	findMyIndex(adventure) {
+		return adventure.delvers.findIndex(delver => delver.id === this.id);
+	}
 }

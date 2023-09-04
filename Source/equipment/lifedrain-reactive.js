@@ -17,20 +17,8 @@ async function effect([target], user, isCrit, adventure) {
 	}
 
 	let { element, modifiers: [elementStagger], damage, bonus, healing, critBonus } = module.exports;
-	let userTeam = "delver";
-	let userCombatantPool = adventure.delvers;
-	let targetTeam = "enemy";
-	let targetCombatantPool = adventure.room.enemies;
-	if (user.archetype === "@{clone}") {
-		userTeam = "enemy";
-		userCombatantPool = adventure.room.enemies;
-		targetTeam = "delver";
-		targetCombatantPool = adventure.delvers;
-	}
-	const userIndex = userCombatantPool.findIndex(combatant => combatant.id === user.id && combatant.name === user.name);
-	const userMove = adventure.room.moves.find(move => move.userReference.team == userTeam && move.userReference.index == userIndex);
-	const targetIndex = targetCombatantPool.findIndex(combatant => combatant.id === target.id && combatant.name === target.name);
-	const targetMove = adventure.room.moves.find(move => move.userReference.team == targetTeam && move.userReference.index == targetIndex);
+	const userMove = adventure.room.moves.find(move => move.userReference.team === user.team && move.userReference.index === user.findMyIndex(adventure));
+	const targetMove = adventure.room.moves.find(move => move.userReference.team === target.team && move.userReference.index === target.findMyIndex(adventure));
 
 	if (compareMoveSpeed(userMove, targetMove) > 0) {
 		damage += bonus;

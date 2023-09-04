@@ -41,7 +41,7 @@ module.exports.spawnEnemy = function (adventure, enemyTemplate) {
 }
 
 module.exports.selectRandomOtherAlly = function (adventure, self) {
-	const selfIndex = adventure.room.enemies.findIndex(enemy => enemy.name === self.name && enemy.id === self.id);
+	const selfIndex = self.findMyIndex(adventure);
 	const liveOtherEnemyIndexes = [];
 	adventure.room.enemies.forEach((enemy, index) => {
 		if (enemy.hp > 0 && index !== selfIndex) {
@@ -66,8 +66,7 @@ module.exports.selectAllFoes = function (adventure, self) {
 }
 
 module.exports.selectSelf = function (adventure, self) {
-	const index = adventure.room.enemies.findIndex(enemy => enemy.name === self.name && enemy.id === self.id);
-	return [new CombatantReference("enemy", index)];
+	return [new CombatantReference(self.team, self.findMyIndex(adventure))];
 }
 
 module.exports.selectNone = function (adventure, self) {

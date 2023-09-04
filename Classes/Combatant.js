@@ -77,6 +77,8 @@ module.exports = class Combatant {
 
 	getName() { }
 
+	findMyIndex(adventure) { }
+
 	/** Get the number of stacks of the given modifier the combatant has
 	 * @param {string} modifierName
 	 */
