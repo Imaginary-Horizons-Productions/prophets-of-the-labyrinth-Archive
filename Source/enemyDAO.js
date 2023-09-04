@@ -66,8 +66,7 @@ module.exports.selectAllFoes = function (adventure, self) {
 }
 
 module.exports.selectSelf = function (adventure, self) {
-	const [index, team] = adventure.getCombatantIndex(self);
-	return [new CombatantReference(team, index)];
+	return [new CombatantReference(self.team, self.findMyIndex(adventure))];
 }
 
 module.exports.selectNone = function (adventure, self) {
