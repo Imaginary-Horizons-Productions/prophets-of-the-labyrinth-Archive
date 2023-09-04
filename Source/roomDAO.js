@@ -395,13 +395,19 @@ exports.editButtons = function (components, edits) {
 			switch (component.type) {
 				case ComponentType.Button:
 					const editedButton = new ButtonBuilder(component);
-;
+					if (customId in edits) {
+						const { preventUse, label, emoji } = edits[customId];
+						editedButton.setDisabled(preventUse)
+							.setLabel(label);
+						if (emoji) {
+							editedButton.setEmoji(emoji);
+						}
+					};
 					return editedButton;
 				case ComponentType.StringSelect:
 					return new StringSelectMenuBuilder(component);
 				default:
 					throw new Error(`Disabling unregistered component from editButtons: ${component.type}`);
-
 			}
 		}));
 	})
