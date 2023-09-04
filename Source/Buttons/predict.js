@@ -53,7 +53,7 @@ module.exports = new Button(customId,
 				});
 				break;
 			case "Intents": // Shows each enemy's target(s) in the next round and the names of the next two moves and if their move has priority
-				adventure.room.moves.forEach(({ userReference, targets, name }) => {
+				adventure.room.moves.forEach(({ userReference, targets, name, priority }) => {
 					if (userReference.team === "enemy") {
 						const enemy = adventure.getCombatant(userReference);
 						if (enemy.hp > 0) {
