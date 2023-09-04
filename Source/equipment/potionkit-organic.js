@@ -3,7 +3,7 @@ const Resource = require('../../Classes/Resource.js');
 const { removeModifier } = require('../combatantDAO.js');
 const { rollConsumable } = require('../labyrinths/_labyrinthDictionary.js');
 
-module.exports = new EquipmentTemplate("Potion Kit", "Add 1 random potion to loot, regain 1 durability when entering a new room", "Instead add @{critBonus} potions", "Water", effect, ["Guarding Potion Kit", "Urgent Potion Kit"])
+module.exports = new EquipmentTemplate("Organic Potion Kit", "Add 1 random potion to loot, regain 1 durability when entering a new room", "Instead add @{critBonus} potions", "Water", effect, ["Guarding Potion Kit", "Urgent Potion Kit"])
 	.setCategory("Trinket")
 	.setTargetingTags({ target: "none", team: "none" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }])

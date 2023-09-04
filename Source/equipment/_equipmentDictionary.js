@@ -103,6 +103,9 @@ for (const file of [
 	"warhammer-slowing.js"
 ]) {
 	const equip = require(`./${file}`);
+	if (equip.name in EQUIPMENT) {
+		console.error(`Equipment overwritten due to same name: ${equip.name}`);
+	}
 	EQUIPMENT[equip.name] = equip;
 };
 
