@@ -11,7 +11,7 @@ module.exports = new Select(id, async (interaction, [round]) => {
 	if (adventure.room.round === Number(round)) {
 		const [consumableName] = interaction.values;
 		const user = adventure.delvers.find(delver => delver.id === interaction.user.id);
-		const userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
+		const userIndex = user.findMyIndex(adventure);
 		// Filter out: consumable uses by self and enemy (only count own team)
 		const committedCount = adventure.room.moves.filter(move => move.name === consumableName && move.userReference.team === user.team && move.userReference.index !== userIndex).length;
 		if (consumableName in adventure.consumables && adventure.consumables[consumableName] > committedCount) {

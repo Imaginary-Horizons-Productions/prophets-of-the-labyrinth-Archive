@@ -10,10 +10,10 @@ module.exports = new Select(id, async (interaction, [moveName, round, index]) =>
 	// Add move object to adventure
 	let adventure = getAdventure(interaction.channelId);
 	if (adventure.room.round === Number(round)) {
-		let user = adventure.delvers.find(delver => delver.id === interaction.user.id);
+		const user = adventure.delvers.find(delver => delver.id === interaction.user.id);
 		if (moveName === "Punch" || user.equipment.some(equip => equip.name === moveName && equip.uses > 0)) {
 			// Add move to round list (overwrite exisiting readied move)
-			let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
+			const userIndex = user.findMyIndex(adventure);
 			let [targetTeam, targetIndex] = interaction.values[0].split(SAFE_DELIMITER);
 			let newMove = new Move()
 				.onSetMoveSpeed(user)
@@ -36,12 +36,7 @@ module.exports = new Select(id, async (interaction, [moveName, round, index]) =>
 			await adventure.room.moves.push(newMove);
 
 			// Send confirmation text
-			let target;
-			if (targetTeam === "delver") {
-				target = adventure.delvers[targetIndex];
-			} else if (targetTeam === "enemy") {
-				target = adventure.room.enemies[targetIndex];
-			}
+			const target = adventure.getCombatant({ team: targetTeam, index: targetIndex });
 			interaction.update({ components: [] });
 			interaction.channel.send(`${interaction.user} ${overwritten ? "switches to ready" : "readies"} **${moveName}** to use on **${target.getName(adventure.room.enemyIdMap)}**.`).then(() => {
 				setAdventure(adventure);

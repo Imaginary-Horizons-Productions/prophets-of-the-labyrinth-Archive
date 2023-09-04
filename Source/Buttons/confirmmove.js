@@ -12,10 +12,10 @@ module.exports = new Button(customId,
 	async (interaction, [moveName, round, index]) => {
 		const adventure = getAdventure(interaction.channel.id);
 		if (adventure.room.round === Number(round)) {
-			let user = adventure.delvers.find(delver => delver.id === interaction.user.id);
+			const user = adventure.delvers.find(delver => delver.id === interaction.user.id);
 			if (user.equipment.some(equip => equip.name === moveName && equip.uses > 0)) {
 				// Add move to round list (overwrite exisiting readied move)
-				let userIndex = adventure.delvers.findIndex(delver => delver.id === interaction.user.id);
+				const userIndex = user.findMyIndex(adventure);
 				let newMove = new Move()
 					.onSetMoveSpeed(user)
 					.setIsCrit(user.crit)

@@ -193,7 +193,6 @@ module.exports.Adventure = class {
 		switch (team) {
 			case "delver":
 				return this.delvers[index];
-			case "clone":
 			case "enemy":
 				return this.room.enemies[index];
 			case "none":
