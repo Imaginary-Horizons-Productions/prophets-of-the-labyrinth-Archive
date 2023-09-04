@@ -26,4 +26,6 @@ module.exports.execute = (interaction) => {
 	}
 }
 
-module.exports["autocomplete_equipment-name"] = equipNames;
+module.exports.autocomplete = {
+	"equipment-name": equipNames
+};

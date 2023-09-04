@@ -86,7 +86,7 @@ client.on(Events.ClientReady, () => {
 	})();
 })
 
-client.on(Events.InteractionCreate, async interaction => {
+client.on(Events.InteractionCreate, interaction => {
 	if (interaction.isCommand()) {
 		const { premiumCommand, managerCommand, execute } = getCommand(interaction.commandName);
 		if (!premiumCommand || !getPremiumUsers().includes(interaction.user.id)) {
@@ -108,16 +108,16 @@ client.on(Events.InteractionCreate, async interaction => {
 		}
 		try {
 			const focusedOption = interaction.options.getFocused(true);
-			const acKey = `autocomplete_${focusedOption.name}`;
+			const acKey = `${focusedOption.name}`;
 			let choices;
-			if (acKey in command) {
-				choices = command[acKey];
+			if (acKey in command.autocomplete) {
+				choices = command.autocomplete[acKey];
 			}
 			else {
 				throw new Error(`export: "${acKey}" not defined for ${interaction.commandName}`)
 			}
 			// return max 25 options that contain current focused text. TODO performance may need to be tuned to keep under 3 seconds as we scale up any lists 
-			await interaction.respond(choices.filter(choice => choice.toLowerCase().includes(focusedOption.value.toLowerCase())).map(n => ({ name: n, value: n })).slice(0, 25));
+			interaction.respond(choices.filter(choice => choice.toLowerCase().includes(focusedOption.value.toLowerCase())).map(n => ({ name: n, value: n })).slice(0, 25));
 		} catch (error) {
 			console.error(error);
 		}

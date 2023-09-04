@@ -29,4 +29,6 @@ module.exports.execute = (interaction) => {
 	}
 }
 
-module.exports["autocomplete_consumable-name"] = consumableNames;
+module.exports.autocomplete = {
+	"consumable-name": consumableNames
+};
