@@ -100,7 +100,29 @@ client.on(Events.InteractionCreate, interaction => {
 			interaction.reply({ content: `The \`/${interaction.commandName}\` command is a premium command. Use \`/support\` for more information.`, ephemeral: true })
 				.catch(console.error);
 		}
-	} else {
+	} else if (interaction.isAutocomplete()) {
+		const command = getCommand(interaction.commandName);
+		if (!command) {
+			console.error(`No command matching ${interaction.commandName} was found.`);
+			return;
+		}
+		try {
+			const focusedOption = interaction.options.getFocused(true);
+			const acKey = `${focusedOption.name}`;
+			let choices;
+			if (acKey in command.autocomplete) {
+				choices = command.autocomplete[acKey];
+			}
+			else {
+				throw new Error(`export: "${acKey}" not defined for ${interaction.commandName}`)
+			}
+			// return max 25 options that contain current focused text. TODO performance may need to be tuned to keep under 3 seconds as we scale up any lists 
+			interaction.respond(choices.filter(choice => choice.toLowerCase().includes(focusedOption.value.toLowerCase())).map(n => ({ name: n, value: n })).slice(0, 25));
+		} catch (error) {
+			console.error(error);
+		}
+	}
+	else {
 		const [mainId, ...args] = interaction.customId.split(SAFE_DELIMITER);
 		if (interaction.isButton()) {
 			callButton(mainId, interaction, args);
