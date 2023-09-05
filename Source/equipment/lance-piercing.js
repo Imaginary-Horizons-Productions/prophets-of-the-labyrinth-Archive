@@ -1,7 +1,7 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { dealDamage, addModifier } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Piercing Sword", "Strike a foe for @{damage} @{element} unblockable damage (double increase from Power Up)", "Damage x@{critBonus}", "Earth", effect, ["Accelerating Lance", "Vigilant Lance"])
+module.exports = new EquipmentTemplate("Piercing Lance", "Strike a foe for @{damage} @{element} unblockable damage (double increase from Power Up)", "Damage x@{critBonus}", "Earth", effect, ["Accelerating Lance", "Vigilant Lance"])
 	.setCategory("Weapon")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
