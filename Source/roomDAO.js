@@ -320,9 +320,13 @@ function generateMerchantRows(adventure) {
 				if (adventure.room.resources[resource].count > 0) {
 					const cost = getEquipmentProperty(resource, "cost");
 					const maxUses = getEquipmentProperty(resource, "maxUses");
+					let description = buildEquipmentDescription(resource, false);
+					if (description.length > 100) {
+						description = description.slice(0, 99) + "…"; // Single character elipsis
+					}
 					options.push({
 						label: `${cost}g: ${resource} (${maxUses} uses)`,
-						description: buildEquipmentDescription(resource, false),
+						description,
 						value: `${resource}${SAFE_DELIMITER}${i}`
 					})
 				}

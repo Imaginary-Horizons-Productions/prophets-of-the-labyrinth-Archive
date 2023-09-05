@@ -41,7 +41,7 @@ module.exports = new Labyrinth("Debug Dungeon", "Untyped", 10, [10])
 				Rare: [
 					"Devoted Buckler",
 					"Heavy Buckler",
-					"Urgent Buckler",
+					"Guarding Buckler",
 					"Hunter's Certain Victory",
 					"Lethal Certain Victory",
 					"Reckless Certain Victory",
