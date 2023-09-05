@@ -2,6 +2,8 @@ const { Adventure } = require("../../Classes/Adventure.js");
 const RoomTemplate = require("../../Classes/RoomTemplate.js");
 const { generateRandomNumber } = require("../../helpers.js");
 const { getRoom } = require("../Rooms/_roomDictionary.js");
+const { consumableExists } = require("../consumables/_consumablesDictionary.js");
+const { equipmentExists } = require("../equipment/_equipmentDictionary.js");
 
 const LABYRINTHS = {};
 
@@ -9,6 +11,31 @@ for (const file of [
 	"debugdungeon.js"
 ]) {
 	const labyrinth = require(`./${file}`);
+	for (const element in labyrinth.availableConsumables) {
+		for (const consumable of labyrinth.availableConsumables[element]) {
+			if (!consumableExists(consumable)) {
+				console.error(`Unregistered consumable name in ${labyrinth.name}: ${consumable}`);
+			}
+		}
+	}
+
+	for (const element in labyrinth.availableEquipment) {
+		for (const rarity in labyrinth.availableEquipment[element]) {
+			for (const equipment of labyrinth.availableEquipment[element][rarity]) {
+				if (!equipmentExists(equipment)) {
+					console.error(`Unregistered equipment name in ${labyrinth.name}: ${equipment}`);
+				}
+			}
+		}
+	}
+
+	for (const tag in labyrinth.availableRooms) {
+		for (const roomTitle of labyrinth.availableRooms[tag]) {
+			if (!getRoom(roomTitle)) {
+				console.error(`Unregistered room title in ${labyrinth.name}: ${roomTitle}`);
+			}
+		}
+	}
 	LABYRINTHS[labyrinth.name] = labyrinth;
 }
 
@@ -32,14 +59,10 @@ exports.getLabyrinthProperty = function (labyrinthName, propertyName) {
 
 /** Rolls a consumable's name from droppable consumables
  * @param {Adventure} adventure
- * @param {string} targetString
  * @returns {string}
  */
-exports.rollConsumable = function (adventure, targetString = "") {
-	const consumablePool = adventure.getElementPool().flatMap((element) => {
-		return LABYRINTHS[adventure.labyrinth].availableConsumables[element]
-			.filter(consumable => consumable.includes(targetString))
-	});
+exports.rollConsumable = function (adventure) {
+	const consumablePool = adventure.getElementPool().flatMap((element) => LABYRINTHS[adventure.labyrinth].availableConsumables[element]);
 
 	return consumablePool[generateRandomNumber(adventure, consumablePool.length, "general")];
 }
