@@ -116,7 +116,7 @@ module.exports = new Labyrinth("Debug Dungeon", "Untyped", 10, [10])
 					"Urgent Potion Kit",
 					"Hunter's Sickle",
 					"Sharpened Sickle",
-					"Thick Sickle"
+					"Toxic Sickle"
 				]
 			},
 			Fire: {
