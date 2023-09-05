@@ -165,7 +165,7 @@ exports.nextRoom = function (roomType, thread) {
 			}
 		}
 	} else {
-		adventure.roomCandidates[`Final Battle${SAFE_DELIMITER}${adventure.depth}`] = true;
+		adventure.roomCandidates[`Final Battle${SAFE_DELIMITER}${adventure.depth}`] = [];
 	}
 
 	// Generate current room
