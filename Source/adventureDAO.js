@@ -95,9 +95,10 @@ exports.setAdventure = function (adventure) {
 
 /** @type {Record<number, string[]>} key = weight, value = roomTag[] */
 const roomTypesByRarity = {
-	1: ["Artifact Guardian", "Treasure"],
-	3: ["Forge", "Rest Site", "Merchant"],
-	6: ["Battle", "Event"]
+	1: ["Treasure"],
+	3: ["Artifact Guardian"],
+	5: ["Forge", "Rest Site", "Merchant"],
+	10: ["Battle", "Event"]
 };
 
 /**
