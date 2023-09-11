@@ -1,9 +1,10 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addModifier, removeModifier, addBlock } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Guarding Vigilance Charm", "Gain @{mod1Stacks} @{mod1} and @{block} block", "@{mod1} +@{bonus} and block x@{critBonus}", "Earth", effect, ["Long Vigilance Charm", "Guarding Vigilance Charm"])
+module.exports = new EquipmentTemplate("Guarding Vigilance Charm", "Gain @{mod1Stacks} @{mod1} and @{block} block", "@{mod1} +@{bonus} and block x@{critBonus}", "Earth", effect)
 	.setCategory("Trinket")
 	.setTargetingTags({ target: "self", team: "self" })
+	.setSidegrades("Long Vigilance Charm", "Guarding Vigilance Charm")
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Vigilance", stacks: 3 }])
 	.setBonus(2) // Vigilance stacks
 	.setCost(350)

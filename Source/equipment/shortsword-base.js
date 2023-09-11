@@ -1,9 +1,10 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { dealDamage, addModifier } = require("../combatantDAO.js");
 
-module.exports = new EquipmentTemplate("Shortsword", "Strike a foe for @{damage} @{element} damage, then apply @{mod1Stacks} @{mod1} to both the foe and yourself", "Damage x@{critBonus}", "Fire", effect, ["Accelerating Shortsword", "Toxic Shortsword"])
+module.exports = new EquipmentTemplate("Shortsword", "Strike a foe for @{damage} @{element} damage, then apply @{mod1Stacks} @{mod1} to both the foe and yourself", "Damage x@{critBonus}", "Fire", effect)
 	.setCategory("Weapon")
 	.setTargetingTags({ target: "single", team: "enemy" })
+	.setUpgrades("Accelerating Shortsword", "Toxic Shortsword")
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Exposed", stacks: 1 }])
 	.setCost(200)
 	.setUses(10)

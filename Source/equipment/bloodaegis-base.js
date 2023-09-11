@@ -1,9 +1,10 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { removeModifier, addBlock, payHP } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Blood Aegis", "Pay @{hpCost} hp; gain @{block} block and intercept a later single target move", "Block x@{critBonus}", "Water", effect, ["Charging Blood Aegis", "Heavy Blood Aegis", "Sweeping Blood Aegis"])
+module.exports = new EquipmentTemplate("Blood Aegis", "Pay @{hpCost} hp; gain @{block} block and intercept a later single target move", "Block x@{critBonus}", "Water", effect)
 	.setCategory("Pact")
 	.setTargetingTags({ target: "single", team: "enemy" })
+	.setUpgrades("Charging Blood Aegis", "Heavy Blood Aegis", "Sweeping Blood Aegis")
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(200)
 	.setUses(10)

@@ -1,9 +1,10 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { dealDamage, addModifier } = require("../combatantDAO.js");
 
-module.exports = new EquipmentTemplate("Lethal Spear", "Strike a foe for @{damage} @{element} damage", "Damage x@{critBonus}, also inflict @{mod1Stacks} @{mod1}", "Wind", effect, ["Reactive Spear", "Sweeping Spear"])
+module.exports = new EquipmentTemplate("Lethal Spear", "Strike a foe for @{damage} @{element} damage", "Damage x@{critBonus}, also inflict @{mod1Stacks} @{mod1}", "Wind", effect)
 	.setCategory("Weapon")
 	.setTargetingTags({ target: "single", team: "enemy" })
+	.setSidegrades("Reactive Spear", "Sweeping Spear")
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Stagger", stacks: 1 }])
 	.setCost(350)
 	.setUses(10)

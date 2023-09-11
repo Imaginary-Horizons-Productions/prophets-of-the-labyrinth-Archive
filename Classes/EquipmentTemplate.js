@@ -5,18 +5,18 @@ module.exports = class EquipmentTemplate {
 	 * @param {string} critDescriptionInput
 	 * @param {"Fire" | "Water" | "Earth" | "Wind" | "Untyped"} elementInput
 	 * @param {Function} effectInput
-	 * @param {Array<string>} upgradeNames
 	 */
-	constructor(nameInput, descriptionInput, critDescriptionInput, elementInput, effectInput, upgradeNames) {
+	constructor(nameInput, descriptionInput, critDescriptionInput, elementInput, effectInput) {
 		this.name = nameInput;
 		this.description = descriptionInput;
 		this.critDescription = critDescriptionInput;
 		this.element = elementInput;
 		this.effect = effectInput;
-		this.upgrades = upgradeNames;
 	}
 	category = "";
 	targetingTags = {};
+	upgrades = [];
+	sidegrades = [];
 	cost = 100;
 	maxUses = 10;
 	critBonus = 2;
@@ -45,6 +45,20 @@ module.exports = class EquipmentTemplate {
 	 */
 	setTargetingTags(tagObject) {
 		this.targetingTags = tagObject;
+		return this;
+	}
+
+	setUpgrades(...gearNames) {
+		for (const upgrade of gearNames) {
+			this.upgrades.push(upgrade);
+		}
+		return this;
+	}
+
+	setSidegrades(...gearNames) {
+		for (const sidegrade of gearNames) {
+			this.sidegrades.push(sidegrade);
+		}
 		return this;
 	}
 

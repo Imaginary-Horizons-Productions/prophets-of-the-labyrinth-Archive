@@ -25,11 +25,13 @@ module.exports = new Button(id,
 
 		const options = [];
 		delver.equipment.forEach((equip, index) => {
-			let upgrades = getEquipmentProperty(equip.name, "upgrades");
-			if (upgrades.length > 0) {
+			const upgrades = getEquipmentProperty(equip.name, "upgrades");
+			const sidegrades = getEquipmentProperty(equip.name, "sidegrades");
+			const tinkerPool = upgrades.concat(sidegrades);
+			if (tinkerPool.length > 0) {
 				options.push({
 					label: equip.name,
-					description: `Results: ${upgrades.join(", ")}`,
+					description: `Results: ${tinkerPool.join(", ")}`,
 					value: `${equip.name}${SAFE_DELIMITER}${index}`
 				})
 			}

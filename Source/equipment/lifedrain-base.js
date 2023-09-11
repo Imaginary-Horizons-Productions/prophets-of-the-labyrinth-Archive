@@ -1,9 +1,10 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addModifier, dealDamage, gainHealth } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Life Drain", "Strike a foe for @{damage} @{element} damage, then gain @{healing} hp", "Healing x@{critBonus}", "Water", effect, ["Flanking Life Drain", "Reactive Life Drain", "Urgent Life Drain"])
+module.exports = new EquipmentTemplate("Life Drain", "Strike a foe for @{damage} @{element} damage, then gain @{healing} hp", "Healing x@{critBonus}", "Water", effect)
 	.setCategory("Spell")
 	.setTargetingTags({ target: "single", team: "enemy" })
+	.setUpgrades("Flanking Life Drain", "Reactive Life Drain", "Urgent Life Drain")
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(200)
 	.setUses(10)

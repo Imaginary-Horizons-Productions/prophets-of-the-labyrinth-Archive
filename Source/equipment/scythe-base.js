@@ -1,9 +1,10 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addModifier, dealDamage } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Scythe", "Strike a foe for @{damage} @{element} damage; instant death if foe is at or below @{bonus} hp", "Instant death threshold x@{critBonus}", "Wind", effect, ["Lethal Scythe", "Piercing Scythe", "Toxic Scythe"])
+module.exports = new EquipmentTemplate("Scythe", "Strike a foe for @{damage} @{element} damage; instant death if foe is at or below @{bonus} hp", "Instant death threshold x@{critBonus}", "Wind", effect)
 	.setCategory("Weapon")
 	.setTargetingTags({ target: "single", team: "enemy" })
+	.setUpgrades("Lethal Scythe", "Piercing Scythe", "Toxic Scythe")
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(200)
 	.setUses(10)

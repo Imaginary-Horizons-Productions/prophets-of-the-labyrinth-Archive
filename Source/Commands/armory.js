@@ -13,13 +13,25 @@ module.exports.execute = (interaction) => {
 	// Command specifications go here
 	const equipmentName = interaction.options.getString(options[0].name);
 	if (equipmentExists(equipmentName)) {
+		const fields = [
+			{ name: "Max Durability", value: getEquipmentProperty(equipmentName, "maxUses").toString() },
+			{ name: "Base Value", value: getEquipmentProperty(equipmentName, "cost").toString() }
+		];
+
 		const upgrades = getEquipmentProperty(equipmentName, "upgrades");
-		let embed = embedTemplate(interaction.client.user.displayAvatarURL()).setColor(getColor(getEquipmentProperty(equipmentName, "element")))
+		if (upgrades.length > 0) {
+			fields.push({ name: "Upgrades Into", value: upgrades.join(", ") });
+		}
+
+		const sidegrades = getEquipmentProperty(equipmentName, "sidegrades");
+		if (sidegrades.length > 0) {
+			fields.push({ name: "Can be Tinkered Into", value: sidegrades.join(", ") });
+		}
+
+		const embed = embedTemplate(interaction.client.user.displayAvatarURL()).setColor(getColor(getEquipmentProperty(equipmentName, "element")))
 			.setTitle(equipmentName)
 			.setDescription(buildEquipmentDescription(equipmentName, true))
-			.addFields({ name: "Max Durability", value: getEquipmentProperty(equipmentName, "maxUses").toString() })
-			.addFields({ name: "Base Value", value: getEquipmentProperty(equipmentName, "cost").toString() })
-			.addFields({ name: "Can be Tinkered Into", value: upgrades.length ? upgrades.join(", ") : "None" });
+			.addFields(fields);
 		interaction.reply({ embeds: [embed], ephemeral: true });
 	} else {
 		interaction.reply({ content: `Stats on **${equipmentName}** could not be found. Check for typos!`, ephemeral: true });

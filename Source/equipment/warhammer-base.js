@@ -1,9 +1,10 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { dealDamage, addModifier } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Warhammer", "Strike a foe for @{damage} (+@{bonus} if foe is already stunned) @{element} damage", "Damage x@{critBonus}", "Earth", effect, ["Piercing Warhammer", "Slowing Warhammer"])
+module.exports = new EquipmentTemplate("Warhammer", "Strike a foe for @{damage} (+@{bonus} if foe is already stunned) @{element} damage", "Damage x@{critBonus}", "Earth", effect)
 	.setCategory("Weapon")
 	.setTargetingTags({ target: "single", team: "enemy" })
+	.setUpgrades("Piercing Warhammer", "Slowing Warhammer")
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(350)
 	.setUses(10)

@@ -2,9 +2,10 @@ const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { dealDamage, addModifier } = require('../combatantDAO.js');
 const { isDebuff } = require('../Modifiers/_modifierDictionary.js');
 
-module.exports = new EquipmentTemplate("Censer", "Burn a foe for @{damage} (+@{bonus} if target has any debuffs) @{element} damage", "Also apply @{mod1Stacks} @{mod1}", "Fire", effect, ["Fate Sealing Censer", "Thick Censer", "Tormenting Censor"])
+module.exports = new EquipmentTemplate("Censer", "Burn a foe for @{damage} (+@{bonus} if target has any debuffs) @{element} damage", "Also apply @{mod1Stacks} @{mod1}", "Fire", effect)
 	.setCategory("Trinket")
 	.setTargetingTags({ target: "single", team: "enemy" })
+	.setUpgrades("Fate Sealing Censer", "Thick Censer", "Tormenting Censor")
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Slow", stacks: 2 }])
 	.setDamage(50)
 	.setBonus(75) // damage

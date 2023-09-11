@@ -1,6 +1,7 @@
 # Prophets of the Labyrinth Change Log
 #### Prophets of the Labyrinth Version 0.11.1:
 - added `/regenerate` command, which resends the current room's message and UI
+- tweaked room rarities, largely made Treasure rooms Rarer
 #### Prophets of the Labyrinth Verison 0.11.0:
 - New Archetype: Legionnaire
    - Element: Fire; Predicts: Intents

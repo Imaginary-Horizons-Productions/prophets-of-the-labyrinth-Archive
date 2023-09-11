@@ -1,9 +1,10 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addModifier } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Tormenting War Cry", "Inflict @{mod1Stacks} @{mod1} and duplicate debuffs on a foe and all foes with Exposed", "@{mod1} +@{bonus}", "Fire", effect, ["Charging War Cry", "Slowing War Cry"])
+module.exports = new EquipmentTemplate("Tormenting War Cry", "Inflict @{mod1Stacks} @{mod1} and duplicate debuffs on a foe and all foes with Exposed", "@{mod1} +@{bonus}", "Fire", effect)
 	.setCategory("Spell")
 	.setTargetingTags({ target: "single", team: "enemy" })
+	.setSidegrades("Charging War Cry", "Slowing War Cry")
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Stagger", stacks: 1 }])
 	.setBonus(1) // Stagger stacks
 	.setCost(350)

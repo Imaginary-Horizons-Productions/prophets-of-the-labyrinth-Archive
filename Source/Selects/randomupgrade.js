@@ -17,7 +17,7 @@ module.exports = new Select(id,
 		if (adventure.room.resources.roomAction.count > 0) {
 			const user = adventure.delvers.find(delver => delver.id === interaction.user.id);
 			const [equipmentName, index] = interaction.values[0].split(SAFE_DELIMITER);
-			const upgradePool = getEquipmentProperty(equipmentName, "upgrades");
+			const upgradePool = getEquipmentProperty(equipmentName, "upgrades").concat(getEquipmentProperty(equipmentName, "sidegrades"));
 			const upgradeName = upgradePool[generateRandomNumber(adventure, upgradePool.length, "general")];
 			const upgradeUses = getEquipmentProperty(upgradeName, "maxUses");
 			const usesDifference = upgradeUses - getEquipmentProperty(equipmentName, "maxUses");

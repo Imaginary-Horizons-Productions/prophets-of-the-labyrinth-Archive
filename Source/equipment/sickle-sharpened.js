@@ -1,9 +1,10 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addModifier, dealDamage } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Sharpened Sickle", "Strike a foe for @{damage} (+5% foe max hp) @{element} damage", "Damage x@{critBonus}", "Water", effect, ["Hunter's Sickle", "Toxic Sickle"])
+module.exports = new EquipmentTemplate("Sharpened Sickle", "Strike a foe for @{damage} (+5% foe max hp) @{element} damage", "Damage x@{critBonus}", "Water", effect)
 	.setCategory("Weapon")
 	.setTargetingTags({ target: "single", team: "enemy" })
+	.setSidegrades("Hunter's Sickle", "Toxic Sickle")
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(350)
 	.setUses(10)

@@ -3,9 +3,10 @@ const Resource = require('../../Classes/Resource.js');
 const { generateRandomNumber } = require('../../helpers.js');
 const { removeModifier } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Urgent Potion Kit", "Add 1 random potion to loot with priority", "Instead add @{critBonus} potions", "Water", effect, ["Guarding Potion Kit", "Organic Potion Kit"])
+module.exports = new EquipmentTemplate("Urgent Potion Kit", "Add 1 random potion to loot with priority", "Instead add @{critBonus} potions", "Water", effect)
 	.setCategory("Trinket")
 	.setTargetingTags({ target: "none", team: "none" })
+	.setSidegrades("Guarding Potion Kit", "Organic Potion Kit")
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(350)
 	.setUses(10)

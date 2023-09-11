@@ -1,9 +1,10 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addBlock, removeModifier } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Sweeping Scutum", "Grant @{block} block to all allies (including yourself)", "Block x@{critBonus}", "Fire", effect, ["Heavy Scutum", "Vigilant Scutum"])
+module.exports = new EquipmentTemplate("Sweeping Scutum", "Grant @{block} block to all allies (including yourself)", "Block x@{critBonus}", "Fire", effect)
 	.setCategory("Armor")
 	.setTargetingTags({ target: "all", team: "delver" })
+	.setSidegrades("Heavy Scutum", "Vigilant Scutum")
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(350)
 	.setUses(10)
