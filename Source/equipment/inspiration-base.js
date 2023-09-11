@@ -1,7 +1,7 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addModifier, removeModifier } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Inspiration", "Apply @{mod1Stacks} @{mod1} to an ally", "@{mod1} +@{bonus}", "Wind", effect, ["Soothing Inspiration", "Sweeping Inspiration"])
+module.exports = new EquipmentTemplate("Inspiration", "Apply @{mod1Stacks} @{mod1} to an ally", "@{mod1} +@{bonus}", "Wind", effect, ["Reinforcing Inspiration", "Soothing Inspiration", "Sweeping Inspiration"])
 	.setCategory("Spell")
 	.setTargetingTags({ target: "single", team: "delver" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Power Up", stacks: 25 }])
