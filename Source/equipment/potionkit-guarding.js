@@ -9,7 +9,7 @@ module.exports = new EquipmentTemplate("Guarding Potion Kit", "Gain @{block} blo
 	.setSidegrades("Organic Potion Kit", "Urgent Potion Kit")
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(350)
-	.setUses(10)
+	.setUses(15)
 	.setBlock(75);
 
 const rollablePotions = [

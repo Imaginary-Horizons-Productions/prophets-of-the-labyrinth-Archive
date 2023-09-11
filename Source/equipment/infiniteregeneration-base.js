@@ -8,7 +8,7 @@ module.exports = new EquipmentTemplate("Infinite Regeneration", "Pay @{hpCost} h
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Regen", stacks: 3 }])
 	.setHpCost(50)
 	.setCost(200)
-	.setUses(5);
+	.setUses(10);
 
 function effect([target], user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger, regen], hpCost, critBonus } = module.exports;

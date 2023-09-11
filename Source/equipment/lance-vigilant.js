@@ -7,7 +7,7 @@ module.exports = new EquipmentTemplate("Vigilant Lance", "Strike a foe for @{dam
 	.setSidegrades("Accelerating Lance", "Piercing Lance")
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Vigilance", stacks: 2 }])
 	.setCost(350)
-	.setUses(10)
+	.setUses(15)
 	.setDamage(75)
 	.setBlock(75);
 

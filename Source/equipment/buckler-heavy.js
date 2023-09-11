@@ -7,7 +7,7 @@ module.exports = new EquipmentTemplate("Heavy Buckler", "Grant an ally @{block} 
 	.setSidegrades("Devoted Buckler", "Guarding Buckler")
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Power Up", stacks: 25 }])
 	.setCost(350)
-	.setUses(10)
+	.setUses(15)
 	.setBlock(125);
 
 function effect([target], user, isCrit, adventure) {

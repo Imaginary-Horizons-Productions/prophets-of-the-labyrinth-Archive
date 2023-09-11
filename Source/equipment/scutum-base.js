@@ -7,7 +7,7 @@ module.exports = new EquipmentTemplate("Scutum", "Grant @{block} block to an all
 	.setUpgrades("Heavy Scutum", "Sweeping Scutum", "Vigilant Scutum")
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(200)
-	.setUses(10)
+	.setUses(15)
 	.setBlock(75);
 
 function effect([target], user, isCrit, adventure) {

@@ -7,7 +7,7 @@ module.exports = new EquipmentTemplate("Hunter's Certain Victory", "Strike a foe
 	.setSidegrades("Lethal Certain Victory", "Reckless Certain Victory")
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Power Up", stacks: 25 }])
 	.setCost(350)
-	.setUses(10)
+	.setUses(15)
 	.setDamage(75)
 	.setBonus(15);
 

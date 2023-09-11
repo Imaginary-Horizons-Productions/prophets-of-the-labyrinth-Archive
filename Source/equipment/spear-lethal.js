@@ -7,7 +7,7 @@ module.exports = new EquipmentTemplate("Lethal Spear", "Strike a foe for @{damag
 	.setSidegrades("Reactive Spear", "Sweeping Spear")
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Stagger", stacks: 1 }])
 	.setCost(350)
-	.setUses(10)
+	.setUses(15)
 	.setDamage(100);
 
 function effect([target], user, isCrit, adventure) {

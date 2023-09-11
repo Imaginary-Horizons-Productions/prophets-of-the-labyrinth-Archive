@@ -8,7 +8,7 @@ module.exports = new EquipmentTemplate("Soothing Inspiration", "Apply @{mod1Stac
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Power Up", stacks: 25 }, { name: "Regen", stacks: 2 }])
 	.setBonus(25) // Power Up stacks
 	.setCost(350)
-	.setUses(5);
+	.setUses(10);
 
 function effect([target], user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger, powerUp, regen], bonus } = module.exports;

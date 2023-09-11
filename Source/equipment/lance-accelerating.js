@@ -7,7 +7,7 @@ module.exports = new EquipmentTemplate("Accelerating Lance", "Strike a foe for @
 	.setSidegrades("Piercing Lance", "Vigilant Lance")
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Quicken", stacks: 1 }])
 	.setCost(350)
-	.setUses(10)
+	.setUses(15)
 	.setDamage(75);
 
 function effect([target], user, isCrit, adventure) {

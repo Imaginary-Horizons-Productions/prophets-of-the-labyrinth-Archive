@@ -7,7 +7,7 @@ module.exports = new EquipmentTemplate("Toxic Shortsword", "Strike a foe for @{d
 	.setSidegrades("Accelerating Shortsword")
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Exposed", stacks: 1 }, { name: "Poison", stacks: 3 }])
 	.setCost(350)
-	.setUses(10)
+	.setUses(15)
 	.setDamage(75);
 
 function effect([target], user, isCrit, adventure) {

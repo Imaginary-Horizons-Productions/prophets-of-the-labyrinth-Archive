@@ -8,7 +8,7 @@ module.exports = new EquipmentTemplate("Purifying Barrier", "Grant an ally @{blo
 	.setSidegrades("Thick Barrier", "Urgent Barrier")
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(350)
-	.setUses(1);
+	.setUses(5);
 
 function effect([target], user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger], block, critBonus } = module.exports;

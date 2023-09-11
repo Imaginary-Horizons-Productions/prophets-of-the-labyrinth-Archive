@@ -10,7 +10,7 @@ module.exports = new EquipmentTemplate("Fate Sealing Censer", "Burn a foe for @{
 	.setDamage(50)
 	.setBonus(75) // damage
 	.setCost(350)
-	.setUses(10);
+	.setUses(15);
 
 function effect([target], user, isCrit, adventure) {
 	if (target.hp < 1) {

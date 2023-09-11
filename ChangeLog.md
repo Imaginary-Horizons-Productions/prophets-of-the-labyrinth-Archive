@@ -3,6 +3,7 @@
 - added `/regenerate` command, which resends the current room's message and UI
 - tweaked room rarities, largely made Treasure rooms Rarer
 - Ritualist's target selection helper text now shows if the target has debuffs or not
+- Buffed gear durability across the board by 50% or more (except Toxic Sickle, which had more durability than its peers)
 #### Prophets of the Labyrinth Verison 0.11.0:
 - New Archetype: Legionnaire
    - Element: Fire; Predicts: Intents

@@ -6,7 +6,7 @@ module.exports = new EquipmentTemplate("Flanking Corrosion", "Inflict @{mod1Stac
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Power Down", stacks: 40 }, { name: "Exposed", stacks: 2 }, { name: "Stagger", stacks: 1 }])
 	.setCost(350)
-	.setUses(10);
+	.setUses(15);
 
 function effect([target], user, isCrit, adventure) {
 	if (target.hp < 1) {

@@ -7,7 +7,7 @@ module.exports = new EquipmentTemplate("Flanking Life Drain", "Strike a foe for 
 	.setSidegrades("Reactive Life Drain", "Urgent Life Drain")
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Exposed", stacks: 2 }])
 	.setCost(350)
-	.setUses(10)
+	.setUses(15)
 	.setDamage(75)
 	.setHealing(25);
 

@@ -7,7 +7,7 @@ module.exports = new EquipmentTemplate("Sweeping Daggers", "Strike all foes for 
 	.setSidegrades("Sharpened Daggers", "Slowing Daggers")
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(350)
-	.setUses(10)
+	.setUses(15)
 	.setCritBonus(3)
 	.setDamage(50);
 

@@ -7,7 +7,7 @@ module.exports = new EquipmentTemplate("Thick Barrier", "Grant an ally @{block} 
 	.setSidegrades("Purifiying Barrier", "Urgent Barrier")
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(350)
-	.setUses(2)
+	.setUses(10)
 	.setBlock(1000);
 
 function effect([target], user, isCrit, adventure) {

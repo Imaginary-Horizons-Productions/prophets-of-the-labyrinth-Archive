@@ -7,7 +7,7 @@ module.exports = new EquipmentTemplate("Heavy Blood Aegis", "Pay @{hpCost} hp; g
 	.setSidegrades("Charging Blood Aegis", "Sweeping Blood Aegis")
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(350)
-	.setUses(10)
+	.setUses(15)
 	.setHpCost(25)
 	.setBlock(250);
 

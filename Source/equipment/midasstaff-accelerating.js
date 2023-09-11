@@ -8,7 +8,7 @@ module.exports = new EquipmentTemplate("Accelerating Midas Staff", "Apply @{mod1
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Curse of Midas", stacks: 1 }, { name: "Quicken", stacks: 1 }])
 	.setBonus(1) // Curse of Midas stacks
 	.setCost(350)
-	.setUses(5);
+	.setUses(10);
 
 function effect([target], user, isCrit, adventure) {
 	if (target.hp < 1) {

@@ -7,7 +7,7 @@ module.exports = new EquipmentTemplate("Corrosion", "Inflict @{mod1Stacks} @{mod
 	.setUpgrades("Flanking Corrosion")
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Power Down", stacks: 40 }, { name: "Stagger", stacks: 1 }])
 	.setCost(200)
-	.setUses(10);
+	.setUses(15);
 
 function effect([target], user, isCrit, adventure) {
 	if (target.hp < 1) {

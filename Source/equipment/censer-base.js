@@ -10,7 +10,7 @@ module.exports = new EquipmentTemplate("Censer", "Burn a foe for @{damage} (+@{b
 	.setDamage(50)
 	.setBonus(75) // damage
 	.setCost(200)
-	.setUses(10);
+	.setUses(15);
 
 function effect([target], user, isCrit, adventure) {
 	if (target.hp < 1) {

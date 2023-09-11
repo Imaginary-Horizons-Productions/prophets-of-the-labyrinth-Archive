@@ -7,7 +7,7 @@ module.exports = new EquipmentTemplate("Reactive Spear", "Strike a foe for @{dam
 	.setSidegrades("Lethal Spear", "Sweeping Spear")
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Stagger", stacks: 1 }])
 	.setCost(350)
-	.setUses(10)
+	.setUses(15)
 	.setDamage(100)
 	.setBonus(75); // damage
 

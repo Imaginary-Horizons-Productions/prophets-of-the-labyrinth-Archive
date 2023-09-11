@@ -8,7 +8,7 @@ module.exports = new EquipmentTemplate("War Cry", "Inflict @{mod1Stacks} @{mod1}
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Stagger", stacks: 1 }])
 	.setBonus(1) // Stagger stacks
 	.setCost(200)
-	.setUses(10)
+	.setUses(15)
 	.setPriority(1);
 
 function effect([initialTarget], user, isCrit, adventure) {

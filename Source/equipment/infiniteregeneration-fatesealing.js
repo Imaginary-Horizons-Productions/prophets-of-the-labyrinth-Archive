@@ -7,7 +7,7 @@ module.exports = new EquipmentTemplate("Fate Sealing Infinite Regeneration", "Pa
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Regen", stacks: 3 }, { name: "Stasis", stacks: 1 }])
 	.setHpCost(50)
 	.setCost(200)
-	.setUses(5);
+	.setUses(10);
 
 function effect([target], user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger, regen, stasis], hpCost, critBonus } = module.exports;

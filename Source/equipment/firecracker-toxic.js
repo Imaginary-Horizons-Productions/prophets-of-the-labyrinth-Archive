@@ -8,7 +8,7 @@ module.exports = new EquipmentTemplate("Toxic Firecracker", "Strike 3 random foe
 	.setSidegrades("Double Firecracker", "Mercurial Firecracker")
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Poison", stacks: 3 }])
 	.setCost(350)
-	.setUses(5)
+	.setUses(15)
 	.setCritBonus(2)
 	.setDamage(50);
 

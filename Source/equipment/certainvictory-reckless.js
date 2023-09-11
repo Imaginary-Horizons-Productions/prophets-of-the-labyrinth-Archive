@@ -7,7 +7,7 @@ module.exports = new EquipmentTemplate("Reckless Certain Victory", "Strike a foe
 	.setSidegrades("Hunter's Certain Victory", "Lethal Certain Victory")
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Power Up", stacks: 25 }, { name: "Exposed", stacks: 1 }])
 	.setCost(350)
-	.setUses(10)
+	.setUses(15)
 	.setDamage(125);
 
 function effect([target], user, isCrit, adventure) {

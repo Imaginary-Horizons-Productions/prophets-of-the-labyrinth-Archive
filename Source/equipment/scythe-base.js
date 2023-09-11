@@ -7,7 +7,7 @@ module.exports = new EquipmentTemplate("Scythe", "Strike a foe for @{damage} @{e
 	.setUpgrades("Lethal Scythe", "Piercing Scythe", "Toxic Scythe")
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(200)
-	.setUses(10)
+	.setUses(15)
 	.setDamage(75)
 	.setBonus(99); // execute threshold
 

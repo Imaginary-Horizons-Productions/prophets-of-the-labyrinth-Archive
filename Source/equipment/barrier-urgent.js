@@ -7,7 +7,7 @@ module.exports = new EquipmentTemplate("Urgent Barrier", "Grant an ally @{block}
 	.setSidegrades("Purifiying Barrier", "Thick Barrier")
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(350)
-	.setUses(1)
+	.setUses(5)
 	.setBlock(1000)
 	.setPriority(1);
 

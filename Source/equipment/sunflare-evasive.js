@@ -7,7 +7,7 @@ module.exports = new EquipmentTemplate("Evasive Sun Flare", "Inflict @{mod1Stack
 	.setSidegrades("Accelerating Sun Flare", "Tormenting Sun Flare")
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Stagger", stacks: 1 }, { name: "Evade", stacks: 2 }, { name: "Slow", stacks: 2 }])
 	.setCost(350)
-	.setUses(10)
+	.setUses(15)
 	.setPriority(1)
 	.setBlock(50);
 

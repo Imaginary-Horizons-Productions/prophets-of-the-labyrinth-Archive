@@ -9,7 +9,7 @@ module.exports = new EquipmentTemplate("Guarding Vigilance Charm", "Gain @{mod1S
 	.setBonus(2) // Vigilance stacks
 	.setCost(350)
 	.setBlock(60)
-	.setUses(5);
+	.setUses(15);
 
 function effect(targets, user, isCrit, adventure) {
 	let { element, modifiers: [elementStagger, vigilance], bonus, block, critBonus } = module.exports;

@@ -8,7 +8,7 @@ module.exports = new EquipmentTemplate("Mercurial Firecracker", "Strike 3 random
 	.setSidegrades("Double Firecracker", "Toxic Firecracker")
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(350)
-	.setUses(5)
+	.setUses(15)
 	.setCritBonus(2)
 	.setDamage(50);
 

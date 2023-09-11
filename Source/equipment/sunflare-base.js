@@ -7,7 +7,7 @@ module.exports = new EquipmentTemplate("Sun Flare", "Inflict @{mod1Stacks} @{mod
 	.setUpgrades("Accelerating Sun Flare", "Evasive Sun Flare", "Tormenting Sun Flare")
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Stagger", stacks: 1 }, { name: "Slow", stacks: 2 }])
 	.setCost(200)
-	.setUses(10)
+	.setUses(15)
 	.setPriority(1);
 
 function effect([target], user, isCrit, adventure) {

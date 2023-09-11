@@ -7,7 +7,7 @@ module.exports = new EquipmentTemplate("Hunter's Sickle", "Strike a foe for @{da
 	.setSidegrades("Sharpened Sickle", "Toxic Sickle")
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(350)
-	.setUses(10)
+	.setUses(15)
 	.setDamage(75)
 	.setBonus(15); // gold
 

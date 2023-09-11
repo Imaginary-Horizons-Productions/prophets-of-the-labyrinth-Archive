@@ -7,7 +7,7 @@ module.exports = new EquipmentTemplate("Thirsting Battleaxe", "Strike a foe for 
 	.setSidegrades("Prideful Battleaxe", "Thick Battleaxe")
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Exposed", stacks: 1 }])
 	.setCost(350)
-	.setUses(10)
+	.setUses(15)
 	.setDamage(125)
 	.setHealing(60);
 

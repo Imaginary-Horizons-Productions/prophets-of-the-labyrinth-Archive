@@ -7,7 +7,7 @@ module.exports = new EquipmentTemplate("Bow", "Strike a foe for @{damage} @{elem
 	.setUpgrades("Evasive Bow", "Hunter's Bow", "Mercurial Bow")
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(200)
-	.setUses(10)
+	.setUses(15)
 	.setDamage(75)
 	.setPriority(1);
 

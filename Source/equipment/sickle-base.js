@@ -7,7 +7,7 @@ module.exports = new EquipmentTemplate("Sickle", "Strike a foe for @{damage} (+5
 	.setUpgrades("Hunter's Sickle", "Sharpened Sickle", "Toxic Sickle")
 	.setModifiers([{ name: "Stagger", stacks: 1 }])
 	.setCost(200)
-	.setUses(10)
+	.setUses(15)
 	.setDamage(75);
 
 function effect([target], user, isCrit, adventure) {
