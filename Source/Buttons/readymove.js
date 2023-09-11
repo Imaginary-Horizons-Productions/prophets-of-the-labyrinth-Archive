@@ -1,12 +1,11 @@
 const Button = require('../../Classes/Button.js');
 const { EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-const Delver = require('../../Classes/Delver.js');
 const { SAFE_DELIMITER } = require('../../constants.js');
-const { getEmoji, getWeakness, getColor } = require('../elementHelpers.js');
+const { getEmoji, getColor } = require('../elementHelpers.js');
 const { getAdventure } = require('../adventureDAO.js');
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
 const { equipmentToEmbedField } = require('../equipmentDAO.js');
-const { generateTextBar } = require('../../helpers.js');
+const { getArchetype } = require('../Archetypes/_archetypeDictionary.js');
 
 const customId = "readymove";
 module.exports = new Button(customId,
@@ -27,12 +26,13 @@ module.exports = new Button(customId,
 			.setDescription(`Your ${getEmoji(delver.element)} moves add 1 Stagger to enemies and remove 1 Stagger from allies.\n\nPick one option from below as your move for this round:`)
 			.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
 		const enemyOptions = [];
+		const miniPredictBuilder = getArchetype(delver.archetype).miniPredict;
 		for (let i = 0; i < adventure.room.enemies.length; i++) {
 			let enemy = adventure.room.enemies[i];
 			if (enemy.hp > 0) {
 				enemyOptions.push({
 					label: enemy.getName(adventure.room.enemyIdMap),
-					description: miniPredict(delver.predict, enemy),
+					description: miniPredictBuilder(enemy),
 					value: `enemy${SAFE_DELIMITER}${i}`
 				})
 			}
@@ -40,7 +40,7 @@ module.exports = new Button(customId,
 		let delverOptions = adventure.delvers.map((ally, i) => {
 			return {
 				label: ally.name,
-				description: miniPredict(delver.predict, ally),
+				description: miniPredictBuilder(ally),
 				value: `delver${SAFE_DELIMITER}${i}`
 			}
 		});
@@ -83,21 +83,3 @@ module.exports = new Button(customId,
 			.catch(console.error);
 	}
 );
-
-function miniPredict(predictType, combatant) {
-	switch (predictType) {
-		case "Movements":
-			const staggerCount = combatant.getModifierStacks("Stagger");
-			return `Stagger: ${generateTextBar(staggerCount, combatant.staggerThreshold, combatant.staggerThreshold)}`;
-		case "Vulnerabilities":
-			return `Weakness: ${getEmoji(getWeakness(combatant.element))}`;
-		case "Intents":
-			if (combatant instanceof Delver) {
-				return "Move in 2 rounds: Ask them";
-			} else {
-				return `Move in 2 rounds: ${combatant.nextAction}`;
-			}
-		case "Health":
-			return `HP: ${combatant.hp}/${combatant.maxHp}`;
-	}
-}

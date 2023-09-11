@@ -1,11 +1,12 @@
 module.exports = class Archetype {
-	constructor(nameInput) {
+	constructor(nameInput, predictFunction, miniPredictFunction) {
 		this.name = nameInput;
+		this.predict = predictFunction;
+		this.miniPredict = miniPredictFunction;
 	}
 	maxHp = 300;
 	speed = 100;
 	element = "Untyped";
-	predict = "";
 	signatureEquipment = [];
 
 	setHp(integer) {
@@ -20,11 +21,6 @@ module.exports = class Archetype {
 
 	setElement(elementLabel) {
 		this.element = elementLabel;
-		return this;
-	}
-
-	setPredictType(predictEnum) {
-		this.predict = predictEnum;
 		return this;
 	}
 

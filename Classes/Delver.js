@@ -9,7 +9,6 @@ module.exports = class Delver extends Combatant {
 		this.adventureId = adventureIdInput;
 	}
 	isReady = false;
-	predict = "not picked";
 	/** @type {{name: string; uses: number}[]} */
 	equipment = [];
 	startingArtifact = "";
@@ -23,14 +22,6 @@ module.exports = class Delver extends Combatant {
 	setStaggerThreshold = super.setStaggerThreshold;
 
 	setElement = super.setElement;
-
-	/** Sets the predict for the delver.
-	 * @param {"Movements" | "Vulnerabilities" | "Intents" | "Health"} predictEnum
-	 */
-	setPredict(predictEnum) {
-		this.predict = predictEnum;
-		return this;
-	}
 
 	getName() {
 		return this.name;
