@@ -12,10 +12,10 @@ module.exports = new Button(customId,
 		const classOptions = [];
 		for (const className in playerProfile.archetypes) {
 			if (playerProfile.archetypes[className] != null) {
-				let archetype = getArchetype(className);
+				const archetype = getArchetype(className);
 				classOptions.push({
 					label: `${className} ${getEmoji(archetype.element)}`,
-					description: `Predicts: ${archetype.predict}`,
+					description: `Gear: ${archetype.signatureEquipment.join(", ")}`,
 					value: className
 				})
 			}

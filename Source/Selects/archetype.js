@@ -21,8 +21,7 @@ module.exports = new Select(customId, (interaction, args) => {
 		delver.setArchetype(archetypeTemplate.name)
 			.setHp(archetypeTemplate.maxHp)
 			.setSpeed(archetypeTemplate.speed)
-			.setElement(archetypeTemplate.element)
-			.setPredict(archetypeTemplate.predict);
+			.setElement(archetypeTemplate.element);
 
 		setAdventure(adventure);
 

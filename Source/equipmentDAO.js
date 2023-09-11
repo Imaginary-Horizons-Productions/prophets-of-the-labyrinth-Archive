@@ -27,7 +27,7 @@ exports.equipmentToEmbedField = function (equipmentName, uses) {
 exports.inspectSelfPayload = function (delver, equipmentCapacity) {
 	const embed = new EmbedBuilder().setColor(getColor(delver.element))
 		.setTitle(`${delver.getName()} the ${delver.archetype}`)
-		.setDescription(`HP: ${generateTextBar(delver.hp, delver.maxHp, 11)} ${delver.hp}/${delver.maxHp}\nPredicts: ${delver.predict}\nYour ${getEmoji(delver.element)} moves add 1 Stagger to enemies and remove 1 Stagger from allies.`)
+		.setDescription(`HP: ${generateTextBar(delver.hp, delver.maxHp, 11)} ${delver.hp}/${delver.maxHp}\nYour ${getEmoji(delver.element)} moves add 1 Stagger to enemies and remove 1 Stagger from allies.`)
 		.setFooter({ text: "Imaginary Horizons Productions", iconURL: "https://cdn.discordapp.com/icons/353575133157392385/c78041f52e8d6af98fb16b8eb55b849a.png" });
 	if (delver.block > 0) {
 		embed.addFields({ name: "Block", value: delver.block.toString() })
@@ -62,7 +62,7 @@ exports.inspectSelfPayload = function (delver, equipmentCapacity) {
 			actionRow.push(new ButtonBuilder().setCustomId(`modifier${SAFE_DELIMITER}MORE`)
 				.setLabel(`${modifiers.length - 4} more...`)
 				.setStyle(ButtonStyle.Secondary)
-				.setDisabled(delver.predict !== "Modifiers"))
+				.setDisabled(!["Chemist", "Ritualist"].includes(delver.archetype)))
 		}
 		components.push(new ActionRowBuilder().addComponents(...actionRow));
 	}
