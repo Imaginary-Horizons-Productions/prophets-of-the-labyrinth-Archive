@@ -21,31 +21,40 @@ module.exports = new Button(customId,
 		const artifactPool = getAllArtifactNames();
 		let start = parseInt(interaction.user.id) % adventure.rnTable.length;
 		const artifactsRolledSoFar = new Set();
+		let artifactBulletList = "";
 		const playerArtifactCollection = Object.values(playerProfile.artifacts);
-		for (let i = 0; i < MAX_SELECT_OPTIONS - options.length; i++) {
+		for (let i = 0; i < 5; i++) {
 			const digits = Math.ceil(Math.log2(artifactPool.length) / Math.log2(12));
 			const end = (start + digits) % adventure.rnTable.length;
 			const max = 12 ** digits;
 			const sectionLength = max / artifactPool.length;
 			const roll = parseInt(adventure.rnTable.slice(start, end), 12);
 			const rolledArtifact = artifactPool[Math.floor(roll / sectionLength)];
-			if (!artifactsRolledSoFar.has(rolledArtifact) && playerArtifactCollection.includes(rolledArtifact)) {
+			if (!artifactsRolledSoFar.has(rolledArtifact)) {
+				artifactBulletList += `\n- ${rolledArtifact}`;
 				artifactsRolledSoFar.add(rolledArtifact);
-				options.push({
-					label: rolledArtifact,
-					description: getArtifact(rolledArtifact).dynamicDescription(1),
-					value: rolledArtifact
-				})
+				if (playerArtifactCollection.includes(rolledArtifact)) {
+					options.push({
+						label: rolledArtifact,
+						description: getArtifact(rolledArtifact).dynamicDescription(1),
+						value: rolledArtifact
+					})
+				}
 			}
 			start++;
 		}
 
-		const artifactSelect = [new ActionRowBuilder().addComponents(
-			new StringSelectMenuBuilder()
-				.setCustomId("startingartifact")
-				.setPlaceholder("Select an artifact...")
-				.addOptions(options)
-		)];
-		interaction.reply({ content: "Select an artifact from your collection to start with! Each player will have a different set of artifacts to select from.", components: artifactSelect, ephemeral: true });
+		interaction.reply({
+			content: `You can bring 1 of the following artifacts on this adventure (if you've collected that artifact from a previous adventure):${artifactBulletList}\nEach player will have a different set of artifacts to select from.`,
+			components: [
+				new ActionRowBuilder().addComponents(
+					new StringSelectMenuBuilder()
+						.setCustomId("startingartifact")
+						.setPlaceholder("Select an artifact...")
+						.addOptions(options)
+				)
+			],
+			ephemeral: true
+		});
 	}
 );
