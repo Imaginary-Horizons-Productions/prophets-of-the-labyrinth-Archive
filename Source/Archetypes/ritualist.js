@@ -1,5 +1,6 @@
 const Archetype = require("../../Classes/Archetype.js");
 const { generateTextBar } = require("../../helpers.js");
+const { isDebuff } = require("../Modifiers/_modifierDictionary.js");
 const { modifiersToString } = require("../combatantDAO.js");
 
 module.exports = new Archetype("Ritualist",
@@ -11,7 +12,7 @@ module.exports = new Archetype("Ritualist",
 		return [false, embed];
 	},
 	(combatant) => {
-		return `HP: ${combatant.hp}/${combatant.maxHp}`;
+		return `Has Debuffs: ${Object.keys(combatant.modifiers).some(modifier => isDebuff(modifier)) ?  "✅" : "🚫"}`;
 	})
 	.setElement("Fire")
 	.setDescription("Able to divine the health and state of all combatants, the Ritualist punishes foes that dare play against destiny.")

@@ -1,6 +1,5 @@
 const Button = require('../../Classes/Button.js');
 const { ActionRowBuilder, StringSelectMenuBuilder } = require('discord.js');
-const { MAX_SELECT_OPTIONS } = require('../../constants.js');
 const { getPlayer } = require('../playerDAO.js');
 const { getAdventure } = require('../adventureDAO.js');
 const { getArtifact, getAllArtifactNames } = require('../Artifacts/_artifactDictionary.js');
