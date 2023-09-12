@@ -7,6 +7,7 @@ const modifierDictionary = {};
 for (const file of [
 	"absorb-earth.js",
 	"absorb-fire.js",
+	"absorb-untyped.js",
 	"absorb-water.js",
 	"absorb-wind.js",
 	"curse-of-midas.js",
@@ -22,8 +23,13 @@ for (const file of [
 	"slow.js",
 	"stagger.js",
 	"stasis.js",
+	"stun.js",
 	"vigilance.js",
-	"stun.js"
+	"weakness-earth.js",
+	"weakness-fire.js",
+	"weakness-untyped.js",
+	"weakness-water.js",
+	"weakness-wind.js"
 ]) {
 	const modifier = require(`./${file}`);
 	modifierDictionary[modifier.name] = modifier;

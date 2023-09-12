@@ -22,12 +22,25 @@ Can target allies (beyond self)
 - Vigilance Charm (Earth)
 - Buckler (Earth)
 
+### Double
+Doubles the number of targets
+
+#### Avaialble on
+- Firecracker (Fire)
+- Pistol (Earth)
+
 ### Evasive
 User gains Evade
 
 #### Available on
 - Sun Flare (Wind)
 - Bow (Wind)
+
+### Exploiting
+If target is weak to attack, give random ally Power Up
+
+#### Available on
+- all Pistol (Earth)
 
 ### Fate Sealing
 Apply Stasis to target on crit
@@ -142,6 +155,12 @@ Adds block to target
 
 #### Available on
 - Inspiration (Wind)
+
+### Sabotaging
+Adds a random weakness to target
+
+#### Available on
+- all Sabotage Kit (Earth)
 
 ### Sharpened
 Increased base damage

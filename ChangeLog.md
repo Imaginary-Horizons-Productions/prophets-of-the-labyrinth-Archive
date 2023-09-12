@@ -1,7 +1,11 @@
 # Prophets of the Labyrinth Change Log
 #### Prophets of the Labyrinth Version 0.11.1:
+- New Archetype: Detective
+   - Element: Earth; Predicts: Elemental Info & Crits
+- Assassin's Predict now also lists elements combatants will absorb
+- Absorption buffs are now inverted by their weakness (eg `Fire Absorb` now inverts `Fire Weakness`, previously `Fire Absorb` inverted `Water Absorb`)
 - added `/regenerate` command, which resends the current room's message and UI
-- tweaked room rarities, largely made Treasure rooms Rarer
+- tweaked room rarities, largely made Treasure rooms rarer
 - Ritualist's target selection helper text now shows if the target has debuffs or not
 - Buffed gear durability across the board by 50% or more (except Toxic Sickle, which had more durability than its peers)
 #### Prophets of the Labyrinth Verison 0.11.0:

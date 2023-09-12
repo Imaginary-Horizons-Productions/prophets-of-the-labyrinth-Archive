@@ -5,4 +5,4 @@ module.exports = new Modifier("Fire Absorb", 1)
 	.setIsBuff(true)
 	.setIsDebuff(false)
 	.setIsNonStacking(false)
-	.setInverse("Water Absorb");
+	.setInverse("Fire Weakness");

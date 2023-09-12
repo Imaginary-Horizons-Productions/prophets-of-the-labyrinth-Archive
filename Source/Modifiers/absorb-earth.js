@@ -5,4 +5,4 @@ module.exports = new Modifier("Earth Absorb", 1)
 	.setIsBuff(true)
 	.setIsDebuff(false)
 	.setIsNonStacking(false)
-	.setInverse("Wind Absorb");
+	.setInverse("Earth Weakness");

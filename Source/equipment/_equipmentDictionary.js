@@ -63,10 +63,13 @@ for (const file of [
 	"midasstaff-base.js",
 	"midasstaff-soothing.js",
 	"midasstaff-accelerating.js",
+	"pistol-base.js",
+	"pistol-double.js",
 	"potionkit-base.js",
 	"potionkit-guarding.js",
 	"potionkit-organic.js",
 	"potionkit-urgent.js",
+	"sabotagekit-base.js",
 	"scutum-base.js",
 	"scutum-heavy.js",
 	"scutum-sweeping.js",
@@ -148,13 +151,13 @@ exports.buildEquipmentDescription = function (equipmentName, buildFullDescriptio
 			description = exports.getEquipmentProperty(equipmentName, "description");
 		}
 
-		description = description.replace("@{element}", getEmoji(exports.getEquipmentProperty(equipmentName, "element")))
-			.replace("@{critBonus}", exports.getEquipmentProperty(equipmentName, "critBonus"))
-			.replace("@{damage}", exports.getEquipmentProperty(equipmentName, "damage"))
-			.replace("@{bonus}", exports.getEquipmentProperty(equipmentName, "bonus"))
-			.replace("@{block}", exports.getEquipmentProperty(equipmentName, "block"))
-			.replace("@{hpCost}", exports.getEquipmentProperty(equipmentName, "hpCost"))
-			.replace("@{healing}", exports.getEquipmentProperty(equipmentName, "healing"));
+		description = description.replace(/@{element}/g, getEmoji(exports.getEquipmentProperty(equipmentName, "element")))
+			.replace(/@{critBonus}/g, exports.getEquipmentProperty(equipmentName, "critBonus"))
+			.replace(/@{damage}/g, exports.getEquipmentProperty(equipmentName, "damage"))
+			.replace(/@{bonus}/g, exports.getEquipmentProperty(equipmentName, "bonus"))
+			.replace(/@{block}/g, exports.getEquipmentProperty(equipmentName, "block"))
+			.replace(/@{hpCost}/g, exports.getEquipmentProperty(equipmentName, "hpCost"))
+			.replace(/@{healing}/g, exports.getEquipmentProperty(equipmentName, "healing"));
 		exports.getEquipmentProperty(equipmentName, "modifiers").forEach((modifier, index) => {
 			description = description.replace(new RegExp(`@{mod${index}}`, "g"), modifier.name)
 				.replace(new RegExp(`@{mod${index}Stacks}`, "g"), modifier.stacks);
