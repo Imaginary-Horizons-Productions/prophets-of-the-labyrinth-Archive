@@ -96,7 +96,7 @@ Regain durability when entering new rooms
 
 #### Available on
 - Potion Kit (water)
-- Iron Fist Stance (Fire)
+- Iron Fist Stance (Wind)
 
 ### Piercing
 Deals unblockable damage
