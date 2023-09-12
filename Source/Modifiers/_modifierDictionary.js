@@ -12,6 +12,8 @@ for (const file of [
 	"curse-of-midas.js",
 	"evade.js",
 	"exposed.js",
+	"floating-mist-stance.js",
+	"iron-fist-stance.js",
 	"oblivious.js",
 	"poison.js",
 	"power-down.js",
