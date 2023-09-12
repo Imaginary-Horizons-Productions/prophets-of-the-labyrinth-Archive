@@ -5,7 +5,7 @@ const { dealDamage, addModifier, getCombatantWeaknesses } = require('../combatan
 module.exports = new EquipmentTemplate("Pistol", "Strike a foe for @{damage} @{element} damage, give a random ally @{mod1Stacks} @{mod1} if the foe is weak to @{element}", "Damage x@{critBonus}", "Earth", effect)
 	.setCategory("Weapon")
 	.setTargetingTags({ target: "single", team: "enemy" })
-	.setUpgrades("Double Pistol")
+	.setUpgrades("Double Pistol", "Duelist's Pistol")
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Power Up", stacks: 40 }])
 	.setCost(200)
 	.setUses(15)

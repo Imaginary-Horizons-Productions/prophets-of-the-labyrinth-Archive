@@ -52,6 +52,7 @@ module.exports = new Labyrinth("Debug Dungeon", "Untyped", 10, [10])
 					"Piercing Lance",
 					"Vigilant Lance",
 					"Double Pistol",
+					"Duelist's Pistol",
 					"Devoted Vigilance Charm",
 					"Long Vigilance Charm",
 					"Guarding Vigilance Charm",

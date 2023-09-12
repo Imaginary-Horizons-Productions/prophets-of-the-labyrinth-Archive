@@ -29,6 +29,12 @@ Doubles the number of targets
 - Firecracker (Fire)
 - Pistol (Earth)
 
+### Duelist's
+Bonus damage if no allies are targeting the same enemy
+
+#### Available on
+- Pistol (Earth)
+
 ### Evasive
 User gains Evade
 
@@ -262,9 +268,6 @@ Grants Vigilant to user
 - Scutum (Fire)
 
 ## Yet Unused Variants
-### Duelist's
-Bonus damage if no allies are targeting the same enemy
-
 ### Opportunist's
 Bonus damage if at least one other ally is targetting the same enemy
 
