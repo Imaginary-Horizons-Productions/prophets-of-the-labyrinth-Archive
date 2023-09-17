@@ -285,7 +285,7 @@ exports.newRound = function (adventure, thread, lastRoundText) {
 			combatant.roundSpeed = Math.floor(combatant.speed * percentBonus);
 
 			// Roll Critical Hit
-			const baseCritChance = 0.25 + (combatant.critBonus / 100);
+			const baseCritChance = 0.25 * (1 + (combatant.critBonus / 100));
 			const max = 144;
 			let threshold = max * baseCritChance;
 			const featherCount = adventure.getArtifactCount("Hawk Tailfeather");
