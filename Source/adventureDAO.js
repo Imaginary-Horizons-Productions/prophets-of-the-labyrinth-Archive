@@ -107,7 +107,7 @@ const roomTypesByRarity = {
 function rollGearTier(adventure) {
 	const cloverCount = adventure.getArtifactCount("Negative-One Leaf Clover");
 	const baseUpgradeChance = 1 / 8;
-	const cloverUpgradeChance = 1 - 0.80 ** cloverCount;
+	const cloverUpgradeChance = cloverCount > 0 ? 1 - 0.80 ** cloverCount : 1;
 	const max = 144;
 	const threshold = max * baseUpgradeChance / cloverUpgradeChance;
 	adventure.updateArtifactStat("Negative-One Leaf Clover", "Expected Extra Rare Equipment", (threshold / max) - baseUpgradeChance);
