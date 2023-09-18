@@ -38,6 +38,6 @@ jobs:
           # Make sure you have that / at the end. We use rsync
           # WIKI_DIR's default is wiki/
           WIKI_DIR: Wiki/
-          GH_TOKEN: ${{ secrets.WIKI }}
+          GH_TOKEN: ${{ secrets.SECRET_WITH_REPO_ACCESS }}
           GH_MAIL: ${{ secrets.WIKI_EMAIL }}
           GH_NAME: ${{ github.repository_owner }}
