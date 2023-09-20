@@ -285,16 +285,16 @@ exports.newRound = function (adventure, thread, lastRoundText) {
 			combatant.roundSpeed = Math.floor(combatant.speed * percentBonus);
 
 			// Roll Critical Hit
-			const baseCritChance = (1 + (combatant.critBonus / 100)) * (1 / 4) - 1;
+			const baseCritChance = (1 + (combatant.critBonus / 100)) * (1 / 4);
 			const max = 144;
 			let threshold = max * baseCritChance;
-			if (combatant instanceof Delver) {
-				const featherCount = adventure.getArtifactCount("Hawk Tailfeather");
+			const featherCount = adventure.getArtifactCount("Hawk Tailfeather");
+			if (featherCount > 0 && combatant instanceof Delver) {
 				const featherCritChance = 1 - 0.85 ** featherCount;
 				threshold /= featherCritChance;
 				adventure.updateArtifactStat("Hawk Tailfeather", "Expected Extra Critical Hits", (threshold / max) - baseCritChance);
 			}
-			let critRoll = generateRandomNumber(adventure, max, "battle");
+			const critRoll = generateRandomNumber(adventure, max, "battle");
 			combatant.crit = critRoll < threshold;
 
 			// Roll Enemy Moves and Generate Dummy Moves
