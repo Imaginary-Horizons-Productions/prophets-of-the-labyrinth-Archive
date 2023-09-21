@@ -6,7 +6,7 @@ module.exports = new EquipmentTemplate("Fate Sealing Infinite Regeneration", "Pa
 	.setTargetingTags({ target: "single", team: "delver" })
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Regen", stacks: 3 }, { name: "Stasis", stacks: 1 }])
 	.setHpCost(50)
-	.setCost(200)
+	.setCost(350)
 	.setUses(10);
 
 function effect([target], user, isCrit, adventure) {
