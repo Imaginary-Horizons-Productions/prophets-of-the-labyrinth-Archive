@@ -318,7 +318,7 @@ function generateMerchantRows(adventure) {
 			let options = [];
 			categorizedResources[groupName].forEach((resource, i) => {
 				if (adventure.room.resources[resource].count > 0) {
-					const cost = getEquipmentProperty(resource, "cost");
+					const cost = adventure.room.resources[resource].cost;
 					const maxUses = getEquipmentProperty(resource, "maxUses");
 					let description = buildEquipmentDescription(resource, false);
 					if (description.length > 100) {

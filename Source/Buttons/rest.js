@@ -3,6 +3,7 @@ const Button = require('../../Classes/Button.js');
 const { setAdventure, getAdventure } = require('../adventureDAO.js');
 const { gainHealth } = require('../combatantDAO.js');
 const { editButtons, consumeRoomActions } = require('../roomDAO.js');
+const { SAFE_DELIMITER } = require('../../constants.js');
 
 const customId = "rest";
 module.exports = new Button(customId,
@@ -27,7 +28,7 @@ module.exports = new Button(customId,
 		let components = interaction.message.components;
 		if (remainingActions < 1) {
 			components = editButtons(components, {
-				[customId]: { preventUse: true, label: "The party rested", emoji: "✔️" },
+				[`${customId}${SAFE_DELIMITER}${healPercent}`]: { preventUse: true, label: "The party rested", emoji: "✔️" },
 				"viewchallenges": { preventUse: true, label: "The challenger is gone", emoji: "✖️" }
 			});
 		}
