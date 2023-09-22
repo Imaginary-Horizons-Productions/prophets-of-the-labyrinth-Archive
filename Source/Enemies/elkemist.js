@@ -57,7 +57,7 @@ function bubbleEffect(targets, user, isCrit, adventure) {
 	if (isCrit) {
 		progressGained += 10;
 	}
-	for (const target in targets) {
+	for (const target of targets) {
 		for (let modifier in target.modifiers) {
 			if (isBuff(modifier)) {
 				delete target.modifiers[modifier];
