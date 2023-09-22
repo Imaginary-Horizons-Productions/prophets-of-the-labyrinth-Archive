@@ -1,6 +1,6 @@
 const Button = require('../../Classes/Button.js');
 const { EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-const { SAFE_DELIMITER } = require('../../constants.js');
+const { SAFE_DELIMITER, MAX_MESSAGE_ACTION_ROWS } = require('../../constants.js');
 const { getEmoji, getColor } = require('../elementHelpers.js');
 const { getAdventure } = require('../adventureDAO.js');
 const { getEquipmentProperty } = require('../equipment/_equipmentDictionary.js');
