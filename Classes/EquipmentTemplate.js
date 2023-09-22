@@ -29,7 +29,7 @@ module.exports = class EquipmentTemplate {
 	modifiers = []; //[{name, stacks}]
 
 	/** Sets the equipment's category and returns the category via builder pattern
-	 * @param {"Weapon" | "Armor" | "Spell" | "Pact" | "Trinket"} categoryEnum
+	 * @param {"Weapon" | "Armor" | "Spell" | "Pact" | "Trinket" | "Technique"} categoryEnum
 	 * @returns {EquipmentTemplate}
 	 */
 	setCategory(categoryEnum) {

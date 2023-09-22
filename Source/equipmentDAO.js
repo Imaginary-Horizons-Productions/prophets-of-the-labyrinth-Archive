@@ -8,7 +8,7 @@ const { ordinalSuffixEN, generateTextBar } = require("../helpers.js");
 /** Seen in target selection embeds and /inspect-self equipment fields contain nearly all information about the equipment they represent
  * @param {string} equipmentName
  * @param {number} uses
- * @returns {import("discord.js").EmbedField} contents for a message embed field [heading, body]
+ * @returns {import("discord.js").EmbedField} contents for a message embed field
  */
 exports.equipmentToEmbedField = function (equipmentName, uses) {
 	const maxUses = getEquipmentProperty(equipmentName, "maxUses");

@@ -63,7 +63,9 @@ module.exports = new Labyrinth("Debug Dungeon", "Untyped", 10, [10])
 					"Bow",
 					"Cloak",
 					"Daggers",
+					"Floating Mist Stance",
 					"Inspiration",
+					"Iron Fist Stance",
 					"Scythe",
 					"Spear",
 					"Sun Flare"
@@ -81,6 +83,7 @@ module.exports = new Labyrinth("Debug Dungeon", "Untyped", 10, [10])
 					"Reinforcing Inspiration",
 					"Soothing Inspiration",
 					"Sweeping Inspiration",
+					"Organic Iron Fist Stance",
 					"Lethal Scythe",
 					"Piercing Scythe",
 					"Toxic Scythe",

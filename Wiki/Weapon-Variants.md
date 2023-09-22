@@ -96,6 +96,7 @@ Regain durability when entering new rooms
 
 #### Available on
 - Potion Kit (water)
+- Iron Fist Stance (Wind)
 
 ### Piercing
 Deals unblockable damage
@@ -263,3 +264,5 @@ Bonus damage if target has no block
 - Midas Staff (apply Curse of Midas)
 - Infinite Regeneration (pay hp to apply regen)
 - Potion Kit (add potion consumable to loot)
+- Iron Fist Stance (increase Punch damage and stagger)
+- Floating Mist Stance (gain Evade each round)

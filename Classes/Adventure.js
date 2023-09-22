@@ -114,7 +114,7 @@ module.exports.Adventure = class {
 	}
 
 	getEquipmentCapacity() {
-		let count = 4 + this.getArtifactCount("Hammerspace Holster") - this.getChallengeIntensity("Can't Hold All this Value");
+		let count = 3 + this.getArtifactCount("Hammerspace Holster") - this.getChallengeIntensity("Can't Hold All this Value");
 		count = Math.min(MAX_MESSAGE_ACTION_ROWS, count);
 		count = Math.max(1, count);
 		return count;
