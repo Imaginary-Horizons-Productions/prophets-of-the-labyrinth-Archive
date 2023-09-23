@@ -165,6 +165,7 @@ Applies Regen
 #### Avaialble on
 - Midas Staff (Water)
 - Inspiration (Wind)
+- Floating Mist Stance (Wind)
 
 ### Sweeping
 Reduce base damage, hits all enemies/allies
