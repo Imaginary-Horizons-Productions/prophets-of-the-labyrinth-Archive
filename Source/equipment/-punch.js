@@ -19,12 +19,12 @@ function effect([target], user, isCrit, adventure) {
 	const pendingElement = ironFistStacks > 0 ? user.element : element;
 	const floatingMistStacks = user.getModifierStacks("Floating Mist Stacks");
 	let totalStagger = floatingMistStacks * 2;
-	const pendingDamage = damage + (ironFistStacks * 45);
+	let pendingDamage = damage + (ironFistStacks * 45);
 	if (user.element === pendingElement) {
 		totalStagger++;
 	}
 	if (isCrit) {
-		damage *= critBonus;
+		pendingDamage *= critBonus;
 	}
 	if (totalStagger > 0) {
 		addModifier(target, { name: "Stagger", stacks: totalStagger });
