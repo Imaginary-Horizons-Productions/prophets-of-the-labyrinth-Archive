@@ -1,7 +1,8 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { removeModifier, addBlock, payHP } = require('../combatantDAO.js');
+const { needsLivingTargets } = require('../enemyDAO.js');
 
-module.exports = new EquipmentTemplate("Sweeping Blood Aegis", "Pay @{hpCost} hp; gain @{block} block and intercept all later single target moves", "Block x@{critBonus}", "Water", effect)
+module.exports = new EquipmentTemplate("Sweeping Blood Aegis", "Pay @{hpCost} hp; gain @{block} block and intercept all later single target moves", "Block x@{critBonus}", "Water", needsLivingTargets(effect))
 	.setCategory("Pact")
 	.setTargetingTags({ target: "all", team: "enemy" })
 	.setSidegrades("Charging Blood Aegis", "Heavy Blood Aegis")
@@ -27,10 +28,8 @@ function effect(targets, user, isCrit, adventure) {
 	adventure.moves.forEach(move => {
 		if (move.userReference.team === targetTeam && move.targets.length === 1) {
 			const target = adventure.getCombatant(move.userReference);
-			if (target.hp > 0) {
-				move.targets = [{ team: user.team, index: userIndex }];
-				provokedTargets.push(target.getName(adventure.room.enemyIdMap));
-			}
+			move.targets = [{ team: user.team, index: userIndex }];
+			provokedTargets.push(target.getName(adventure.room.enemyIdMap));
 		}
 	})
 

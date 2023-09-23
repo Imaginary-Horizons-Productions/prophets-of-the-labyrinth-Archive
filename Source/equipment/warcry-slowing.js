@@ -30,8 +30,10 @@ function effect([initialTarget], user, isCrit, adventure) {
 		pendingStaggerStacks += bonus;
 	}
 	targetArray.forEach(target => {
-		addModifier(target, { name: "Stagger", stacks: pendingStaggerStacks });
-		addModifier(target, slow);
+		if (target.hp > 0) {
+			addModifier(target, { name: "Stagger", stacks: pendingStaggerStacks });
+			addModifier(target, slow);
+		}
 	})
 	return `${[...targetSet].join(", ")} ${targetArray.length === 1 ? "is" : "are"} staggered and Slowed by the fierce war cry.`;
 }

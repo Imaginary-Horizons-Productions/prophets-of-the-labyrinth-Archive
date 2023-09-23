@@ -87,7 +87,11 @@ exports.dealDamage = async function (targets, user, damage, isUnblockable, eleme
 		}
 	}
 	if (adventure.lives < previousLifeCount) {
-		resultTexts.push(`***${adventure.lives} lives remain.***`);
+		if (adventure.lives === 1) {
+			resultTexts.push(`***${adventure.lives} life remains.***`);
+		} else {
+			resultTexts.push(`***${adventure.lives} lives remain.***`);
+		}
 	}
 	return resultTexts.join(" ");
 }
@@ -105,7 +109,11 @@ exports.payHP = function (user, damage, adventure) {
 		if (user.team === "delver") {
 			user.hp = user.maxHp;
 			adventure.lives -= 1;
-			resultText += ` *${userName} has died* and been revived. ***${adventure.lives} lives remain.***`;
+			if (adventure.lives === 1) {
+				resultText += ` *${userName} has died* and been revived. ***${adventure.lives} life remains.***`;
+			} else {
+				resultText += ` *${userName} has died* and been revived. ***${adventure.lives} lives remain.***`;
+			}
 		} else {
 			user.hp = 0;
 			resultText += ` *${userName} has died*.`;

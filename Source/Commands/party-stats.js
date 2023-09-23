@@ -20,7 +20,7 @@ module.exports.execute = (interaction) => {
 			.setTitle("Party Stats")
 			.setDescription(`${adventure.name} - Depth: ${adventure.depth}`)
 			.addFields([
-				{ name: `${adventure.lives} Lives Remain`, value: "When a player runs out of HP, a life will be lost and they'll be returned to max HP. When all lives are lost, the adventure will end." },
+				{ name: `${adventure.lives} Lives Remaining`, value: "When a player runs out of HP, a life will be lost and they'll be returned to max HP. When all lives are lost, the adventure will end." },
 				{ name: `${adventure.gold} Gold`, value: "Gold is exchanged for goods and services within adventures. Gold *will be lost when an adventure ends*." },
 				{ name: "Consumables", value: Object.keys(adventure.consumables).map(consumable => `${consumable} x ${adventure.consumables[consumable]}`).join("\n") || "None" },
 				{

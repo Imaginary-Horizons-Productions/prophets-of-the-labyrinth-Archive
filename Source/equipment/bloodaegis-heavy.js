@@ -1,7 +1,8 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { removeModifier, addBlock, payHP } = require('../combatantDAO.js');
+const { needsLivingTargets } = require('../enemyDAO.js');
 
-module.exports = new EquipmentTemplate("Heavy Blood Aegis", "Pay @{hpCost} hp; gain @{block} block and intercept a later single target move", "Block x@{critBonus}", "Water", effect)
+module.exports = new EquipmentTemplate("Heavy Blood Aegis", "Pay @{hpCost} hp; gain @{block} block and intercept a later single target move", "Block x@{critBonus}", "Water", needsLivingTargets(effect))
 	.setCategory("Pact")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setSidegrades("Charging Blood Aegis", "Sweeping Blood Aegis")

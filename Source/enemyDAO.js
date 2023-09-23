@@ -40,6 +40,33 @@ module.exports.spawnEnemy = function (adventure, enemyTemplate) {
 	Enemy.setEnemyTitle(adventure.room.enemyIdMap, enemy);
 }
 
+module.exports.needsLivingTargets = function (next) {
+	return (targets, user, isCrit, adventure) => {
+		const livingTargets = [];
+		const deadTargets = [];
+		for (const target of targets) {
+			if (target.hp > 0) {
+				livingTargets.push(target);
+			} else {
+				deadTargets.push(target);
+			}
+		}
+		if (livingTargets.length > 0) {
+			const deadTargetText = "";
+			if (deadTargets.length > 0) {
+				deadTargetText += ` ${deadTargets.map(target => target.getName(adventure.room.enemyIdMap)).join(", ")} ${deadTargets === 1 ? "was" : "were"} already dead!`
+			}
+			return next(livingTargets, user, isCrit, adventure).then(resultText => {
+				return `${resultText}${deadTargetText}`;
+			})
+		} else if (targets.length === 1) {
+			return ` But ${targets[0].getName(adventure.room.enemyIdMap)} was already dead!`;
+		} else {
+			return ` But all targets were already dead!`;
+		}
+	}
+}
+
 module.exports.selectRandomOtherAlly = function (adventure, self) {
 	const selfIndex = self.findMyIndex(adventure);
 	const liveOtherEnemyIndexes = [];

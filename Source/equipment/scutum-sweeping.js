@@ -1,7 +1,8 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addBlock, removeModifier } = require('../combatantDAO.js');
+const { needsLivingTargets } = require('../enemyDAO.js');
 
-module.exports = new EquipmentTemplate("Sweeping Scutum", "Grant @{block} block to all allies (including yourself)", "Block x@{critBonus}", "Fire", effect)
+module.exports = new EquipmentTemplate("Sweeping Scutum", "Grant @{block} block to all allies (including yourself)", "Block x@{critBonus}", "Fire", needsLivingTargets(effect))
 	.setCategory("Armor")
 	.setTargetingTags({ target: "all", team: "delver" })
 	.setSidegrades("Heavy Scutum", "Vigilant Scutum")

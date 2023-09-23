@@ -1,7 +1,8 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { dealDamage, addModifier } = require("../combatantDAO.js");
+const { needsLivingTargets } = require('../enemyDAO.js');
 
-module.exports = new EquipmentTemplate("Spear", "Strike a foe for @{damage} @{element} damage", "Also inflict @{mod1Stacks} @{mod1}", "Wind", effect)
+module.exports = new EquipmentTemplate("Spear", "Strike a foe for @{damage} @{element} damage", "Also inflict @{mod1Stacks} @{mod1}", "Wind", needsLivingTargets(effect))
 	.setCategory("Weapon")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setUpgrades("Lethal Spear", "Reactive Spear", "Sweeping Spear")
@@ -11,10 +12,6 @@ module.exports = new EquipmentTemplate("Spear", "Strike a foe for @{damage} @{el
 	.setDamage(100);
 
 function effect([target], user, isCrit, adventure) {
-	if (target.hp < 1) {
-		return ` ${target.getName(adventure.room.enemyIdMap)} was already dead!`;
-	}
-
 	let { element, modifiers: [elementStagger, critStagger], damage } = module.exports;
 	if (user.element === element) {
 		addModifier(target, elementStagger);

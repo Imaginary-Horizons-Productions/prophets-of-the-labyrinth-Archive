@@ -1,7 +1,8 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addModifier, removeModifier } = require('../combatantDAO.js');
+const { needsLivingTargets } = require('../enemyDAO.js');
 
-module.exports = new EquipmentTemplate("Devoted Vigilance Charm", "Grant an ally @{mod1Stacks} @{mod1}", "@{mod1} +@{bonus}", "Earth", effect)
+module.exports = new EquipmentTemplate("Devoted Vigilance Charm", "Grant an ally @{mod1Stacks} @{mod1}", "@{mod1} +@{bonus}", "Earth", needsLivingTargets(effect))
 	.setCategory("Trinket")
 	.setTargetingTags({ target: "single", team: "delver" })
 	.setSidegrades("Long Vigilance Charm", "Guarding Vigilance Charm")
