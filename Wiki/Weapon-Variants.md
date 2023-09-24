@@ -22,6 +22,12 @@ Can target allies (beyond self)
 - Vigilance Charm (Earth)
 - Buckler (Earth)
 
+### Discounted
+Reduced cost
+#### Available on
+- Infinite Regeneration (Earth)
+- Midas Staff (Water)
+
 ### Evasive
 User gains Evade
 
