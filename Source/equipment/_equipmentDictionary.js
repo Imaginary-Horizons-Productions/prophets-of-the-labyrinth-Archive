@@ -75,6 +75,7 @@ for (const file of [
 	"potionkit-organic.js",
 	"potionkit-urgent.js",
 	"sabotagekit-base.js",
+	"sabotagekit-long.js",
 	"scutum-base.js",
 	"scutum-heavy.js",
 	"scutum-sweeping.js",
