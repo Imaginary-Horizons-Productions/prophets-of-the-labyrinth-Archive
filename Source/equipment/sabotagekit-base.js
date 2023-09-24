@@ -9,7 +9,8 @@ module.exports = new EquipmentTemplate("Sabotage Kit", "Afflict a foe with @{mod
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Slow", stacks: 2 }, { name: "Stagger", stacks: 1 }, { name: "Slow", stacks: 4 }])
 	.setCost(200)
-	.setUses(15);
+	.setUses(15)
+	.setFlavorText({ name: "Eligible Weaknesses", value: "The rolled weakness won't be one of the target's resistances or existing weaknesses" });
 
 function effect([target], user, isCrit, adventure) {
 	if (target.hp < 1) {

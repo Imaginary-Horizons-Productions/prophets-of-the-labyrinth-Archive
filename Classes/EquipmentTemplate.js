@@ -27,6 +27,8 @@ module.exports = class EquipmentTemplate {
 	healing = 0;
 	priority = 0;
 	modifiers = []; //[{name, stacks}]
+	/** @type {import("discord.js").EmbedField} */
+	flavorText;
 
 	/** Sets the equipment's category and returns the category via builder pattern
 	 * @param {"Weapon" | "Armor" | "Spell" | "Pact" | "Trinket" | "Technique"} categoryEnum
@@ -116,6 +118,12 @@ module.exports = class EquipmentTemplate {
 
 	setModifiers(modifiersArray) {
 		this.modifiers = modifiersArray;
+		return this;
+	}
+
+	/** @param {import("discord.js").EmbedField} flavorTextInput */
+	setFlavorText(flavorTextInput) {
+		this.flavorText = flavorTextInput;
 		return this;
 	}
 }

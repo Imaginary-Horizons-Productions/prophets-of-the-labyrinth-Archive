@@ -8,7 +8,8 @@ module.exports = new EquipmentTemplate("Long Sabotage Kit", "Afflict a foe with 
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setModifiers([{ name: "Slow", stacks: 3 }, { name: "Stagger", stacks: 1 }, { name: "Slow", stacks: 5 }])
 	.setCost(350)
-	.setUses(15);
+	.setUses(15)
+	.setFlavorText({ name: "Eligible Weaknesses", value: "The rolled weakness won't be one of the target's resistances or existing weaknesses" });
 
 function effect([target], user, isCrit, adventure) {
 	if (target.hp < 1) {
