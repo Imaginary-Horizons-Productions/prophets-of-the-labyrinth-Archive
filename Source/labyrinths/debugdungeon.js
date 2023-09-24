@@ -171,7 +171,7 @@ module.exports = new Labyrinth("Debug Dungeon", "Untyped", 10, [10])
 		})
 	.setRooms(
 		{
-			"Event": ["Twin Pedestals", "Elemental Research", "Free Gold?", "Health Redistribution", "The Score Beggar", "Repair Kit, just hanging out", "Abandoned Forge", "Equipment Merchant", "Consumable Merchant", "Overpriced Merchant", "Rest Site", "Treasure!"],
+			"Event": ["Twin Pedestals", "Elemental Research", "Free Gold?", "Health Redistribution", "The Score Beggar", "Repair Kit, just hanging out", "Abandoned Forge", "Equipment Merchant", "Consumable Merchant", "Overpriced Merchant", "Rest Site", "Treasure! Artifact or Gold?"],
 			"Battle": ["Hawk Fight", "Frog Fight", "Mechabee Fight", "Slime Fight", "Tortoise Fight"],
 			"Merchant": ["Equipment Merchant", "Consumable Merchant", "Overpriced Merchant"],
 			"Rest Site": ["Rest Site"],
