@@ -34,5 +34,5 @@ function effect([target], user, isCrit, adventure) {
 			addModifier(target, { name: rolledWeakness, stacks: 3 });
 		}
 	}
-	return `${target.getName(adventure.room.enemyIdMap)} is Slowed, Staggered${weaknessPool.length > 0 ? `, and gains ${rolledWeakness}` : ""}.`;
+	return `${target.getName(adventure.room.enemyIdMap)} is Slowed${weaknessPool.length > 0 ? `, and gains ${rolledWeakness}` : ""}.`;
 }
