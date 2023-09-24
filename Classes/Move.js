@@ -1,7 +1,7 @@
 const { CombatantReference } = require("./Adventure");
 const Delver = require("./Delver");
 const Enemy = require("./Enemy");
-const { calculateTotalSpeed, removeModifier } = require("../Source/combatantDAO");
+const { calculateTotalSpeed } = require("../Source/combatantDAO");
 
 module.exports.Move = class {
 	constructor() {
@@ -11,7 +11,7 @@ module.exports.Move = class {
 		this.randomOrder = 0;
 		this.priority = 0;
 		this.isCrit = false;
-		this.userReference; //TODO #76 convert to array to support joint/combo moves
+		this.userReference;
 		/** @type {CombatantReference[]} */
 		this.targets = [];
 	}

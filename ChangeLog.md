@@ -15,6 +15,7 @@
 - New Gear Variants:
    - Discounted Infinite Regeneration
    - Discounted Midas Staff
+   - Reactive Warhammer
 #### Prophets of the Labyrinth Verison 0.11.0:
 - New Archetype: Legionnaire
    - Element: Fire; Predicts: Intents

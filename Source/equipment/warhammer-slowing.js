@@ -2,10 +2,10 @@ const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { dealDamage, addModifier } = require('../combatantDAO.js');
 const { needsLivingTargets } = require('../enemyDAO.js');
 
-module.exports = new EquipmentTemplate("Slowing Warhammer", "Strike a foe for @{damage} (+@{bonus} if foe is already stunned) @{element} damage and inflict @{mod1Stacks} @{mod1}", "Damage x@{critBonus}", "Earth", needsLivingTargets(effect))
+module.exports = new EquipmentTemplate("Slowing Warhammer", "Strike a foe for @{damage} (+@{bonus} if foe is currently stunned) @{element} damage and inflict @{mod1Stacks} @{mod1}", "Damage x@{critBonus}", "Earth", needsLivingTargets(effect))
 	.setCategory("Weapon")
 	.setTargetingTags({ target: "single", team: "enemy" })
-	.setSidegrades("Piercing Warhammer")
+	.setSidegrades("Piercing Warhammer", "Reactive Warhammer")
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Slow", stacks: 1 }])
 	.setCost(350)
 	.setUses(15)

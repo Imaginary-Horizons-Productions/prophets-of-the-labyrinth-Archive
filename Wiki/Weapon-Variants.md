@@ -130,6 +130,7 @@ Increased damage against a foe with higher speed
 #### Available on
 - Spear (Wind)
 - Life Drain (Water)
+- Warhammer (Earth)
 
 ### Reaper's
 Instant death if target is below hp threshold

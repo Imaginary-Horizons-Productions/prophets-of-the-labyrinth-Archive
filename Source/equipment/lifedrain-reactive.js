@@ -2,7 +2,7 @@ const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addModifier, dealDamage, gainHealth, compareMoveSpeed } = require('../combatantDAO.js');
 const { needsLivingTargets } = require('../enemyDAO.js');
 
-module.exports = new EquipmentTemplate("Reactive Life Drain", "Strike a foe for @{damage} (+@{bonus} if foe went first) @{element} damage, then gain @{healing} hp", "Healing x@{critBonus}", "Water", needsLivingTargets(effect))
+module.exports = new EquipmentTemplate("Reactive Life Drain", "Strike a foe for @{damage} (+@{bonus} if after foe) @{element} damage, then gain @{healing} hp", "Healing x@{critBonus}", "Water", needsLivingTargets(effect))
 	.setCategory("Spell")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setSidegrades("Flanking Life Drain", "Urgent Life Drain")
