@@ -25,7 +25,12 @@ for (const file of [
 	"merchant-consumable.js",
 	"merchant-overpriced.js",
 	"restsite-basic.js",
-	"treasure-basic.js"
+	"treasure-artifactvsgear.js",
+	"treasure-artifactvsgold.js",
+	"treasure-artifactvsitems.js",
+	"treasure-gearvsitems.js",
+	"treasure-goldvsgear.js",
+	"treasure-goldvsitems.js"
 ]) {
 	const room = require(`./${file}`);
 	ROOMS[room.title] = room;
