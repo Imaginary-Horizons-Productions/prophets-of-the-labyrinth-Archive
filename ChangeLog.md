@@ -12,6 +12,9 @@
    - 1 of 2 pieces of equipment
    - a large sum of gold
    - a pair of consumables
+- New Gear Variants:
+   - Discounted Infinite Regeneration
+   - Discounted Midas Staff
 #### Prophets of the Labyrinth Verison 0.11.0:
 - New Archetype: Legionnaire
    - Element: Fire; Predicts: Intents
