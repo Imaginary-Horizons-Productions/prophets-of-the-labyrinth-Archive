@@ -35,6 +35,12 @@ Bonus damage if no allies are targeting the same enemy
 #### Available on
 - Pistol (Earth)
 
+### Discounted
+Reduced cost
+#### Available on
+- Infinite Regeneration (Earth)
+- Midas Staff (Water)
+
 ### Evasive
 User gains Evade
 

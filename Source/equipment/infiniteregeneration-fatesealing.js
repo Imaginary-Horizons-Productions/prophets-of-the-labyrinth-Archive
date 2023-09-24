@@ -5,6 +5,7 @@ const { needsLivingTargets } = require('../enemyDAO.js');
 module.exports = new EquipmentTemplate("Fate Sealing Infinite Regeneration", "Pay @{hpCost} hp to grant an ally @{mod1Stacks} @{mod1}", "HP Cost / @{critBonus} and grant @{mod2Stacks} @{mod2}", "Earth", needsLivingTargets(effect))
 	.setCategory("Pact")
 	.setTargetingTags({ target: "single", team: "delver" })
+	.setSidegrades("Discounted Infinite Regeneration")
 	.setModifiers([{ name: "Stagger", stacks: 1 }, { name: "Regen", stacks: 3 }, { name: "Stasis", stacks: 1 }])
 	.setHpCost(50)
 	.setCost(350)
