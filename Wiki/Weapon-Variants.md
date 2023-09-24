@@ -102,6 +102,7 @@ Increased stack count of buff/debuff applied
 #### Available on
 - Cloak (Wind)
 - Vigilance Charm (Earth)
+- Long Sabotage Kit (Earth)
 
 ### Mercurial
 Damage type matches user

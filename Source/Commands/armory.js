@@ -28,6 +28,11 @@ module.exports.execute = (interaction) => {
 			fields.push({ name: "Can be Tinkered Into", value: sidegrades.join(", ") });
 		}
 
+		const flavorText = getEquipmentProperty(equipmentName, "flavorText");
+		if (flavorText) {
+			fields.push(flavorText);
+		}
+
 		const embed = embedTemplate(interaction.client.user.displayAvatarURL()).setColor(getColor(getEquipmentProperty(equipmentName, "element")))
 			.setTitle(equipmentName)
 			.setDescription(buildEquipmentDescription(equipmentName, true))
