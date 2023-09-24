@@ -11,7 +11,6 @@ const { SAFE_DELIMITER } = require("../../constants.js");
 const { isSponsor, generateRandomNumber } = require('./../../helpers.js');
 
 const DESCRIPTORS = ["Shining", "New", "Dusty", "Old", "Floating", "Undersea", "Future", "Intense", "Fiery", "Crumbling"];
-const LOCATIONS = ["Pyramid", "Adventure", "Castle", "Labyrinth", "Ruins", "Plateau", "Dungeon", "Maze", "Fortress", "Dream"];
 
 const mainId = "delve";
 const options = [
@@ -49,10 +48,9 @@ module.exports.execute = (interaction) => {
 	prerollBoss("Final Battle", adventure);
 	prerollBoss("Artifact Guardian", adventure);
 
-	//TODO #469 generate adventure name using labyrinth name
 	const elementPool = elementsList();
 	const pickedElement = elementPool[generateRandomNumber(adventure, elementPool.length, "general")];
-	adventure.setName(`${DESCRIPTORS[generateRandomNumber(adventure, DESCRIPTORS.length, "general")]} ${LOCATIONS[generateRandomNumber(adventure, LOCATIONS.length, "general")]} of ${pickedElement}`)
+	adventure.setName(`${DESCRIPTORS[generateRandomNumber(adventure, DESCRIPTORS.length, "general")]} ${labyrinthName} of ${pickedElement}`)
 		.setElement(pickedElement);
 
 	const embed = new EmbedBuilder().setColor(getColor(pickedElement))
