@@ -1,7 +1,8 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addBlock, removeModifier, addModifier } = require('../combatantDAO.js');
+const { needsLivingTargets } = require('../enemyDAO.js');
 
-module.exports = new EquipmentTemplate("Heavy Buckler", "Grant an ally @{block} block and gain @{mod1Stacks} @{mod1}", "Block x@{critBonus}", "Earth", effect)
+module.exports = new EquipmentTemplate("Heavy Buckler", "Grant an ally @{block} block and gain @{mod1Stacks} @{mod1}", "Block x@{critBonus}", "Earth", needsLivingTargets(effect))
 	.setCategory("Armor")
 	.setTargetingTags({ target: "single", team: "delver" })
 	.setSidegrades("Devoted Buckler", "Guarding Buckler")

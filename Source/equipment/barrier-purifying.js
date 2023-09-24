@@ -1,8 +1,9 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addBlock, removeModifier } = require('../combatantDAO.js');
+const { needsLivingTargets } = require('../enemyDAO.js');
 const { isDebuff } = require('../Modifiers/_modifierDictionary.js');
 
-module.exports = new EquipmentTemplate("Purifying Barrier", "Grant an ally @{block} block and cure them of all debuffs", "Block x@{critBonus}", "Fire", effect)
+module.exports = new EquipmentTemplate("Purifying Barrier", "Grant an ally @{block} block and cure them of all debuffs", "Block x@{critBonus}", "Fire", needsLivingTargets(effect))
 	.setCategory("Spell")
 	.setTargetingTags({ target: "single", team: "delver" })
 	.setSidegrades("Thick Barrier", "Urgent Barrier")
@@ -19,7 +20,7 @@ function effect([target], user, isCrit, adventure) {
 		block *= critBonus;
 	}
 	addBlock(target, block);
-	let debuffs = [];
+	const debuffs = [];
 	for (let modifier in target.modifiers) {
 		if (isDebuff(modifier)) {
 			delete target.modifiers[modifier];

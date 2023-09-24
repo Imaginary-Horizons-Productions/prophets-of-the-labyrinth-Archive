@@ -67,7 +67,9 @@ module.exports = new Labyrinth("Debug Dungeon", "Untyped", 10, [10])
 					"Bow",
 					"Cloak",
 					"Daggers",
+					"Floating Mist Stance",
 					"Inspiration",
+					"Iron Fist Stance",
 					"Scythe",
 					"Spear",
 					"Sun Flare"
@@ -82,9 +84,11 @@ module.exports = new Labyrinth("Debug Dungeon", "Untyped", 10, [10])
 					"Sharpened Daggers",
 					"Slowing Daggers",
 					"Sweeping Daggers",
+					"Soothing Floating Mist Stance",
 					"Reinforcing Inspiration",
 					"Soothing Inspiration",
 					"Sweeping Inspiration",
+					"Organic Iron Fist Stance",
 					"Lethal Scythe",
 					"Piercing Scythe",
 					"Toxic Scythe",
@@ -178,7 +182,7 @@ module.exports = new Labyrinth("Debug Dungeon", "Untyped", 10, [10])
 			"Final Battle": ["A Northern Laboratory", "Hall of Mirrors", "The Hexagon"],
 			"Forge": ["Abandoned Forge"],
 			"Artifact Guardian": ["A Slimy Throneroom", "A windfall of treasure!"],
-			"Treasure": ["Treasure!"],
+			"Treasure": ["Treasure! Artifact or Equipment?", "Treasure! Artifact or Gold?", "Treasure! Artifact or Consumables?", "Treasure! Equipment or Consumables?", "Treasure! Gold or Equipment?", "Treasure! Gold or Consumables?"],
 			"Empty": ["Empty Room"]
 		}
 	);

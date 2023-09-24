@@ -3,7 +3,7 @@ const Resource = require('../../Classes/Resource.js');
 const { generateRandomNumber } = require('../../helpers.js');
 const { removeModifier } = require('../combatantDAO.js');
 
-module.exports = new EquipmentTemplate("Organic Potion Kit", "Add 1 random potion to loot, regain 1 durability when entering a new room", "Instead add @{critBonus} potions", "Water", effect)
+module.exports = new EquipmentTemplate("Organic Potion Kit", "Add 1 random potion to loot, regain 1 durability each room", "Instead add @{critBonus} potions", "Water", effect)
 	.setCategory("Trinket")
 	.setTargetingTags({ target: "none", team: "none" })
 	.setSidegrades("Guarding Potion Kit", "Urgent Potion Kit")

@@ -1,7 +1,8 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { dealDamage, addModifier } = require('../combatantDAO.js');
+const { needsLivingTargets } = require('../enemyDAO.js');
 
-module.exports = new EquipmentTemplate("Tormenting Censer", "Burn a foe for @{damage} (+@{bonus} if target has debuffs) @{element} damage, duplicate its debuffs", "Also apply @{mod1Stacks} @{mod1}", "Fire", effect)
+module.exports = new EquipmentTemplate("Tormenting Censer", "Burn a foe for @{damage} (+@{bonus} if target has debuffs) @{element} damage, duplicate its debuffs", "Also apply @{mod1Stacks} @{mod1}", "Fire", needsLivingTargets(effect))
 	.setCategory("Trinket")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setSidegrades("Fate Sealing Censer", "Thick Censer")
@@ -12,10 +13,6 @@ module.exports = new EquipmentTemplate("Tormenting Censer", "Burn a foe for @{da
 	.setUses(15);
 
 function effect([target], user, isCrit, adventure) {
-	if (target.hp < 1) {
-		return ` ${target.getName(adventure.room.enemyIdMap)} was already dead!`;
-	}
-
 	let { element, modifiers: [elementStagger, slow], damage, bonus } = module.exports;
 	for (const modifier in target.modifiers) {
 		if (isDebuff(modifier)) {

@@ -1,5 +1,5 @@
 const Archetype = require("../../Classes/Archetype.js");
-const {  generateTextBar } = require("../../helpers.js");
+const { generateTextBar } = require("../../helpers.js");
 const { calculateTotalSpeed } = require("../combatantDAO.js");
 
 module.exports = new Archetype("Martial Artist",
@@ -22,4 +22,4 @@ module.exports = new Archetype("Martial Artist",
 	})
 	.setElement("Wind")
 	.setDescription("Able to assess combatant Stun thresholds and speed, the Martial Artist excels at stunning foes.")
-	.setSignatureEquipment(["Spear", "Sun Flare"]);
+	.setSignatureEquipment(["Iron Fist Stance", "Floating Mist Stance"]);

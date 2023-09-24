@@ -1,7 +1,8 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addModifier } = require('../combatantDAO.js');
+const { needsLivingTargets } = require('../enemyDAO.js');
 
-module.exports = new EquipmentTemplate("Sun Flare", "Inflict @{mod1Stacks} @{mod1} on a foe with priority", "Also inflict @{mod2Stacks} @{mod2}", "Wind", effect)
+module.exports = new EquipmentTemplate("Sun Flare", "Inflict @{mod1Stacks} @{mod1} on a foe with priority", "Also inflict @{mod2Stacks} @{mod2}", "Wind", needsLivingTargets(effect))
 	.setCategory("Spell")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setUpgrades("Accelerating Sun Flare", "Evasive Sun Flare", "Tormenting Sun Flare")
@@ -11,10 +12,6 @@ module.exports = new EquipmentTemplate("Sun Flare", "Inflict @{mod1Stacks} @{mod
 	.setPriority(1);
 
 function effect([target], user, isCrit, adventure) {
-	if (target.hp < 1) {
-		return ` ${target.getName(adventure.room.enemyIdMap)} was already dead!`;
-	}
-
 	let { element, modifiers: [elementStagger, stagger, slow] } = module.exports;
 	if (user.element === element) {
 		addModifier(target, elementStagger);

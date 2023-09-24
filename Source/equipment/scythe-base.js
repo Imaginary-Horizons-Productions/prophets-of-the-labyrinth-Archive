@@ -1,7 +1,8 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addModifier, dealDamage } = require('../combatantDAO.js');
+const { needsLivingTargets } = require('../enemyDAO.js');
 
-module.exports = new EquipmentTemplate("Scythe", "Strike a foe for @{damage} @{element} damage; instant death if foe is at or below @{bonus} hp", "Instant death threshold x@{critBonus}", "Wind", effect)
+module.exports = new EquipmentTemplate("Scythe", "Strike a foe for @{damage} @{element} damage; instant death if foe is at or below @{bonus} hp", "Instant death threshold x@{critBonus}", "Wind", needsLivingTargets(effect))
 	.setCategory("Weapon")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setUpgrades("Lethal Scythe", "Piercing Scythe", "Toxic Scythe")
@@ -12,10 +13,6 @@ module.exports = new EquipmentTemplate("Scythe", "Strike a foe for @{damage} @{e
 	.setBonus(99); // execute threshold
 
 function effect([target], user, isCrit, adventure) {
-	if (target.hp < 1) {
-		return ` ${target.getName(adventure.room.enemyIdMap)} was already dead!`;
-	}
-
 	let { element, modifiers: [elementStagger], damage, bonus: hpThreshold, critBonus } = module.exports;
 	if (user.element === element) {
 		addModifier(target, elementStagger);

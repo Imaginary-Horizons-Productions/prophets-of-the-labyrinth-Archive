@@ -1,7 +1,8 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addModifier, removeModifier } = require('../combatantDAO.js');
+const { needsLivingTargets } = require('../enemyDAO.js');
 
-module.exports = new EquipmentTemplate("Soothing Inspiration", "Apply @{mod1Stacks} @{mod1} and @{mod2Stacks} @{mod2} to an ally", "@{mod1} +@{bonus}", "Wind", effect)
+module.exports = new EquipmentTemplate("Soothing Inspiration", "Apply @{mod1Stacks} @{mod1} and @{mod2Stacks} @{mod2} to an ally", "@{mod1} +@{bonus}", "Wind", needsLivingTargets(effect))
 	.setCategory("Spell")
 	.setTargetingTags({ target: "single", team: "delver" })
 	.setSidegrades("Reinforcing Inspiration", "Sweeping Inspiration")

@@ -1,7 +1,8 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { dealDamage, addModifier, payHP } = require('../combatantDAO.js');
+const { needsLivingTargets } = require('../enemyDAO.js');
 
-module.exports = new EquipmentTemplate("Hunter's Certain Victory", "Strike a foe for @{damage} @{element} damage, gain @{mod1Stacks} @{mod1} (@{bonus}g on kill); pay HP for your @{mod1}", "Damage x@{critBonus}", "Earth", effect)
+module.exports = new EquipmentTemplate("Hunter's Certain Victory", "Strike a foe for @{damage} @{element} damage, gain @{mod1Stacks} @{mod1} (@{bonus}g on kill); pay HP for your @{mod1}", "Damage x@{critBonus}", "Earth", needsLivingTargets(effect))
 	.setCategory("Pact")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setSidegrades("Lethal Certain Victory", "Reckless Certain Victory")
@@ -12,10 +13,6 @@ module.exports = new EquipmentTemplate("Hunter's Certain Victory", "Strike a foe
 	.setBonus(15);
 
 function effect([target], user, isCrit, adventure) {
-	if (target.hp < 1) {
-		return ` ${target.getName(adventure.room.enemyIdMap)} was already dead!`;
-	}
-
 	let { element, modifiers: [elementStagger, powerUp], damage, bonus: bounty, critBonus } = module.exports;
 	if (user.element === element) {
 		addModifier(target, elementStagger);

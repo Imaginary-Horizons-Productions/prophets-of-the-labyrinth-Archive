@@ -17,7 +17,7 @@ const { getEnemy } = require("./Enemies/_enemyDictionary");
 const { rollEquipmentDrop, rollConsumable, getLabyrinthProperty, prerollBoss, rollRoom } = require("./labyrinths/_labyrinthDictionary.js");
 const { getTurnDecrement } = require("./Modifiers/_modifierDictionary.js");
 
-const { clearBlock, removeModifier, compareMoveSpeed } = require("./combatantDAO.js");
+const { clearBlock, removeModifier, compareMoveSpeed, addModifier } = require("./combatantDAO.js");
 const { spawnEnemy } = require("./enemyDAO.js");
 const { getGuild, setGuild } = require("./guildDAO.js");
 const { resolveMove } = require("./moveDAO.js");
@@ -337,6 +337,12 @@ exports.newRound = function (adventure, thread, lastRoundText) {
 			// Decrement Modifiers
 			for (const modifier in combatant.modifiers) {
 				removeModifier(combatant, { name: modifier, stacks: getTurnDecrement(modifier), force: true })
+			}
+
+			// Persisting Round Effects
+			const floatingMistStacks = combatant.getModifierStacks("Floating Mist Stance");
+			if (floatingMistStacks > 0) {
+				addModifier(combatant, { name: "Evade", stacks: floatingMistStacks * 2 });
 			}
 		})
 	}

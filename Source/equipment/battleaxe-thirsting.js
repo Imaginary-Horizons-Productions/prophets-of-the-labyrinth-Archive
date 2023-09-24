@@ -1,7 +1,8 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addModifier, dealDamage, gainHealth } = require('../combatantDAO.js');
+const { needsLivingTargets } = require('../enemyDAO.js');
 
-module.exports = new EquipmentTemplate("Thirsting Battleaxe", "Strike a foe for @{damage} @{element} damage, gain @{mod1Stacks} @{mod1}; heal @{healing} hp on kill", "Damage x@{critBonus}", "Fire", effect)
+module.exports = new EquipmentTemplate("Thirsting Battleaxe", "Strike a foe for @{damage} @{element} damage, gain @{mod1Stacks} @{mod1}; heal @{healing} hp on kill", "Damage x@{critBonus}", "Fire", needsLivingTargets(effect))
 	.setCategory("Weapon")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setSidegrades("Prideful Battleaxe", "Thick Battleaxe")
@@ -12,10 +13,6 @@ module.exports = new EquipmentTemplate("Thirsting Battleaxe", "Strike a foe for 
 	.setHealing(60);
 
 function effect([target], user, isCrit, adventure) {
-	if (target.hp < 1) {
-		return ` ${target.getName(adventure.room.enemyIdMap)} was already dead!`;
-	}
-
 	let { element, modifiers: [elementStagger, exposed], damage, critBonus, healing } = module.exports;
 	if (user.element === element) {
 		addModifier(target, elementStagger);

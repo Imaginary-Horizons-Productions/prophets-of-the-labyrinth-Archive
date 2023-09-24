@@ -1,7 +1,8 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { dealDamage, addModifier, addBlock } = require('../combatantDAO.js');
+const { needsLivingTargets } = require('../enemyDAO.js');
 
-module.exports = new EquipmentTemplate("Vigilant Lance", "Strike a foe for @{damage} @{element} damage (double increase from Power Up), then gain @{mod1Stacks} @{mod1}", "Damage x@{critBonus}", "Earth", effect)
+module.exports = new EquipmentTemplate("Vigilant Lance", "Strike a foe for @{damage} @{element} damage (double increase from Power Up), then gain @{mod1Stacks} @{mod1}", "Damage x@{critBonus}", "Earth", needsLivingTargets(effect))
 	.setCategory("Weapon")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setSidegrades("Accelerating Lance", "Piercing Lance")
@@ -12,10 +13,6 @@ module.exports = new EquipmentTemplate("Vigilant Lance", "Strike a foe for @{dam
 	.setBlock(75);
 
 function effect([target], user, isCrit, adventure) {
-	if (target.hp < 1) {
-		return ` ${target.getName(adventure.room.enemyIdMap)} was already dead!`;
-	}
-
 	let { element, modifiers: [elementStagger, vigilance], damage, block, critBonus } = module.exports;
 	if (user.element === element) {
 		addModifier(target, elementStagger);

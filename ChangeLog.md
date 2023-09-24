@@ -8,6 +8,14 @@
 - tweaked room rarities, largely made Treasure rooms rarer
 - Ritualist's target selection helper text now shows if the target has debuffs or not
 - Buffed gear durability across the board by 50% or more (except Toxic Sickle, which had more durability than its peers)
+- Reworked Martial Artist starting gear
+   - Iron Fist Stance: increases Punch damage and changes it to your element
+   - Floating Mist Stance: grants Evade each turn and increases Punch inflicted by Stagger
+- Treasure rooms now have a random 2 of the following four options (players can still only pick one):
+   - an artifact
+   - 1 of 2 pieces of equipment
+   - a large sum of gold
+   - a pair of consumables
 #### Prophets of the Labyrinth Verison 0.11.0:
 - New Archetype: Legionnaire
    - Element: Fire; Predicts: Intents

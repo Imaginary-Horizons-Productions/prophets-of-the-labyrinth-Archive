@@ -1,8 +1,9 @@
 const ConsumableTemplate = require("../../Classes/ConsumableTemplate.js");
 const { addBlock } = require("../combatantDAO.js");
+const { needsLivingTargets } = require("../enemyDAO.js");
 const { selectAllAllies } = require("./selectors/selectAllAllies.js");
 
-module.exports = new ConsumableTemplate("Block Potion", "Adds 50 block to all allies", selectAllAllies, effect)
+module.exports = new ConsumableTemplate("Block Potion", "Adds 50 block to all allies", selectAllAllies, needsLivingTargets(effect))
 	.setElement("Untyped")
 	.setCost(30)
 	.setTargetTags("all", "delver")

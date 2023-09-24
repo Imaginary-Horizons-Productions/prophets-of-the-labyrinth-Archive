@@ -1,7 +1,8 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { addModifier } = require('../combatantDAO.js');
+const { needsLivingTargets } = require('../enemyDAO.js');
 
-module.exports = new EquipmentTemplate("Soothing Midas Staff", "Apply @{mod1Stacks} @{mod1} and @{mod2Stacks} @{mod2} to a combatant", "@{mod1} +@{bonus}", "Water", effect)
+module.exports = new EquipmentTemplate("Soothing Midas Staff", "Apply @{mod1Stacks} @{mod1} and @{mod2Stacks} @{mod2} to a combatant", "@{mod1} +@{bonus}", "Water", needsLivingTargets(effect))
 	.setCategory("Weapon")
 	.setTargetingTags({ target: "single", team: "any" })
 	.setSidegrades("Accelerating Midas Staff")
@@ -11,10 +12,6 @@ module.exports = new EquipmentTemplate("Soothing Midas Staff", "Apply @{mod1Stac
 	.setUses(10);
 
 function effect([target], user, isCrit, adventure) {
-	if (target.hp < 1) {
-		return ` ${target.getName(adventure.room.enemyIdMap)} was already dead!`;
-	}
-
 	let { element, modifiers: [elementStagger, curse, regen], bonus } = module.exports;
 	const pendingCurse = { ...curse, stacks: curse.stacks + (isCrit ? bonus : 0) };
 	if (user.element === element) {

@@ -1,7 +1,8 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { dealDamage, addModifier } = require('../combatantDAO.js');
+const { needsLivingTargets } = require('../enemyDAO.js');
 
-module.exports = new EquipmentTemplate("Slowing Warhammer", "Strike a foe for @{damage} (+@{bonus} if foe is already stunned) @{element} damage and inflict @{mod1Stacks} @{mod1}", "Damage x@{critBonus}", "Earth", effect)
+module.exports = new EquipmentTemplate("Slowing Warhammer", "Strike a foe for @{damage} (+@{bonus} if foe is already stunned) @{element} damage and inflict @{mod1Stacks} @{mod1}", "Damage x@{critBonus}", "Earth", needsLivingTargets(effect))
 	.setCategory("Weapon")
 	.setTargetingTags({ target: "single", team: "enemy" })
 	.setSidegrades("Piercing Warhammer")
@@ -12,10 +13,6 @@ module.exports = new EquipmentTemplate("Slowing Warhammer", "Strike a foe for @{
 	.setBonus(75); // damage
 
 function effect([target], user, isCrit, adventure) {
-	if (target.hp < 1) {
-		return ` ${target.getName(adventure.room.enemyIdMap)} was already dead!`;
-	}
-
 	let { element, modifiers: [elementStagger, slow], damage, bonus, critBonus } = module.exports;
 
 	if (target.getModifierStacks("Stun") > 0) {

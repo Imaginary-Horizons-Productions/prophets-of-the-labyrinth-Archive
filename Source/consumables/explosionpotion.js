@@ -1,8 +1,9 @@
 const ConsumableTemplate = require("../../Classes/ConsumableTemplate.js");
 const { dealDamage } = require("../combatantDAO.js");
+const { needsLivingTargets } = require("../enemyDAO.js");
 const { selectAllFoes } = require("./selectors/selectAllFoes.js");
 
-module.exports = new ConsumableTemplate("Explosion Potion", "Deal 75 damage to all enemies", selectAllFoes, effect)
+module.exports = new ConsumableTemplate("Explosion Potion", "Deal 75 damage to all enemies", selectAllFoes, needsLivingTargets(effect))
 	.setElement("Untyped")
 	.setCost(30)
 	.setTargetTags("all", "enemy")

@@ -1,8 +1,9 @@
 const EquipmentTemplate = require('../../Classes/EquipmentTemplate.js');
 const { dealDamage, addModifier } = require('../combatantDAO.js');
 const { SAFE_DELIMITER } = require("../../constants.js");
+const { needsLivingTargets } = require('../enemyDAO.js');
 
-module.exports = new EquipmentTemplate("Toxic Firecracker", "Strike 3 random foes applying @{mod1Stacks} @{mod1} and @{damage} @{element} damage", "Damage x@{critBonus}", "Fire", effect)
+module.exports = new EquipmentTemplate("Toxic Firecracker", "Strike 3 random foes applying @{mod1Stacks} @{mod1} and @{damage} @{element} damage", "Damage x@{critBonus}", "Fire", needsLivingTargets(effect))
 	.setCategory("Weapon")
 	.setTargetingTags({ target: `random${SAFE_DELIMITER}3`, team: "enemy" })
 	.setSidegrades("Double Firecracker", "Mercurial Firecracker")
@@ -19,10 +20,6 @@ function effect(targets, user, isCrit, adventure) {
 	}
 	return Promise.all(
 		targets.map(target => {
-			if (target.hp < 1) {
-				return "";
-			}
-
 			if (user.element === element) {
 				addModifier(target, elementStagger);
 			}

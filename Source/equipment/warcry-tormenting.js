@@ -30,10 +30,12 @@ function effect([initialTarget], user, isCrit, adventure) {
 		pendingStaggerStacks += bonus;
 	}
 	targetArray.forEach(target => {
-		addModifier(target, { name: "Stagger", stacks: pendingStaggerStacks });
-		for (const modifier in target.modifiers) {
-			if (isDebuff(modifier)) {
-				addModifier(target, { name: modifier, stacks: 1 });
+		if (target.hp > 0) {
+			addModifier(target, { name: "Stagger", stacks: pendingStaggerStacks });
+			for (const modifier in target.modifiers) {
+				if (isDebuff(modifier)) {
+					addModifier(target, { name: modifier, stacks: 1 });
+				}
 			}
 		}
 	})

@@ -13,11 +13,15 @@ module.exports = new Button(customId,
 		for (const className in playerProfile.archetypes) {
 			if (playerProfile.archetypes[className] != null) {
 				const archetype = getArchetype(className);
-				classOptions.push({
-					label: `${className} ${getEmoji(archetype.element)}`,
-					description: `Gear: ${archetype.signatureEquipment.join(", ")}`,
-					value: className
-				})
+				if (archetype) {
+					classOptions.push({
+						label: `${className} ${getEmoji(archetype.element)}`,
+						description: `Gear: ${archetype.signatureEquipment.join(", ")}`,
+						value: className
+					})
+				} else {
+					console.error(`Attempt to deploy unregistered archtype: ${className}`);
+				}
 			}
 		}
 		interaction.reply({
