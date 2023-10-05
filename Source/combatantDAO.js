@@ -35,7 +35,7 @@ exports.dealDamage = async function (targets, user, damage, isUnblockable, eleme
 				if (targetModifiers.includes("Exposed")) {
 					pendingDamage *= 1.5;
 				}
-				let isWeakness = getWeakness(target.element) === element;
+				let isWeakness = `${element} Weakness` in target.modifiers || getWeakness(target.element) === element;
 				if (isWeakness) {
 					pendingDamage *= 2;
 				}
@@ -258,4 +258,14 @@ exports.compareMoveSpeed = function (first, second) {
 	} else {
 		return second.priority - first.priority;
 	}
+}
+
+exports.getCombatantWeaknesses = function (combatant) {
+	const weaknesses = [getWeakness(combatant.element)];
+	["Earth", "Fire", "Untyped", "Water", "Wind"].forEach(element => {
+		if (!weaknesses.includes(element) && `${element} Weakness` in combatant.modifiers) {
+			weaknesses.push(element);
+		}
+	})
+	return weaknesses;
 }

@@ -60,7 +60,7 @@ exports.generateRandomNumber = function (adventure, exclusiveMax, branch) {
 		throw new Error(`generateRandomNumber recieved invalid exclusiveMax: ${exclusiveMax}`);
 	}
 
-	if (exclusiveMax === 1) {
+	if (exclusiveMax < 2) {
 		return 0;
 	} else {
 		const digits = Math.ceil(Math.log2(exclusiveMax) / Math.log2(12));

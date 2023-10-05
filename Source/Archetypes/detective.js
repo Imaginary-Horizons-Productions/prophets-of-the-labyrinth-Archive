@@ -2,7 +2,7 @@ const Archetype = require("../../Classes/Archetype.js");
 const { getCombatantWeaknesses } = require("../combatantDAO.js");
 const { getEmoji } = require("../elementHelpers.js");
 
-module.exports = new Archetype("Assassin",
+module.exports = new Archetype("Detective",
 	(embed, adventure) => {
 		adventure.room.enemies.filter(combatant => combatant.hp > 0).concat(adventure.delvers).forEach(combatant => {
 			const weaknesses = getCombatantWeaknesses(combatant).map(element => getEmoji(element));
@@ -14,6 +14,6 @@ module.exports = new Archetype("Assassin",
 	(combatant) => {
 		return `Weakness(es): ${getCombatantWeaknesses(combatant).map(weakness => getEmoji(weakness)).join(", ")}`;
 	})
-	.setElement("Wind")
-	.setDescription("Able to predict which combatants will critically hit and assess combatant elemental affinities, the Assassin excels at dealing great amounts of damage.")
-	.setSignatureEquipment(["Daggers", "Cloak"]);
+	.setElement("Earth")
+	.setDescription("Adept at analyzing then seizing upon the elementary weaknesses of foes, the Detective can even induce weaknesses on foes with their Sabotage Kit.")
+	.setSignatureEquipment(["Pistol", "Sabotage Kit"]);

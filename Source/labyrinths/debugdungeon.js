@@ -35,6 +35,8 @@ module.exports = new Labyrinth("Debug Dungeon", "Untyped", 10, [10])
 					"Certain Victory",
 					"Infinite Regeneration",
 					"Lance",
+					"Pistol",
+					"Sabotage Kit",
 					"Vigilance Charm",
 					"Warhammer"
 				],
@@ -49,6 +51,9 @@ module.exports = new Labyrinth("Debug Dungeon", "Untyped", 10, [10])
 					"Accelerating Lance",
 					"Piercing Lance",
 					"Vigilant Lance",
+					"Double Pistol",
+					"Duelist's Pistol",
+					"Long Sabotage Kit",
 					"Devoted Vigilance Charm",
 					"Long Vigilance Charm",
 					"Guarding Vigilance Charm",

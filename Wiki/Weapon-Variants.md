@@ -22,6 +22,19 @@ Can target allies (beyond self)
 - Vigilance Charm (Earth)
 - Buckler (Earth)
 
+### Double
+Doubles the number of targets
+
+#### Avaialble on
+- Firecracker (Fire)
+- Pistol (Earth)
+
+### Duelist's
+Bonus damage if no allies are targeting the same enemy
+
+#### Available on
+- Pistol (Earth)
+
 ### Discounted
 Reduced cost
 #### Available on
@@ -34,6 +47,12 @@ User gains Evade
 #### Available on
 - Sun Flare (Wind)
 - Bow (Wind)
+
+### Exploiting
+If target is weak to attack, give random ally Power Up
+
+#### Available on
+- all Pistol (Earth)
 
 ### Fate Sealing
 Apply Stasis to target on crit
@@ -89,6 +108,7 @@ Increased stack count of buff/debuff applied
 #### Available on
 - Cloak (Wind)
 - Vigilance Charm (Earth)
+- Long Sabotage Kit (Earth)
 
 ### Mercurial
 Damage type matches user
@@ -150,6 +170,12 @@ Adds block to target
 
 #### Available on
 - Inspiration (Wind)
+
+### Sabotaging
+Adds a random weakness to target
+
+#### Available on
+- all Sabotage Kit (Earth)
 
 ### Sharpened
 Increased base damage
@@ -252,9 +278,6 @@ Grants Vigilant to user
 - Scutum (Fire)
 
 ## Yet Unused Variants
-### Duelist's
-Bonus damage if no allies are targeting the same enemy
-
 ### Opportunist's
 Bonus damage if at least one other ally is targetting the same enemy
 
